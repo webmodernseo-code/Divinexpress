@@ -1,0 +1,72 @@
+/* ============================================================
+   DIVINEXPRESS — TYPE TOKENS
+   Inter throughout. Display type is heavy, tight, often uppercase
+   with negative tracking — body copy is calm and generous.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+  --font-sans: 'Inter', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-mono: 'SF Mono', 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+  /* ---- Weights ---- */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-black: 800;
+
+  /* ---- Display scale (hero / headline) — heavy, tight, often uppercase ---- */
+  --display-1-size: 88px;
+  --display-1-line: 0.95; /* @kind other */
+  --display-1-tracking: -0.02em;
+  --display-1-weight: var(--weight-black);
+
+  --display-2-size: 64px;
+  --display-2-line: 0.98; /* @kind other */
+  --display-2-tracking: -0.015em;
+  --display-2-weight: var(--weight-black);
+
+  --display-3-size: 44px;
+  --display-3-line: 1.02; /* @kind other */
+  --display-3-tracking: -0.01em;
+  --display-3-weight: var(--weight-bold);
+
+  /* ---- Headings ---- */
+  --heading-1-size: 32px;
+  --heading-1-line: 1.15; /* @kind other */
+  --heading-1-weight: var(--weight-bold);
+
+  --heading-2-size: 24px;
+  --heading-2-line: 1.2; /* @kind other */
+  --heading-2-weight: var(--weight-semibold);
+
+  --heading-3-size: 18px;
+  --heading-3-line: 1.3; /* @kind other */
+  --heading-3-weight: var(--weight-semibold);
+
+  /* ---- Body ---- */
+  --body-lg-size: 17px;
+  --body-lg-line: 1.5; /* @kind other */
+  --body-md-size: 15px;
+  --body-md-line: 1.5; /* @kind other */
+  --body-sm-size: 13px;
+  --body-sm-line: 1.45; /* @kind other */
+
+  /* ---- Labels / UI text ---- */
+  --label-size: 12px;
+  --label-line: 1.3; /* @kind other */
+  --label-tracking: 0.06em;
+  --label-weight: var(--weight-semibold);
+
+  --eyebrow-size: 12px;
+  --eyebrow-tracking: 0.14em;
+  --eyebrow-weight: var(--weight-semibold);
+
+  /* ---- Numeric / price ---- */
+  --price-size: 17px;
+  --price-weight: var(--weight-semibold);
+  --price-lg-size: 28px;
+  --price-lg-weight: var(--weight-bold);
+}
