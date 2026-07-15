@@ -24,28 +24,28 @@
 
 ### Task 1: Clean up stale scaffold and initialize the Next.js project
 
-**Context:** `git status` shows `.eslintrc.json`, `.gitignore`, `README.md`, `app/*`, `next.config.mjs`, `package.json`, `package-lock.json`, `postcss.config.mjs`, `tailwind.config.ts`, `tsconfig.json` as deleted in the working tree (they exist in the initial commit but were removed from disk before this session). That old scaffold used Tailwind, which the approved spec explicitly excludes. This task finalizes the removal and replaces it with a clean, hand-authored Next.js 14 setup (no Tailwind, no `create-next-app` interactive prompts).
+**Context:** The initial commit checked out in this worktree is a `create-next-app` scaffold using Tailwind, which the approved spec explicitly excludes (`.eslintrc.json`, `.gitignore`, `README.md`, `app/*`, `next.config.mjs`, `package.json`, `package-lock.json`, `postcss.config.mjs`, `tailwind.config.ts`, `tsconfig.json`). This task removes it and replaces it with a clean, hand-authored Next.js 14 setup (no Tailwind, no `create-next-app` interactive prompts).
 
 **Files:**
-- Modify (stage deletions): `.eslintrc.json`, `.gitignore`, `README.md`, `app/favicon.ico`, `app/fonts/GeistMonoVF.woff`, `app/fonts/GeistVF.woff`, `app/globals.css`, `app/layout.tsx`, `app/page.tsx`, `next.config.mjs`, `package-lock.json`, `package.json`, `postcss.config.mjs`, `tailwind.config.ts`, `tsconfig.json`
-- Create: `package.json`, `tsconfig.json`, `next.config.mjs`, `.eslintrc.json`, `.gitignore`
+- Delete: `app/favicon.ico`, `app/fonts/GeistMonoVF.woff`, `app/fonts/GeistVF.woff`, `app/globals.css`, `app/layout.tsx`, `app/page.tsx`, `postcss.config.mjs`, `tailwind.config.ts`
+- Replace: `.eslintrc.json`, `.gitignore`, `README.md`, `next.config.mjs`, `package.json`, `package-lock.json`, `tsconfig.json`
 
 **Interfaces:**
 - Produces: a working `npm install` / `npm run build` / `npm run lint` toolchain that Task 2 onward extends.
 
-- [ ] **Step 1: Stage the removal of the stale Tailwind-based scaffold**
+- [ ] **Step 1: Remove the stale Tailwind-based scaffold**
 
 ```bash
-git add -u
+git rm -r app postcss.config.mjs tailwind.config.ts .eslintrc.json .gitignore README.md next.config.mjs package.json package-lock.json tsconfig.json
 git status --porcelain
 ```
 
-Expected: every path listed above shows as `D` (staged deletion), no other changes.
+Expected: every path listed shows as `D` (staged deletion), no other changes. (`README.md` and `.gitignore` are deleted here and recreated with new content in Steps 3-7 / Task 5 — this is a full replacement, not an edit.)
 
 - [ ] **Step 2: Commit the removal**
 
 ```bash
-git commit -m "Remove stale create-next-app/Tailwind scaffold ahead of Phase 0 rebuild"
+git commit -m "Remove create-next-app/Tailwind scaffold ahead of Phase 0 rebuild"
 ```
 
 - [ ] **Step 3: Create `package.json`**
