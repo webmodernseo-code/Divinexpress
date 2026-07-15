@@ -1,9 +1,13 @@
-'use client';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-import { useTranslations } from 'next-intl';
+export default async function HomePage({
+  params
+}: {
+  params: { locale: string };
+}) {
+  setRequestLocale(params.locale);
 
-export default function HomePage() {
-  const t = useTranslations('layout');
+  const t = await getTranslations('layout');
 
   return (
     <section style={{ padding: 'var(--space-8)' }}>
