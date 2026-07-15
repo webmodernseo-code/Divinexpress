@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#f0eee9;font-family:'Inter',sans-serif}
+  .dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}
+  .dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 8px}
+  .dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+  .dv-tname{font:600 16px/1.2 'Inter',sans-serif;color:#1a1a1a}
+  .dv-grp{font:400 13px ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:rgba(0,0,0,.4);margin:26px 0 14px}
+  .dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+  .dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}
+  .dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}
+  .dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 14px/1.3 'Inter',sans-serif;color:rgba(0,0,0,.6)}
+  .dv-card{max-width:100%;background:#fdfcf9;border:2px solid #1a1a1a;box-shadow:3px 3px 0 rgba(0,0,0,.15);overflow:hidden}
+  .dv-opt:target .dv-oid{background:#2a78d6;color:#fff}
+  .dv-next{margin:22px 0 0;font:15px/1.5 'Inter',sans-serif;color:rgba(0,0,0,.55)}
+  .ph{background-color:#fff;background-image:linear-gradient(45deg, transparent 48%, #ccc 49%, #ccc 51%, transparent 52%),linear-gradient(-45deg, transparent 48%, #ccc 49%, #ccc 51%, transparent 52%);border:2px solid #1a1a1a;display:flex;align-items:center;justify-content:center;color:#777;font-size:13px;font-family:ui-monospace,monospace;text-align:center}
+  .ln{border:2px solid #1a1a1a}
+  .dl{border:1.5px dashed #999}
+  .lbl{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#888}
+  .btn{border:2px solid #1a1a1a;border-radius:999px;padding:8px 18px;font:16px 'Inter',sans-serif;text-align:center;background:#fff}
+  .btnp{border:2px solid #1a1a1a;border-radius:999px;padding:8px 18px;font:16px 'Inter',sans-serif;text-align:center;background:#1a1a1a;color:#fff}
+  .chip{border:1.5px solid #1a1a1a;border-radius:999px;padding:3px 10px;font-size:12px;font-family:ui-monospace,monospace}
+  .promo{border:1.5px solid #2f8f5b;color:#2f8f5b;border-radius:999px;padding:3px 10px;font-size:12px;font-family:ui-monospace,monospace}
+  .urgent{color:#c23b3b;font-size:12px;font-family:ui-monospace,monospace}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t1">
+  <div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">DivinExpress — wireframes basse-fidélité, site ecommerce &amp; dashboard marchand</span></div>
+
+  <div class="dv-grp">Ecommerce — Desktop &amp; Mobile</div>
+  <div class="dv-opts">
+
+    <!-- 1a Accueil A -->
+    <div class="dv-opt" id="1a">
+      <div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Accueil — Hero plein cadre</div>
+      <div class="dv-card" style="width:820px">
+        <div style="background:#1a1a1a;color:#fff;padding:5px 24px;display:flex;justify-content:space-between;align-items:center;font-size:11px">
+          <div style="display:flex;gap:8px">
+            <span style="width:16px;height:16px;border:1.5px solid #fff;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:8px">f</span>
+            <span style="width:16px;height:16px;border:1.5px solid #fff;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:8px">ig</span>
+            <span style="width:16px;height:16px;border:1.5px solid #fff;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:8px">tt</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">Devise <span style="border:1.5px solid #fff;border-radius:999px;padding:2px 8px">EUR € ▾</span></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:2px solid #1a1a1a">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:34px;height:34px;border-radius:999px;background:#1a1a1a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">DX</div>
+            <div style="font-weight:700;font-size:18px;letter-spacing:.02em">DIVINEXPRESS</div>
+          </div>
+          <div style="display:flex;gap:18px;font-size:14px"><span>Homme</span><span>Femme</span><span>Running</span><span>Sale</span></div>
+          <div style="display:flex;gap:16px;font-size:14px;align-items:center"><span>⌕</span><a href="#1l" style="color:#1a1a1a;text-decoration:underline">Suivi de commande</a><span>Panier (2)</span></div>
+        </div>
+        <div class="ph" style="height:340px;position:relative">
+          IMAGE HERO — Campagne
+          <div style="position:absolute;left:24px;bottom:24px;background:#fdfcf9;border:2px solid #1a1a1a;padding:16px 20px;max-width:280px">
+            <div style="font-size:28px;font-weight:700;line-height:1">RUN FURTHER</div>
+            <div style="font-size:14px;margin:6px 0 10px">Engineered for Speed.</div>
+            <div class="btnp" style="width:140px">Shop the Drop</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 24px;border-bottom:2px solid #1a1a1a">
+          <span>‹</span>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px"><span class="promo" style="border-radius:999px">-30%</span><span>Sur toute la collection Running · Code RUN30</span></div>
+          <span>›</span>
+        </div>
+        <div style="display:flex;justify-content:center;gap:6px;padding:8px 0"><div style="width:6px;height:6px;border-radius:999px;background:#1a1a1a"></div><div style="width:6px;height:6px;border-radius:999px;border:1.5px solid #1a1a1a"></div><div style="width:6px;height:6px;border-radius:999px;border:1.5px solid #1a1a1a"></div></div>
+        <div style="padding:20px 24px">
+          <div class="lbl" style="margin-bottom:10px">Nouveautés</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+            <div><div class="ph" style="height:140px">Photo produit</div><div style="font-size:13px;margin-top:6px">Modèle Air Runner</div><div style="font-size:13px;font-weight:700">€150.00</div></div>
+            <div><div class="ph" style="height:140px">Photo produit</div><div style="font-size:13px;margin-top:6px">Modèle Track Pro</div><div style="display:flex;gap:6px;align-items:center"><span class="promo">-34%</span><span style="font-size:13px;font-weight:700">€99.00</span></div></div>
+            <div><div class="ph" style="height:140px">Photo produit</div><div style="font-size:13px;margin-top:6px">Modèle City Low</div><div style="font-size:13px;font-weight:700">€120.00</div></div>
+            <div><div class="ph" style="height:140px">Photo produit</div><div style="font-size:13px;margin-top:6px">Modèle Trail X</div><div class="urgent">Only 2 left</div></div>
+          </div>
+        </div>
+        <div style="padding:14px 24px;border-top:2px solid #1a1a1a;font-size:12px;color:#666">Livraison gratuite dès €50 · Retours sous 30 jours</div>
+        <div style="background:#1a1a1a;color:#fff;padding:20px 24px">
+          <div class="lbl" style="color:#999;margin-bottom:10px">Moyens de paiement acceptés</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <div style="background:#fff;color:#1a1a1a;border-radius:4px;padding:6px 10px;font-size:11px;font-weight:700">VISA</div>
+            <div style="background:#fff;color:#1a1a1a;border-radius:4px;padding:6px 10px;font-size:11px;font-weight:700">Mastercard</div>
+            <div style="background:#fff;color:#1a1a1a;border-radius:4px;padding:6px 10px;font-size:11px;font-weight:700">PayPal</div>
+            <div style="background:#fff;color:#1a1a1a;border-radius:4px;padding:6px 10px;font-size:11px;font-weight:700">Orange Money</div>
+            <div style="background:#fff;color:#1a1a1a;border-radius:4px;padding:6px 10px;font-size:11px;font-weight:700">MTN Money</div>
+            <div style="background:#fff;color:#1a1a1a;border-radius:4px;padding:6px 10px;font-size:11px;font-weight:700">Wave</div>
+          </div>
+          <div style="display:flex;gap:14px;font-size:11px;color:#999;margin-top:14px"><a href="#1m" style="color:#999">À propos</a><a href="#1n" style="color:#999">Mentions légales</a><a href="#1o" style="color:#999">Confidentialité</a><a href="#1p" style="color:#999">Cookies</a></div>
+          <div style="font-size:11px;color:#999;margin-top:10px">© 2026 DivinExpress</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1b Accueil B -->
+    <div class="dv-opt" id="1b">
+      <div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Accueil — Split navigation catégories</div>
+      <div class="dv-card" style="width:820px">
+        <div style="background:#1a1a1a;color:#fff;padding:5px 24px;display:flex;justify-content:space-between;align-items:center;font-size:11px">
+          <div style="display:flex;gap:8px"><span style="width:16px;height:16px;border:1.5px solid #fff;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:8px">f</span><span style="width:16px;height:16px;border:1.5px solid #fff;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:8px">ig</span><span style="width:16px;height:16px;border:1.5px solid #fff;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:8px">tt</span></div>
+          <div style="display:flex;align-items:center;gap:6px">Devise <span style="border:1.5px solid #fff;border-radius:999px;padding:2px 8px">EUR € ▾</span></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:2px solid #1a1a1a">
+          <div style="display:flex;align-items:center;gap:10px"><div style="width:34px;height:34px;border-radius:999px;background:#1a1a1a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">DX</div><div style="font-weight:700;font-size:18px">DIVINEXPRESS</div></div>
+          <div style="display:flex;gap:16px;font-size:14px;align-items:center"><span>⌕</span><a href="#1l" style="color:#1a1a1a;text-decoration:underline">Suivi de commande</a><div class="btn" style="padding:6px 14px;font-size:13px">Panier (2)</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr">
+          <div class="ph" style="height:300px;border-right:2px solid #1a1a1a">IMAGE — Homme</div>
+          <div class="ph" style="height:300px">IMAGE — Femme</div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:20px;padding:16px;border-bottom:2px solid #1a1a1a">
+          <div class="chip">Running</div><div class="chip">Training</div><div class="chip">Lifestyle</div><div class="chip">Sale</div>
+        </div>
+        <div style="padding:20px 24px">
+          <div class="lbl" style="margin-bottom:10px">Best-sellers</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+            <div><div class="ph" style="height:160px">Photo produit</div><div style="font-size:13px;margin-top:6px">Air Runner</div><div style="font-size:13px;font-weight:700">€150.00</div></div>
+            <div><div class="ph" style="height:160px">Photo produit</div><div style="font-size:13px;margin-top:6px">Track Pro</div><div style="font-size:13px;font-weight:700">€180.00</div></div>
+            <div><div class="ph" style="height:160px">Photo produit</div><div style="font-size:13px;margin-top:6px">Trail X</div><div style="font-size:13px;font-weight:700">€165.00</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1c Accueil mobile -->
+    <div class="dv-opt" id="1c">
+      <div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Accueil — Mobile</div>
+      <div class="dv-card" style="width:320px">
+        <div style="background:#1a1a1a;color:#fff;padding:4px 16px;display:flex;justify-content:flex-end;align-items:center;font-size:10px">
+          <span style="border:1.5px solid #fff;border-radius:999px;padding:1px 6px">EUR € ▾</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:2px solid #1a1a1a;font-size:13px">
+          <span>☰</span>
+          <div style="display:flex;align-items:center;gap:6px"><div style="width:24px;height:24px;border-radius:999px;background:#1a1a1a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px">DX</div><span style="font-weight:700">DIVINEXPRESS</span></div>
+          <div style="display:flex;gap:8px"><span>⌕</span><span>Panier</span></div>
+        </div>
+        <div style="text-align:center;padding:6px;font-size:11px;border-bottom:1.5px dashed #999"><a href="#1l" style="color:#1a1a1a">Suivi de commande ›</a></div>
+        <div class="ph" style="height:220px;position:relative">
+          IMAGE HERO
+          <div style="position:absolute;left:12px;bottom:12px;background:#fdfcf9;border:2px solid #1a1a1a;padding:10px 12px">
+            <div style="font-size:20px;font-weight:700;line-height:1">RUN FURTHER</div>
+            <div class="btnp" style="width:110px;margin-top:8px;font-size:13px;padding:6px 12px">Shop Now</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:8px;border-bottom:1.5px dashed #999;font-size:11px"><span>‹</span><span class="promo" style="border-radius:999px;font-size:10px">-30%</span><span>Code RUN30</span><span>›</span></div>
+        <div style="display:flex;gap:10px;padding:12px 16px;overflow:hidden">
+          <div class="chip">Running</div><div class="chip">Sale</div><div class="chip">Femme</div>
+        </div>
+        <div style="padding:0 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div><div class="ph" style="height:110px">Photo</div><div style="font-size:12px;margin-top:4px">Air Runner</div><div style="font-size:12px;font-weight:700">€150.00</div></div>
+          <div><div class="ph" style="height:110px">Photo</div><div style="font-size:12px;margin-top:4px">Track Pro</div><div class="promo" style="font-size:11px">-34%</div></div>
+        </div>
+        <div style="background:#1a1a1a;color:#fff;padding:14px 16px">
+          <div class="lbl" style="color:#999;margin-bottom:8px;font-size:9px">Paiement</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <div style="background:#fff;color:#1a1a1a;border-radius:4px;padding:4px 7px;font-size:9px;font-weight:700">VISA</div>
+            <div style="background:#fff;color:#1a1a1a;border-radius:4px;padding:4px 7px;font-size:9px;font-weight:700">Mastercard</div>
+            <div style="background:#fff;color:#1a1a1a;border-radius:4px;padding:4px 7px;font-size:9px;font-weight:700">PayPal</div>
+            <div style="background:#fff;color:#1a1a1a;border-radius:4px;padding:4px 7px;font-size:9px;font-weight:700">Orange Money</div>
+            <div style="background:#fff;color:#1a1a1a;border-radius:4px;padding:4px 7px;font-size:9px;font-weight:700">MTN</div>
+            <div style="background:#fff;color:#1a1a1a;border-radius:4px;padding:4px 7px;font-size:9px;font-weight:700">Wave</div>
+          </div>
+          <div style="font-size:9px;color:#999;margin-top:10px">© 2026 DivinExpress</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1d PLP -->
+    <div class="dv-opt" id="1d">
+      <div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Liste produits (PLP) — Desktop</div>
+      <div class="dv-card" style="width:760px">
+        <div style="padding:14px 24px;border-bottom:2px solid #1a1a1a;font-weight:700;font-size:18px">RUNNING (128 articles)</div>
+        <div style="display:grid;grid-template-columns:180px 1fr">
+          <div style="padding:20px;border-right:2px dashed #999">
+            <div class="lbl">Filtres</div>
+            <div style="margin-top:10px;font-size:13px;line-height:2">☐ Prix<br>☐ Taille<br>☐ Couleur<br>☐ Sport<br>☐ Promo</div>
+          </div>
+          <div style="padding:20px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:14px;font-size:12px;color:#666"><span>Trier: Popularité</span><span>Grille</span></div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+              <div><div class="ph" style="height:130px">Photo</div><div style="font-size:13px;margin-top:6px">Air Runner</div><div style="font-size:13px;font-weight:700">€150.00</div></div>
+              <div><div class="ph" style="height:130px">Photo</div><div style="font-size:13px;margin-top:6px">Track Pro</div><div style="display:flex;gap:6px"><span class="promo">-34%</span><span style="font-size:13px;font-weight:700">€99.00</span></div></div>
+              <div><div class="ph" style="height:130px">Photo</div><div style="font-size:13px;margin-top:6px">Trail X</div><div class="urgent">Only 2 left</div></div>
+              <div><div class="ph" style="height:130px">Photo</div><div style="font-size:13px;margin-top:6px">City Low</div><div style="font-size:13px;font-weight:700">€120.00</div></div>
+              <div><div class="ph" style="height:130px">Photo</div><div style="font-size:13px;margin-top:6px">Speed Knit</div><div style="font-size:13px;font-weight:700">€135.00</div></div>
+              <div><div class="ph" style="height:130px">Photo</div><div style="font-size:13px;margin-top:6px">Flex Trainer</div><div style="font-size:13px;font-weight:700">€110.00</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1e PDP A -->
+    <div class="dv-opt" id="1e">
+      <div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>Fiche produit (PDP) A — Galerie empilée</div>
+      <div class="dv-card" style="width:760px">
+        <div style="padding:14px 24px;border-bottom:2px solid #1a1a1a;font-size:13px;color:#666">Accueil / Running / Air Runner</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+          <div style="display:flex;flex-direction:column;gap:6px;padding:16px">
+            <div class="ph" style="height:220px">Photo produit — vue 1</div>
+            <div style="display:flex;gap:6px"><div class="ph" style="height:60px;width:60px">v2</div><div class="ph" style="height:60px;width:60px">v3</div><div class="ph" style="height:60px;width:60px">v4</div></div>
+          </div>
+          <div style="padding:16px;border-left:2px dashed #999">
+            <div style="font-size:22px;font-weight:700">AIR RUNNER</div>
+            <div style="font-size:18px;font-weight:700;margin:8px 0">€150.00</div>
+            <div class="lbl" style="margin-bottom:6px">Taille</div>
+            <div style="display:flex;gap:8px;margin-bottom:14px"><div class="chip">38</div><div class="chip">39</div><div class="btn" style="padding:3px 10px;font-size:12px;border-color:#c23b3b;color:#c23b3b">40</div><div class="chip">41</div></div>
+            <div class="urgent" style="margin-bottom:14px">Only 2 left in size 41</div>
+            <div class="btnp" style="width:100%">Add to Bag</div>
+            <div style="margin-top:16px;font-size:13px;color:#666">Livraison gratuite dès €50. Retours sous 30 jours.</div>
+            <div style="margin-top:16px;border-top:2px dashed #999;padding-top:10px;font-size:13px">▸ Détails &amp; matière<br>▸ Livraison &amp; retours</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1f PDP B -->
+    <div class="dv-opt" id="1f">
+      <div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a>Fiche produit (PDP) B — Galerie grille + panneau sticky</div>
+      <div class="dv-card" style="width:760px">
+        <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:0">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:16px">
+            <div class="ph" style="height:160px">v1</div><div class="ph" style="height:160px">v2</div>
+            <div class="ph" style="height:160px">v3</div><div class="ph" style="height:160px">v4</div>
+          </div>
+          <div style="padding:16px;border-left:2px solid #1a1a1a;display:flex;flex-direction:column;gap:10px">
+            <div style="font-size:20px;font-weight:700">TRACK PRO</div>
+            <div style="display:flex;gap:8px;align-items:center"><span class="promo">-34% Today</span><span style="font-size:17px;font-weight:700">€99.00</span><span style="text-decoration:line-through;color:#999;font-size:13px">€150.00</span></div>
+            <div class="lbl">Couleur</div>
+            <div style="display:flex;gap:8px"><div class="chip">Noir</div><div class="chip">Blanc</div></div>
+            <div class="lbl">Taille</div>
+            <div style="display:flex;gap:8px"><div class="chip">S</div><div class="chip">M</div><div class="chip">L</div></div>
+            <div class="btnp" style="width:100%;margin-top:6px">Add to Bag</div>
+            <div class="btn" style="width:100%">Ajouter aux favoris</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1g PDP mobile -->
+    <div class="dv-opt" id="1g">
+      <div class="dv-olabel"><a class="dv-oid" href="#1g">1g</a>Fiche produit — Mobile</div>
+      <div class="dv-card" style="width:320px">
+        <div class="ph" style="height:280px">Photo produit</div>
+        <div style="display:flex;gap:6px;padding:10px 16px">
+          <div style="width:8px;height:8px;border-radius:999px;background:#1a1a1a"></div>
+          <div style="width:8px;height:8px;border-radius:999px;border:1.5px solid #1a1a1a"></div>
+          <div style="width:8px;height:8px;border-radius:999px;border:1.5px solid #1a1a1a"></div>
+        </div>
+        <div style="padding:0 16px 16px">
+          <div style="font-size:19px;font-weight:700">AIR RUNNER</div>
+          <div style="font-size:16px;font-weight:700;margin:6px 0">€150.00</div>
+          <div class="lbl">Taille</div>
+          <div style="display:flex;gap:6px;margin:6px 0 12px"><div class="chip">38</div><div class="chip">39</div><div class="chip">40</div><div class="chip">41</div></div>
+          <div class="btnp" style="width:100%">Add to Bag</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1h Panier -->
+    <div class="dv-opt" id="1h">
+      <div class="dv-olabel"><a class="dv-oid" href="#1h">1h</a>Panier — Desktop</div>
+      <div class="dv-card" style="width:700px">
+        <div style="padding:14px 24px;border-bottom:2px solid #1a1a1a;font-weight:700;font-size:18px">VOTRE PANIER (2)</div>
+        <div style="display:grid;grid-template-columns:1fr 260px">
+          <div style="padding:16px 24px">
+            <div style="display:flex;gap:14px;padding:12px 0;border-bottom:1.5px dashed #999">
+              <div class="ph" style="height:80px;width:80px">Photo</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:14px">Air Runner</div><div style="font-size:12px;color:#666">Taille 40 · Noir</div><div style="font-size:12px;margin-top:4px">Qté: 1</div></div>
+              <div style="font-size:14px;font-weight:700">€150.00</div>
+            </div>
+            <div style="display:flex;gap:14px;padding:12px 0">
+              <div class="ph" style="height:80px;width:80px">Photo</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:14px">Track Pro</div><div style="font-size:12px;color:#666">Taille 39 · Blanc</div><div style="font-size:12px;margin-top:4px">Qté: 1</div></div>
+              <div style="font-size:14px;font-weight:700"><span class="promo" style="margin-right:6px">-34%</span>€99.00</div>
+            </div>
+          </div>
+          <div style="padding:16px 24px;border-left:2px solid #1a1a1a">
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Sous-total</span><span>€249.00</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Livraison</span><span style="color:#2f8f5b">Gratuite</span></div>
+            <div style="display:flex;justify-content:space-between;font-weight:700;margin:10px 0;border-top:1.5px dashed #999;padding-top:10px"><span>Total</span><span>€249.00</span></div>
+            <div class="btnp" style="width:100%">Checkout</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1i Checkout -->
+    <div class="dv-opt" id="1i">
+      <div class="dv-olabel"><a class="dv-oid" href="#1i">1i</a>Checkout — Desktop, étapes sur une page</div>
+      <div class="dv-card" style="width:760px">
+        <div style="padding:14px 24px;border-bottom:2px solid #1a1a1a;display:flex;gap:20px;font-size:13px">
+          <span style="font-weight:700">1. Livraison</span><span style="color:#999">2. Paiement</span><span style="color:#999">3. Confirmation</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 260px">
+          <div style="padding:20px 24px">
+            <div class="lbl" style="margin-bottom:10px">Adresse de livraison</div>
+            <div class="dl" style="height:34px;margin-bottom:8px"></div>
+            <div class="dl" style="height:34px;margin-bottom:8px"></div>
+            <div style="display:flex;gap:8px;margin-bottom:16px"><div class="dl" style="height:34px;flex:1"></div><div class="dl" style="height:34px;flex:1"></div></div>
+            <div class="lbl" style="margin-bottom:10px">Paiement</div>
+            <div class="dl" style="height:34px;margin-bottom:8px"></div>
+            <div class="btnp" style="width:180px">Confirmer</div>
+          </div>
+          <div style="padding:20px 24px;border-left:2px solid #1a1a1a">
+            <div class="lbl" style="margin-bottom:10px">Résumé</div>
+            <div style="display:flex;gap:10px;margin-bottom:10px"><div class="ph" style="height:56px;width:56px">Photo</div><div style="font-size:12px">Air Runner<br>Track Pro</div></div>
+            <div style="display:flex;justify-content:space-between;font-weight:700;border-top:1.5px dashed #999;padding-top:10px"><span>Total</span><span>€249.00</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1j Compte -->
+    <div class="dv-opt" id="1j">
+      <div class="dv-olabel"><a class="dv-oid" href="#1j">1j</a>Compte client — Commandes</div>
+      <div class="dv-card" style="width:700px">
+        <div style="display:grid;grid-template-columns:180px 1fr">
+          <div style="padding:20px;border-right:2px dashed #999;font-size:14px;line-height:2.2">
+            <div style="font-weight:700">Mon compte</div>
+            <div>Commandes</div><div style="color:#999">Adresses</div><div style="color:#999">Favoris</div><div style="color:#999">Paramètres</div>
+          </div>
+          <div style="padding:20px 24px">
+            <div class="lbl" style="margin-bottom:12px">Historique des commandes</div>
+            <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1.5px dashed #999;font-size:13px"><span>#DE-10234</span><span>12 juin 2026</span><span style="color:#2f8f5b">Livrée</span><span>€150.00</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1.5px dashed #999;font-size:13px"><span>#DE-10198</span><span>2 juin 2026</span><span>En transit</span><span>€99.00</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 0;font-size:13px"><span>#DE-10145</span><span>20 mai 2026</span><span style="color:#2f8f5b">Livrée</span><span>€120.00</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1k Panier+Checkout mobile -->
+    <div class="dv-opt" id="1k">
+      <div class="dv-olabel"><a class="dv-oid" href="#1k">1k</a>Panier → Checkout — Mobile</div>
+      <div style="display:flex;gap:16px">
+        <div class="dv-card" style="width:230px">
+          <div style="padding:10px 14px;border-bottom:2px solid #1a1a1a;font-weight:700;font-size:14px">PANIER (2)</div>
+          <div style="padding:12px 14px">
+            <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1.5px dashed #999"><div class="ph" style="height:50px;width:50px">Photo</div><div style="font-size:11px">Air Runner<br>Taille 40<br>€150.00</div></div>
+            <div style="display:flex;gap:8px;padding:8px 0"><div class="ph" style="height:50px;width:50px">Photo</div><div style="font-size:11px">Track Pro<br>Taille 39<br>€99.00</div></div>
+            <div style="display:flex;justify-content:space-between;font-weight:700;font-size:13px;margin-top:8px"><span>Total</span><span>€249.00</span></div>
+            <div class="btnp" style="width:100%;margin-top:8px;font-size:13px">Checkout</div>
+          </div>
+        </div>
+        <div class="dv-card" style="width:230px">
+          <div style="padding:10px 14px;border-bottom:2px solid #1a1a1a;font-weight:700;font-size:14px">LIVRAISON</div>
+          <div style="padding:12px 14px">
+            <div class="dl" style="height:30px;margin-bottom:8px"></div>
+            <div class="dl" style="height:30px;margin-bottom:8px"></div>
+            <div class="dl" style="height:30px;margin-bottom:12px"></div>
+            <div class="btnp" style="width:100%;font-size:13px">Payer €249.00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1l Suivi de colis -->
+    <div class="dv-opt" id="1l">
+      <div class="dv-olabel"><a class="dv-oid" href="#1l">1l</a>Suivi de colis</div>
+      <div class="dv-card" style="width:600px">
+        <div style="padding:14px 24px;border-bottom:2px solid #1a1a1a;display:flex;align-items:center;gap:10px"><div style="width:30px;height:30px;border-radius:999px;background:#1a1a1a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px">DX</div><div style="font-weight:700;font-size:16px">DIVINEXPRESS</div></div>
+        <div style="padding:24px">
+          <div style="font-weight:700;font-size:20px;margin-bottom:4px">Suivi de commande</div>
+          <div style="font-size:13px;color:#666;margin-bottom:16px">Entrez votre numéro de commande et votre email</div>
+          <div style="display:flex;gap:8px;margin-bottom:8px"><div class="dl" style="height:36px;flex:1"></div><div class="btnp" style="padding:8px 20px">Suivre</div></div>
+          <div class="dl" style="height:36px;margin-bottom:24px"></div>
+          <div class="lbl" style="margin-bottom:16px">Commande #DE-10233 · Livraison estimée le 16 juin</div>
+          <div style="display:flex;align-items:flex-start;position:relative;margin-bottom:24px">
+            <div style="position:absolute;top:9px;left:10%;right:10%;height:2px;background:#1a1a1a;z-index:0"></div>
+            <div style="flex:1;text-align:center;position:relative;z-index:1"><div style="width:18px;height:18px;border-radius:999px;background:#1a1a1a;margin:0 auto 8px"></div><div style="font-size:12px;font-weight:700">Commandée</div><div style="font-size:11px;color:#666">12 juin</div></div>
+            <div style="flex:1;text-align:center;position:relative;z-index:1"><div style="width:18px;height:18px;border-radius:999px;background:#1a1a1a;margin:0 auto 8px"></div><div style="font-size:12px;font-weight:700">Confirmée</div><div style="font-size:11px;color:#666">12 juin</div></div>
+            <div style="flex:1;text-align:center;position:relative;z-index:1"><div style="width:18px;height:18px;border-radius:999px;background:#1a1a1a;margin:0 auto 8px"></div><div style="font-size:12px;font-weight:700">Expédiée</div><div style="font-size:11px;color:#666">13 juin</div></div>
+            <div style="flex:1;text-align:center;position:relative;z-index:1"><div style="width:18px;height:18px;border-radius:999px;border:1.5px solid #999;background:#fdfcf9;margin:0 auto 8px"></div><div style="font-size:12px;color:#999">Livrée</div><div style="font-size:11px;color:#999">Estimé 16 juin</div></div>
+          </div>
+          <div class="ln" style="padding:14px;display:flex;justify-content:space-between;font-size:13px">
+            <span>Transporteur: DHL Express</span><span>N° suivi: FR2026883311</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1m À propos -->
+    <div class="dv-opt" id="1m">
+      <div class="dv-olabel"><a class="dv-oid" href="#1m">1m</a>À propos</div>
+      <div class="dv-card" style="width:600px">
+        <div style="padding:14px 24px;border-bottom:2px solid #1a1a1a;font-weight:700;font-size:16px">DIVINEXPRESS</div>
+        <div style="padding:24px">
+          <div style="font-weight:700;font-size:22px;margin-bottom:12px">À PROPOS</div>
+          <div class="ph" style="height:160px;margin-bottom:16px">Image de marque</div>
+          <div class="dl" style="height:14px;margin-bottom:8px"></div>
+          <div class="dl" style="height:14px;margin-bottom:8px;width:90%"></div>
+          <div class="dl" style="height:14px;width:75%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1n Mentions légales -->
+    <div class="dv-opt" id="1n">
+      <div class="dv-olabel"><a class="dv-oid" href="#1n">1n</a>Mentions légales</div>
+      <div class="dv-card" style="width:600px">
+        <div style="padding:14px 24px;border-bottom:2px solid #1a1a1a;font-weight:700;font-size:16px">DIVINEXPRESS</div>
+        <div style="padding:24px">
+          <div style="font-weight:700;font-size:22px;margin-bottom:12px">MENTIONS LÉGALES</div>
+          <div class="lbl" style="margin:10px 0 6px">Éditeur du site</div>
+          <div class="dl" style="height:12px;margin-bottom:6px;width:80%"></div>
+          <div class="lbl" style="margin:14px 0 6px">Hébergement</div>
+          <div class="dl" style="height:12px;margin-bottom:6px;width:70%"></div>
+          <div class="lbl" style="margin:14px 0 6px">Propriété intellectuelle</div>
+          <div class="dl" style="height:12px;width:85%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1o Politique de confidentialité -->
+    <div class="dv-opt" id="1o">
+      <div class="dv-olabel"><a class="dv-oid" href="#1o">1o</a>Politique de confidentialité (RGPD)</div>
+      <div class="dv-card" style="width:600px">
+        <div style="padding:14px 24px;border-bottom:2px solid #1a1a1a;font-weight:700;font-size:16px">DIVINEXPRESS</div>
+        <div style="padding:24px">
+          <div style="font-weight:700;font-size:22px;margin-bottom:12px">POLITIQUE DE CONFIDENTIALITÉ</div>
+          <div class="lbl" style="margin-bottom:6px">Données collectées</div>
+          <div class="dl" style="height:12px;margin-bottom:6px;width:85%"></div>
+          <div class="lbl" style="margin:14px 0 6px">Vos droits (RGPD)</div>
+          <div class="dl" style="height:12px;margin-bottom:6px;width:80%"></div>
+          <div class="dl" style="height:12px;width:60%"></div>
+          <div class="btn" style="width:220px;margin-top:16px;font-size:13px">Exercer mes droits</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1p Gestion des cookies -->
+    <div class="dv-opt" id="1p">
+      <div class="dv-olabel"><a class="dv-oid" href="#1p">1p</a>Gestion des cookies — Bandeau + préférences</div>
+      <div class="dv-card" style="width:600px">
+        <div style="padding:20px 24px 60px;font-size:13px;color:#666">Page en arrière-plan (contenu du site)</div>
+        <div style="background:#1a1a1a;color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px">
+          <div style="font-size:12px;line-height:1.5">Nous utilisons des cookies pour améliorer votre expérience et mesurer l'audience.</div>
+          <div style="display:flex;gap:8px;flex:none">
+            <div class="btn" style="border-color:#fff;color:#fff;font-size:11px;padding:6px 12px;white-space:nowrap">Personnaliser</div>
+            <div class="btnp" style="background:#fff;color:#1a1a1a;font-size:11px;padding:6px 12px;white-space:nowrap">Tout accepter</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="dv-grp">Dashboard marchand — Desktop</div>
+  <div class="dv-opts">
+
+    <!-- 2a Commandes A -->
+    <div class="dv-opt" id="2a">
+      <div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Commandes — Liste (tableau dense)</div>
+      <div class="dv-card" style="width:820px">
+        <div style="display:grid;grid-template-columns:170px 1fr">
+          <div style="padding:20px;border-right:2px solid #1a1a1a;font-size:14px;line-height:2.4">
+            <div style="font-weight:700;margin-bottom:10px">DIVINEXPRESS</div>
+            <div style="font-weight:700">Commandes</div><div style="color:#999">Catalogue</div><div style="color:#999">Analytics</div><div style="color:#999">Paramètres</div>
+          </div>
+          <div style="padding:18px 22px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><span style="font-weight:700;font-size:18px">Commandes</span><div class="btnp" style="font-size:12px;padding:6px 14px">Exporter</div></div>
+            <div style="display:flex;gap:10px;margin-bottom:12px"><div class="chip">Toutes</div><div class="chip">En attente</div><div class="chip">Expédiées</div><div class="chip">Remboursées</div></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;font-size:11px;color:#888;padding:8px 0;border-bottom:2px solid #1a1a1a">
+              <span>COMMANDE</span><span>CLIENT</span><span>DATE</span><span>STATUT</span><span>TOTAL</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;font-size:13px;padding:9px 0;border-bottom:1.5px dashed #999"><span>#DE-10234</span><span>M. Dubois</span><span>12 juin</span><span style="color:#2f8f5b">Fulfilled</span><span>€150.00</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;font-size:13px;padding:9px 0;border-bottom:1.5px dashed #999"><span>#DE-10233</span><span>L. Martin</span><span>12 juin</span><span>En attente</span><span>€99.00</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;font-size:13px;padding:9px 0;border-bottom:1.5px dashed #999"><span>#DE-10232</span><span>A. Chen</span><span>11 juin</span><span style="color:#c23b3b">Échec paiement</span><span>€120.00</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;font-size:13px;padding:9px 0"><span>#DE-10231</span><span>S. Diallo</span><span>11 juin</span><span style="color:#2f8f5b">Fulfilled</span><span>€165.00</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2b Commandes B -->
+    <div class="dv-opt" id="2b">
+      <div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>Commandes — Liste + panneau détail (split)</div>
+      <div class="dv-card" style="width:820px">
+        <div style="display:grid;grid-template-columns:170px 1fr 260px">
+          <div style="padding:20px;border-right:2px solid #1a1a1a;font-size:14px;line-height:2.4">
+            <div style="font-weight:700;margin-bottom:10px">DIVINEXPRESS</div>
+            <div style="font-weight:700">Commandes</div><div style="color:#999">Catalogue</div><div style="color:#999">Analytics</div><div style="color:#999">Paramètres</div>
+          </div>
+          <div style="padding:18px 22px;border-right:2px dashed #999">
+            <div style="font-weight:700;font-size:16px;margin-bottom:10px">Commandes (312)</div>
+            <div style="font-size:13px;padding:8px 0;border-bottom:1.5px dashed #999;background:rgba(0,0,0,.04)">#DE-10234 · M. Dubois · €150.00</div>
+            <div style="font-size:13px;padding:8px 0;border-bottom:1.5px dashed #999">#DE-10233 · L. Martin · €99.00</div>
+            <div style="font-size:13px;padding:8px 0;border-bottom:1.5px dashed #999">#DE-10232 · A. Chen · €120.00</div>
+            <div style="font-size:13px;padding:8px 0">#DE-10231 · S. Diallo · €165.00</div>
+          </div>
+          <div style="padding:18px 22px">
+            <div style="font-weight:700;font-size:15px">#DE-10234</div>
+            <div style="font-size:12px;color:#666;margin-bottom:10px">12 juin 2026 · <span style="color:#2f8f5b">Fulfilled</span></div>
+            <div style="display:flex;gap:8px;margin-bottom:10px"><div class="ph" style="height:44px;width:44px">Photo</div><div style="font-size:11px">Air Runner<br>Taille 40 · Qté 1</div></div>
+            <div class="lbl">Client</div>
+            <div style="font-size:13px;margin-bottom:10px">M. Dubois<br>Paris, FR</div>
+            <div class="btn" style="width:100%;font-size:12px">Marquer expédié</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2c Commande détail -->
+    <div class="dv-opt" id="2c">
+      <div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>Commande — Page détail dédiée</div>
+      <div class="dv-card" style="width:780px">
+        <div style="display:grid;grid-template-columns:170px 1fr">
+          <div style="padding:20px;border-right:2px solid #1a1a1a;font-size:14px;line-height:2.4">
+            <div style="font-weight:700;margin-bottom:10px">DIVINEXPRESS</div>
+            <div style="font-weight:700">Commandes</div><div style="color:#999">Catalogue</div><div style="color:#999">Analytics</div><div style="color:#999">Paramètres</div>
+          </div>
+          <div style="padding:18px 22px">
+            <div style="font-size:12px;color:#666">Commandes / #DE-10234</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin:6px 0 16px"><span style="font-weight:700;font-size:20px">#DE-10234</span><span class="chip" style="color:#2f8f5b;border-color:#2f8f5b">Fulfilled</span></div>
+            <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:20px">
+              <div>
+                <div class="lbl" style="margin-bottom:8px">Articles</div>
+                <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1.5px dashed #999"><div class="ph" style="height:56px;width:56px">Photo</div><div style="font-size:13px;flex:1">Air Runner · Taille 40</div><div style="font-size:13px">€150.00</div></div>
+                <div class="lbl" style="margin:16px 0 8px">Historique</div>
+                <div style="font-size:12px;color:#666;line-height:1.8">12 juin — Commande passée<br>12 juin — Paiement confirmé<br>13 juin — Expédiée</div>
+              </div>
+              <div style="border-left:2px dashed #999;padding-left:20px">
+                <div class="lbl">Client</div>
+                <div style="font-size:13px;margin-bottom:12px">M. Dubois<br>12 Rue de Paris<br>75001 Paris, FR</div>
+                <div class="lbl">Paiement</div>
+                <div style="font-size:13px;margin-bottom:12px">Total €150.00<br>Visa ····4242</div>
+                <div class="btn" style="width:100%;font-size:12px">Rembourser</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2d Catalogue -->
+    <div class="dv-opt" id="2d">
+      <div class="dv-olabel"><a class="dv-oid" href="#2d">2d</a>Catalogue produits — Liste</div>
+      <div class="dv-card" style="width:780px">
+        <div style="display:grid;grid-template-columns:170px 1fr">
+          <div style="padding:20px;border-right:2px solid #1a1a1a;font-size:14px;line-height:2.4">
+            <div style="font-weight:700;margin-bottom:10px">DIVINEXPRESS</div>
+            <div style="color:#999">Commandes</div><div style="font-weight:700">Catalogue</div><div style="color:#999">Analytics</div><div style="color:#999">Paramètres</div>
+          </div>
+          <div style="padding:18px 22px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><span style="font-weight:700;font-size:18px">Catalogue (86)</span><div class="btnp" style="font-size:12px;padding:6px 14px">+ Ajouter un produit</div></div>
+            <div style="display:grid;grid-template-columns:40px 2fr 1fr 1fr 1fr;font-size:11px;color:#888;padding:8px 0;border-bottom:2px solid #1a1a1a">
+              <span></span><span>PRODUIT</span><span>PRIX</span><span>STOCK</span><span>STATUT</span>
+            </div>
+            <div style="display:grid;grid-template-columns:40px 2fr 1fr 1fr 1fr;align-items:center;font-size:13px;padding:9px 0;border-bottom:1.5px dashed #999"><div class="ph" style="height:32px;width:32px">·</div><span>Air Runner</span><span>€150.00</span><span>128</span><span style="color:#2f8f5b">Actif</span></div>
+            <div style="display:grid;grid-template-columns:40px 2fr 1fr 1fr 1fr;align-items:center;font-size:13px;padding:9px 0;border-bottom:1.5px dashed #999"><div class="ph" style="height:32px;width:32px">·</div><span>Track Pro</span><span>€99.00</span><span style="color:#c23b3b">3</span><span style="color:#2f8f5b">Actif</span></div>
+            <div style="display:grid;grid-template-columns:40px 2fr 1fr 1fr 1fr;align-items:center;font-size:13px;padding:9px 0"><div class="ph" style="height:32px;width:32px">·</div><span>Trail X</span><span>€165.00</span><span>0</span><span style="color:#c23b3b">Épuisé</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2e Ajout produit -->
+    <div class="dv-opt" id="2e">
+      <div class="dv-olabel"><a class="dv-oid" href="#2e">2e</a>Ajout d'un produit — Formulaire</div>
+      <div class="dv-card" style="width:780px">
+        <div style="display:grid;grid-template-columns:170px 1fr">
+          <div style="padding:20px;border-right:2px solid #1a1a1a;font-size:14px;line-height:2.4">
+            <div style="font-weight:700;margin-bottom:10px">DIVINEXPRESS</div>
+            <div style="color:#999">Commandes</div><div style="font-weight:700">Catalogue</div><div style="color:#999">Analytics</div><div style="color:#999">Paramètres</div>
+          </div>
+          <div style="padding:18px 22px">
+            <div style="font-size:12px;color:#666">Catalogue / Nouveau produit</div>
+            <div style="font-weight:700;font-size:20px;margin:6px 0 16px">Ajouter un produit</div>
+            <div style="display:grid;grid-template-columns:1fr 240px;gap:20px">
+              <div>
+                <div class="lbl" style="margin-bottom:6px">Nom du produit</div>
+                <div class="dl" style="height:32px;margin-bottom:14px"></div>
+                <div class="lbl" style="margin-bottom:6px">Description</div>
+                <div class="dl" style="height:70px;margin-bottom:14px"></div>
+                <div style="display:flex;gap:10px">
+                  <div style="flex:1"><div class="lbl" style="margin-bottom:6px">Prix</div><div class="dl" style="height:32px"></div></div>
+                  <div style="flex:1"><div class="lbl" style="margin-bottom:6px">Stock</div><div class="dl" style="height:32px"></div></div>
+                </div>
+              </div>
+              <div>
+                <div class="lbl" style="margin-bottom:6px">Images</div>
+                <div class="ph" style="height:100px;margin-bottom:8px">+ Ajouter</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px"><div class="ph" style="height:50px">·</div><div class="ph" style="height:50px">·</div></div>
+                <div class="btnp" style="width:100%">Publier</div>
+                <div class="btn" style="width:100%;margin-top:8px">Enregistrer brouillon</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2f Analytics -->
+    <div class="dv-opt" id="2f">
+      <div class="dv-olabel"><a class="dv-oid" href="#2f">2f</a>Analytics</div>
+      <div class="dv-card" style="width:780px">
+        <div style="display:grid;grid-template-columns:170px 1fr">
+          <div style="padding:20px;border-right:2px solid #1a1a1a;font-size:14px;line-height:2.4">
+            <div style="font-weight:700;margin-bottom:10px">DIVINEXPRESS</div>
+            <div style="color:#999">Commandes</div><div style="color:#999">Catalogue</div><div style="font-weight:700">Analytics</div><div style="color:#999">Paramètres</div>
+          </div>
+          <div style="padding:18px 22px">
+            <div style="font-weight:700;font-size:18px;margin-bottom:14px">Analytics</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px">
+              <div class="ln" style="padding:12px"><div class="lbl">Ventes (30j)</div><div style="font-size:22px;font-weight:700">€48,320</div><div style="font-size:12px;color:#2f8f5b">+12%</div></div>
+              <div class="ln" style="padding:12px"><div class="lbl">Commandes</div><div style="font-size:22px;font-weight:700">312</div><div style="font-size:12px;color:#2f8f5b">+4%</div></div>
+              <div class="ln" style="padding:12px"><div class="lbl">Panier moyen</div><div style="font-size:22px;font-weight:700">€155</div><div style="font-size:12px;color:#c23b3b">-2%</div></div>
+            </div>
+            <div class="lbl" style="margin-bottom:8px">Ventes sur 30 jours</div>
+            <div class="ph" style="height:140px;margin-bottom:16px">Graphique — courbe des ventes</div>
+            <div class="lbl" style="margin-bottom:8px">Top produits</div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr;font-size:12px;color:#888;padding:6px 0;border-bottom:2px solid #1a1a1a"><span>PRODUIT</span><span>VENTES</span><span>REVENU</span></div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr;font-size:13px;padding:8px 0;border-bottom:1.5px dashed #999"><span>Air Runner</span><span>84</span><span>€12,600</span></div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr;font-size:13px;padding:8px 0"><span>Track Pro</span><span>61</span><span>€6,039</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="dv-next">Essayez ensuite : "affiner <a class="dv-oid" href="#1a">1a</a> avec un menu mega-menu" · "détailler le flow mobile complet de <a class="dv-oid" href="#1k">1k</a>" · "ajouter les pages Paramètres du dashboard"</p>
+  <p class="dv-next">Nouvelles pages : <a class="dv-oid" href="#1l">1l</a> Suivi de colis · <a class="dv-oid" href="#1m">1m</a> À propos · <a class="dv-oid" href="#1n">1n</a> Mentions légales · <a class="dv-oid" href="#1o">1o</a> Confidentialité (RGPD) · <a class="dv-oid" href="#1p">1p</a> Gestion des cookies</p>
+</section>
+
+</x-dc>
+</body>
+</html>
