@@ -369,7 +369,7 @@ Expected: `ls app/styles/tokens` lists all 7 files.
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, getTranslations } from 'next-intl/server';
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { locales, type Locale } from '@/i18n';
 import '@/app/styles/tokens.css';
@@ -392,6 +392,8 @@ export default async function LocaleLayout({
   params: { locale: string };
 }) {
   if (!locales.includes(params.locale as Locale)) notFound();
+
+  setRequestLocale(params.locale);
 
   const messages = await getMessages();
   const t = await getTranslations('layout');
@@ -416,11 +418,19 @@ export default async function LocaleLayout({
 
 - [ ] **Step 5: Create the placeholder home page `app/[locale]/page.tsx`**
 
-```tsx
-import { useTranslations } from 'next-intl';
+`generateStaticParams` in the layout (Step 4) means Next.js tries to statically render `/fr` and `/en`. next-intl v3 requires calling `setRequestLocale` before any translation call whenever static rendering is in play, in every server component that calls a next-intl API — the layout alone is not enough, so the page needs its own call too:
 
-export default function HomePage() {
-  const t = useTranslations('layout');
+```tsx
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+
+export default async function HomePage({
+  params
+}: {
+  params: { locale: string };
+}) {
+  setRequestLocale(params.locale);
+
+  const t = await getTranslations('layout');
 
   return (
     <section style={{ padding: 'var(--space-8)' }}>
