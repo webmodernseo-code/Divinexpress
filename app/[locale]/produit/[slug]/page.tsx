@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getProductBySlug } from '@/lib/catalog';
 import { formatPrice, isOnSale, cheapestVariant } from '@/lib/pricing';
+import { getLocalizedField } from '@/lib/i18n-utils';
 import { Gallery } from '@/components/Gallery/Gallery';
 import type { Locale } from '@/i18n';
 import styles from './page.module.css';
@@ -14,8 +15,8 @@ export default async function ProductPage({ params }: { params: { locale: string
   const product = await getProductBySlug(params.slug);
   if (!product) notFound();
 
-  const name = locale === 'fr' ? product.nameFr : product.nameEn;
-  const description = locale === 'fr' ? product.descriptionFr : product.descriptionEn;
+  const name = getLocalizedField(product, 'name', locale);
+  const description = getLocalizedField(product, 'description', locale);
   const cheapest = cheapestVariant(product.variants);
   const onSale = cheapest ? isOnSale(cheapest) : false;
   const sizes = [...new Set(product.variants.map((variant) => variant.size))];

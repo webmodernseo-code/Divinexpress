@@ -5,6 +5,7 @@ import { getCategories, getProductsByCategory, SALE_SLUG } from '@/lib/catalog';
 import { parseFilters, isFiltersPanelVisible, toggleFiltersPanelHref, parseSort, sortHref, SORT_OPTIONS } from '@/lib/filters';
 import { ProductCard } from '@/components/ProductCard/ProductCard';
 import { FilterPanel } from '@/components/FilterPanel/FilterPanel';
+import { getLocalizedField } from '@/lib/i18n-utils';
 import type { Locale } from '@/i18n';
 import styles from './page.module.css';
 
@@ -55,7 +56,7 @@ export default async function CategoryPage({
               locale={locale}
               className={sort === option.id ? styles.sortActive : styles.sortOption}
             >
-              {locale === 'fr' ? option.labelFr : option.labelEn}
+              {getLocalizedField(option, 'label', locale)}
             </Link>
           ))}
         </div>

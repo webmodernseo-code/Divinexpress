@@ -1,6 +1,7 @@
 import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n';
 import { formatPrice, isOnSale, cheapestVariant } from '@/lib/pricing';
+import { getLocalizedField } from '@/lib/i18n-utils';
 import styles from './ProductCard.module.css';
 
 export type ProductCardData = {
@@ -12,7 +13,7 @@ export type ProductCardData = {
 };
 
 export function ProductCard({ product, locale }: { product: ProductCardData; locale: Locale }) {
-  const name = locale === 'fr' ? product.nameFr : product.nameEn;
+  const name = getLocalizedField(product, 'name', locale);
   const cheapest = cheapestVariant(product.variants);
   const onSale = cheapest ? isOnSale(cheapest) : false;
   const image = product.images[0];
