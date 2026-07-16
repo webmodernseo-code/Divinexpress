@@ -17,5 +17,17 @@
     "heroTitle": "RUN FURTHER",
     "heroSubtitle": "Engineered for Speed.",
     "heroCta": "Shop the Drop"
+  },
+  "plp": {
+    "products": "produits",
+    "showFilters": "Afficher les filtres",
+    "hideFilters": "Masquer les filtres",
+    "size": "Taille",
+    "color": "Couleur",
+    "price": "Prix",
+    "colorBlack": "Noir",
+    "colorWhite": "Blanc",
+    "colorGrey": "Gris",
+    "colorBlue": "Bleu"
   }
 }
