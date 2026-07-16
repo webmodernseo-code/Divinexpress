@@ -15,3 +15,10 @@
   color: var(--color-success, #2e7d32);
   font-weight: bold;
 }
+
+.discountBadge {
+  color: var(--color-success, #2e7d32);
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-left: var(--space-2, 0.5rem);
+}

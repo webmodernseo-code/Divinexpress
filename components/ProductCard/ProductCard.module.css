@@ -1,6 +1,14 @@
+.cardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 0.5rem);
+}
+
 .card {
   display: block;
   color: var(--text-primary);
+  text-decoration: none;
+  position: relative;
 }
 
 .card:hover {
@@ -15,6 +23,11 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.card:hover .imageWrap {
+  transform: scale(1.02);
 }
 
 .image {
@@ -28,12 +41,53 @@
   font-size: var(--body-sm-size);
 }
 
+.promoTag {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: var(--color-success, #2e7d32);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
 .name {
   margin-top: var(--space-2);
   font-size: var(--body-sm-size);
+  font-weight: var(--weight-semibold, 600);
 }
 
 .price {
   font-size: var(--price-size);
   font-weight: var(--price-weight);
+  margin-top: 2px;
+}
+
+.colorSelector {
+  display: flex;
+  gap: 6px;
+  padding: 4px 0;
+}
+
+.colorCircle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.15);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.1s ease;
+}
+
+.colorCircle:hover {
+  transform: scale(1.2);
+}
+
+.colorCircleActive {
+  outline: 2px solid var(--color-black, #111111);
+  outline-offset: 1px;
 }
