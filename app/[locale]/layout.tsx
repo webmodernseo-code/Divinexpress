@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { locales, type Locale } from '@/i18n';
+import { Header } from '@/components/Header/Header';
 import '@/app/styles/tokens.css';
 import styles from './layout.module.css';
 
@@ -29,14 +30,13 @@ export default async function LocaleLayout({
 
   const messages = await getMessages();
   const t = await getTranslations('layout');
+  const locale = params.locale as Locale;
 
   return (
     <html lang={params.locale}>
       <body>
         <NextIntlClientProvider locale={params.locale} messages={messages}>
-          <header className={styles.header}>
-            <span className={styles.brand}>{t('brand')}</span>
-          </header>
+          <Header locale={locale} />
           <main>{children}</main>
           <footer className={styles.footer}>
             © {new Date().getFullYear()} DivinExpress — {t('footer')}

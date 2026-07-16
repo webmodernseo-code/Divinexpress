@@ -1,0 +1,17 @@
+.form {
+  display: flex;
+}
+
+.input {
+  font-family: var(--font-sans);
+  font-size: var(--body-sm-size);
+  border: var(--border-width-hairline) solid var(--surface-border);
+  border-radius: 999px;
+  padding: var(--space-1) var(--space-3);
+  min-width: 140px;
+}
+
+.input:focus {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}

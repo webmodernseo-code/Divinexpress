@@ -2,5 +2,15 @@
   "layout": {
     "brand": "DIVINEXPRESS",
     "footer": "All rights reserved."
+  },
+  "header": {
+    "brand": "DIVINEXPRESS",
+    "navLabel": "Categories",
+    "homme": "Men",
+    "femme": "Women",
+    "running": "Running",
+    "sale": "Sale",
+    "searchPlaceholder": "Search",
+    "cart": "Bag"
   }
 }

@@ -1,0 +1,87 @@
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) var(--space-8);
+  background: var(--surface-page-inverse);
+  color: var(--text-inverse);
+  font-size: var(--body-sm-size);
+}
+
+.social {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.socialIcon {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--color-white);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+}
+
+.mainBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-8);
+  border-bottom: var(--border-width-hairline) solid var(--surface-border);
+}
+
+.brandLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--surface-page-inverse);
+  color: var(--text-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--weight-bold);
+  font-size: var(--body-sm-size);
+}
+
+.brand {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-black);
+  font-size: var(--heading-2-size);
+  line-height: var(--heading-2-line);
+  letter-spacing: var(--display-1-tracking);
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.nav {
+  display: flex;
+  gap: var(--space-6);
+  font-size: var(--body-md-size);
+}
+
+.navLink {
+  color: var(--text-primary);
+}
+
+.navSale {
+  color: var(--price-sale);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: var(--body-md-size);
+}
+
+.cart {
+  color: var(--text-primary);
+}
