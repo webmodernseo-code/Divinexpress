@@ -12,5 +12,10 @@
     "sale": "Sale",
     "searchPlaceholder": "Search",
     "cart": "Bag"
+  },
+  "home": {
+    "heroTitle": "RUN FURTHER",
+    "heroSubtitle": "Engineered for Speed.",
+    "heroCta": "Shop the Drop"
   }
 }
