@@ -1,27 +1,70 @@
 .topBar {
+  background-color: var(--color-black, #111111);
+  color: var(--text-inverse, #ffffff);
+  height: 36px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space-2) var(--space-8);
-  background: var(--surface-page-inverse);
-  color: var(--text-inverse);
-  font-size: var(--body-sm-size);
+  padding: 0 var(--space-8);
+  font-family: var(--font-inter, 'Inter', sans-serif);
+  font-size: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .social {
   display: flex;
-  gap: var(--space-2);
+  gap: var(--space-4, 1rem);
+  align-items: center;
 }
 
 .socialIcon {
-  width: 18px;
-  height: 18px;
-  border: 1.5px solid var(--color-white);
-  border-radius: 999px;
+  color: var(--text-inverse, #ffffff);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.socialIcon:hover {
+  opacity: 1;
+}
+
+.selectors {
+  display: flex;
+  gap: var(--space-4, 1rem);
+  align-items: center;
+  font-size: 0.75rem;
+}
+
+.selectorItem {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 9px;
+  gap: var(--space-1, 0.25rem);
+  cursor: pointer;
+  position: relative;
+  height: 100%;
+}
+
+.chevron {
+  font-size: 0.6rem;
+  opacity: 0.7;
+}
+
+.hiddenToggle {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--color-black, #111111);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: none;
+  z-index: 10;
+  padding: var(--space-2);
+}
+
+.selectorItem:hover .hiddenToggle {
+  display: block;
 }
 
 .mainBar {

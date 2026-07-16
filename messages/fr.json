@@ -11,7 +11,11 @@
     "running": "Running",
     "sale": "Sale",
     "searchPlaceholder": "Rechercher",
-    "cart": "Panier"
+    "cart": "Panier",
+    "topbarMsg1": "Une question? Visitez notre page 'contact'",
+    "topbarMsg2": "Livraison à l'internationale et retours gratuits",
+    "countrySelect": "France (EUR €)",
+    "langSelect": "Français"
   },
   "home": {
     "heroTitle": "RUN FURTHER",
