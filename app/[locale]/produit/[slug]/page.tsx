@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getProductBySlug } from '@/lib/catalog';
-import { formatPrice, isOnSale, cheapestVariant } from '@/lib/pricing';
+import { cheapestVariant } from '@/lib/pricing';
 import { getLocalizedField } from '@/lib/i18n-utils';
+import { PriceDisplay } from '@/components/PriceDisplay/PriceDisplay';
 import { Gallery } from '@/components/Gallery/Gallery';
 import type { Locale } from '@/i18n';
 import styles from './page.module.css';
@@ -18,7 +19,6 @@ export default async function ProductPage({ params }: { params: { locale: string
   const name = getLocalizedField(product, 'name', locale);
   const description = getLocalizedField(product, 'description', locale);
   const cheapest = cheapestVariant(product.variants);
-  const onSale = cheapest ? isOnSale(cheapest) : false;
   const sizes = [...new Set(product.variants.map((variant) => variant.size))];
   const colors = [...new Set(product.variants.map((variant) => variant.color))];
 
@@ -32,16 +32,12 @@ export default async function ProductPage({ params }: { params: { locale: string
         <h1 className={styles.name}>{name}</h1>
         <p className={styles.description}>{description}</p>
         {cheapest && (
-          <div className={styles.price}>
-            {onSale && cheapest.compareAtPriceCents !== null ? (
-              <>
-                <span className={styles.priceStrike}>{formatPrice(cheapest.compareAtPriceCents, locale)}</span>{' '}
-                <span className={styles.priceSale}>{formatPrice(cheapest.priceCents, locale)}</span>
-              </>
-            ) : (
-              <span>{formatPrice(cheapest.priceCents, locale)}</span>
-            )}
-          </div>
+          <PriceDisplay
+            priceCents={cheapest.priceCents}
+            compareAtPriceCents={cheapest.compareAtPriceCents}
+            locale={locale}
+            className={styles.price}
+          />
         )}
         <div className={styles.variantGroup}>
           <div className={styles.variantLabel}>{t('size')}</div>

@@ -37,13 +37,3 @@
   font-size: var(--price-size);
   font-weight: var(--price-weight);
 }
-
-.priceStrike {
-  color: var(--price-strike);
-  text-decoration: line-through;
-  font-weight: var(--weight-regular);
-}
-
-.priceSale {
-  color: var(--price-sale);
-}

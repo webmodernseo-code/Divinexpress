@@ -1,7 +1,8 @@
 import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n';
-import { formatPrice, isOnSale, cheapestVariant } from '@/lib/pricing';
+import { cheapestVariant } from '@/lib/pricing';
 import { getLocalizedField } from '@/lib/i18n-utils';
+import { PriceDisplay } from '../PriceDisplay/PriceDisplay';
 import styles from './ProductCard.module.css';
 
 export type ProductCardData = {
@@ -15,7 +16,6 @@ export type ProductCardData = {
 export function ProductCard({ product, locale }: { product: ProductCardData; locale: Locale }) {
   const name = getLocalizedField(product, 'name', locale);
   const cheapest = cheapestVariant(product.variants);
-  const onSale = cheapest ? isOnSale(cheapest) : false;
   const image = product.images[0];
 
   return (
@@ -29,16 +29,12 @@ export function ProductCard({ product, locale }: { product: ProductCardData; loc
       </div>
       <div className={styles.name}>{name}</div>
       {cheapest && (
-        <div className={styles.price}>
-          {onSale && cheapest.compareAtPriceCents !== null ? (
-            <>
-              <span className={styles.priceStrike}>{formatPrice(cheapest.compareAtPriceCents, locale)}</span>{' '}
-              <span className={styles.priceSale}>{formatPrice(cheapest.priceCents, locale)}</span>
-            </>
-          ) : (
-            <span>{formatPrice(cheapest.priceCents, locale)}</span>
-          )}
-        </div>
+        <PriceDisplay
+          priceCents={cheapest.priceCents}
+          compareAtPriceCents={cheapest.compareAtPriceCents}
+          locale={locale}
+          className={styles.price}
+        />
       )}
     </Link>
   );

@@ -44,16 +44,6 @@
   font-weight: var(--price-lg-weight);
 }
 
-.priceStrike {
-  color: var(--price-strike);
-  text-decoration: line-through;
-  font-weight: var(--weight-regular);
-}
-
-.priceSale {
-  color: var(--price-sale);
-}
-
 .variantGroup {
   display: flex;
   flex-direction: column;
