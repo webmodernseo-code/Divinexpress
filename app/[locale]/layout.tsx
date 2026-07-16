@@ -5,8 +5,8 @@ import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server
 import { notFound } from 'next/navigation';
 import { locales, type Locale } from '@/i18n';
 import { Header } from '@/components/Header/Header';
+import { Footer } from '@/components/Footer/Footer';
 import '@/app/styles/tokens.css';
-import styles from './layout.module.css';
 
 export const metadata: Metadata = {
   title: 'DivinExpress',
@@ -38,9 +38,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider locale={params.locale} messages={messages}>
           <Header locale={locale} />
           <main>{children}</main>
-          <footer className={styles.footer}>
-            © {new Date().getFullYear()} DivinExpress — {t('footer')}
-          </footer>
+          <Footer locale={locale} />
         </NextIntlClientProvider>
       </body>
     </html>
