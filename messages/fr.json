@@ -34,5 +34,9 @@
     "size": "Taille",
     "color": "Couleur",
     "addToBag": "Add to Bag"
+  },
+  "search": {
+    "resultsFor": "Résultats pour",
+    "noResults": "Aucun produit trouvé."
   }
 }

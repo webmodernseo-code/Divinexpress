@@ -1,0 +1,25 @@
+.page {
+  padding: var(--space-6) var(--space-8);
+}
+
+.heading {
+  font-size: var(--heading-2-size);
+  font-weight: var(--heading-2-weight);
+  margin: 0 0 var(--space-6);
+}
+
+.empty {
+  color: var(--text-secondary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
