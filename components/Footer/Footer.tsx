@@ -52,7 +52,7 @@ export function Footer({ locale }: { locale: Locale }) {
         <div className={styles.legalLinks}>
           <a href="#" className={styles.legalLink}>Politique de confidentialité</a>
           <span>·</span>
-          <a href="#" className={styles.legalLink}>Conditions d'utilisation</a>
+          <a href="#" className={styles.legalLink}>{"Conditions d'utilisation"}</a>
           <span>·</span>
           <a href="#" className={styles.legalLink}>Mentions légales</a>
         </div>
