@@ -100,3 +100,27 @@ export function sortHref(searchParams: URLSearchParams, sortId: SortId): string 
   const query = next.toString();
   return `?${query}`;
 }
+
+export function matchVariant(
+  variant: { size: string; color: string; priceCents: number },
+  filters: ProductFilters
+): boolean {
+  if (filters.sizes.length > 0 && !filters.sizes.includes(variant.size)) {
+    return false;
+  }
+  if (filters.colors.length > 0 && !filters.colors.includes(variant.color)) {
+    return false;
+  }
+  if (filters.priceBuckets.length > 0) {
+    const ranges = priceRangesForBuckets(filters.priceBuckets);
+    const matchesPrice = ranges.some(({ minCents, maxCents }) =>
+      maxCents === null
+        ? variant.priceCents >= minCents
+        : variant.priceCents >= minCents && variant.priceCents <= maxCents
+    );
+    if (!matchesPrice) {
+      return false;
+    }
+  }
+  return true;
+}

@@ -2,6 +2,7 @@ import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n';
 import { cheapestVariant } from '@/lib/pricing';
 import { getLocalizedField } from '@/lib/i18n-utils';
+import { matchVariant, type ProductFilters } from '@/lib/filters';
 import { PriceDisplay } from '../PriceDisplay/PriceDisplay';
 import styles from './ProductCard.module.css';
 
@@ -10,12 +11,26 @@ export type ProductCardData = {
   nameFr: string;
   nameEn: string;
   images: { url: string; alt: string }[];
-  variants: { priceCents: number; compareAtPriceCents: number | null }[];
+  variants: { size: string; color: string; priceCents: number; compareAtPriceCents: number | null }[];
 };
 
-export function ProductCard({ product, locale }: { product: ProductCardData; locale: Locale }) {
+export function ProductCard({
+  product,
+  locale,
+  filters
+}: {
+  product: ProductCardData;
+  locale: Locale;
+  filters?: ProductFilters;
+}) {
   const name = getLocalizedField(product, 'name', locale);
-  const cheapest = cheapestVariant(product.variants);
+
+  const matchedVariants = filters
+    ? product.variants.filter((variant) => matchVariant(variant, filters))
+    : product.variants;
+
+  const variantsToUse = matchedVariants.length > 0 ? matchedVariants : product.variants;
+  const cheapest = cheapestVariant(variantsToUse);
   const image = product.images[0];
 
   return (

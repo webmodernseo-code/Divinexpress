@@ -76,7 +76,7 @@ export default async function CategoryPage({
         )}
         <div className={showFilters ? styles.gridWithFilters : styles.gridFull}>
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} locale={locale} />
+            <ProductCard key={product.id} product={product} locale={locale} filters={filters} />
           ))}
         </div>
       </div>

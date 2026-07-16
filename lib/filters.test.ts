@@ -7,7 +7,8 @@ import {
   toggleFiltersPanelHref,
   toggleFilterValueHref,
   parseSort,
-  sortHref
+  sortHref,
+  matchVariant
 } from './filters';
 
 describe('parseFilters', () => {
@@ -114,5 +115,46 @@ describe('sortHref', () => {
 
   it('removes tri when switching back to nouveautes', () => {
     expect(sortHref(new URLSearchParams('taille=M&tri=prix-desc'), 'nouveautes')).toBe('?taille=M');
+  });
+});
+
+describe('matchVariant', () => {
+  const variant = {
+    size: 'M',
+    color: 'Noir',
+    priceCents: 4500
+  };
+
+  it('should match when filters are empty', () => {
+    const filters = { sizes: [], colors: [], priceBuckets: [] };
+    expect(matchVariant(variant, filters)).toBe(true);
+  });
+
+  it('should match size when filtered by size', () => {
+    const filtersPass = { sizes: ['M', 'L'], colors: [], priceBuckets: [] };
+    const filtersFail = { sizes: ['S'], colors: [], priceBuckets: [] };
+    expect(matchVariant(variant, filtersPass)).toBe(true);
+    expect(matchVariant(variant, filtersFail)).toBe(false);
+  });
+
+  it('should match color when filtered by color', () => {
+    const filtersPass = { sizes: [], colors: ['Noir', 'Blanc'], priceBuckets: [] };
+    const filtersFail = { sizes: [], colors: ['Bleu'], priceBuckets: [] };
+    expect(matchVariant(variant, filtersPass)).toBe(true);
+    expect(matchVariant(variant, filtersFail)).toBe(false);
+  });
+
+  it('should match price when filtered by price bucket', () => {
+    const filtersPass = { sizes: [], colors: [], priceBuckets: ['moins-50'] as any[] };
+    const filtersFail = { sizes: [], colors: [], priceBuckets: ['50-100'] as any[] };
+    expect(matchVariant(variant, filtersPass)).toBe(true);
+    expect(matchVariant(variant, filtersFail)).toBe(false);
+  });
+
+  it('should combine multiple filters with AND logic', () => {
+    const filtersPass = { sizes: ['M'], colors: ['Noir'], priceBuckets: ['moins-50'] as any[] };
+    const filtersFail = { sizes: ['M'], colors: ['Blanc'], priceBuckets: ['moins-50'] as any[] };
+    expect(matchVariant(variant, filtersPass)).toBe(true);
+    expect(matchVariant(variant, filtersFail)).toBe(false);
   });
 });
