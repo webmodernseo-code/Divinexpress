@@ -29,5 +29,10 @@
     "colorWhite": "White",
     "colorGrey": "Grey",
     "colorBlue": "Blue"
+  },
+  "pdp": {
+    "size": "Size",
+    "color": "Color",
+    "addToBag": "Add to Bag"
   }
 }
