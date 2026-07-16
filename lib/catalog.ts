@@ -1,6 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { prisma } from './prisma';
 import { priceRangesForBuckets, type ProductFilters, type SortId } from './filters';
+import { isOnSale } from './pricing';
 
 export const SALE_SLUG = 'sale';
 
@@ -56,7 +57,11 @@ export async function getProductsByCategory(categorySlug: string, filters: Produ
       include: CATALOG_INCLUDE,
       orderBy: { createdAt: 'desc' }
     });
-    return sortProducts(products, sort);
+    // The Prisma filter above is a coarse "has a compareAtPriceCents" check;
+    // narrow to isOnSale's stricter rule (compareAtPriceCents > priceCents)
+    // so a product only appears here if it actually renders as on-sale.
+    const onSaleProducts = products.filter((product) => product.variants.some((variant) => isOnSale(variant)));
+    return sortProducts(onSaleProducts, sort);
   }
 
   const products = await prisma.product.findMany({

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getProductBySlug } from '@/lib/catalog';
-import { formatPrice, isOnSale } from '@/lib/pricing';
+import { formatPrice, isOnSale, cheapestVariant } from '@/lib/pricing';
 import { Gallery } from '@/components/Gallery/Gallery';
 import type { Locale } from '@/i18n';
 import styles from './page.module.css';
@@ -16,11 +16,8 @@ export default async function ProductPage({ params }: { params: { locale: string
 
   const name = locale === 'fr' ? product.nameFr : product.nameEn;
   const description = locale === 'fr' ? product.descriptionFr : product.descriptionEn;
-  const cheapest = product.variants.reduce(
-    (min, variant) => (variant.priceCents < min.priceCents ? variant : min),
-    product.variants[0]
-  );
-  const onSale = isOnSale(cheapest);
+  const cheapest = cheapestVariant(product.variants);
+  const onSale = cheapest ? isOnSale(cheapest) : false;
   const sizes = [...new Set(product.variants.map((variant) => variant.size))];
   const colors = [...new Set(product.variants.map((variant) => variant.color))];
 
@@ -33,16 +30,18 @@ export default async function ProductPage({ params }: { params: { locale: string
         <div className={styles.category}>{product.category.name}</div>
         <h1 className={styles.name}>{name}</h1>
         <p className={styles.description}>{description}</p>
-        <div className={styles.price}>
-          {onSale && cheapest.compareAtPriceCents !== null ? (
-            <>
-              <span className={styles.priceStrike}>{formatPrice(cheapest.compareAtPriceCents, locale)}</span>{' '}
-              <span className={styles.priceSale}>{formatPrice(cheapest.priceCents, locale)}</span>
-            </>
-          ) : (
-            <span>{formatPrice(cheapest.priceCents, locale)}</span>
-          )}
-        </div>
+        {cheapest && (
+          <div className={styles.price}>
+            {onSale && cheapest.compareAtPriceCents !== null ? (
+              <>
+                <span className={styles.priceStrike}>{formatPrice(cheapest.compareAtPriceCents, locale)}</span>{' '}
+                <span className={styles.priceSale}>{formatPrice(cheapest.priceCents, locale)}</span>
+              </>
+            ) : (
+              <span>{formatPrice(cheapest.priceCents, locale)}</span>
+            )}
+          </div>
+        )}
         <div className={styles.variantGroup}>
           <div className={styles.variantLabel}>{t('size')}</div>
           <div className={styles.variantOptions}>

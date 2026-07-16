@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import type { Locale } from '@/i18n';
@@ -11,14 +12,16 @@ export async function Header({ locale }: { locale: Locale }) {
   const t = await getTranslations('header');
 
   return (
-    <div>
+    <header>
       <div className={styles.topBar}>
         <div className={styles.social} aria-hidden="true">
           <span className={styles.socialIcon}>f</span>
           <span className={styles.socialIcon}>ig</span>
           <span className={styles.socialIcon}>tt</span>
         </div>
-        <LocaleToggle current={locale} />
+        <Suspense fallback={null}>
+          <LocaleToggle current={locale} />
+        </Suspense>
       </div>
       <div className={styles.mainBar}>
         <Link href="/" locale={locale} className={styles.brandLink}>
@@ -42,6 +45,6 @@ export async function Header({ locale }: { locale: Locale }) {
           <span className={styles.cart}>{t('cart')} (0)</span>
         </div>
       </div>
-    </div>
+    </header>
   );
 }

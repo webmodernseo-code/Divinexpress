@@ -6,6 +6,11 @@
   gap: var(--space-4);
 }
 
+.group {
+  display: flex;
+  flex-direction: column;
+}
+
 .groupTitle {
   font-size: var(--label-size);
   font-weight: var(--label-weight);
