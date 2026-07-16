@@ -12,6 +12,7 @@ export default async function ProductPage({ params }: { params: { locale: string
   setRequestLocale(params.locale);
   const locale = params.locale as Locale;
   const t = await getTranslations('pdp');
+  const tHeader = await getTranslations('header');
 
   const product = await getProductBySlug(params.slug);
   if (!product) notFound();
@@ -28,7 +29,7 @@ export default async function ProductPage({ params }: { params: { locale: string
         <Gallery images={product.images} />
       </div>
       <div className={styles.info}>
-        <div className={styles.category}>{product.category.name}</div>
+        <div className={styles.category}>{tHeader(product.category.slug as any)}</div>
         <h1 className={styles.name}>{name}</h1>
         <p className={styles.description}>{description}</p>
         {cheapest && (
