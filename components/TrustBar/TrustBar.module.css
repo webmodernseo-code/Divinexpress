@@ -1,0 +1,31 @@
+/* components/TrustBar/TrustBar.module.css */
+.bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-8);
+  padding: var(--space-12) var(--space-8);
+  text-align: center;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.title {
+  font-weight: var(--heading-3-weight);
+  font-size: var(--body-sm-size);
+}
+
+.desc {
+  font-size: var(--label-size);
+  color: var(--color-grey-mid);
+}
+
+@media (max-width: 768px) {
+  .bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
