@@ -1,0 +1,5 @@
+/* components/Header/MessageCarousel.module.css */
+.carousel {
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+}

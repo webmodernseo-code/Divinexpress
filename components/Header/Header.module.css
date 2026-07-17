@@ -1,0 +1,73 @@
+/* components/Header/Header.module.css */
+.topbar {
+  background: var(--color-black);
+  color: var(--color-white);
+  text-align: center;
+  padding: var(--space-2) var(--space-4);
+}
+
+.mainBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-8);
+  border-bottom: var(--border-hairline);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--heading-3-weight);
+  color: var(--color-black);
+  text-decoration: none;
+  letter-spacing: var(--label-tracking);
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--color-black);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--body-sm-size);
+  font-weight: var(--heading-3-weight);
+}
+
+.nav {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.navLink {
+  color: var(--color-black);
+  text-decoration: none;
+  font-size: var(--body-md-size);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.iconLink {
+  position: relative;
+  display: inline-flex;
+  color: var(--color-black);
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: var(--color-black);
+  color: var(--color-white);
+  font-size: 10px;
+  line-height: 1;
+  border-radius: var(--radius-full);
+  padding: 3px 5px;
+}
