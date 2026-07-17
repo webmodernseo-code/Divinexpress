@@ -1,7 +1,0 @@
-.footer {
-  padding: var(--space-4) var(--space-8);
-  border-top: var(--border-width-hairline) solid var(--surface-border);
-  color: var(--text-secondary);
-  font-family: var(--font-sans);
-  font-size: var(--body-sm-size);
-}

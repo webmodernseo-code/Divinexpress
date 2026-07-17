@@ -1,8 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { searchProducts } from '@/lib/catalog';
-import { ProductCard } from '@/components/ProductCard/ProductCard';
+import { getLocalizedField } from '@/lib/i18n-utils';
 import type { Locale } from '@/i18n';
-import styles from './page.module.css';
 
 export default async function SearchPage({
   params,
@@ -19,18 +18,18 @@ export default async function SearchPage({
   const products = await searchProducts(query);
 
   return (
-    <div className={styles.page}>
-      <h1 className={styles.heading}>
+    <div>
+      <h1>
         {t('resultsFor')} « {query} »
       </h1>
       {products.length === 0 ? (
-        <p className={styles.empty}>{t('noResults')}</p>
+        <p>{t('noResults')}</p>
       ) : (
-        <div className={styles.grid}>
+        <ul>
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} locale={locale} />
+            <li key={product.id}>{getLocalizedField(product, 'name', locale)}</li>
           ))}
-        </div>
+        </ul>
       )}
     </div>
   );

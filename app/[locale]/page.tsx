@@ -1,8 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
-import { CategoryTile } from '@/components/CategoryTile/CategoryTile';
 import type { Locale } from '@/i18n';
-import styles from './page.module.css';
 
 const CATEGORIES = ['homme', 'femme', 'running', 'sale'] as const;
 
@@ -14,18 +12,17 @@ export default async function HomePage({ params }: { params: { locale: string } 
 
   return (
     <>
-      <section className={styles.hero}>
-        <h1 className={styles.heroTitle}>{t('heroTitle')}</h1>
-        <p className={styles.heroSubtitle}>{t('heroSubtitle')}</p>
-        <Link href="/homme" locale={locale} className={styles.heroCta}>
-          {t('heroCta')}
-        </Link>
-      </section>
-      <section className={styles.categories}>
+      <h1>{t('heroTitle')}</h1>
+      <p>{t('heroSubtitle')}</p>
+      <ul>
         {CATEGORIES.map((slug) => (
-          <CategoryTile key={slug} slug={slug} label={tHeader(slug)} locale={locale} />
+          <li key={slug}>
+            <Link href={`/${slug}`} locale={locale}>
+              {tHeader(slug)}
+            </Link>
+          </li>
         ))}
-      </section>
+      </ul>
     </>
   );
 }

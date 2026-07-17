@@ -3,11 +3,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { getCategories, getProductsByCategory, SALE_SLUG } from '@/lib/catalog';
 import { parseFilters, isFiltersPanelVisible, toggleFiltersPanelHref, parseSort, sortHref, SORT_OPTIONS } from '@/lib/filters';
-import { ProductCard } from '@/components/ProductCard/ProductCard';
-import { FilterPanel } from '@/components/FilterPanel/FilterPanel';
 import { getLocalizedField } from '@/lib/i18n-utils';
 import type { Locale } from '@/i18n';
-import styles from './page.module.css';
 
 export default async function CategoryPage({
   params,
@@ -35,51 +32,27 @@ export default async function CategoryPage({
   const sort = parseSort(urlSearchParams);
   const products = await getProductsByCategory(params.category, filters, sort);
   const showFilters = isFiltersPanelVisible(urlSearchParams);
-  const colorLabels: Record<string, string> = {
-    Noir: t('colorBlack'),
-    Blanc: t('colorWhite'),
-    Gris: t('colorGrey'),
-    Bleu: t('colorBlue')
-  };
 
   return (
-    <div className={styles.page}>
-      <div className={styles.toolbar}>
-        <span>
-          {products.length} {t('products')}
-        </span>
-        <div className={styles.sort}>
-          {SORT_OPTIONS.map((option) => (
-            <Link
-              key={option.id}
-              href={sortHref(urlSearchParams, option.id)}
-              locale={locale}
-              className={sort === option.id ? styles.sortActive : styles.sortOption}
-            >
-              {getLocalizedField(option, 'label', locale)}
-            </Link>
-          ))}
-        </div>
-        <Link href={toggleFiltersPanelHref(urlSearchParams)} locale={locale} className={styles.filterToggle}>
-          {showFilters ? t('hideFilters') : t('showFilters')}
-        </Link>
+    <div>
+      <p>
+        {products.length} {t('products')}
+      </p>
+      <div>
+        {SORT_OPTIONS.map((option) => (
+          <Link key={option.id} href={sortHref(urlSearchParams, option.id)} locale={locale}>
+            {sort === option.id ? `[${getLocalizedField(option, 'label', locale)}]` : getLocalizedField(option, 'label', locale)}
+          </Link>
+        ))}
       </div>
-      <div className={styles.layout}>
-        {showFilters && (
-          <FilterPanel
-            filters={filters}
-            searchParams={urlSearchParams}
-            locale={locale}
-            labels={{ size: t('size'), color: t('color'), price: t('price') }}
-            colorLabels={colorLabels}
-          />
-        )}
-        <div className={showFilters ? styles.gridWithFilters : styles.gridFull}>
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} locale={locale} filters={filters} />
-          ))}
-        </div>
-      </div>
+      <Link href={toggleFiltersPanelHref(urlSearchParams)} locale={locale}>
+        {showFilters ? t('hideFilters') : t('showFilters')}
+      </Link>
+      <ul>
+        {products.map((product) => (
+          <li key={product.id}>{getLocalizedField(product, 'name', locale)}</li>
+        ))}
+      </ul>
     </div>
   );
 }
