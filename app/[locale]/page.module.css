@@ -1,0 +1,13 @@
+/* app/[locale]/page.module.css */
+.promoPair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  padding: 0 var(--space-8) var(--space-12);
+}
+
+@media (max-width: 768px) {
+  .promoPair {
+    grid-template-columns: 1fr;
+  }
+}
