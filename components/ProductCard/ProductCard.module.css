@@ -1,0 +1,45 @@
+.card {
+  display: block;
+  text-decoration: none;
+  color: var(--color-black);
+}
+
+.imageWrap {
+  aspect-ratio: 1;
+  background: var(--color-grey-light);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.name {
+  margin-top: var(--space-3);
+  font-size: var(--body-md-size);
+  font-weight: var(--heading-3-weight);
+}
+
+.price {
+  margin-top: var(--space-1);
+  font-size: var(--body-sm-size);
+}
+
+.priceStrike {
+  text-decoration: line-through;
+  color: var(--color-grey-mid);
+  margin-right: var(--space-2);
+}
+
+.priceSale {
+  color: var(--color-price-sale);
+  font-weight: var(--heading-3-weight);
+}
