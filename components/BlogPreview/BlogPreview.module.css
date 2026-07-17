@@ -1,0 +1,37 @@
+/* components/BlogPreview/BlogPreview.module.css */
+.section {
+  padding: var(--space-12) var(--space-8);
+}
+
+.title {
+  font-size: var(--heading-2-size);
+  font-weight: var(--heading-2-weight);
+  text-align: center;
+  margin: 0 0 var(--space-8);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-6);
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  background: var(--color-grey-light);
+}
+
+.meta {
+  font-size: var(--label-size);
+  color: var(--color-grey-mid);
+  margin: var(--space-3) 0 var(--space-1);
+}
+
+.postTitle {
+  font-size: var(--body-md-size);
+  font-weight: var(--heading-3-weight);
+  margin: 0;
+}
