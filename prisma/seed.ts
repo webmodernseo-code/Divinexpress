@@ -18,6 +18,7 @@ type SeedProduct = {
   descriptionFr: string;
   descriptionEn: string;
   categorySlug: string;
+  featured?: boolean;
   variants: SeedVariant[];
 };
 
@@ -35,6 +36,7 @@ const products: SeedProduct[] = [
     descriptionFr: 'Veste en wax premium, coupe ajustée.',
     descriptionEn: 'Premium wax jacket, fitted cut.',
     categorySlug: 'homme',
+    featured: true,
     variants: [
       { sku: 'VWN-M-BLK', size: 'M', color: 'Noir', priceCents: 8900, stock: 12 },
       { sku: 'VWN-L-BLK', size: 'L', color: 'Noir', priceCents: 8900, stock: 8 }
@@ -47,6 +49,7 @@ const products: SeedProduct[] = [
     descriptionFr: 'T-shirt respirant, coupe droite.',
     descriptionEn: 'Breathable t-shirt, straight cut.',
     categorySlug: 'homme',
+    featured: true,
     variants: [
       { sku: 'TTB-S-WHT', size: 'S', color: 'Blanc', priceCents: 2900, stock: 20 },
       { sku: 'TTB-M-WHT', size: 'M', color: 'Blanc', priceCents: 2900, stock: 18 },
@@ -73,6 +76,7 @@ const products: SeedProduct[] = [
     descriptionFr: 'Legging taille haute, maintien fort.',
     descriptionEn: 'High-waist leggings, strong support.',
     categorySlug: 'femme',
+    featured: true,
     variants: [
       { sku: 'LPN-S-BLK', size: 'S', color: 'Noir', priceCents: 5500, stock: 14 },
       { sku: 'LPN-M-BLK', size: 'M', color: 'Noir', priceCents: 5500, stock: 11 },
@@ -86,6 +90,7 @@ const products: SeedProduct[] = [
     descriptionFr: 'Maintien moyen, bretelles ajustables.',
     descriptionEn: 'Medium support, adjustable straps.',
     categorySlug: 'femme',
+    featured: true,
     variants: [
       { sku: 'BSB-S-WHT', size: 'S', color: 'Blanc', priceCents: 2500, compareAtPriceCents: 3500, stock: 17 },
       { sku: 'BSB-M-WHT', size: 'M', color: 'Blanc', priceCents: 2500, compareAtPriceCents: 3500, stock: 13 },
@@ -111,6 +116,7 @@ const products: SeedProduct[] = [
     descriptionFr: 'Ultra-léger, poche zippée dos.',
     descriptionEn: 'Ultra-lightweight, zipped back pocket.',
     categorySlug: 'running',
+    featured: true,
     variants: [
       { sku: 'CVR-M-BLU', size: 'M', color: 'Bleu', priceCents: 7900, stock: 9 },
       { sku: 'CVR-L-BLU', size: 'L', color: 'Bleu', priceCents: 7900, stock: 5 }
@@ -134,6 +140,7 @@ const products: SeedProduct[] = [
     descriptionFr: 'Légère, réglable, tissu respirant.',
     descriptionEn: 'Lightweight, adjustable, breathable fabric.',
     categorySlug: 'running',
+    featured: true,
     variants: [
       { sku: 'CRN-U-BLK', size: 'Unique', color: 'Noir', priceCents: 1600, compareAtPriceCents: 2200, stock: 22 }
     ]
@@ -169,7 +176,7 @@ async function main() {
 
     await prisma.product.upsert({
       where: { slug: product.slug },
-      update: {},
+      update: { featured: product.featured ?? false },
       create: {
         slug: product.slug,
         nameFr: product.nameFr,
@@ -177,6 +184,7 @@ async function main() {
         descriptionFr: product.descriptionFr,
         descriptionEn: product.descriptionEn,
         status: 'PUBLISHED',
+        featured: product.featured ?? false,
         categoryId,
         variants: { create: product.variants },
         images: {

@@ -83,6 +83,24 @@ export async function getProductBySlug(slug: string) {
   });
 }
 
+export async function getFeaturedProducts(limit = 8) {
+  return prisma.product.findMany({
+    where: { status: 'PUBLISHED', featured: true },
+    include: CATALOG_INCLUDE,
+    orderBy: { createdAt: 'desc' },
+    take: limit
+  });
+}
+
+export async function getNewArrivals(limit = 8) {
+  return prisma.product.findMany({
+    where: { status: 'PUBLISHED' },
+    include: CATALOG_INCLUDE,
+    orderBy: { createdAt: 'desc' },
+    take: limit
+  });
+}
+
 export async function searchProducts(query: string) {
   const trimmed = query.trim();
   if (trimmed === '') return [];
