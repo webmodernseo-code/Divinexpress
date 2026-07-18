@@ -1,5 +1,7 @@
 /* components/TrustBar/TrustBar.module.css */
 .bar {
+  max-width: var(--container-max);
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-8);

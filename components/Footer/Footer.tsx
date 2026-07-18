@@ -13,7 +13,13 @@ export async function Footer({ locale }: { locale: Locale }) {
 
   return (
     <footer className={styles.footer}>
-      <div className={styles.columns}>
+      <div className={styles.top}>
+        <svg width="64" height="64" viewBox="0 0 100 100" className={styles.logo}>
+          <polygon points="50,3 95,26 95,74 50,97 5,74 5,26" fill="none" stroke="#fff" strokeWidth="4" />
+          <text x="50" y="60" fontSize="24" fontWeight="800" fill="#fff" textAnchor="middle">
+            DX
+          </text>
+        </svg>
         <div className={styles.column}>
           <div className={styles.heading}>{t('navHeading')}</div>
           <Link href="/" locale={locale} className={styles.link}>
@@ -33,24 +39,9 @@ export async function Footer({ locale }: { locale: Locale }) {
           <div className={styles.heading}>{t('categoriesHeading')}</div>
           {categories.map((category) => (
             <Link key={category.slug} href={`/${category.slug}`} locale={locale} className={styles.link}>
-              {tHeader(category.slug as 'homme' | 'femme' | 'running')}
+              {tHeader(category.slug as 'homme' | 'femme' | 'enfant')}
             </Link>
           ))}
-        </div>
-        <div className={styles.column}>
-          <div className={styles.heading}>{t('utilityHeading')}</div>
-          <a href="#" className={styles.link}>
-            {t('utilitySizeGuide')}
-          </a>
-          <a href="#" className={styles.link}>
-            {t('utilityLegal')}
-          </a>
-          <a href="#" className={styles.link}>
-            {t('utilityTerms')}
-          </a>
-          <a href="#" className={styles.link}>
-            {t('utilityPrivacy')}
-          </a>
         </div>
         <div className={styles.column}>
           <div className={styles.heading}>{t('contactHeading')}</div>
@@ -59,11 +50,26 @@ export async function Footer({ locale }: { locale: Locale }) {
           </a>
         </div>
       </div>
+      <div className={styles.divider} />
       <div className={styles.bottom}>
         <div className={styles.payments}>
           <span className={styles.paymentBadge}>Visa</span>
           <span className={styles.paymentBadge}>Mastercard</span>
           <span className={styles.paymentBadge}>PayPal</span>
+        </div>
+        <div className={styles.policyLinks}>
+          <a href="#" className={styles.policyLink}>
+            {t('utilitySizeGuide')}
+          </a>
+          <a href="#" className={styles.policyLink}>
+            {t('utilityLegal')}
+          </a>
+          <a href="#" className={styles.policyLink}>
+            {t('utilityTerms')}
+          </a>
+          <a href="#" className={styles.policyLink}>
+            {t('utilityPrivacy')}
+          </a>
         </div>
         <p className={styles.copyright}>{t('copyright', { year })}</p>
       </div>

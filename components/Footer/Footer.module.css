@@ -2,13 +2,20 @@
 .footer {
   background: var(--color-black);
   color: #cccccc;
-  padding: var(--space-16) var(--space-8) var(--space-8);
+  padding: var(--space-16) var(--space-8) 0;
 }
 
-.columns {
+.top {
+  max-width: var(--container-max);
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-8);
+  grid-template-columns: auto 1fr 1fr 1fr;
+  gap: var(--space-10);
+  align-items: start;
+}
+
+.logo {
+  flex: none;
 }
 
 .heading {
@@ -19,42 +26,71 @@
 
 .link {
   display: block;
-  color: #cccccc;
+  color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
   padding: var(--space-1) 0;
   font-size: var(--body-sm-size);
 }
 
+.link:hover {
+  color: var(--color-white);
+}
+
+.divider {
+  max-width: var(--container-max);
+  margin: var(--space-10) auto 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
 .bottom {
-  margin-top: var(--space-12);
-  padding-top: var(--space-6);
-  border-top: 1px solid #333333;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-6) 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .payments {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-2);
+  justify-content: center;
 }
 
 .paymentBadge {
-  border: 1px solid #444444;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: var(--radius-sm);
   padding: var(--space-1) var(--space-2);
   font-size: var(--label-size);
 }
 
+.policyLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  justify-content: center;
+}
+
+.policyLink {
+  font-size: var(--label-size);
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+}
+
+.policyLink:hover {
+  color: var(--color-white);
+}
+
 .copyright {
   font-size: var(--label-size);
+  color: rgba(255, 255, 255, 0.4);
   margin: 0;
 }
 
 @media (max-width: 768px) {
-  .columns {
+  .top {
     grid-template-columns: repeat(2, 1fr);
   }
 }

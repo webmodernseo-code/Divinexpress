@@ -20,7 +20,7 @@ export async function CategoryStrip({ locale }: { locale: Locale }) {
               alt=""
               className={styles.image}
             />
-            <span className={styles.label}>{t(category.slug as 'homme' | 'femme' | 'running')}</span>
+            <span className={styles.label}>{t(category.slug as 'homme' | 'femme' | 'enfant')}</span>
           </Link>
         ))}
       </div>

@@ -11,6 +11,8 @@
 
 .bannerFull {
   min-height: 220px;
+  max-width: var(--container-max);
+  margin: 0 auto var(--space-12);
 }
 
 .image {
