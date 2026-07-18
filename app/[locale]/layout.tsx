@@ -7,6 +7,9 @@ import { Inter } from 'next/font/google';
 import { locales, type Locale } from '@/i18n';
 import { Header } from '@/components/Header/Header';
 import { Footer } from '@/components/Footer/Footer';
+import { CartProvider } from '@/components/Cart/CartContext';
+import { ToastProvider } from '@/components/Toast/ToastContext';
+import { CartDrawer } from '@/components/Cart/CartDrawer';
 import '@/app/styles/tokens.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
@@ -38,9 +41,14 @@ export default async function LocaleLayout({
     <html lang={params.locale} className={inter.variable}>
       <body>
         <NextIntlClientProvider locale={params.locale} messages={messages}>
-          <Header locale={locale} />
-          <main>{children}</main>
-          <Footer locale={locale} />
+          <ToastProvider>
+            <CartProvider>
+              <Header locale={locale} />
+              <main>{children}</main>
+              <Footer locale={locale} />
+              <CartDrawer />
+            </CartProvider>
+          </ToastProvider>
         </NextIntlClientProvider>
       </body>
     </html>
