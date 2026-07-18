@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import type { Locale } from '@/i18n';
+import { useCart } from '@/components/Cart/CartContext';
 import styles from './HeaderActions.module.css';
 
 export function HeaderActions({
@@ -15,6 +16,7 @@ export function HeaderActions({
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState('');
   const router = useRouter();
+  const { totalItems, openCart } = useCart();
 
   function submitSearch() {
     if (query.trim() === '') return;
@@ -53,7 +55,7 @@ export function HeaderActions({
         </svg>
       </div>
 
-      <div className={styles.cartWrapper}>
+      <div className={styles.cartWrapper} onClick={openCart}>
         <svg
           className={styles.icon}
           width="19"
@@ -70,7 +72,7 @@ export function HeaderActions({
           <path d="M3 6h18" />
           <path d="M16 10a4 4 0 0 1-8 0" />
         </svg>
-        <span className={styles.badge}>0</span>
+        {totalItems > 0 && <span className={styles.badge}>{totalItems}</span>}
       </div>
     </div>
   );
