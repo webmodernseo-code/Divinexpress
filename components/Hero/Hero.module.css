@@ -101,3 +101,46 @@
     transform: translateY(0);
   }
 }
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 480px;
+  }
+  .content {
+    padding: 0 var(--space-6);
+    gap: var(--space-4);
+  }
+  .title {
+    font-size: 36px;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    min-height: 420px;
+  }
+  .content {
+    padding: 0 var(--space-4);
+  }
+  .title {
+    font-size: 28px;
+  }
+  .actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+  .pulse {
+    display: block;
+    width: 100%;
+  }
+  .ctaPrimary,
+  .ctaSecondary {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: var(--space-3) 0;
+  }
+}
+
