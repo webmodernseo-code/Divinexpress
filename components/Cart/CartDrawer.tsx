@@ -105,7 +105,7 @@ export function CartDrawer() {
             <span>{formatPrice(subtotalCents)}</span>
           </div>
           <button onClick={handleCheckout} className={styles.checkoutButton}>
-            Passer la commande
+            Continuer vers le paiement
           </button>
         </div>
       </div>
