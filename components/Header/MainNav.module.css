@@ -140,6 +140,41 @@
   }
 }
 
+.drawerFooter {
+  margin-top: auto;
+  border-top: 1px solid var(--border-subtle, rgba(12,4,7,0.08));
+  padding-top: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.drawerSelectorLabel,
+.drawerSocialsLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-grey-mid);
+  font-weight: 700;
+  margin-bottom: -4px;
+}
+
+.drawerSocials {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.drawerSocialLink {
+  color: rgba(12, 4, 7, 0.7);
+  display: flex;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.drawerSocialLink:hover {
+  color: var(--color-black);
+}
+
 /* Responsive show/hide */
 @media (max-width: 768px) {
   .desktopNav {

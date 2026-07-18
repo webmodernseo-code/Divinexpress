@@ -102,6 +102,16 @@
     order: 3;
     flex: 0 0 auto;
   }
+  .socials {
+    display: none;
+  }
+  .selectors {
+    display: none;
+  }
+  .carouselContainer {
+    flex: 1;
+    justify-content: center;
+  }
 }
 
 
