@@ -14,11 +14,13 @@ export async function Hero({ locale }: { locale: Locale }) {
         <h1 className={styles.title}>{t('heroTitle')}</h1>
         <p className={styles.subtitle}>{t('heroSubtitle')}</p>
         <div className={styles.actions}>
-          <Link href="/homme" locale={locale} className={styles.ctaPrimary}>
-            {t('heroCtaShop')}
-          </Link>
+          <div className={styles.pulse}>
+            <Link href="/homme" locale={locale} className={styles.ctaPrimary}>
+              {t('heroCtaShop')} →
+            </Link>
+          </div>
           <a href="#categories" className={styles.ctaSecondary}>
-            {t('heroCtaCategories')}
+            {t('heroCtaCategories')} →
           </a>
         </div>
       </div>

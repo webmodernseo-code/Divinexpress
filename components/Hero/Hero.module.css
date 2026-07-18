@@ -1,11 +1,11 @@
 /* components/Hero/Hero.module.css */
 .hero {
   position: relative;
-  min-height: 480px;
+  min-height: 560px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   overflow: hidden;
-  background: var(--color-beige);
+  background: var(--color-black);
 }
 
 .image {
@@ -19,49 +19,73 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.05));
+  background: linear-gradient(0deg, rgba(12, 4, 7, 0.5), rgba(12, 4, 7, 0.1));
 }
 
 .content {
   position: relative;
-  padding: var(--space-12) var(--space-8);
-  color: var(--color-white);
-  max-width: 600px;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 var(--space-10);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
 }
 
 .title {
   font-size: var(--heading-1-size);
   font-weight: var(--heading-1-weight);
-  line-height: 1.1;
-  margin: 0 0 var(--space-4);
+  line-height: 1.08;
+  color: var(--color-white);
+  margin: 0;
+  max-width: 560px;
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
   font-size: var(--body-md-size);
-  margin: 0 0 var(--space-6);
+  color: var(--color-white);
+  margin: 0;
+  max-width: 480px;
 }
 
 .actions {
   display: flex;
-  gap: var(--space-4);
+  gap: var(--space-3);
+}
+
+.pulse {
+  display: inline-block;
+  animation: ctaPulse 2.4s ease-in-out infinite;
 }
 
 .ctaPrimary,
 .ctaSecondary {
   display: inline-block;
   padding: var(--space-3) var(--space-6);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-full);
   text-decoration: none;
   font-size: var(--body-sm-size);
   font-weight: var(--heading-3-weight);
 }
 
 .ctaPrimary {
-  background: var(--color-white);
+  background: var(--color-cream);
   color: var(--color-black);
 }
 
 .ctaSecondary {
   border: 1px solid var(--color-white);
   color: var(--color-white);
+}
+
+@keyframes ctaPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
