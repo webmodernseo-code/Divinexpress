@@ -1,43 +1,44 @@
-# Walkthrough — Redesign du Footer (Phase 3)
+# Walkthrough — Blog, Politiques, PDP et Images Produits (Phase 4)
 
-Nous avons complètement redessiné le Footer de l'application pour correspondre parfaitement au prototype `Site DivinExpress.dc.html` et aux spécifications premium de la charte Snikei.
+Nous avons implémenté l'ensemble des fonctionnalités de la Phase 4, rendant l'application extrêmement vivante, complète, et conforme aux meilleures pratiques du e-commerce moderne.
 
 ## Changements apportés
 
-### 1. Composant Footer
-* **[MODIFY] [Footer.tsx](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/Footer/Footer.tsx)** :
-  * Agrandissement du logo SVG de `64px` à `90px` avec intégration de la police Inter pour le texte "DX".
-  * Refonte de la structure à 4 colonnes sur PC :
-    - **Logo DX**
-    - **Liens Rapides** : Accueil, Boutique, Blog, Contact (connectés aux traductions dynamiques `tHeader` pour rester multilingue).
-    - **Informations de Contact** : Boutique DivinExpress, adresse (349 Avenue Jean Jaurès, Lyon) et email.
-    - **Réseaux sociaux** : Icônes vectorielles SVG (Facebook, Instagram, TikTok) alignées à droite.
-  * Ligne séparatrice avec une marge supérieure de `44px`.
-  * **Barre inférieure** :
-    - Remplacement des 3 badges de paiement par 5 badges formatés (Visa, Mastercard, PayPal, Mobile Money, CB).
-    - Ajout des 6 liens légaux/politiques (Politique de confidentialité, Politique de remboursement, Conditions d'utilisation, Politique d'expédition, Conditions générales de vente, Mentions légales).
-    - Copyright centré : "© 2026, DivinExpress".
+### 1. Ajustement des articles sur la page d'accueil (BlogPreview)
+* **[MODIFY] [BlogPreview.tsx](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/BlogPreview/BlogPreview.tsx)** : Expansion à 4 articles avec des images de couverture de haute qualité provenant d'Unsplash et liaison vers leurs pages de détails respectives.
+* **[MODIFY] [BlogPreview.module.css](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/BlogPreview/BlogPreview.module.css)** : Grille CSS mise à 4 colonnes sur PC (réduisant ainsi la taille des fiches) et à 2 colonnes côte à côte sur mobile.
 
-### 2. Styles et Responsive
-* **[MODIFY] [Footer.module.css](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/Footer/Footer.module.css)** :
-  * Application du fond noir pur (`#0C0407`) et espacement `56px 40px 0` conforme au prototype.
-  * Gestion du positionnement flex et des grilles CSS pour un alignement précis.
-  * Transitions de couleur fluides au survol des liens et icônes.
-  * **Média Queries** :
-    - Sur tablette (≤ 768px) : Passage en grille à 2 colonnes avec alignement des réseaux sociaux à gauche.
-    - Sur mobile (≤ 480px) : Passage en colonne unique (1fr), centrage de tous les textes, boutons de réseaux sociaux et logos pour un rendu moderne et aéré.
+### 2. Importation des images réelles des produits (Base de données)
+* **[MODIFY] [seed.ts](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/prisma/seed.ts)** : Attribution d'URLs d'images Unsplash professionnelles pour chacun des 10 articles du catalogue de sport/mode (vestes, t-shirts, leggings, shorts, etc.) à la place de l'image de placeholder vectoriel SVG. Mise à jour de l'upsert pour propager ces modifications automatiquement.
 
-### 3. Fichiers de Traduction
-* **[MODIFY] [fr.json](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/messages/fr.json)** / **[en.json](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/messages/en.json)** : Ajout des clés de traduction pour les six mentions légales et politiques de vente dans la section `footer`.
+### 3. Module Blog (Liste et Détails d'articles)
+* **[NEW] [blog/page.tsx](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/app/[locale]/blog/page.tsx)** & **[page.module.css](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/app/[locale]/blog/page.module.css)** : Page principale du blog affichant un en-tête moderne et l'ensemble des 4 articles dans une grille responsive de fiches cliquables.
+* **[NEW] [blog/[id]/page.tsx](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/app/[locale]/blog/[id]/page.tsx)** & **[page.module.css](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/app/[locale]/blog/[id]/page.module.css)** : Page de lecture d'un article avec fil d'Ariane dynamique (Breadcrumb), photo de couverture grand format, texte structuré en paragraphes espacés, et section "Articles similaires" affichant d'autres articles recommandés au bas de l'écran.
+
+### 4. Pages des Mentions Légales & Politiques (`/politique/[slug]`)
+* **[NEW] [politique/[slug]/page.tsx](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/app/[locale]/politique/[slug]/page.tsx)** & **[page.module.css](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/app/[locale]/politique/[slug]/page.module.css)** : Route dynamique gérant en français et en anglais les 6 documents légaux requis par le prototype (politique de confidentialité, politique de remboursement, conditions d'utilisation, politique d'expédition, conditions générales de vente, mentions légales). Design minimaliste ultra-pro centré.
+
+### 5. Page de Détails Produit Interactive (PDP)
+* **[MODIFY] [page.tsx](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/app/[locale]/produit/[slug]/page.tsx)** : Route serveur récupérant le produit par son slug et la transmettant au composant client.
+* **[NEW] [ProductDetailClient.tsx](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/ProductDetail/ProductDetailClient.tsx)** & **[ProductDetailClient.module.css](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/ProductDetail/ProductDetailClient.module.css)** : Interface haut de gamme comprenant :
+  - Un fil d'Ariane dynamique.
+  - La galerie d'images sur la gauche.
+  - Les informations produit sur la droite (Titre, Évaluation d'étoiles complexes, prix avec comparaison pour soldes).
+  - Un sélecteur de couleurs et un sélecteur de tailles sous forme de boutons interactifs modifiant l'état.
+  - Un compteur de quantité (+/-) dynamique.
+  - Le bouton "Ajouter au panier" connecté au CartContext global (met à jour le sac à l'en-tête et ouvre le CartDrawer) et au ToastContext (affiche une notification).
+  - Trois blocs d'accordions interactifs (Informations produit, Conseils de taille, Livraison & retours) avec icônes vectorielles personnalisées.
 
 ---
 
 ## Vérification et Validation
 
 ### Tests Automatisés
-* **Compilation TypeScript** : Réussie (`npx tsc --noEmit`).
-* **Tests unitaires** : Les 39 tests de la suite passent tous au vert (`npm run test`).
+* **TypeScript** : 100% valide (`npx tsc --noEmit`).
+* **Tests unitaires** : Les 39 tests passent avec succès (`npm run test`).
 
 ### Validation Manuelle
-* Le rendu visuel à l'adresse [http://localhost:3002/fr](http://localhost:3002/fr) intègre le nouveau footer avec ses effets interactifs.
-* Les icônes sociales et liens de bas de page respectent la mise en page responsive sur mobile et tablette.
+* L'application web est fonctionnelle sur `http://localhost:3002/fr`.
+* Les images de produits issues d'Unsplash s'affichent correctement en grilles.
+* Les pages de politique et du blog chargent avec fluidité.
+* Le sélecteur de taille, couleur, et ajout au panier réagit immédiatement en PDP.
