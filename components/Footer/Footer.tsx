@@ -29,7 +29,7 @@ export async function Footer({ locale }: { locale: Locale }) {
             <Link href="/" locale={locale} className={styles.link}>
               {tHeader('home')}
             </Link>
-            <Link href="/shop" locale={locale} className={styles.link}>
+            <Link href="/boutique" locale={locale} className={styles.link}>
               {tHeader('shop')}
             </Link>
             <Link href="/blog" locale={locale} className={styles.link}>
