@@ -2,6 +2,11 @@
   display: block;
   text-decoration: none;
   color: var(--color-black);
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+
+.card:hover {
+  transform: translateY(-4px);
 }
 
 .imageWrap {
@@ -25,21 +30,28 @@
 .name {
   margin-top: var(--space-3);
   font-size: var(--body-md-size);
-  font-weight: var(--heading-3-weight);
+  font-weight: 700;
 }
 
 .price {
   margin-top: var(--space-1);
   font-size: var(--body-sm-size);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 .priceStrike {
   text-decoration: line-through;
   color: var(--color-grey-mid);
-  margin-right: var(--space-2);
 }
 
 .priceSale {
   color: var(--color-price-sale);
   font-weight: var(--heading-3-weight);
 }
+
+.ratingRow {
+  margin-top: var(--space-2);
+}
+

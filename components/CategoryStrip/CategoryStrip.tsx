@@ -16,7 +16,7 @@ export async function CategoryStrip({ locale }: { locale: Locale }) {
         {categories.map((category) => (
           <Link key={category.slug} href={`/${category.slug}`} locale={locale} className={styles.tile}>
             <img
-              src={`https://picsum.photos/seed/divinexpress-${category.slug}/400/400`}
+              src="https://cdn.prod.website-files.com/6890fbf29f28b7089b169c21/689f6d729e84606ea278f244_Category-Grid.png"
               alt=""
               className={styles.image}
             />

@@ -1,0 +1,22 @@
+.ratingContainer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+}
+
+.starsGroup {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.starSvg {
+  flex-shrink: 0;
+}
+
+.count {
+  font-size: 12px;
+  color: var(--color-grey-mid, #666666);
+  font-weight: 500;
+  line-height: 1;
+}

@@ -50,6 +50,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
         locale={locale}
         imageSeed="divinexpress-weekend"
         badge={t('discountBadge')}
+        description={t('discountDesc')}
         size="full"
       />
       <ProductMarquee title={t('newArrivalsTitle')} products={newArrivals} locale={locale} />
