@@ -70,3 +70,28 @@
   font-size: 22px;
   letter-spacing: -0.02em;
 }
+
+@media (max-width: 768px) {
+  .mainBar {
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-6);
+  }
+  .brand {
+    flex: 0 1 auto;
+    order: 1;
+  }
+  /* MainNav (child 2) containing the burger button */
+  .mainBar > *:nth-child(2) {
+    order: 3;
+    flex: 0 0 auto;
+    margin-left: 8px;
+  }
+  /* HeaderActions (child 3) */
+  .mainBar > *:nth-child(3) {
+    order: 2;
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
