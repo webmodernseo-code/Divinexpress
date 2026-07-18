@@ -132,29 +132,19 @@
   background: var(--color-black);
 }
 
-.layout {
-  display: flex;
-  gap: 48px;
-  align-items: start;
-}
-
-.sidebar {
-  width: 240px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
-.gridWithSidebar {
-  flex: 1;
+.filtersBar {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 32px;
+  background: var(--neutral-100, #F2F0EC);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 48px;
+  align-items: start;
+  animation: fadeInDown 0.4s var(--ease-standard) both;
 }
 
 .gridFullWidth {
-  flex: 1;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 32px;
@@ -164,13 +154,6 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  border-bottom: 1px solid rgba(12, 4, 7, 0.06);
-  padding-bottom: 24px;
-}
-
-.filterGroup:last-of-type {
-  border-bottom: none;
-  padding-bottom: 0;
 }
 
 .filterHeading {
@@ -222,7 +205,7 @@
 
 .sizePill {
   color: var(--color-black);
-  background: transparent;
+  background: #ffffff;
   border: 1px solid var(--color-grey-light, #CCCCCC);
 }
 
@@ -299,6 +282,7 @@
   position: relative;
   transition: all var(--duration-fast);
   flex-shrink: 0;
+  background: #ffffff;
 }
 
 .checkboxActive {
@@ -330,9 +314,10 @@
   border-radius: var(--radius-sm, 8px);
   transition: all var(--duration-fast);
   font-family: var(--font-sans);
-  margin-top: 10px;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  align-self: end;
+  width: 100%;
 }
 
 .resetBtn:hover {
@@ -369,16 +354,12 @@
   margin: 0;
 }
 
-@media (max-width: 1200px) {
-  .gridFullWidth {
-    grid-template-columns: repeat(3, 1fr);
-  }
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 992px) {
-  .gridWithSidebar {
-    grid-template-columns: repeat(2, 1fr);
-  }
+@media (max-width: 1200px) {
   .gridFullWidth {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -388,16 +369,10 @@
   .container {
     padding: 32px var(--space-6) 64px;
   }
-  .layout {
-    flex-direction: column;
-    gap: 32px;
+  .filtersBar {
+    gap: 24px;
+    padding: 24px;
   }
-  .sidebar {
-    width: 100%;
-    border-bottom: 1px solid rgba(12, 4, 7, 0.08);
-    padding-bottom: 32px;
-  }
-  .gridWithSidebar,
   .gridFullWidth {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
@@ -426,7 +401,10 @@
     max-width: 100%;
     white-space: nowrap;
   }
-  .gridWithSidebar,
+  .filtersBar {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
   .gridFullWidth {
     gap: 12px;
   }

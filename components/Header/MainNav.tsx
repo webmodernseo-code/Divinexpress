@@ -100,10 +100,14 @@ export function MainNav({ locale, items }: { locale: Locale; items: NavItem[] })
 
         {/* Footer Area inside Mobile Drawer containing language/currency selector and socials */}
         <div className={styles.drawerFooter}>
-          <div className={styles.drawerSelectorLabel}>Langue & Devise</div>
-          <LocaleCurrencySelector locale={locale} theme="light" />
+          <div className={styles.drawerSelectorLabel}>
+            {locale === 'fr' ? 'Langue & Devise' : 'Language & Currency'}
+          </div>
+          <LocaleCurrencySelector locale={locale} theme="light" className={styles.drawerSelectors} />
 
-          <div className={styles.drawerSocialsLabel}>Suivez-nous</div>
+          <div className={styles.drawerSocialsLabel}>
+            {locale === 'fr' ? 'Suivez-nous' : 'Follow us'}
+          </div>
           <div className={styles.drawerSocials}>
             {/* Facebook */}
             <a href="#" className={styles.drawerSocialLink} aria-label="Facebook">

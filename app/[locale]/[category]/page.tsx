@@ -151,111 +151,109 @@ export default async function CategoryPage({
         </div>
       </div>
 
-      {/* Catalog Layout */}
-      <div className={styles.layout}>
-        {/* Sidebar Filters */}
-        {showFilters && (
-          <aside className={styles.sidebar}>
-            {/* Category selection (if in Boutique) */}
-            {isBoutiquePage && (
-              <div className={styles.filterGroup}>
-                <h3 className={styles.filterHeading}>Catégories</h3>
-                <div className={styles.categoryLinks}>
-                  {categories.map((c) => (
-                    <Link key={c.slug} href={`/${c.slug}`} locale={locale} className={styles.categoryLink}>
-                      {c.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Sizes */}
+      {/* Horizontal Collapsible Filters Bar */}
+      {showFilters && (
+        <aside className={styles.filtersBar}>
+          {/* Category selection (if in Boutique) */}
+          {isBoutiquePage && (
             <div className={styles.filterGroup}>
-              <h3 className={styles.filterHeading}>{locale === 'fr' ? 'Tailles' : 'Sizes'}</h3>
-              <div className={styles.sizesGrid}>
-                {AVAILABLE_SIZES.map((size) => {
-                  const isActive = filters.sizes.includes(size);
-                  return (
-                    <Link
-                      key={size}
-                      href={toggleFilterValueHref(urlSearchParams, 'taille', size)}
-                      locale={locale}
-                      className={isActive ? styles.sizePillActive : styles.sizePill}
-                    >
-                      {size}
-                    </Link>
-                  );
-                })}
+              <h3 className={styles.filterHeading}>Catégories</h3>
+              <div className={styles.categoryLinks}>
+                {categories.map((c) => (
+                  <Link key={c.slug} href={`/${c.slug}`} locale={locale} className={styles.categoryLink}>
+                    {c.name}
+                  </Link>
+                ))}
               </div>
             </div>
+          )}
 
-            {/* Colors */}
-            <div className={styles.filterGroup}>
-              <h3 className={styles.filterHeading}>{locale === 'fr' ? 'Couleurs' : 'Colors'}</h3>
-              <div className={styles.colorsList}>
-                {AVAILABLE_COLORS.map((color) => {
-                  const isActive = filters.colors.includes(color);
-                  return (
-                    <Link
-                      key={color}
-                      href={toggleFilterValueHref(urlSearchParams, 'couleur', color)}
-                      locale={locale}
-                      className={isActive ? styles.colorRowActive : styles.colorRow}
-                    >
-                      <span
-                        className={styles.colorDot}
-                        style={{
-                          background:
-                            color === 'Noir'
-                              ? '#000000'
-                              : color === 'Blanc'
-                              ? '#ffffff'
-                              : color === 'Gris'
-                              ? '#888888'
-                              : '#2563eb',
-                          border: color === 'Blanc' ? '1px solid #ddd' : 'none'
-                        }}
-                      />
-                      <span>{locale === 'fr' ? color : color === 'Noir' ? 'Black' : color === 'Blanc' ? 'White' : color === 'Gris' ? 'Grey' : 'Blue'}</span>
-                    </Link>
-                  );
-                })}
-              </div>
+          {/* Sizes */}
+          <div className={styles.filterGroup}>
+            <h3 className={styles.filterHeading}>{locale === 'fr' ? 'Tailles' : 'Sizes'}</h3>
+            <div className={styles.sizesGrid}>
+              {AVAILABLE_SIZES.map((size) => {
+                const isActive = filters.sizes.includes(size);
+                return (
+                  <Link
+                    key={size}
+                    href={toggleFilterValueHref(urlSearchParams, 'taille', size)}
+                    locale={locale}
+                    className={isActive ? styles.sizePillActive : styles.sizePill}
+                  >
+                    {size}
+                  </Link>
+                );
+              })}
             </div>
+          </div>
 
-            {/* Price ranges */}
-            <div className={styles.filterGroup}>
-              <h3 className={styles.filterHeading}>{locale === 'fr' ? 'Budget' : 'Price'}</h3>
-              <div className={styles.priceList}>
-                {PRICE_BUCKETS.map((bucket) => {
-                  const isActive = filters.priceBuckets.includes(bucket.id);
-                  return (
-                    <Link
-                      key={bucket.id}
-                      href={toggleFilterValueHref(urlSearchParams, 'prix', bucket.id)}
-                      locale={locale}
-                      className={isActive ? styles.priceRowActive : styles.priceRow}
-                    >
-                      <span className={isActive ? styles.checkboxActive : styles.checkbox} />
-                      <span>{locale === 'fr' ? bucket.labelFr : bucket.labelEn}</span>
-                    </Link>
-                  );
-                })}
-              </div>
+          {/* Colors */}
+          <div className={styles.filterGroup}>
+            <h3 className={styles.filterHeading}>{locale === 'fr' ? 'Couleurs' : 'Colors'}</h3>
+            <div className={styles.colorsList}>
+              {AVAILABLE_COLORS.map((color) => {
+                const isActive = filters.colors.includes(color);
+                return (
+                  <Link
+                    key={color}
+                    href={toggleFilterValueHref(urlSearchParams, 'couleur', color)}
+                    locale={locale}
+                    className={isActive ? styles.colorRowActive : styles.colorRow}
+                  >
+                    <span
+                      className={styles.colorDot}
+                      style={{
+                        background:
+                          color === 'Noir'
+                            ? '#000000'
+                            : color === 'Blanc'
+                            ? '#ffffff'
+                            : color === 'Gris'
+                            ? '#888888'
+                            : '#2563eb',
+                        border: color === 'Blanc' ? '1px solid #ddd' : 'none'
+                      }}
+                    />
+                    <span>{locale === 'fr' ? color : color === 'Noir' ? 'Black' : color === 'Blanc' ? 'White' : color === 'Gris' ? 'Grey' : 'Blue'}</span>
+                  </Link>
+                );
+              })}
             </div>
+          </div>
 
-            {/* Reset Filters */}
-            {(filters.sizes.length > 0 || filters.colors.length > 0 || filters.priceBuckets.length > 0) && (
-              <Link href={resetHref} locale={locale} className={styles.resetBtn}>
-                {locale === 'fr' ? 'Réinitialiser les filtres' : 'Reset Filters'}
-              </Link>
-            )}
-          </aside>
-        )}
+          {/* Price ranges */}
+          <div className={styles.filterGroup}>
+            <h3 className={styles.filterHeading}>{locale === 'fr' ? 'Budget' : 'Price'}</h3>
+            <div className={styles.priceList}>
+              {PRICE_BUCKETS.map((bucket) => {
+                const isActive = filters.priceBuckets.includes(bucket.id);
+                return (
+                  <Link
+                    key={bucket.id}
+                    href={toggleFilterValueHref(urlSearchParams, 'prix', bucket.id)}
+                    locale={locale}
+                    className={isActive ? styles.priceRowActive : styles.priceRow}
+                  >
+                    <span className={isActive ? styles.checkboxActive : styles.checkbox} />
+                    <span>{locale === 'fr' ? bucket.labelFr : bucket.labelEn}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
 
-        {/* Product Grid */}
-        <div className={showFilters ? styles.gridWithSidebar : styles.gridFullWidth}>
+          {/* Reset Filters */}
+          {(filters.sizes.length > 0 || filters.colors.length > 0 || filters.priceBuckets.length > 0) && (
+            <Link href={resetHref} locale={locale} className={styles.resetBtn}>
+              {locale === 'fr' ? 'Réinitialiser les filtres' : 'Reset Filters'}
+            </Link>
+          )}
+        </aside>
+      )}
+
+      {/* Product Grid - always full width for maximum product visibility! */}
+      <div className={styles.gridFullWidth}>
           {products.length > 0 ? (
             products.map((product) => (
               <ProductCard key={product.id} product={product} locale={locale} />
@@ -275,7 +273,6 @@ export default async function CategoryPage({
             </div>
           )}
         </div>
-      </div>
     </main>
   );
 }

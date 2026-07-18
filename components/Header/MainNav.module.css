@@ -142,7 +142,7 @@
 
 .drawerFooter {
   margin-top: auto;
-  border-top: 1px solid var(--border-subtle, rgba(12,4,7,0.08));
+  border-top: 1px solid var(--border-subtle, rgba(12, 4, 7, 0.08));
   padding-top: var(--space-6);
   display: flex;
   flex-direction: column;
@@ -159,20 +159,38 @@
   margin-bottom: -4px;
 }
 
+.drawerSelectors {
+  width: 100%;
+}
+
+.drawerSelectors select {
+  flex: 1;
+}
+
 .drawerSocials {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   align-items: center;
 }
 
 .drawerSocialLink {
-  color: rgba(12, 4, 7, 0.7);
-  display: flex;
-  transition: color var(--duration-fast) var(--ease-standard);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(12, 4, 7, 0.12);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-black, #0c0407);
+  background: #ffffff;
+  transition: all var(--duration-fast) var(--ease-standard);
 }
 
 .drawerSocialLink:hover {
-  color: var(--color-black);
+  background: var(--color-black, #0c0407);
+  color: var(--color-white, #ffffff);
+  border-color: var(--color-black, #0c0407);
+  transform: translateY(-2px);
 }
 
 /* Responsive show/hide */

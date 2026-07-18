@@ -11,7 +11,15 @@ const CURRENCIES = [
   { value: 'XOF', label: 'UEMOA (XOF F CFA)' }
 ] as const;
 
-export function LocaleCurrencySelector({ locale, theme = 'dark' }: { locale: Locale; theme?: 'dark' | 'light' }) {
+export function LocaleCurrencySelector({
+  locale,
+  theme = 'dark',
+  className
+}: {
+  locale: Locale;
+  theme?: 'dark' | 'light';
+  className?: string;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const [currency, setCurrency] = useState('EUR');
@@ -19,7 +27,7 @@ export function LocaleCurrencySelector({ locale, theme = 'dark' }: { locale: Loc
   const selectClass = `${styles.select} ${theme === 'light' ? styles.selectLight : styles.selectDark}`;
 
   return (
-    <div className={styles.selectorGroup}>
+    <div className={`${styles.selectorGroup} ${className || ''}`}>
       <select
         value={locale}
         onChange={(e) => router.replace(pathname, { locale: e.target.value as Locale })}
