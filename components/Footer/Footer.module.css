@@ -1,96 +1,199 @@
-/* components/Footer/Footer.module.css */
 .footer {
-  background: var(--color-black);
+  background: var(--color-black, #0c0407);
   color: #cccccc;
-  padding: var(--space-16) var(--space-8) 0;
+  padding: 56px var(--space-10) 0;
 }
 
 .top {
   max-width: var(--container-max);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: auto 1fr 1fr 1fr;
-  gap: var(--space-10);
+  grid-template-columns: auto 1fr 1.3fr auto;
+  gap: 40px;
   align-items: start;
 }
 
-.logo {
+.logoCol {
   flex: none;
 }
 
+.logo {
+  display: block;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
 .heading {
-  color: var(--color-white);
-  font-weight: var(--heading-3-weight);
-  margin-bottom: var(--space-4);
+  color: var(--color-white, #ffffff);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 20px;
+  letter-spacing: 0.04em;
+}
+
+.linksGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .link {
   display: block;
   color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
-  padding: var(--space-1) 0;
-  font-size: var(--body-sm-size);
+  font-size: 14px;
+  transition: color var(--duration-fast);
 }
 
 .link:hover {
-  color: var(--color-white);
+  color: var(--color-white, #ffffff);
+}
+
+.contactDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.contactCompany {
+  font-weight: 600;
+  color: var(--color-white, #ffffff);
+}
+
+.contactText {
+  display: block;
+}
+
+.contactMail {
+  display: block;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: color var(--duration-fast);
+}
+
+.contactMail:hover {
+  color: var(--color-white, #ffffff);
+}
+
+.socialsColumn {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.socialIcon {
+  color: var(--color-white, #ffffff);
+  transition: color var(--duration-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.socialIcon:hover {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .divider {
   max-width: var(--container-max);
-  margin: var(--space-10) auto 0;
+  margin: 44px auto 0;
   border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .bottom {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: var(--space-6) 0;
+  padding: 22px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-3);
+  gap: 14px;
 }
 
 .payments {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: 8px;
   justify-content: center;
 }
 
 .paymentBadge {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: var(--radius-sm);
-  padding: var(--space-1) var(--space-2);
-  font-size: var(--label-size);
+  border-radius: 5px;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  font-family: var(--font-sans);
 }
 
 .policyLinks {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
+  gap: 12px;
   justify-content: center;
 }
 
 .policyLink {
-  font-size: var(--label-size);
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.65);
   text-decoration: none;
+  cursor: pointer;
+  transition: color var(--duration-fast);
+  font-family: var(--font-sans);
 }
 
 .policyLink:hover {
-  color: var(--color-white);
+  color: var(--color-white, #ffffff);
 }
 
 .copyright {
-  font-size: var(--label-size);
+  font-size: 11px;
   color: rgba(255, 255, 255, 0.4);
   margin: 0;
+  font-family: var(--font-sans);
 }
 
 @media (max-width: 768px) {
   .top {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .socialsColumn {
+    justify-content: flex-start;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 40px var(--space-4) 0;
+  }
+  .top {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .logoCol {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .column {
+    align-items: center;
+    text-align: center;
+  }
+  .socialsColumn {
+    justify-content: center;
+  }
+  .divider {
+    margin: 32px auto 0;
   }
 }
