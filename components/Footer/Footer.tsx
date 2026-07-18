@@ -88,24 +88,24 @@ export async function Footer({ locale }: { locale: Locale }) {
 
         {/* Legal/Policy Links */}
         <div className={styles.policyLinks}>
-          <a href="#" className={styles.policyLink}>
+          <Link href="/politique/privacy" locale={locale} className={styles.policyLink}>
             {t('utilityPrivacy')}
-          </a>
-          <a href="#" className={styles.policyLink}>
+          </Link>
+          <Link href="/politique/refund" locale={locale} className={styles.policyLink}>
             {t('utilityRefund')}
-          </a>
-          <a href="#" className={styles.policyLink}>
+          </Link>
+          <Link href="/politique/terms" locale={locale} className={styles.policyLink}>
             {t('utilityTermsOfUse')}
-          </a>
-          <a href="#" className={styles.policyLink}>
+          </Link>
+          <Link href="/politique/shipping" locale={locale} className={styles.policyLink}>
             {t('utilityShipping')}
-          </a>
-          <a href="#" className={styles.policyLink}>
+          </Link>
+          <Link href="/politique/cgv" locale={locale} className={styles.policyLink}>
             {t('utilityCgv')}
-          </a>
-          <a href="#" className={styles.policyLink}>
+          </Link>
+          <Link href="/politique/legal" locale={locale} className={styles.policyLink}>
             {t('utilityLegal')}
-          </a>
+          </Link>
         </div>
 
         {/* Copyright */}

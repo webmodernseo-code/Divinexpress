@@ -4,6 +4,12 @@ import { getCategories } from '@/lib/catalog';
 import type { Locale } from '@/i18n';
 import styles from './CategoryStrip.module.css';
 
+const CATEGORY_IMAGES: Record<string, string> = {
+  homme: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=600&auto=format&fit=crop&q=80',
+  femme: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=600&auto=format&fit=crop&q=80',
+  enfant: 'https://images.unsplash.com/photo-1503919545889-aef636e10ad4?w=600&auto=format&fit=crop&q=80'
+};
+
 export async function CategoryStrip({ locale }: { locale: Locale }) {
   const t = await getTranslations('header');
   const tHome = await getTranslations('home');
@@ -16,7 +22,7 @@ export async function CategoryStrip({ locale }: { locale: Locale }) {
         {categories.map((category) => (
           <Link key={category.slug} href={`/${category.slug}`} locale={locale} className={styles.tile}>
             <img
-              src="https://cdn.prod.website-files.com/6890fbf29f28b7089b169c21/689f6d729e84606ea278f244_Category-Grid.png"
+              src={CATEGORY_IMAGES[category.slug] || CATEGORY_IMAGES.homme}
               alt=""
               className={styles.image}
             />
