@@ -11,6 +11,7 @@
   padding: var(--space-2) var(--space-8);
   font-size: 12px;
   gap: var(--space-4);
+  font-family: var(--font-sans);
 }
 
 .socials {

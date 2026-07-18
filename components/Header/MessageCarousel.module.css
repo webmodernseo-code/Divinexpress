@@ -1,22 +1,29 @@
 .carousel {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  font-size: var(--label-size);
+  gap: 10px;
+  font-size: 12px;
   justify-content: center;
+  font-family: var(--font-sans);
+  color: var(--color-white);
 }
 
 .message {
   white-space: nowrap;
+  font-weight: 500;
 }
 
 .arrow {
   cursor: pointer;
   color: rgba(255, 255, 255, 0.6);
-  font-size: var(--body-md-size);
+  font-size: 14px;
+  font-weight: bold;
   user-select: none;
   transition: color var(--duration-fast) var(--ease-standard);
-  padding: 0 var(--space-1);
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  padding: 0 4px;
 }
 
 .arrow:hover {
