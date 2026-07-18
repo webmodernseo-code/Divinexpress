@@ -1,0 +1,90 @@
+/* components/TestimonialCarousel/TestimonialCarousel.module.css */
+.section {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-24) var(--space-8);
+  background: var(--color-grey-light);
+}
+
+.title {
+  font-size: var(--heading-2-size);
+  font-weight: var(--heading-2-weight);
+  text-align: center;
+  margin: 0 0 var(--space-10);
+}
+
+.carousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+}
+
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+}
+
+.quote {
+  font-size: var(--body-md-size);
+  margin: 0 0 var(--space-4);
+}
+
+.name {
+  font-weight: var(--heading-3-weight);
+  margin: 0;
+}
+
+.arrow {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-circle);
+  background: var(--color-white);
+  border: var(--border-hairline);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-black);
+}
+
+.arrow:hover {
+  background: var(--color-cream);
+}
+
+.dots {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: center;
+  margin-top: var(--space-6);
+}
+
+.dot,
+.dotActive {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-circle);
+  cursor: pointer;
+  background: rgba(12, 4, 7, 0.2);
+}
+
+.dotActive {
+  background: var(--color-black);
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
