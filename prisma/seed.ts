@@ -25,7 +25,7 @@ type SeedProduct = {
 const categories = [
   { name: 'Homme', slug: 'homme' },
   { name: 'Femme', slug: 'femme' },
-  { name: 'Running', slug: 'running' }
+  { name: 'Enfant', slug: 'enfant' }
 ];
 
 const products: SeedProduct[] = [
@@ -115,7 +115,7 @@ const products: SeedProduct[] = [
     nameEn: 'Blue running windbreaker',
     descriptionFr: 'Ultra-léger, poche zippée dos.',
     descriptionEn: 'Ultra-lightweight, zipped back pocket.',
-    categorySlug: 'running',
+    categorySlug: 'enfant',
     featured: true,
     variants: [
       { sku: 'CVR-M-BLU', size: 'M', color: 'Bleu', priceCents: 7900, stock: 9 },
@@ -128,7 +128,7 @@ const products: SeedProduct[] = [
     nameEn: 'Technical running socks',
     descriptionFr: 'Anti-ampoules, taille unique.',
     descriptionEn: 'Blister-resistant, one size.',
-    categorySlug: 'running',
+    categorySlug: 'enfant',
     variants: [
       { sku: 'CRT-U-BLK', size: 'Unique', color: 'Noir', priceCents: 1500, stock: 40 }
     ]
@@ -139,7 +139,7 @@ const products: SeedProduct[] = [
     nameEn: 'Black running cap',
     descriptionFr: 'Légère, réglable, tissu respirant.',
     descriptionEn: 'Lightweight, adjustable, breathable fabric.',
-    categorySlug: 'running',
+    categorySlug: 'enfant',
     featured: true,
     variants: [
       { sku: 'CRN-U-BLK', size: 'Unique', color: 'Noir', priceCents: 1600, compareAtPriceCents: 2200, stock: 22 }
@@ -151,7 +151,7 @@ const products: SeedProduct[] = [
     nameEn: 'Black running belt bag',
     descriptionFr: 'Compartiment étanche pour téléphone.',
     descriptionEn: 'Water-resistant phone compartment.',
-    categorySlug: 'running',
+    categorySlug: 'enfant',
     variants: [
       { sku: 'SBR-U-BLK', size: 'Unique', color: 'Noir', priceCents: 2800, stock: 16 }
     ]
