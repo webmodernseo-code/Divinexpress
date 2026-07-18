@@ -73,14 +73,13 @@ export function ProductDetailClient({
 
     // Call global cart state
     addToCart({
-      id: activeVariant.id,
-      productSlug: product.slug,
-      nameFr: product.nameFr,
-      nameEn: product.nameEn,
+      productId: activeVariant.id,
+      slug: product.slug,
+      name: locale === 'fr' ? product.nameFr : product.nameEn,
+      image: product.images[0]?.url || '/placeholder-product.svg',
+      priceCents: activeVariant.priceCents,
       size: activeVariant.size,
       color: activeVariant.color,
-      priceCents: activeVariant.priceCents,
-      imageUrl: product.images[0]?.url || '/placeholder-product.svg',
       quantity
     });
 
