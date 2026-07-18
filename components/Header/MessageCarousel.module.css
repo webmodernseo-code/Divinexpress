@@ -1,5 +1,26 @@
 /* components/Header/MessageCarousel.module.css */
 .carousel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   font-size: var(--label-size);
   letter-spacing: var(--label-tracking);
+}
+
+.message {
+  white-space: nowrap;
+}
+
+.arrow {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+}
+
+.arrow:hover {
+  color: #fff;
 }

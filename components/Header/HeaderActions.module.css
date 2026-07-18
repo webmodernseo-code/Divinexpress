@@ -1,0 +1,50 @@
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.select {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: var(--label-size);
+  color: var(--color-black);
+}
+
+.searchInput {
+  border: none;
+  border-bottom: 1px solid rgba(12, 4, 7, 0.3);
+  padding: var(--space-2) var(--space-1);
+  font-size: var(--body-sm-size);
+  color: var(--color-black);
+  width: 200px;
+  font-family: var(--font-sans);
+}
+
+.searchInput:focus {
+  outline: none;
+}
+
+.iconLink {
+  position: relative;
+  display: inline-flex;
+  color: var(--color-black);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: var(--color-black);
+  color: var(--color-white);
+  font-size: 10px;
+  line-height: 1;
+  border-radius: var(--radius-full);
+  padding: 3px 5px;
+}
