@@ -1,10 +1,9 @@
-/* components/Header/MessageCarousel.module.css */
 .carousel {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   font-size: var(--label-size);
-  letter-spacing: var(--label-tracking);
+  justify-content: center;
 }
 
 .message {
@@ -12,15 +11,14 @@
 }
 
 .arrow {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
-  padding: 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: var(--body-md-size);
+  user-select: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+  padding: 0 var(--space-1);
 }
 
 .arrow:hover {
-  color: #fff;
+  color: var(--color-white);
 }
