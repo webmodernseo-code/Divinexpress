@@ -1,18 +1,53 @@
-/* components/Header/Header.module.css */
+.header {
+  background: var(--color-white);
+  width: 100%;
+}
+
 .topbar {
   background: var(--color-black);
   color: var(--color-white);
-  text-align: center;
-  padding: var(--space-2) var(--space-4);
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-8);
+  font-size: 12px;
+  gap: var(--space-4);
+}
+
+.socials {
+  display: flex;
+  gap: 14px;
+  flex: 1;
+  align-items: center;
+}
+
+.socialLink {
+  color: rgba(255, 255, 255, 0.75);
+  display: flex;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.socialLink:hover {
+  color: var(--color-white);
+}
+
+.carouselContainer {
+  display: flex;
+  align-items: center;
+  flex: 2;
+  justify-content: center;
+}
+
+.selectors {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .mainBar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: var(--space-4) var(--space-8);
+  padding: var(--space-4) var(--space-10);
   border-bottom: var(--border-hairline);
 }
 
@@ -20,32 +55,17 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  font-weight: var(--heading-3-weight);
-  color: var(--color-black);
+  flex: 1;
   text-decoration: none;
-  letter-spacing: var(--label-tracking);
-}
-
-.logo {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-full);
-  background: var(--color-black);
-  color: var(--color-white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--body-sm-size);
-  font-weight: var(--heading-3-weight);
-}
-
-.nav {
-  display: flex;
-  gap: var(--space-6);
-}
-
-.navLink {
   color: var(--color-black);
-  text-decoration: none;
-  font-size: var(--body-md-size);
+}
+
+.logoSvg {
+  flex-shrink: 0;
+}
+
+.brandText {
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.02em;
 }
