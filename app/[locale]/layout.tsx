@@ -3,10 +3,13 @@ import type { ReactNode } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { Inter } from 'next/font/google';
 import { locales, type Locale } from '@/i18n';
 import { Header } from '@/components/Header/Header';
 import { Footer } from '@/components/Footer/Footer';
 import '@/app/styles/tokens.css';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 
 export const metadata: Metadata = {
   title: 'DivinExpress',
@@ -32,7 +35,7 @@ export default async function LocaleLayout({
   const locale = params.locale as Locale;
 
   return (
-    <html lang={params.locale}>
+    <html lang={params.locale} className={inter.variable}>
       <body>
         <NextIntlClientProvider locale={params.locale} messages={messages}>
           <Header locale={locale} />

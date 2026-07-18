@@ -4,8 +4,10 @@ import { Hero } from '@/components/Hero/Hero';
 import { TrustBar } from '@/components/TrustBar/TrustBar';
 import { PromoBanner } from '@/components/PromoBanner/PromoBanner';
 import { ProductGrid } from '@/components/ProductGrid/ProductGrid';
+import { ProductMarquee } from '@/components/ProductMarquee/ProductMarquee';
 import { CategoryStrip } from '@/components/CategoryStrip/CategoryStrip';
-import { Testimonials } from '@/components/Testimonials/Testimonials';
+import { TestimonialCarousel } from '@/components/TestimonialCarousel/TestimonialCarousel';
+import { Faq } from '@/components/Faq/Faq';
 import { BlogPreview } from '@/components/BlogPreview/BlogPreview';
 import type { Locale } from '@/i18n';
 import styles from './page.module.css';
@@ -28,6 +30,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
           href="/homme"
           locale={locale}
           imageSeed="divinexpress-promo-homme"
+          badge={t('promoHommeBadge')}
         />
         <PromoBanner
           title={t('promoSaleTitle')}
@@ -45,11 +48,13 @@ export default async function HomePage({ params }: { params: { locale: string } 
         ctaLabel={t('discountCta')}
         href="/sale"
         locale={locale}
-        imageSeed="divinexpress-discount"
+        imageSeed="divinexpress-weekend"
+        badge={t('discountBadge')}
         size="full"
       />
-      <ProductGrid title={t('newArrivalsTitle')} products={newArrivals} locale={locale} />
-      <Testimonials />
+      <ProductMarquee title={t('newArrivalsTitle')} products={newArrivals} locale={locale} />
+      <TestimonialCarousel />
+      <Faq />
       <BlogPreview locale={locale} />
     </>
   );
