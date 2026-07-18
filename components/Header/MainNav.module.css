@@ -1,0 +1,33 @@
+.nav {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.navLink {
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.inactive {
+  background: transparent;
+  color: var(--color-black);
+}
+
+.inactive:hover {
+  background: var(--color-cream);
+}
+
+.active {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.active:hover {
+  background: var(--color-black);
+}
