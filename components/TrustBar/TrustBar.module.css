@@ -1,11 +1,10 @@
-/* components/TrustBar/TrustBar.module.css */
 .bar {
   max-width: var(--container-max);
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-8);
-  padding: var(--space-12) var(--space-8);
+  gap: 32px;
+  padding: 56px var(--space-10);
   text-align: center;
 }
 
@@ -13,21 +12,41 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-2);
+  gap: 12px;
+  font-family: var(--font-sans);
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
 }
 
 .title {
-  font-weight: var(--heading-3-weight);
-  font-size: var(--body-sm-size);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--color-black);
+  margin: 0;
 }
 
 .desc {
-  font-size: var(--label-size);
+  font-size: 13px;
   color: var(--color-grey-mid);
+  margin: 0;
+  max-width: 220px;
+  line-height: 1.4;
 }
 
 @media (max-width: 768px) {
   .bar {
     grid-template-columns: repeat(2, 1fr);
+    padding: 32px var(--space-6);
+  }
+}
+
+@media (max-width: 480px) {
+  .bar {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 }

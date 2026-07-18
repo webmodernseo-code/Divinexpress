@@ -1,15 +1,24 @@
 import { getTranslations } from 'next-intl/server';
 import styles from './TrustBar.module.css';
 
-const ITEMS = ['payment', 'delivery', 'returns', 'materials'] as const;
-
-const ICON_PATHS: Record<(typeof ITEMS)[number], string> = {
-  payment: 'M3 10h18M5 6h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z',
-  delivery:
-    'M3 7h11v8H3zM14 10h4l3 3v2h-7zM6.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z',
-  returns: 'M3 12a9 9 0 1 0 3-6.7M3 4v5h5',
-  materials: 'M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'
-};
+const ITEMS = [
+  {
+    key: 'payment',
+    icon: 'https://cdn.prod.website-files.com/6890fbf29f28b7089b169c21/6892144f750bf17c33b635e7_recycling-reproducing-svgrepo-com%201.svg'
+  },
+  {
+    key: 'delivery',
+    icon: 'https://cdn.prod.website-files.com/6890fbf29f28b7089b169c21/689214509e45233c0eac2f63_warranty-svgrepo-com%201.svg'
+  },
+  {
+    key: 'returns',
+    icon: 'https://cdn.prod.website-files.com/6890fbf29f28b7089b169c21/68921450b524ed88c4868689_delivery-fast-svgrepo.svg'
+  },
+  {
+    key: 'materials',
+    icon: 'https://cdn.prod.website-files.com/6890fbf29f28b7089b169c21/6892144f566712d4d864a312_eco-friendly-svgrepo-com%201.svg'
+  }
+] as const;
 
 export async function TrustBar() {
   const t = await getTranslations('trustbar');
@@ -17,12 +26,10 @@ export async function TrustBar() {
   return (
     <section className={styles.bar}>
       {ITEMS.map((item) => (
-        <div key={item} className={styles.item}>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d={ICON_PATHS[item]} />
-          </svg>
-          <div className={styles.title}>{t(`${item}Title`)}</div>
-          <div className={styles.desc}>{t(`${item}Desc`)}</div>
+        <div key={item.key} className={styles.item}>
+          <img src={item.icon} alt="" className={styles.icon} />
+          <h3 className={styles.title}>{t(`${item.key}Title`)}</h3>
+          <p className={styles.desc}>{t(`${item.key}Desc`)}</p>
         </div>
       ))}
     </section>

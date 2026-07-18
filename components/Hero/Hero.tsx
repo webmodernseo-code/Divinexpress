@@ -8,11 +8,10 @@ export async function Hero({ locale }: { locale: Locale }) {
 
   return (
     <section className={styles.hero}>
-      <img src="https://picsum.photos/seed/divinexpress-hero/1600/900" alt="" className={styles.image} />
+      <img src="https://cdn.prod.website-files.com/6890fbf29f28b7089b169c21/6891dcf26e965d2e8a4c0fef_hero-image.jpg" alt="" className={styles.image} />
       <div className={styles.overlay} />
       <div className={styles.content}>
         <h1 className={styles.title}>{t('heroTitle')}</h1>
-        <p className={styles.subtitle}>{t('heroSubtitle')}</p>
         <div className={styles.actions}>
           <div className={styles.pulse}>
             <Link href="/homme" locale={locale} className={styles.ctaPrimary}>
