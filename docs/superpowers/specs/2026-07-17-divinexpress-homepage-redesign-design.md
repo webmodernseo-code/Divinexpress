@@ -1,78 +1,99 @@
-# DivinExpress — Refonte Homepage (Design Spec)
+# DivinExpress — Refonte Homepage (Design Spec v2)
 
 ## Contexte
 
-Le design précédent (système "Handoff Divinexpress" + refonte "premium Nike-style" de Gemini) a été entièrement supprimé à la demande de l'utilisateur (voir commit `64347eb`). Toute la logique métier (Prisma, `lib/catalog.ts`, `lib/filters.ts`, `lib/pricing.ts`, `lib/i18n-utils.ts`, routage i18n) reste intacte et sert de socle à cette refonte.
+**Cette version remplace la v1** (déjà implémentée et approuvée — commits `adec183..b035586`, actuellement en place sur `master`). La v1 était basée sur une seule capture d'écran de référence (SNIKEI) et des tokens visuels approximés à l'œil. L'utilisateur a depuis fourni un package de handoff complet (`Handoff Projet DivinExpress.zip`, extrait dans `Handoff Projet DivinExpress/`) contenant :
 
-L'utilisateur a fourni une capture d'écran de référence : la homepage du site de démo "SNIKEI" (boutique de chaussures, template Webflow). Ce document spécifie comment adapter cette structure et cette esthétique à DivinExpress (boutique de vêtements, France + Afrique de l'Ouest).
+- Un **design system précis**, construit en analysant le vrai site SNIKEI (snikei.webflow.io) en direct, y compris sa page style-guide officielle — valeurs exactes de couleurs, échelle typographique, espacements, rayons, ombres (`_ds/snikei-design-system-.../tokens/*.css`).
+- Un **prototype interactif complet** (`Site DivinExpress.dc.html`) couvrant Accueil, Catégories, Boutique (filtres/tri/recherche), Fiche produit, Blog, Article, Contact, À propos, pages légales, 404, et un tiroir panier — avec la logique d'interaction (state, filtres, carrousels) déjà écrite en JS.
+- Un wireframe **Dashboard** (`Dashboard Snikei.dc.html`) — hors périmètre de ce spec, traité séparément.
 
-Ce spec couvre **uniquement la homepage**, ainsi que les composants partagés qu'elle met en place (Header, Footer, TrustBar, ProductCard/ProductGrid, CategoryStrip). Les autres pages du site (Shop/PLP, PDP, Catégories, About, Contact, Blog) ont été vues dans des captures ultérieures mais sont explicitement **hors périmètre** de ce spec — elles feront chacune l'objet d'un brainstorm dédié une fois cette base commune posée.
+Ce spec ne couvre que la **homepage** (section `isHome` du prototype). Les autres pages du prototype (Catégories, Boutique, Fiche produit, Blog, Article, Contact, À propos, pages légales, 404) sont hors périmètre et feront chacune l'objet d'un cycle spec → plan dédié, en s'appuyant sur ce même prototype comme référence.
+
+**Décisions actées avec l'utilisateur avant ce spec :**
+1. Les informations d'entreprise du prototype (adresse "349 Avenue Jean Jaurès, Lyon", téléphone, email `@divinexpress.com`, mentions légales avec une SAS fictive, les deux "magasins" Paris/Lyon) sont **du contenu placeholder du wireframe, à ignorer**. Seul le vrai contact confirmé (`contact@divinexpress.fr`) est utilisé. Aucune adresse ni téléphone inventés.
+2. Le catalogue produits du prototype (chaussures : "Eclipse Sneakers", etc.) est **la structure de démonstration uniquement**. Les vraies données (vêtements) déjà en base continuent d'alimenter toutes les grilles produits.
+3. La catégorie "Running" est **remplacée par "Enfant"** en base pour matcher le prototype (Homme/Femme/Enfant). Les 4 produits actuellement sous "Running" restent temporairement sous la catégorie renommée en tant que contenu placeholder (ce sont des articles de running, pas des vêtements enfant — à remplacer par de vrais produits enfant plus tard), clairement signalé comme tel.
+4. Le panier fonctionnel (ajout, tiroir panier, checkout) est **hors périmètre** — c'est une fonctionnalité e-commerce à part entière, pas une question de design. L'icône panier reste visuelle uniquement, comme en v1.
 
 ## But
 
-Donner à la homepage DivinExpress l'esthétique et la structure de la référence SNIKEI (bandeau promo, hero, réassurance, bannières promo, grilles produits, catégories, témoignages, aperçu blog, footer 4 colonnes), avec le contenu réel de DivinExpress partout où il existe, et du contenu provisoire clairement identifié partout où il n'existe pas encore.
+Faire correspondre la homepage DivinExpress **littéralement** à la section Accueil du prototype `Site DivinExpress.dc.html` : mêmes sections, même ordre, mêmes valeurs de design system, copy traduite/adaptée vêtements plutôt que chaussures, alimentée par les vraies données DivinExpress.
 
-## Palette et tokens visuels
+## Design system (valeurs exactes, remplace les approximations v1)
 
-Reprise telle quelle de l'image de référence (pas d'identité DivinExpress préexistante à respecter) :
+Source : `Handoff Projet DivinExpress/_ds/snikei-design-system-.../tokens/*.css`. Copier ces valeurs telles quelles dans `app/styles/tokens.css` (noms de variables adaptés au préfixe déjà utilisé par le projet où c'est plus simple, valeurs identiques) :
 
-- **Noir** (`#111111` env.) — bandeau du haut, boutons primaires, footer.
-- **Beige/brun** — fond du hero (photo lifestyle).
-- **Blanc** — fond général du corps de page.
-- **Gris clair** — fonds de cartes produit / image placeholder.
-- Typographie : une sans-serif grasse pour les titres (proche de celle de l'image), texte courant en sans-serif standard.
+**Couleurs** — rampe neutre (`#0C0407` quasi-noir → `#FFFFFF` blanc, 10 paliers), crème chaud pour boutons/badges primaires sur photo (`#F6F1E9` / `#FBF8F3`), bleu de marque réservé aux liens/focus (`#3469F9` défaut, rampe 100-900), succès (vert) et alerte (ambre) pour statut/notation.
 
-Ces valeurs seront posées comme tokens CSS (`app/styles/tokens.css`, réintroduit) : couleurs, espacements, rayons, typographie — mêmes catégories que l'ancien design system, valeurs nouvelles.
+**Typographie** — Inter (unique famille, poids 400/500/600/700), échelle 12 paliers de 72px (h1) à 12px (caption), line-heights 110-140% selon palier.
+
+**Espacements** — échelle 4/8/12/16/20/24/32/40/48/64/80/96/128px, conteneur max `1280px`, gouttière `24px`, padding vertical de section `96px` desktop / `48px` mobile.
+
+**Effets** — rayons `8/12/16/24px` + `999px` (pill) + `50%` (cercle), ombres douces teintées neutre-chaud (jamais noir/bleu pur), transitions `150/250/400ms` en `cubic-bezier(.4,0,.2,1)`.
+
+**Boutons** — toujours en pilule (rayon `999px`). Trois formes : (1) fond crème + texte foncé, CTA primaire sur photo ; (2) fond quasi-noir + texte blanc, CTA primaire sur fond blanc ; (3) contour/ghost, bordure + texte assorti. Chaque bouton porte une flèche (→) dans son label.
+
+**Cartes** — coins très arrondis (16-20px), pas de bordure visible, séparation par l'espace blanc + ombre douce.
 
 ## Architecture technique
 
-Composants sous `components/`, un dossier par composant avec son `.module.css`, pas de Tailwind (convention du projet). Chaque section de la homepage devient un composant isolé et réutilisable :
+Composants sous `components/`, un dossier par composant + `.module.css`, pas de Tailwind. Deltas par rapport à la v1 :
 
-- `components/Header/Header.tsx` — logo, nav, recherche, panier, compte
-- `components/Header/MessageCarousel.tsx` — bandeau noir défilant
-- `components/Footer/Footer.tsx` — footer 4 colonnes
-- `components/Hero/Hero.tsx`
-- `components/TrustBar/TrustBar.tsx` — 4 points de réassurance
-- `components/PromoBanner/PromoBanner.tsx` — bannière image + texte + lien (réutilisée 2× pour les bannières promo, 1× pour la bannière -15%)
-- `components/CategoryStrip/CategoryStrip.tsx`
-- `components/ProductCard/ProductCard.tsx` + `components/ProductGrid/ProductGrid.tsx` — réutilisés pour Best Sellers et New Arrivals, et prévus pour être réutilisés sur Shop/PLP plus tard
-- `components/Testimonials/Testimonials.tsx`
-- `components/BlogPreview/BlogPreview.tsx`
+- `components/Header/Header.tsx` — **modifié** : ajoute des sélecteurs langue (FR/EN) et devise (EUR/GBP/XOF) fonctionnels (`<select>`), un bouton recherche qui bascule l'affichage d'un champ `<input>` inline (pas de lien direct vers `/recherche`).
+- `components/Header/MessageCarousel.tsx` — **modifié** : ajoute des flèches précédent/suivant cliquables en plus de la rotation automatique.
+- `components/Hero/Hero.tsx` — **modifié** : nouveau copy (vêtements, pas chaussures), bouton primaire avec micro-animation de pulsation.
+- `components/TrustBar/TrustBar.tsx` — inchangé dans son principe, contenu aligné sur les 4 items du prototype (matières durables, garantie, livraison rapide, tissus écologiques).
+- `components/PromoBanner/PromoBanner.tsx` — inchangé (déjà réutilisable via prop `size`).
+- `components/ProductCard/ProductCard.tsx` + `ProductGrid/ProductGrid.tsx` — **modifié** : ajoute la notation (rating) si disponible, sinon omise proprement (pas de données de notation réelles en base).
+- `components/ProductMarquee/ProductMarquee.tsx` — **nouveau** : variante de grille en défilement horizontal automatique (CSS animation, pause au survol), pour "Nouveautés".
+- `components/CategoryStrip/CategoryStrip.tsx` — inchangé, alimenté par les 3 catégories réelles (dont la nouvelle "Enfant").
+- `components/Testimonials/Testimonials.tsx` → **remplacé par** `components/TestimonialCarousel/TestimonialCarousel.tsx` — carrousel avec flèches précédent/suivant + points, 6 témoignages fictifs (au lieu de 3 statiques).
+- `components/Faq/Faq.tsx` — **nouveau** : accordéon de 5 questions/réponses, contenu réel (livraison, tailles, retours, entretien, contact) adapté vêtements.
+- `components/BlogPreview/BlogPreview.tsx` — inchangé dans son principe (contenu placeholder déjà accepté), renommé en tête de section "Articles & ressources" pour matcher le prototype.
+- `components/Footer/Footer.tsx` — **modifié** : réarrangement en logo + nav + contact + réseaux sociaux (4 zones inégales, pas 4 colonnes égales), ligne de paiements + liens légaux + copyright inchangée dans son principe.
 
-`app/[locale]/layout.tsx` retrouve `Header` + `Footer`. `app/[locale]/page.tsx` compose les sections dans l'ordre de la référence.
+`app/[locale]/layout.tsx` et `app/[locale]/page.tsx` : mise à jour de la composition pour le nouvel ordre de sections et les nouveaux composants.
 
 ## Changement de données
 
-Ajout d'un champ `featured Boolean @default(false)` sur le modèle `Product` (migration Prisma). Quelques produits du seed sont marqués `featured: true` pour peupler "Best Sellers". "New Arrivals" n'a besoin d'aucun changement : tri existant par `createdAt desc` sur les produits publiés.
+1. `featured` sur `Product` — **déjà fait** (v1), inchangé.
+2. **Renommage de catégorie** : `Category` où `slug: 'running'` devient `slug: 'enfant', name: 'Enfant'` (migration de données, pas de schéma). Les 4 produits actuellement rattachés (`coupe-vent-running-bleu`, `chaussettes-running-techniques`, `casquette-running-noire`, `sac-banane-running-noir`) restent rattachés à cette catégorie renommée — ce sont des articles de sport, pas des vêtements enfant, donc clairement du contenu placeholder à remplacer par de vrais produits enfant plus tard. Mettre à jour `header.running` → `header.enfant` dans les fichiers de messages (fr: "Enfant", en: "Kids").
 
-## Sections de la homepage
+## Sections de la homepage (ordre du prototype, `isHome`)
 
-1. **Bandeau promo (topbar)** — noir, texte défilant. Contenu réel existant (`header.topbarMsg1`, `header.topbarMsg2`).
-2. **Header** — logo "DX" / "DIVINEXPRESS", nav Homme/Femme/Running/Sale (réel), recherche, panier (icône + compteur, **le panier n'est pas encore fonctionnel — affichage visuel seulement**), icône compte (**visuelle uniquement, pas de compte client dans ce projet pour l'instant**), sélecteurs langue/devise (existants).
-3. **Hero** — titre + sous-titre + 2 CTA ("Voir la boutique" → `/homme`, "Catégories" → ancre vers la section catégories). Le copy actuel (`RUN FURTHER` / `Engineered for Speed.`) vient de l'ancienne direction "running" et sera remplacé par un texte provisoire adapté à une boutique de vêtements premium (à affiner). Photo : image de stock libre de droits (mode/vêtements), clairement un placeholder à remplacer par une vraie photo DivinExpress.
-4. **TrustBar** — 4 icônes + texte : paiement sécurisé, livraison France & Afrique de l'Ouest, retours faciles, qualité des matières. Contenu texte nouveau (i18n fr/en), pas de dépendance à des données réelles.
-5. **2 bannières promo** — Collection Homme (lien `/homme`) et Sale (lien `/sale`). Photos stock placeholder.
-6. **Best Sellers** — `ProductGrid` avec les produits `featured: true` (limite 8), via une nouvelle fonction `getFeaturedProducts()` dans `lib/catalog.ts`.
-7. **Nos catégories** — `CategoryStrip`, catégories réelles de la base (`getCategories()`).
-8. **Bannière -15%** — un seul `PromoBanner` statique vers `/sale`, sans carrousel multi-slides fonctionnel (une seule vraie promo existe actuellement).
-9. **New Arrivals** — `ProductGrid`, produits publiés les plus récents (limite 8), via une nouvelle fonction `getNewArrivals()`.
-10. **Témoignages** — 3 citations d'exemple, clairement fictives (noms génériques), sans photo réelle. **Pas de système d'avis client réel** ; section prévue pour être reconnectée à de vraies données plus tard.
-11. **Aperçu blog** — 3 ou 4 cartes statiques codées en dur (image stock, titre, catégorie, date fictifs). **Aucun système de blog/CMS** derrière ; purement visuel pour l'instant.
-12. **Footer** — 4 colonnes : Navigation (liens vers les pages qui existent réellement : Accueil, Catégories, Recherche ; les liens vers des pages pas encore construites pointent vers `#` avec un commentaire TODO plutôt que de créer de fausses pages), Catégories (réelles), Pages utilitaires (placeholders `#`), Contact (email réel confirmé : `contact@divinexpress.fr` — **pas d'adresse physique inventée**, contrairement à la référence qui affiche deux faux magasins US). Ligne du bas : logos de paiement génériques en SVG inline (Visa/Mastercard/PayPal — décoratif, ne présume pas de l'intégration de paiement réelle), liens légaux en placeholder, copyright DivinExpress.
+1. **Bandeau annonces** — noir, message centré avec flèches ‹ › pour naviguer manuellement entre 3 messages (au lieu de 2), rotation auto conservée. Sélecteurs langue/devise à droite (fonctionnels côté UI — changent l'affichage, pas de vraie logique de traduction dynamique au clic, le routage i18n reste piloté par l'URL comme aujourd'hui).
+2. **Header** — logo losange "DX" + "DivinExpress", nav pilule (Accueil/Boutique/Blog/Contact — état actif en fond noir), icône recherche togglable, icône panier (visuelle, badge compteur à 0).
+4. **Hero** — titre 1 ligne adapté vêtements (ex: "Explorez notre collection premium"), 2 CTA ("Acheter" primaire crème avec pulsation, "Catégories" contour), photo pleine largeur en fond, hauteur ~560px.
+5. **Réassurance** — 4 blocs icône+titre+description, contenu du prototype adapté vêtements.
+6. **2 bannières promo** — grille 2 colonnes, badge crème "-X%" en haut à gauche, titre + CTA "Acheter" en bas.
+7. **Catalogue** (= Best Sellers) — titre centré, grille 3 colonnes, jusqu'à 12 produits `featured: true`.
+8. **Nos catégories** — titre aligné à gauche, 3 tuiles carrées côte à côte (Homme/Femme/Enfant).
+9. **Bannière offre du week-end** — bannière pleine largeur unique, badge "Offre du week-end", gros pourcentage en overlay.
+10. **Nouveautés** — titre centré, défilement horizontal automatique (marquee) des produits les plus récents, pause au survol.
+11. **Témoignages** — titre, carrousel 3 cartes visibles + flèches + points, 6 témoignages fictifs clairement identifiés comme tels (noms génériques, pas de vraies photos).
+12. **FAQ** — titre centré, accordéon 5 questions (livraison, tailles, retours, entretien, contact), contenu réel adapté vêtements.
+13. **Articles & ressources** — titre, grille 4 cartes, contenu placeholder (pas de CMS réel), comme en v1.
+14. **Footer** — logo, colonne liens rapides, colonne contact (email réel uniquement), réseaux sociaux ; ligne du bas avec badges de paiement, liens légaux placeholder, copyright.
 
 ## Ce qui reste explicitement hors périmètre
 
-- Les 6 autres pages vues en capture (Shop/PLP, PDP, Catégories, About, Contact, Blog) — chacune aura son propre cycle brainstorm → spec → plan.
+- Les autres pages du prototype (Catégories, Boutique, Fiche produit, Blog, Article, Contact, À propos, pages légales, 404) — chacune son propre cycle spec → plan.
+- Le Dashboard (`Dashboard Snikei.dc.html`) — cycle dédié séparé.
 - Tout système de blog/CMS réel.
 - Tout système d'avis clients réel.
-- Le panier et le compte client fonctionnels (actuellement visuels seulement dans le header).
+- Le panier et le compte client fonctionnels (visuels seulement).
+- Toute vraie logique de changement de devise (conversion de prix) — le sélecteur change l'affichage du sélecteur lui-même, pas les prix affichés, pour l'instant.
 
 ## Critères d'acceptation
 
-1. Les 12 sections listées sont présentes dans cet ordre sur `/fr` et `/en`.
-2. Best Sellers et New Arrivals affichent de vrais produits issus de la base (pas de données codées en dur pour ces deux grilles).
-3. Nos catégories affiche les vraies catégories de la base.
-4. Aucune fausse donnée d'entreprise (adresse, téléphone) n'est affichée ; l'email de contact est le vrai (`contact@divinexpress.fr`).
-5. Le carrousel du bandeau défile automatiquement entre les deux messages existants.
-6. `npm run lint`, `npx vitest run` et `npm run build` passent tous les trois.
-7. La page reste responsive (mobile/desktop), même sans breakpoints détaillés dans ce spec — à valider visuellement à l'implémentation.
+1. Les 13 sections listées sont présentes dans cet ordre sur `/fr` et `/en`.
+2. Toutes les valeurs de couleur/typo/espacement/rayon/ombre correspondent aux tokens exacts du design system fourni (pas d'approximation).
+3. Catalogue et Nouveautés affichent de vrais produits issus de la base.
+4. Nos catégories affiche Homme/Femme/Enfant (catégorie renommée), issues de la base.
+5. Aucune fausse donnée d'entreprise (adresse, téléphone, raison sociale) n'est affichée ; l'email de contact est le vrai (`contact@divinexpress.fr`).
+6. Le bandeau d'annonces navigue manuellement (flèches) et automatiquement entre 3 messages.
+7. Le carrousel de témoignages et l'accordéon FAQ sont interactifs (état géré côté client).
+8. Le défilement "Nouveautés" s'anime en continu et se met en pause au survol.
+9. `npm run lint`, `npx vitest run` et `npm run build` passent tous les trois.
+10. La page reste responsive (mobile/desktop) — à valider visuellement à l'implémentation.
