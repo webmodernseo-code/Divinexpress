@@ -68,10 +68,14 @@ export async function Header({ locale }: { locale: Locale }) {
         </Link>
 
         {/* Main Pill navigation */}
-        <MainNav locale={locale} items={navItems} />
+        <div className={styles.navWrapper}>
+          <MainNav locale={locale} items={navItems} />
+        </div>
 
         {/* Right side actions (search, bag) */}
-        <HeaderActions locale={locale} searchLabel={t('searchLabel')} />
+        <div className={styles.actionsWrapper}>
+          <HeaderActions locale={locale} searchLabel={t('searchLabel')} />
+        </div>
       </div>
     </header>
   );

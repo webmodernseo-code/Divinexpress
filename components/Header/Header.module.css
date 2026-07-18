@@ -71,27 +71,37 @@
   letter-spacing: -0.02em;
 }
 
+.navWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.actionsWrapper {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
 @media (max-width: 768px) {
   .mainBar {
     justify-content: space-between;
     padding: var(--space-4) var(--space-6);
   }
   .brand {
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     order: 1;
   }
-  /* MainNav (child 2) containing the burger button */
-  .mainBar > *:nth-child(2) {
-    order: 3;
-    flex: 0 0 auto;
-    margin-left: 8px;
-  }
-  /* HeaderActions (child 3) */
-  .mainBar > *:nth-child(3) {
+  .actionsWrapper {
     order: 2;
     flex: 1;
     display: flex;
     justify-content: flex-end;
+    margin-right: 12px;
+  }
+  .navWrapper {
+    order: 3;
+    flex: 0 0 auto;
   }
 }
+
 
