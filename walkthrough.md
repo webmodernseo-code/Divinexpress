@@ -1,32 +1,34 @@
-# Walkthrough — Homepage Sections & Ratings (Phase 2)
+# Walkthrough — Redesign du Footer (Phase 3)
 
-We have aligned the key homepage sections following the TrustBar (Promo Banners, Catalogue Grid, Category Strip, and Weekend Offer Banner) with the prototype design system Snikei.
+Nous avons complètement redessiné le Footer de l'application pour correspondre parfaitement au prototype `Site DivinExpress.dc.html` et aux spécifications premium de la charte Snikei.
 
 ## Changements apportés
 
-### 1. Système d'Évaluation par Étoiles (Star Ratings)
-* **[NEW] [Rating.tsx](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/Rating/Rating.tsx)** : Nouveau composant réutilisable affichant 5 étoiles SVG avec des dégradés (`linearGradient`) précis permettant d'afficher des notes décimales partielles (ex: 4,3) remplies en jaune ambré, avec le nombre d'avis à côté.
-* **[NEW] [Rating.module.css](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/Rating/Rating.module.css)** : Styles du conteneur d'étoiles, espacements et police Inter du compteur.
+### 1. Composant Footer
+* **[MODIFY] [Footer.tsx](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/Footer/Footer.tsx)** :
+  * Agrandissement du logo SVG de `64px` à `90px` avec intégration de la police Inter pour le texte "DX".
+  * Refonte de la structure à 4 colonnes sur PC :
+    - **Logo DX**
+    - **Liens Rapides** : Accueil, Boutique, Blog, Contact (connectés aux traductions dynamiques `tHeader` pour rester multilingue).
+    - **Informations de Contact** : Boutique DivinExpress, adresse (349 Avenue Jean Jaurès, Lyon) et email.
+    - **Réseaux sociaux** : Icônes vectorielles SVG (Facebook, Instagram, TikTok) alignées à droite.
+  * Ligne séparatrice avec une marge supérieure de `44px`.
+  * **Barre inférieure** :
+    - Remplacement des 3 badges de paiement par 5 badges formatés (Visa, Mastercard, PayPal, Mobile Money, CB).
+    - Ajout des 6 liens légaux/politiques (Politique de confidentialité, Politique de remboursement, Conditions d'utilisation, Politique d'expédition, Conditions générales de vente, Mentions légales).
+    - Copyright centré : "© 2026, DivinExpress".
 
-### 2. Catalogue de Ventes & Fiches Produits (Best Sellers)
-* **[MODIFY] [ProductCard.tsx](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/ProductCard/ProductCard.tsx)** : Intégration du composant `<Rating>` sous le prix. Ajout d'un générateur de note déterministe et stable basé sur le slug pour afficher des notes réalistes (ex: 4.3 pour Eclipse Sneakers, 4.1 pour Flexora Boot).
-* **[MODIFY] [ProductCard.module.css](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/ProductCard/ProductCard.module.css)** : Ajout d'un effet de survol premium avec translation verticale (`transform: translateY(-4px)`) et de transitions fluides.
-* **[MODIFY] [ProductGrid.module.css](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/ProductGrid/ProductGrid.module.css)** : Passage à une grille à 3 colonnes sur PC et à 2 colonnes sur tablette/mobile pour s'accorder avec le prototype.
+### 2. Styles et Responsive
+* **[MODIFY] [Footer.module.css](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/Footer/Footer.module.css)** :
+  * Application du fond noir pur (`#0C0407`) et espacement `56px 40px 0` conforme au prototype.
+  * Gestion du positionnement flex et des grilles CSS pour un alignement précis.
+  * Transitions de couleur fluides au survol des liens et icônes.
+  * **Média Queries** :
+    - Sur tablette (≤ 768px) : Passage en grille à 2 colonnes avec alignement des réseaux sociaux à gauche.
+    - Sur mobile (≤ 480px) : Passage en colonne unique (1fr), centrage de tous les textes, boutons de réseaux sociaux et logos pour un rendu moderne et aéré.
 
-### 3. Bannières Promotionnelles & Offre du Week-end
-* **[MODIFY] [PromoBanner.tsx](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/PromoBanner/PromoBanner.tsx)** :
-  * Liaison des images officielles du prototype CDN pour les collections Homme, Running et Offre week-end.
-  * Ajout d'une mise en page pour le format pleine largeur (Weekend Banner) avec description.
-  * Remplacement du bouton imbriqué par un span stylisé pour respecter la spécification HTML5.
-* **[MODIFY] [PromoBanner.module.css](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/PromoBanner/PromoBanner.module.css)** :
-  * Dégradé de fond transparent vers noir (`linear-gradient`) pour améliorer le contraste du texte blanc.
-  * Micro-animation de pulsation continue (`ctaPulse`) sur le bouton d'action principal.
-  * Responsive sur mobile : bannières affichées à 100% de largeur avec boutons optimisés pour les doigts.
-* **[MODIFY] [page.module.css](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/app/[locale]/page.module.css)** : Ajustement des marges et des espacements de la grille de bannières pour un rendu premium identique au prototype.
-
-### 4. Bandeau des Catégories (CategoryStrip)
-* **[MODIFY] [CategoryStrip.tsx](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/CategoryStrip/CategoryStrip.tsx)** : Remplacement de l'image de placeholder par l'image de catégorie officielle du prototype.
-* **[MODIFY] [CategoryStrip.module.css](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/components/CategoryStrip/CategoryStrip.module.css)** : Alignement du texte à gauche, bords arrondis des photos à `20px` et zoom interactif discret au survol.
+### 3. Fichiers de Traduction
+* **[MODIFY] [fr.json](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/messages/fr.json)** / **[en.json](file:///c:/Users/monep/OneDrive/Desktop/Tous%20mes%20dossiers/PROJET%20WEB/DivinExpress/messages/en.json)** : Ajout des clés de traduction pour les six mentions légales et politiques de vente dans la section `footer`.
 
 ---
 
@@ -34,9 +36,8 @@ We have aligned the key homepage sections following the TrustBar (Promo Banners,
 
 ### Tests Automatisés
 * **Compilation TypeScript** : Réussie (`npx tsc --noEmit`).
-* **Tests unitaires** : Les 39 tests existants ont tous été validés avec succès (`npm run test`).
+* **Tests unitaires** : Les 39 tests de la suite passent tous au vert (`npm run test`).
 
 ### Validation Manuelle
-* L'application web est fonctionnelle sur `http://localhost:3002/fr`.
-* Les animations de pulsation du bouton CTA et les effets de translation des fiches produits répondent avec fluidité.
-* Le rendu sur mobile et tablette s'adapte parfaitement avec une grille de produits à 2 colonnes et des bannières empilées de taille idéale.
+* Le rendu visuel à l'adresse [http://localhost:3002/fr](http://localhost:3002/fr) intègre le nouveau footer avec ses effets interactifs.
+* Les icônes sociales et liens de bas de page respectent la mise en page responsive sur mobile et tablette.
