@@ -1,0 +1,109 @@
+/* components/Admin/AdminSidebar.module.css */
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background: var(--color-white, #ffffff);
+  border-right: var(--border-hairline, 1px solid rgba(12, 4, 7, 0.08));
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-6, 24px) var(--space-4, 16px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  padding: 0 var(--space-2, 8px);
+  margin-bottom: var(--space-8, 32px);
+}
+
+.brandText {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: var(--color-black, #0c0407);
+}
+
+.nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6, 24px);
+  overflow-y: auto;
+}
+
+.navGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.navGroupLabel {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: var(--label-tracking, 0.04em);
+  text-transform: uppercase;
+  color: #9ca3af;
+  padding: 0 var(--space-2, 8px);
+  margin-bottom: 6px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px var(--space-2, 8px);
+  border-radius: var(--radius-full, 999px);
+  color: var(--color-black, #0c0407);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  transition: background var(--duration-fast, 150ms) var(--ease-standard, ease);
+}
+
+.navItem:hover {
+  background: var(--color-cream, #f6f1e9);
+}
+
+.navItemActive {
+  background: var(--color-black, #0c0407);
+  color: var(--color-white, #ffffff);
+}
+
+.navItemActive:hover {
+  background: var(--color-black, #0c0407);
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: var(--space-4, 16px);
+  border-top: var(--border-hairline, 1px solid rgba(12, 4, 7, 0.08));
+}
+
+.logout {
+  width: 100%;
+  text-align: left;
+  padding: 9px var(--space-2, 8px);
+  border-radius: var(--radius-full, 999px);
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--duration-fast, 150ms) var(--ease-standard, ease), color var(--duration-fast, 150ms) var(--ease-standard, ease);
+}
+
+.logout:hover {
+  background: var(--color-cream, #f6f1e9);
+  color: var(--color-black, #0c0407);
+}
