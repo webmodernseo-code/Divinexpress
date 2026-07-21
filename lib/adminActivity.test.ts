@@ -28,6 +28,14 @@ describe('buildActivityFeed', () => {
     expect(feed.find((i) => i.id === 'o1')?.amountCents).toBe(5000);
     expect(feed.find((i) => i.id === 'p1')?.amountCents).toBeUndefined();
   });
+
+  it('carries each order\'s own currency onto its activity item, not undefined for products', () => {
+    const orders = [{ id: 'o1', orderNumber: '#1002', totalCents: 3000, createdAt: new Date(2026, 6, 20), currency: 'GBP' }];
+    const products = [{ id: 'p1', nameFr: 'Veste', createdAt: new Date(2026, 6, 19) }];
+    const feed = buildActivityFeed(orders, products, 5);
+    expect(feed.find((i) => i.id === 'o1')?.currency).toBe('GBP');
+    expect(feed.find((i) => i.id === 'p1')?.currency).toBeUndefined();
+  });
 });
 
 describe('formatRelativeTime', () => {
