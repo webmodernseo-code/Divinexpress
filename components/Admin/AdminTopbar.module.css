@@ -1,0 +1,160 @@
+/* components/Admin/AdminTopbar.module.css */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6, 24px);
+  padding: var(--space-4, 16px) var(--space-8, 32px);
+  background: var(--color-white, #ffffff);
+  border-bottom: var(--border-hairline, 1px solid rgba(12, 4, 7, 0.08));
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  max-width: 420px;
+  background: var(--dash-bg, #f7f7f8);
+  border-radius: var(--radius-full, 999px);
+  padding: 8px 14px;
+}
+
+.searchIcon {
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  flex: 1;
+  color: var(--color-black, #0c0407);
+}
+
+.searchInput::placeholder {
+  color: #9ca3af;
+}
+
+.searchKbd {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: #9ca3af;
+  border: 1px solid rgba(12, 4, 7, 0.12);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4, 16px);
+}
+
+.statusPill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dash-green, #10b981);
+  background: var(--dash-green-bg, #d1fae5);
+  border-radius: var(--radius-full, 999px);
+  padding: 6px 12px;
+  white-space: nowrap;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--dash-green, #10b981);
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--color-black, #0c0407);
+  cursor: pointer;
+  transition: background var(--duration-fast, 150ms) var(--ease-standard, ease);
+}
+
+.iconButton:hover {
+  background: var(--dash-bg, #f7f7f8);
+}
+
+.profileWrapper {
+  position: relative;
+}
+
+.profileButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--color-black, #0c0407);
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-black, #0c0407);
+  color: var(--color-white, #ffffff);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.profileName {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.profileMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  background: var(--color-white, #ffffff);
+  border: var(--border-hairline, 1px solid rgba(12, 4, 7, 0.08));
+  border-radius: var(--radius-md, 12px);
+  box-shadow: var(--shadow-popover, 0 8px 40px rgba(12, 4, 7, 0.14));
+  padding: 6px;
+  z-index: 1000;
+}
+
+.logoutItem {
+  width: 100%;
+  text-align: left;
+  padding: 9px 10px;
+  border-radius: var(--radius-sm, 8px);
+  border: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-black, #0c0407);
+  cursor: pointer;
+}
+
+.logoutItem:hover {
+  background: var(--dash-bg, #f7f7f8);
+}
