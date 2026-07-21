@@ -10,6 +10,17 @@
   --color-price-sale: #b3271e;
   --color-brand-blue: #3469f9;
   --color-brand-blue-hover: #1a3ab3;
+  --dash-bg: #f7f7f8;
+  --dash-purple: #7c3aed;
+  --dash-purple-bg: #ede9fe;
+  --dash-orange: #f59e0b;
+  --dash-orange-bg: #fef3c7;
+  --dash-green: #10b981;
+  --dash-green-bg: #d1fae5;
+  --dash-blue: #3b82f6;
+  --dash-blue-bg: #dbeafe;
+  --dash-red: #ef4444;
+  --dash-red-bg: #fee2e2;
 
   --font-sans: var(--font-inter), -apple-system, sans-serif;
 
