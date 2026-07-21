@@ -1,24 +1,77 @@
 .footer {
   background: var(--color-black, #0c0407);
-  color: #cccccc;
-  padding: 56px var(--space-10) 0;
+  color: #d1d5db;
+  padding: 64px var(--space-10) 0;
+  font-family: 'Inter', sans-serif;
 }
 
 .top {
   max-width: var(--container-max);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: auto 1fr 1.3fr auto;
-  gap: 40px;
+  grid-template-columns: 1.5fr 1fr 1.2fr;
+  gap: 56px;
   align-items: start;
 }
 
-.logoCol {
-  flex: none;
+.brandCol {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.logo {
-  display: block;
+.brandLogo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.logoSvg {
+  flex-shrink: 0;
+}
+
+.brandTitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+}
+
+.brandTagline {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #9ca3af;
+  margin: 0;
+  line-height: 1.5;
+  max-width: 300px;
+}
+
+.socials {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.socialIcon {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.socialIcon:hover {
+  background: #ffffff;
+  color: #0c0407;
+  transform: translateY(-2px);
 }
 
 .column {
@@ -27,172 +80,178 @@
 }
 
 .heading {
-  color: var(--color-white, #ffffff);
-  font-family: var(--font-sans);
-  font-size: 15px;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
   font-weight: 700;
   margin: 0 0 20px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
 }
 
 .linksGroup {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .link {
   display: block;
-  color: rgba(255, 255, 255, 0.85);
+  color: #9ca3af;
   text-decoration: none;
-  font-size: 14px;
-  transition: color var(--duration-fast);
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  transition: color 0.2s ease;
 }
 
 .link:hover {
-  color: var(--color-white, #ffffff);
+  color: #ffffff;
 }
 
 .contactDetails {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
+  gap: 8px;
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  color: #9ca3af;
 }
 
 .contactCompany {
-  font-weight: 600;
-  color: var(--color-white, #ffffff);
+  font-weight: 700;
+  font-size: 14px;
+  color: #ffffff;
+  letter-spacing: 0.03em;
 }
 
 .contactText {
   display: block;
+  line-height: 1.4;
 }
 
 .contactMail {
   display: block;
-  margin-top: 8px;
-  color: rgba(255, 255, 255, 0.8);
-  text-decoration: none;
-  transition: color var(--duration-fast);
+  margin-top: 4px;
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: opacity 0.2s ease;
 }
 
 .contactMail:hover {
-  color: var(--color-white, #ffffff);
-}
-
-.socialsColumn {
-  display: flex;
-  gap: 16px;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.socialIcon {
-  color: var(--color-white, #ffffff);
-  transition: color var(--duration-fast);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.socialIcon:hover {
-  color: rgba(255, 255, 255, 0.6);
+  opacity: 0.8;
 }
 
 .divider {
   max-width: var(--container-max);
-  margin: 44px auto 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  margin: 48px auto 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .bottom {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 22px 0;
+  padding: 32px 0 40px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 14px;
+  gap: 28px;
   width: 100%;
 }
 
-.payments {
+.paymentRow {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
+  gap: 16px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.paymentBadge {
-  font-size: 11px;
+.paymentLabel {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 5px;
-  padding: 4px 10px;
-  text-transform: uppercase;
-  font-family: var(--font-sans);
+  color: #9ca3af;
+  letter-spacing: 0.02em;
+}
+
+.paymentLogos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.paymentCard {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: transform 0.2s ease;
+}
+
+.paymentCard:hover {
+  transform: translateY(-2px);
+}
+
+.subBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .policyLinks {
   display: flex;
   flex-wrap: wrap;
   gap: 12px 24px;
-  justify-content: center;
 }
 
 .policyLink {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+  color: #9ca3af;
   text-decoration: none;
   cursor: pointer;
-  transition: color var(--duration-fast);
-  font-family: var(--font-sans);
+  transition: color 0.2s ease;
+  font-family: 'Inter', sans-serif;
 }
 
 .policyLink:hover {
-  color: var(--color-white, #ffffff);
+  color: #ffffff;
 }
 
 .copyright {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
+  font-size: 13px;
+  color: #6b7280;
   margin: 0;
-  font-family: var(--font-sans);
+  font-family: 'Inter', sans-serif;
 }
 
 @media (max-width: 768px) {
   .footer {
     padding: 48px var(--space-6) 0;
   }
+
   .top {
     grid-template-columns: 1fr 1fr;
-    gap: 40px var(--gutter);
+    gap: 36px;
   }
-  .logoCol {
+
+  .brandCol {
     grid-column: span 2;
   }
-  .socialsColumn {
-    grid-column: span 2;
-    justify-content: flex-start;
-    margin-top: 0;
-  }
-  .column {
-    grid-column: span 1;
+
+  .paymentRow {
+    flex-direction: column;
     align-items: flex-start;
-    text-align: left;
+    gap: 12px;
   }
-  .bottom {
+
+  .subBottom {
+    flex-direction: column;
     align-items: flex-start;
-    gap: 20px;
-  }
-  .payments {
-    justify-content: flex-start;
-  }
-  .policyLinks {
-    justify-content: flex-start;
+    gap: 16px;
   }
 }
 
@@ -200,43 +259,19 @@
   .footer {
     padding: 36px var(--space-4) 0;
   }
+
   .top {
     grid-template-columns: 1fr;
     gap: 32px;
   }
-  .logoCol {
+
+  .brandCol {
     grid-column: span 1;
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 0;
   }
-  .column {
-    grid-column: span 1;
-    align-items: flex-start;
-    text-align: left;
-  }
-  .socialsColumn {
-    grid-column: span 1;
-    justify-content: flex-start;
-  }
-  .divider {
-    margin: 36px auto 0;
-  }
-  .bottom {
-    padding: 24px 0;
-    align-items: flex-start;
-    gap: 20px;
-  }
-  .payments {
-    justify-content: flex-start;
-  }
+
   .policyLinks {
-    justify-content: flex-start;
     flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-  }
-  .copyright {
-    text-align: left;
+    gap: 10px;
   }
 }
+
