@@ -83,23 +83,23 @@
 }
 
 .iconPurple {
-  background: var(--dash-purple-bg);
-  color: var(--dash-purple);
+  background: var(--dash-purple-bg, #ede9fe);
+  color: var(--dash-purple, #7c3aed);
 }
 
 .iconOrange {
-  background: var(--dash-orange-bg);
-  color: var(--dash-orange);
+  background: var(--dash-orange-bg, #fef3c7);
+  color: var(--dash-orange, #f59e0b);
 }
 
 .iconGreen {
-  background: var(--dash-green-bg);
-  color: var(--dash-green);
+  background: var(--dash-green-bg, #d1fae5);
+  color: var(--dash-green, #10b981);
 }
 
 .iconBlue {
-  background: var(--dash-blue-bg);
-  color: var(--dash-blue);
+  background: var(--dash-blue-bg, #dbeafe);
+  color: var(--dash-blue, #3b82f6);
 }
 
 .quickText {

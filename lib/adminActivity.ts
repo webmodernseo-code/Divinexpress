@@ -4,10 +4,11 @@ export interface ActivityItem {
   label: string;
   createdAt: Date;
   amountCents?: number;
+  currency?: string;
 }
 
 export function buildActivityFeed(
-  recentOrders: { id: string; orderNumber: string; totalCents: number; createdAt: Date }[],
+  recentOrders: { id: string; orderNumber: string; totalCents: number; createdAt: Date; currency: string }[],
   recentProducts: { id: string; nameFr: string; createdAt: Date }[],
   limit: number
 ): ActivityItem[] {
@@ -16,7 +17,8 @@ export function buildActivityFeed(
     type: 'order',
     label: `Nouvelle commande ${o.orderNumber}`,
     createdAt: o.createdAt,
-    amountCents: o.totalCents
+    amountCents: o.totalCents,
+    currency: o.currency
   }));
   const productItems: ActivityItem[] = recentProducts.map((p) => ({
     id: p.id,

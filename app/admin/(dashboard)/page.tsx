@@ -79,7 +79,13 @@ export default async function AdminOverviewPage() {
   const chartTotalCents = chartData.reduce((sum, b) => sum + b.totalCents, 0);
 
   const activityFeed = buildActivityFeed(
-    recentOrders.map((o) => ({ id: o.id, orderNumber: o.orderNumber, totalCents: o.totalCents, createdAt: o.createdAt })),
+    recentOrders.map((o) => ({
+      id: o.id,
+      orderNumber: o.orderNumber,
+      totalCents: o.totalCents,
+      createdAt: o.createdAt,
+      currency: o.currency
+    })),
     recentProducts.map((p) => ({ id: p.id, nameFr: p.nameFr, createdAt: p.createdAt })),
     5
   );
@@ -235,7 +241,12 @@ export default async function AdminOverviewPage() {
                     <span className={styles.activityLabel}>{item.label}</span>
                     <span className={styles.activityTime}>{formatRelativeTime(item.createdAt)}</span>
                     {item.amountCents !== undefined && (
-                      <span className={styles.activityAmount}>{formatEUR(item.amountCents)}</span>
+                      <span className={styles.activityAmount}>
+                        {new Intl.NumberFormat('fr-FR', {
+                          style: 'currency',
+                          currency: item.currency ?? 'EUR'
+                        }).format(item.amountCents / 100)}
+                      </span>
                     )}
                   </li>
                 ))}

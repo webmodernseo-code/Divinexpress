@@ -3,7 +3,7 @@ import { buildActivityFeed, formatRelativeTime } from './adminActivity';
 
 describe('buildActivityFeed', () => {
   it('merges and sorts orders and products by most recent first', () => {
-    const orders = [{ id: 'o1', orderNumber: '#1001', totalCents: 5000, createdAt: new Date(2026, 6, 20, 10, 0, 0) }];
+    const orders = [{ id: 'o1', orderNumber: '#1001', totalCents: 5000, createdAt: new Date(2026, 6, 20, 10, 0, 0), currency: 'EUR' }];
     const products = [{ id: 'p1', nameFr: 'Veste', createdAt: new Date(2026, 6, 21, 9, 0, 0) }];
     const feed = buildActivityFeed(orders, products, 5);
     expect(feed.map((item) => item.id)).toEqual(['p1', 'o1']);
@@ -14,14 +14,15 @@ describe('buildActivityFeed', () => {
       id: `o${i}`,
       orderNumber: `#${i}`,
       totalCents: 100,
-      createdAt: new Date(2026, 6, 21, i, 0, 0)
+      createdAt: new Date(2026, 6, 21, i, 0, 0),
+      currency: 'EUR'
     }));
     const feed = buildActivityFeed(orders, [], 3);
     expect(feed).toHaveLength(3);
   });
 
   it('includes amountCents for orders but not for products', () => {
-    const orders = [{ id: 'o1', orderNumber: '#1001', totalCents: 5000, createdAt: new Date(2026, 6, 20) }];
+    const orders = [{ id: 'o1', orderNumber: '#1001', totalCents: 5000, createdAt: new Date(2026, 6, 20), currency: 'EUR' }];
     const products = [{ id: 'p1', nameFr: 'Veste', createdAt: new Date(2026, 6, 19) }];
     const feed = buildActivityFeed(orders, products, 5);
     expect(feed.find((i) => i.id === 'o1')?.amountCents).toBe(5000);
