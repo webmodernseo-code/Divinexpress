@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { hashPassword } from '../lib/adminAuth';
 
 const prisma = new PrismaClient();
 
@@ -213,6 +214,19 @@ async function main() {
         }
       }
     });
+  }
+
+  const adminEmail = process.env.ADMIN_SEED_EMAIL;
+  const adminPassword = process.env.ADMIN_SEED_PASSWORD;
+  if (adminEmail && adminPassword) {
+    await prisma.admin.upsert({
+      where: { email: adminEmail },
+      update: { passwordHash: hashPassword(adminPassword) },
+      create: { email: adminEmail, passwordHash: hashPassword(adminPassword), role: 'admin' }
+    });
+    console.log(`Admin account ready: ${adminEmail}`);
+  } else {
+    console.log('ADMIN_SEED_EMAIL/ADMIN_SEED_PASSWORD not set — skipping admin account seed.');
   }
 }
 
