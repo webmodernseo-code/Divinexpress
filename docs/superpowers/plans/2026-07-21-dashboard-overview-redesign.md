@@ -26,13 +26,16 @@
 - Modify: `app/styles/tokens.css`
 
 **Interfaces:**
-- Produces: CSS custom properties `--dash-purple`, `--dash-purple-bg`, `--dash-orange`, `--dash-orange-bg`, `--dash-green`, `--dash-green-bg`, `--dash-blue`, `--dash-blue-bg`, `--dash-red`, `--dash-red-bg` — consumed by Tasks 5, 6, 8.
+- Produces: CSS custom properties `--dash-bg`, `--dash-purple`, `--dash-purple-bg`, `--dash-orange`, `--dash-orange-bg`, `--dash-green`, `--dash-green-bg`, `--dash-blue`, `--dash-blue-bg`, `--dash-red`, `--dash-red-bg` — consumed by Tasks 5, 6, 7, 8.
+
+**Note:** `--dash-bg` (a neutral light grey, `#f7f7f8`) replaces every `--color-cream` use inside the dashboard proper — the shell background (Task 7) and the topbar's search-field background and icon/menu hover tints (Task 6). The user reviewed a static HTML preview of this design and found `--color-cream` (a warm sand tone, already used for the public site and the login page) didn't fit the "premium SaaS" look of the reference screenshots, which use a neutral near-white/light-grey background. This only changes the *admin dashboard* — the public site and the login page are unaffected and keep `--color-cream`.
 
 - [ ] **Step 1: Add the tokens**
 
 In `app/styles/tokens.css`, inside the existing `:root { ... }` block, immediately after the `--color-brand-blue-hover` line, add:
 
 ```css
+  --dash-bg: #f7f7f8;
   --dash-purple: #7c3aed;
   --dash-purple-bg: #ede9fe;
   --dash-orange: #f59e0b;
@@ -54,7 +57,7 @@ Expected: no new errors
 
 ```bash
 git add app/styles/tokens.css
-git commit -m "feat: add colored accent palette tokens for the admin dashboard"
+git commit -m "feat: add colored accent palette and neutral dashboard background tokens"
 ```
 
 ---
@@ -752,7 +755,7 @@ export function AdminTopbar({ name, email }: { name: string | null; email: strin
   gap: 8px;
   flex: 1;
   max-width: 420px;
-  background: var(--color-cream, #f6f1e9);
+  background: var(--dash-bg, #f7f7f8);
   border-radius: var(--radius-full, 999px);
   padding: 8px 14px;
 }
@@ -827,7 +830,7 @@ export function AdminTopbar({ name, email }: { name: string | null; email: strin
 }
 
 .iconButton:hover {
-  background: var(--color-cream, #f6f1e9);
+  background: var(--dash-bg, #f7f7f8);
 }
 
 .profileWrapper {
@@ -893,7 +896,7 @@ export function AdminTopbar({ name, email }: { name: string | null; email: strin
 }
 
 .logoutItem:hover {
-  background: var(--color-cream, #f6f1e9);
+  background: var(--dash-bg, #f7f7f8);
 }
 ```
 
@@ -979,7 +982,7 @@ Replace the full contents of `app/admin/(dashboard)/layout.module.css`:
 .shell {
   display: flex;
   min-height: 100vh;
-  background: var(--color-cream, #f6f1e9);
+  background: var(--dash-bg, #f7f7f8);
   font-family: var(--font-sans);
 }
 
