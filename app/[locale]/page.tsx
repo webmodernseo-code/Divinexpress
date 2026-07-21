@@ -8,7 +8,6 @@ import { ProductMarquee } from '@/components/ProductMarquee/ProductMarquee';
 import { CategoryStrip } from '@/components/CategoryStrip/CategoryStrip';
 import { TestimonialCarousel } from '@/components/TestimonialCarousel/TestimonialCarousel';
 import { Faq } from '@/components/Faq/Faq';
-import { BlogPreview } from '@/components/BlogPreview/BlogPreview';
 import type { Locale } from '@/i18n';
 import styles from './page.module.css';
 
@@ -23,40 +22,13 @@ export default async function HomePage({ params }: { params: { locale: string } 
     <>
       <Hero locale={locale} />
       <TrustBar />
-      <div className={styles.promoPair}>
-        <PromoBanner
-          title={t('promoHommeTitle')}
-          ctaLabel={t('promoHommeCta')}
-          href="/homme"
-          locale={locale}
-          imageSeed="divinexpress-promo-homme"
-          badge={t('promoHommeBadge')}
-        />
-        <PromoBanner
-          title={t('promoSaleTitle')}
-          ctaLabel={t('promoSaleCta')}
-          href="/sale"
-          locale={locale}
-          imageSeed="divinexpress-promo-sale"
-          badge={t('promoSaleBadge')}
-        />
-      </div>
       <ProductGrid title={t('bestSellersTitle')} products={featured} locale={locale} />
       <CategoryStrip locale={locale} />
-      <PromoBanner
-        title={t('discountTitle')}
-        ctaLabel={t('discountCta')}
-        href="/sale"
-        locale={locale}
-        imageSeed="divinexpress-weekend"
-        badge={t('discountBadge')}
-        description={t('discountDesc')}
-        size="full"
-      />
       <ProductMarquee title={t('newArrivalsTitle')} products={newArrivals} locale={locale} />
-      <TestimonialCarousel />
+      <TestimonialCarousel locale={locale} />
       <Faq />
-      <BlogPreview locale={locale} />
     </>
   );
+
 }
+

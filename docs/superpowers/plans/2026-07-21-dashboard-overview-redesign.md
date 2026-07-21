@@ -1604,8 +1604,8 @@ Replace the full contents of `app/admin/(dashboard)/page.module.css`:
 
 .stockBadge {
   font-weight: 700;
-  color: var(--dash-orange, #f59e0b);
-  background: var(--dash-orange-bg, #fef3c7);
+  color: var(--color-white, #ffffff);
+  background: var(--dash-orange, #f59e0b);
   border-radius: var(--radius-full, 999px);
   padding: 4px 10px;
   white-space: nowrap;

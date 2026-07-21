@@ -1,7 +1,7 @@
 .section {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 80px var(--space-10);
+  padding: 64px var(--space-10);
 }
 
 .title {

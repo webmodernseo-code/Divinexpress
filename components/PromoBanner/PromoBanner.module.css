@@ -97,19 +97,24 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-white);
-  color: var(--color-black);
-  border-radius: var(--radius-full);
-  padding: 8px 18px;
-  font-size: 13px;
+  background: var(--color-white, #ffffff);
+  color: var(--color-black, #0c0407);
+  border-radius: 9999px;
+  padding: 10px 22px;
+  font-size: 14px;
   font-weight: 600;
-  font-family: var(--font-sans);
-  transition: background-color var(--duration-fast);
+  font-family: 'Inter', var(--font-sans), sans-serif;
+  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
 }
 
 .ctaButton:hover {
-  background-color: var(--color-cream);
+  background-color: #ffffff;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
 }
+
 
 .fullLayout {
   display: flex;

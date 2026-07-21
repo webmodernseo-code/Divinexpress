@@ -62,13 +62,13 @@ export default async function CategoryPage({
   if (params.category === 'boutique' || params.category === 'shop') {
     title = locale === 'fr' ? 'Découvrir la boutique' : 'Discover the Boutique';
     subtitle = locale === 'fr' 
-      ? 'Explorez l\'ensemble de nos collections exclusives conçues pour le confort et le sport.' 
-      : 'Explore all of our exclusive collections designed for comfort and sports.';
+      ? "Explorez l'ensemble de nos collections exclusives conçues pour le confort et le sport." 
+      : "Explore all of our exclusive collections designed for comfort and sports.";
   } else if (params.category === SALE_SLUG) {
     title = locale === 'fr' ? 'Offres & Promotions' : 'Special Offers';
     subtitle = locale === 'fr' 
-      ? 'Les meilleures réductions sur une sélection d\'articles techniques.' 
-      : 'The best deals on a selection of technical sportswear.';
+      ? "Les meilleures réductions sur une sélection d'articles techniques." 
+      : "The best deals on a selection of technical sportswear.";
   } else {
     const matched = categories.find((c) => c.slug === params.category);
     title = matched ? (locale === 'fr' ? matched.name : matched.name) : params.category;
@@ -267,8 +267,8 @@ export default async function CategoryPage({
               <h3>{locale === 'fr' ? 'Aucun résultat trouvé' : 'No results found'}</h3>
               <p>
                 {locale === 'fr'
-                  ? 'Essayez de modifier vos filtres pour découvrir d\'autres modèles.'
-                  : 'Try modifying your filters to discover other models.'}
+                  ? "Essayez de modifier vos filtres pour découvrir d'autres modèles."
+                  : "Try modifying your filters to discover other models."}
               </p>
             </div>
           )}

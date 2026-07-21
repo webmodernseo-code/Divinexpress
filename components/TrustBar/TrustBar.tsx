@@ -23,15 +23,27 @@ const ITEMS = [
 export async function TrustBar() {
   const t = await getTranslations('trustbar');
 
+  // Repeat items 2 times for seamless infinite scroll
+  const repeatedItems = [...ITEMS, ...ITEMS];
+
   return (
-    <section className={styles.bar}>
-      {ITEMS.map((item) => (
-        <div key={item.key} className={styles.item}>
-          <img src={item.icon} alt="" className={styles.icon} />
-          <h3 className={styles.title}>{t(`${item.key}Title`)}</h3>
-          <p className={styles.desc}>{t(`${item.key}Desc`)}</p>
+    <section className={styles.wrapper}>
+      <div className={styles.viewport}>
+        <div className={styles.track}>
+          {repeatedItems.map((item, idx) => (
+            <div key={`${item.key}-${idx}`} className={styles.item}>
+              <img src={item.icon} alt="" className={styles.icon} />
+              <div className={styles.textGroup}>
+                <h3 className={styles.title}>{t(`${item.key}Title`)}</h3>
+                <p className={styles.desc}>{t(`${item.key}Desc`)}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </section>
   );
 }
+
+
+

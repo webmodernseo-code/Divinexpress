@@ -1,16 +1,18 @@
-/* components/Faq/Faq.module.css */
 .section {
   max-width: 900px;
   margin: 0 auto;
-  padding: var(--space-24) var(--space-8);
+  padding: 64px var(--space-8);
 }
 
 .title {
-  font-size: var(--heading-2-size);
-  font-weight: var(--heading-2-weight);
+  font-family: 'Inter', var(--font-sans), sans-serif;
+  font-size: 30px;
+  font-weight: 700;
   text-align: center;
-  margin: 0 0 var(--space-10);
+  margin: 0 0 36px;
+  color: var(--color-black);
 }
+
 
 .list {
   display: flex;
@@ -54,3 +56,20 @@
   font-size: var(--body-sm-size);
   line-height: 1.6;
 }
+
+@media (max-width: 768px) {
+  .section {
+    padding: 48px var(--space-6);
+  }
+  .title {
+    font-size: 24px;
+    margin: 0 0 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 36px var(--space-4);
+  }
+}
+

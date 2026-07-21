@@ -64,10 +64,12 @@ export async function getProductsByCategory(categorySlug: string, filters: Produ
     return sortProducts(onSaleProducts, sort);
   }
 
+  const isAllShop = categorySlug === 'boutique' || categorySlug === 'shop';
+
   const products = await prisma.product.findMany({
     where: {
       status: 'PUBLISHED',
-      category: { slug: categorySlug },
+      ...(!isAllShop ? { category: { slug: categorySlug } } : {}),
       ...(hasVariantFilter ? { variants: { some: variants } } : {})
     },
     include: CATALOG_INCLUDE,
