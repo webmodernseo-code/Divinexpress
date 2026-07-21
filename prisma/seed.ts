@@ -218,11 +218,12 @@ async function main() {
 
   const adminEmail = process.env.ADMIN_SEED_EMAIL;
   const adminPassword = process.env.ADMIN_SEED_PASSWORD;
+  const adminName = process.env.ADMIN_SEED_NAME;
   if (adminEmail && adminPassword) {
     await prisma.admin.upsert({
       where: { email: adminEmail },
-      update: { passwordHash: hashPassword(adminPassword) },
-      create: { email: adminEmail, passwordHash: hashPassword(adminPassword), role: 'admin' }
+      update: { passwordHash: hashPassword(adminPassword), name: adminName },
+      create: { email: adminEmail, passwordHash: hashPassword(adminPassword), name: adminName, role: 'admin' }
     });
     console.log(`Admin account ready: ${adminEmail}`);
   } else {

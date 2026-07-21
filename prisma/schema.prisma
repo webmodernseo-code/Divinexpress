@@ -122,6 +122,7 @@ model ShippingZone {
 model Admin {
   id           String   @id @default(cuid())
   email        String   @unique
+  name         String?
   passwordHash String
   role         String   @default("admin")
   createdAt    DateTime @default(now())
