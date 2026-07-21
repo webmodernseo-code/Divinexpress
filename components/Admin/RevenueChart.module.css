@@ -1,0 +1,22 @@
+.wrapper {
+  width: 100%;
+}
+
+.svg {
+  width: 100%;
+  height: 220px;
+  display: block;
+}
+
+.xLabels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding: 0 4px;
+}
+
+.xLabel {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: #9ca3af;
+}
