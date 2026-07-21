@@ -16,7 +16,7 @@ export async function login(formData: FormData) {
     redirect('/admin/login?error=1');
   }
 
-  cookies().set('admin_session', createSessionToken(admin.id, secret), {
+  cookies().set('admin_session', await createSessionToken(admin.id, secret), {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
