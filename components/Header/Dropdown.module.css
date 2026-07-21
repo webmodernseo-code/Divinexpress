@@ -78,6 +78,12 @@
   }
 }
 
+.panelRight {
+  left: auto;
+  right: 0;
+  transform-origin: top right;
+}
+
 .option {
   display: flex;
   align-items: center;

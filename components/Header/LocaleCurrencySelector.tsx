@@ -45,6 +45,7 @@ export function LocaleCurrencySelector({
         onChange={setCurrency}
         ariaLabel="Currency"
         theme={theme}
+        align="right"
       />
     </div>
   );

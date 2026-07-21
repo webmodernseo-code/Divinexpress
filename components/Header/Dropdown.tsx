@@ -15,6 +15,7 @@ export function Dropdown({
   onChange,
   ariaLabel,
   theme = 'dark',
+  align = 'left',
   className
 }: {
   options: DropdownOption[];
@@ -22,6 +23,7 @@ export function Dropdown({
   onChange: (value: string) => void;
   ariaLabel: string;
   theme?: 'dark' | 'light';
+  align?: 'left' | 'right';
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -110,7 +112,7 @@ export function Dropdown({
         </svg>
       </button>
       {open && (
-        <div role="listbox" className={styles.panel}>
+        <div role="listbox" className={`${styles.panel} ${align === 'right' ? styles.panelRight : ''}`}>
           {options.map((option, index) => {
             const isSelected = option.value === value;
             const isHighlighted = index === highlightedIndex;
