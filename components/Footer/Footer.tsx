@@ -24,7 +24,7 @@ export async function Footer({ locale }: { locale: Locale }) {
             <span className={styles.brandTitle}>DIVINEXPRESS</span>
           </Link>
           <p className={styles.brandTagline}>
-            Mode & vêtements premium livrés en France et en Afrique de l'Ouest.
+            Mode & vêtements premium livrés en France et en Afrique de l&apos;Ouest.
           </p>
           <div className={styles.socials}>
             <a href="#" className={styles.socialIcon} aria-label="Facebook">
