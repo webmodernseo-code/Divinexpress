@@ -1,28 +1,13 @@
-import { randomBytes, scryptSync, timingSafeEqual } from 'crypto';
+// Edge-safe: this module is imported by middleware.ts, which Next.js runs
+// in the Edge runtime. Node-only APIs (crypto.createHmac, crypto.scryptSync,
+// crypto.timingSafeEqual, fs, etc.) are NOT available there and throw at
+// request time — keep this file limited to Web-standard globals (crypto.subtle,
+// TextEncoder, Buffer), which work in both the Edge runtime and Node.js 19+.
+// Password hashing (Node-only, scrypt) lives in ./adminPassword instead,
+// which must never be imported from here or from middleware.ts.
 
-const SCRYPT_KEYLEN = 64;
 const SESSION_DURATION_MS = 1000 * 60 * 60 * 24 * 7; // 7 days
 
-export function hashPassword(password: string): string {
-  const salt = randomBytes(16).toString('hex');
-  const hash = scryptSync(password, salt, SCRYPT_KEYLEN).toString('hex');
-  return `${salt}:${hash}`;
-}
-
-export function verifyPassword(password: string, storedHash: string): boolean {
-  const [salt, hash] = storedHash.split(':');
-  if (!salt || !hash) return false;
-  const candidateHash = scryptSync(password, salt, SCRYPT_KEYLEN);
-  const storedHashBuffer = Buffer.from(hash, 'hex');
-  if (candidateHash.length !== storedHashBuffer.length) return false;
-  return timingSafeEqual(candidateHash, storedHashBuffer);
-}
-
-// Session tokens are verified from `middleware.ts`, which Next.js runs in
-// the Edge runtime — Node's `crypto.createHmac`/`timingSafeEqual` don't
-// exist there and throw at request time. The Web Crypto API (`crypto.subtle`)
-// is available as a global in both the Edge runtime and Node.js 19+, so it's
-// used here instead for the HMAC signing/verification path.
 async function sign(payload: string, secret: string): Promise<string> {
   const key = await crypto.subtle.importKey(
     'raw',

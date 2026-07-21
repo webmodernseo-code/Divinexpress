@@ -3,7 +3,8 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { verifyPassword, createSessionToken } from '@/lib/adminAuth';
+import { verifyPassword } from '@/lib/adminPassword';
+import { createSessionToken } from '@/lib/adminSession';
 
 export async function login(formData: FormData) {
   const email = String(formData.get('email') ?? '');

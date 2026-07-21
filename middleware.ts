@@ -1,7 +1,7 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 import { locales, defaultLocale } from './i18n';
-import { shouldRedirectToLogin } from './lib/adminAuth';
+import { shouldRedirectToLogin } from './lib/adminSession';
 
 const intlMiddleware = createMiddleware({
   locales,
