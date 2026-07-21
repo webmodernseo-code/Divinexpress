@@ -2,7 +2,6 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getFeaturedProducts, getNewArrivals } from '@/lib/catalog';
 import { Hero } from '@/components/Hero/Hero';
 import { TrustBar } from '@/components/TrustBar/TrustBar';
-import { PromoBanner } from '@/components/PromoBanner/PromoBanner';
 import { ProductGrid } from '@/components/ProductGrid/ProductGrid';
 import { ProductMarquee } from '@/components/ProductMarquee/ProductMarquee';
 import { CategoryStrip } from '@/components/CategoryStrip/CategoryStrip';
@@ -29,6 +28,4 @@ export default async function HomePage({ params }: { params: { locale: string } 
       <Faq />
     </>
   );
-
 }
-
