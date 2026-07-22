@@ -1,7 +1,7 @@
 // components/Admin/ProductImageManager.tsx
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   getCloudinarySignatureAction,
   attachProductImage,
@@ -23,6 +23,8 @@ export function ProductImageManager({
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const dragOriginRef = useRef<ProductImage[] | null>(null);
+  const droppedRef = useRef(false);
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -62,11 +64,19 @@ export function ProductImageManager({
   }
 
   async function handleRemove(imageId: string) {
+    const previous = images;
     setImages((current) => current.filter((img) => img.id !== imageId));
-    await removeProductImage(imageId);
+    try {
+      await removeProductImage(imageId);
+    } catch {
+      setImages(previous);
+      setError('La suppression de la photo a échoué, réessayez.');
+    }
   }
 
   function handleDragStart(index: number) {
+    dragOriginRef.current = images;
+    droppedRef.current = false;
     setDragIndex(index);
   }
 
@@ -83,11 +93,28 @@ export function ProductImageManager({
   }
 
   async function handleDrop() {
+    droppedRef.current = true;
     setDragIndex(null);
-    await reorderProductImages(
-      productId,
-      images.map((img) => img.id)
-    );
+    const origin = dragOriginRef.current;
+    try {
+      await reorderProductImages(
+        productId,
+        images.map((img) => img.id)
+      );
+    } catch {
+      if (origin) setImages(origin);
+      setError('Le réordonnancement des photos a échoué, réessayez.');
+    } finally {
+      dragOriginRef.current = null;
+    }
+  }
+
+  function handleDragEnd() {
+    if (!droppedRef.current && dragOriginRef.current) {
+      setImages(dragOriginRef.current);
+    }
+    dragOriginRef.current = null;
+    setDragIndex(null);
   }
 
   return (
@@ -102,6 +129,7 @@ export function ProductImageManager({
             onDragStart={() => handleDragStart(index)}
             onDragOver={(e) => handleDragOver(e, index)}
             onDrop={handleDrop}
+            onDragEnd={handleDragEnd}
             className={styles.imageCard}
           >
             <img src={image.url} alt={image.alt} className={styles.image} />

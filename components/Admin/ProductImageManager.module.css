@@ -24,14 +24,14 @@
   color: var(--color-price-sale, #b3271e);
   background: rgba(179, 39, 30, 0.08);
   border-radius: var(--radius-sm, 8px);
-  padding: 10px 12px;
+  padding: 10px var(--space-3, 12px);
   margin: 0;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 12px;
+  gap: var(--space-3, 12px);
 }
 
 .imageCard {
@@ -73,6 +73,6 @@
   color: var(--color-black, #0c0407);
   border: 1px dashed rgba(12, 4, 7, 0.2);
   border-radius: var(--radius-sm, 8px);
-  padding: 10px 16px;
+  padding: 10px var(--space-4, 16px);
   cursor: pointer;
 }
