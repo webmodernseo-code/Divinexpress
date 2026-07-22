@@ -36,3 +36,14 @@ export function parseVariantRows(fields: [string, string][]): ParsedVariantRow[]
       sku: row.sku ?? ''
     }));
 }
+
+export function toVariantData(variant: ParsedVariantRow) {
+  return {
+    size: variant.size,
+    color: variant.color,
+    priceCents: variant.priceCents,
+    compareAtPriceCents: variant.compareAtPriceCents,
+    stock: variant.stock,
+    sku: variant.sku
+  };
+}

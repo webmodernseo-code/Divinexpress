@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { Prisma, type ProductStatus } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { slugify, dedupeSlug } from '@/lib/slug';
-import { parseVariantRows, type ParsedVariantRow } from '@/lib/productForm';
+import { parseVariantRows, toVariantData, type ParsedVariantRow } from '@/lib/productForm';
 import { canDelete } from '@/lib/productDeletion';
 import { deleteCloudinaryImage } from '@/lib/cloudinary';
 
@@ -79,14 +79,7 @@ export async function createProduct(prevState: ProductActionState, formData: For
         ...fields,
         slug,
         variants: {
-          create: variants.map((v) => ({
-            sku: v.sku,
-            size: v.size,
-            color: v.color,
-            priceCents: v.priceCents,
-            compareAtPriceCents: v.compareAtPriceCents,
-            stock: v.stock
-          }))
+          create: variants.map((v) => toVariantData(v))
         }
       }
     });
@@ -133,20 +126,13 @@ export async function updateProduct(
       await tx.product.update({ where: { id }, data: fields });
 
       for (const removed of removedVariants) {
-        await tx.productVariant.delete({ where: { id: removed.id } });
+        await tx.productVariant.delete({ where: { id: removed.id, productId: id } });
       }
 
       for (const variant of variants) {
-        const data = {
-          size: variant.size,
-          color: variant.color,
-          priceCents: variant.priceCents,
-          compareAtPriceCents: variant.compareAtPriceCents,
-          stock: variant.stock,
-          sku: variant.sku
-        };
+        const data = toVariantData(variant);
         if (variant.id) {
-          await tx.productVariant.update({ where: { id: variant.id }, data });
+          await tx.productVariant.update({ where: { id: variant.id, productId: id }, data });
         } else {
           await tx.productVariant.create({ data: { ...data, productId: id } });
         }
@@ -155,6 +141,11 @@ export async function updateProduct(
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
       return { error: 'Ce SKU est déjà utilisé par une autre variante.' };
+    }
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2003') {
+      return {
+        error: 'Cette variante a déjà été commandée et ne peut pas être supprimée — passez son stock à 0 à la place.'
+      };
     }
     throw err;
   }
@@ -178,11 +169,18 @@ export async function deleteProduct(id: string): Promise<void> {
     select: { cloudinaryPublicId: true }
   });
 
-  await prisma.$transaction([
-    prisma.productImage.deleteMany({ where: { productId: id } }),
-    prisma.productVariant.deleteMany({ where: { productId: id } }),
-    prisma.product.delete({ where: { id } })
-  ]);
+  try {
+    await prisma.$transaction([
+      prisma.productImage.deleteMany({ where: { productId: id } }),
+      prisma.productVariant.deleteMany({ where: { productId: id } }),
+      prisma.product.delete({ where: { id } })
+    ]);
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2003') {
+      redirect('/admin/produits?error=commandes-existantes');
+    }
+    throw err;
+  }
 
   await Promise.all(
     images
