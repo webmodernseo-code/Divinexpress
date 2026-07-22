@@ -54,7 +54,7 @@ export function CartDrawer() {
             </div>
           ) : (
             cart.map((item) => (
-              <div key={`${item.productId}-${item.size}-${item.color}`} className={styles.item}>
+              <div key={`${item.variantId}-${item.size}-${item.color}`} className={styles.item}>
                 <img src={item.image} alt={item.name} className={styles.itemImage} />
                 <div className={styles.itemDetails}>
                   <h4 className={styles.itemName}>{item.name}</h4>
@@ -64,7 +64,7 @@ export function CartDrawer() {
                   <div className={styles.qtyActions}>
                     <div className={styles.stepper}>
                       <button
-                        onClick={() => updateQuantity(item.productId, item.size, item.color, item.quantity - 1)}
+                        onClick={() => updateQuantity(item.variantId, item.size, item.color, item.quantity - 1)}
                         className={styles.stepButton}
                         aria-label="Diminuer"
                       >
@@ -72,7 +72,7 @@ export function CartDrawer() {
                       </button>
                       <span className={styles.qtyValue}>{item.quantity}</span>
                       <button
-                        onClick={() => updateQuantity(item.productId, item.size, item.color, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.variantId, item.size, item.color, item.quantity + 1)}
                         className={styles.stepButton}
                         aria-label="Augmenter"
                       >
@@ -80,7 +80,7 @@ export function CartDrawer() {
                       </button>
                     </div>
                     <button
-                      onClick={() => removeFromCart(item.productId, item.size, item.color)}
+                      onClick={() => removeFromCart(item.variantId, item.size, item.color)}
                       className={styles.removeButton}
                       aria-label="Supprimer"
                     >

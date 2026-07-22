@@ -91,7 +91,7 @@ export function ProductDetailClient({
     if (!activeVariant) return;
 
     addToCart({
-      productId: activeVariant.id,
+      variantId: activeVariant.id,
       slug: product.slug,
       name: locale === 'fr' ? product.nameFr : product.nameEn,
       image: baseImages[0]?.url || '/placeholder-product.svg',
