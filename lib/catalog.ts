@@ -24,7 +24,7 @@ function variantWhere(filters: ProductFilters): Prisma.ProductVariantWhereInput 
 
 const CATALOG_INCLUDE = {
   variants: true,
-  images: true,
+  images: { orderBy: { position: 'asc' } },
   category: true
 } as const;
 
