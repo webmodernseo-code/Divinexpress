@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { updateProduct } from '../actions';
 import { ProductForm } from '@/components/Admin/ProductForm';
+import { ProductImageManager } from '@/components/Admin/ProductImageManager';
 import styles from '../page.module.css';
 
 export default async function EditProductPage({ params }: { params: { id: string } }) {
@@ -58,6 +59,7 @@ export default async function EditProductPage({ params }: { params: { id: string
         product={formProduct}
         action={updateProduct.bind(null, product.id)}
       />
+      <ProductImageManager productId={product.id} initialImages={product.images} />
     </div>
   );
 }

@@ -1,0 +1,120 @@
+// components/Admin/ProductImageManager.tsx
+'use client';
+
+import { useState } from 'react';
+import {
+  getCloudinarySignatureAction,
+  attachProductImage,
+  removeProductImage,
+  reorderProductImages
+} from '@/app/admin/(dashboard)/produits/imageActions';
+import styles from './ProductImageManager.module.css';
+
+type ProductImage = { id: string; url: string; alt: string; position: number };
+
+export function ProductImageManager({
+  productId,
+  initialImages
+}: {
+  productId: string;
+  initialImages: ProductImage[];
+}) {
+  const [images, setImages] = useState(initialImages);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    setUploading(true);
+    setError(null);
+    try {
+      const signature = await getCloudinarySignatureAction();
+      const body = new FormData();
+      body.append('file', file);
+      body.append('api_key', signature.apiKey);
+      body.append('timestamp', String(signature.timestamp));
+      body.append('signature', signature.signature);
+      body.append('folder', signature.folder);
+
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${signature.cloudName}/image/upload`, {
+        method: 'POST',
+        body
+      });
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+      const uploaded: { secure_url: string; public_id: string } = await response.json();
+      const created = await attachProductImage(productId, {
+        url: uploaded.secure_url,
+        publicId: uploaded.public_id,
+        alt: ''
+      });
+      setImages((current) => [...current, created]);
+    } catch {
+      setError("L'envoi de la photo a échoué, réessayez.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function handleRemove(imageId: string) {
+    setImages((current) => current.filter((img) => img.id !== imageId));
+    await removeProductImage(imageId);
+  }
+
+  function handleDragStart(index: number) {
+    setDragIndex(index);
+  }
+
+  function handleDragOver(e: React.DragEvent, index: number) {
+    e.preventDefault();
+    if (dragIndex === null || dragIndex === index) return;
+    setImages((current) => {
+      const next = [...current];
+      const [moved] = next.splice(dragIndex, 1);
+      next.splice(index, 0, moved);
+      return next;
+    });
+    setDragIndex(index);
+  }
+
+  async function handleDrop() {
+    setDragIndex(null);
+    await reorderProductImages(
+      productId,
+      images.map((img) => img.id)
+    );
+  }
+
+  return (
+    <section className={styles.section}>
+      <h2 className={styles.sectionTitle}>Photos</h2>
+      {error && <p className={styles.error}>{error}</p>}
+      <div className={styles.grid}>
+        {images.map((image, index) => (
+          <div
+            key={image.id}
+            draggable
+            onDragStart={() => handleDragStart(index)}
+            onDragOver={(e) => handleDragOver(e, index)}
+            onDrop={handleDrop}
+            className={styles.imageCard}
+          >
+            <img src={image.url} alt={image.alt} className={styles.image} />
+            <button type="button" onClick={() => handleRemove(image.id)} className={styles.removeButton}>
+              Supprimer
+            </button>
+          </div>
+        ))}
+      </div>
+      <label className={styles.uploadButton}>
+        {uploading ? 'Envoi en cours…' : '+ Ajouter une photo'}
+        <input type="file" accept="image/*" onChange={handleFileChange} disabled={uploading} hidden />
+      </label>
+    </section>
+  );
+}
