@@ -30,8 +30,9 @@ export function ProductImageManager({
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     e.target.value = '';
-    if (!file) return;
+    if (!file || busy) return;
 
+    setBusy(true);
     setUploading(true);
     setError(null);
     try {
@@ -61,6 +62,7 @@ export function ProductImageManager({
       setError("L'envoi de la photo a échoué, réessayez.");
     } finally {
       setUploading(false);
+      setBusy(false);
     }
   }
 
@@ -155,7 +157,7 @@ export function ProductImageManager({
       </div>
       <label className={styles.uploadButton}>
         {uploading ? 'Envoi en cours…' : '+ Ajouter une photo'}
-        <input type="file" accept="image/*" onChange={handleFileChange} disabled={uploading} hidden />
+        <input type="file" accept="image/*" onChange={handleFileChange} disabled={uploading || busy} hidden />
       </label>
     </section>
   );
