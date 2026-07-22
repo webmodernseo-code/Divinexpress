@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { percentChange, bucketOrdersByDay, dayRange } from './adminStats';
+import { percentChange, bucketOrdersByDay, dayRange, formatEURCents } from './adminStats';
 
 describe('percentChange', () => {
   it('computes a positive percent change', () => {
@@ -61,5 +61,15 @@ describe('bucketOrdersByDay', () => {
   it('returns buckets in chronological order with correct date keys', () => {
     const buckets = bucketOrdersByDay([], 3, now);
     expect(buckets.map((b) => b.date)).toEqual(['2026-07-19', '2026-07-20', '2026-07-21']);
+  });
+});
+
+describe('formatEURCents', () => {
+  it('formats cents as a French EUR string', () => {
+    expect(formatEURCents(4990)).toMatch(/49,90\s*€/);
+  });
+
+  it('formats zero correctly', () => {
+    expect(formatEURCents(0)).toMatch(/0,00\s*€/);
   });
 });
