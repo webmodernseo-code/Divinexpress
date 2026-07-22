@@ -147,6 +147,9 @@ export async function Footer({ locale }: { locale: Locale }) {
             <Link href="/politique/legal" locale={locale} className={styles.policyLink}>
               {t('utilityLegal')}
             </Link>
+            <a href="/admin/login" className={styles.policyLink}>
+              {t('utilityAdmin')}
+            </a>
           </div>
           <p className={styles.copyright}>© {year}, DivinExpress. Tous droits réservés.</p>
         </div>
