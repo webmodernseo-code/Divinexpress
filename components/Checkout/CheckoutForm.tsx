@@ -6,6 +6,7 @@ import { useCart } from '@/components/Cart/CartContext';
 import { resolveShippingZone } from '@/lib/shippingZone';
 import { createOrder } from '@/app/[locale]/checkout/actions';
 import type { Locale } from '@/i18n';
+import { formatPrice } from '@/lib/pricing';
 import styles from './CheckoutForm.module.css';
 
 type ShippingZone = { id: string; countries: string[]; costCents: number };
@@ -22,10 +23,6 @@ const COUNTRY_NAMES: Record<string, { fr: string; en: string }> = {
   SN: { fr: 'Sénégal', en: 'Senegal' },
   TG: { fr: 'Togo', en: 'Togo' }
 };
-
-function formatEUR(cents: number): string {
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(cents / 100);
-}
 
 export function CheckoutForm({ zones, locale }: { zones: ShippingZone[]; locale: Locale }) {
   const { cart, subtotalCents, clearCart } = useCart();
@@ -136,21 +133,21 @@ export function CheckoutForm({ zones, locale }: { zones: ShippingZone[]; locale:
               <span>
                 {item.name} ({item.size}, {item.color}) × {item.quantity}
               </span>
-              <span>{formatEUR(item.priceCents * item.quantity)}</span>
+              <span>{formatPrice(item.priceCents * item.quantity, locale)}</span>
             </div>
           ))}
           <div className={styles.summaryDivider} />
           <div className={styles.summaryLine}>
             <span>{locale === 'fr' ? 'Sous-total' : 'Subtotal'}</span>
-            <span>{formatEUR(subtotalCents)}</span>
+            <span>{formatPrice(subtotalCents, locale)}</span>
           </div>
           <div className={styles.summaryLine}>
             <span>{locale === 'fr' ? 'Livraison' : 'Shipping'}</span>
-            <span>{formatEUR(shippingCostCents)}</span>
+            <span>{formatPrice(shippingCostCents, locale)}</span>
           </div>
           <div className={`${styles.summaryLine} ${styles.summaryTotal}`}>
             <span>{locale === 'fr' ? 'Total' : 'Total'}</span>
-            <span>{formatEUR(totalCents)}</span>
+            <span>{formatPrice(totalCents, locale)}</span>
           </div>
         </aside>
       </div>

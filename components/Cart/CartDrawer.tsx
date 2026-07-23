@@ -1,7 +1,10 @@
 'use client';
 
+import { useLocale } from 'next-intl';
 import { useCart } from './CartContext';
 import { Link } from '@/i18n/navigation';
+import { formatPrice } from '@/lib/pricing';
+import type { Locale } from '@/i18n';
 import styles from './CartDrawer.module.css';
 
 export function CartDrawer() {
@@ -13,14 +16,7 @@ export function CartDrawer() {
     updateQuantity,
     removeFromCart
   } = useCart();
-
-  const formatPrice = (cents: number) => {
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'EUR',
-      maximumFractionDigits: 0
-    }).format(cents / 100);
-  };
+  const locale = useLocale() as Locale;
 
   return (
     <>
@@ -83,7 +79,7 @@ export function CartDrawer() {
                     </button>
                   </div>
                 </div>
-                <span className={styles.itemPrice}>{formatPrice(item.priceCents * item.quantity)}</span>
+                <span className={styles.itemPrice}>{formatPrice(item.priceCents * item.quantity, locale)}</span>
               </div>
             ))
           )}
@@ -94,7 +90,7 @@ export function CartDrawer() {
         <div className={styles.footer}>
           <div className={styles.summaryRow}>
             <span>Sous-total</span>
-            <span>{formatPrice(subtotalCents)}</span>
+            <span>{formatPrice(subtotalCents, locale)}</span>
           </div>
           <Link href="/checkout" onClick={closeCart} className={styles.checkoutButton}>
             Continuer vers le paiement
