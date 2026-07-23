@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import type { Locale } from '@/i18n';
 import styles from './page.module.css';
 
+export const dynamic = 'force-dynamic';
+
 const STATUS_COPY: Record<string, { fr: string; en: string }> = {
   PENDING: {
     fr: 'Paiement en cours de confirmation. Rechargez cette page dans quelques instants.',
