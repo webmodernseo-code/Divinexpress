@@ -51,6 +51,7 @@ export default async function AdminShippingPage({
                       min="0"
                       defaultValue={(zone.costCents / 100).toFixed(2)}
                       className={styles.inlineInput}
+                      required
                     />
                     <span className={styles.currencyLabel}>€</span>
                     <button type="submit" className={styles.saveButton}>

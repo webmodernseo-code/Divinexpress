@@ -4,8 +4,9 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 
 export async function updateShippingZoneCost(id: string, formData: FormData): Promise<void> {
-  const costEuros = Number(formData.get('costEuros'));
-  if (!Number.isFinite(costEuros) || costEuros < 0) {
+  const rawCost = formData.get('costEuros');
+  const costEuros = Number(rawCost);
+  if (rawCost === null || String(rawCost).trim() === '' || !Number.isFinite(costEuros) || costEuros < 0) {
     redirect('/admin/parametres/livraison?error=cout-invalide');
   }
 
