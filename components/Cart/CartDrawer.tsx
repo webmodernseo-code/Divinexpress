@@ -1,7 +1,7 @@
 'use client';
 
 import { useCart } from './CartContext';
-import { useToast } from '../Toast/ToastContext';
+import { Link } from '@/i18n/navigation';
 import styles from './CartDrawer.module.css';
 
 export function CartDrawer() {
@@ -11,16 +11,8 @@ export function CartDrawer() {
     subtotalCents,
     closeCart,
     updateQuantity,
-    removeFromCart,
-    clearCart
+    removeFromCart
   } = useCart();
-  const { showToast } = useToast();
-
-  const handleCheckout = () => {
-    clearCart();
-    closeCart();
-    showToast('Commande confirmée — merci pour votre achat !');
-  };
 
   const formatPrice = (cents: number) => {
     return new Intl.NumberFormat('fr-FR', {
@@ -104,9 +96,9 @@ export function CartDrawer() {
             <span>Sous-total</span>
             <span>{formatPrice(subtotalCents)}</span>
           </div>
-          <button onClick={handleCheckout} className={styles.checkoutButton}>
+          <Link href="/checkout" onClick={closeCart} className={styles.checkoutButton}>
             Continuer vers le paiement
-          </button>
+          </Link>
         </div>
       </div>
     </>
