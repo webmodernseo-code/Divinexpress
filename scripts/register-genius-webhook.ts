@@ -1,3 +1,5 @@
+process.loadEnvFile('.env');
+
 const WEBHOOK_URL = 'https://divinexpress.fr/api/checkout/webhook';
 
 async function main() {
