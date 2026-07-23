@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export interface CartItem {
-  productId: string;
+  variantId: string;
   slug: string;
   name: string;
   image: string;
@@ -19,8 +19,8 @@ interface CartContextType {
   totalItems: number;
   subtotalCents: number;
   addToCart: (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => void;
-  removeFromCart: (productId: string, size: string, color: string) => void;
-  updateQuantity: (productId: string, size: string, color: string, quantity: number) => void;
+  removeFromCart: (variantId: string, size: string, color: string) => void;
+  updateQuantity: (variantId: string, size: string, color: string, quantity: number) => void;
   clearCart: () => void;
   openCart: () => void;
   closeCart: () => void;
@@ -64,7 +64,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setCart((prev) => {
       const idx = prev.findIndex(
         (item) =>
-          item.productId === newItem.productId &&
+          item.variantId === newItem.variantId &&
           item.size === newItem.size &&
           item.color === newItem.color
       );
@@ -78,23 +78,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setIsOpen(true);
   };
 
-  const removeFromCart = (productId: string, size: string, color: string) => {
+  const removeFromCart = (variantId: string, size: string, color: string) => {
     setCart((prev) =>
       prev.filter(
         (item) =>
-          !(item.productId === productId && item.size === size && item.color === color)
+          !(item.variantId === variantId && item.size === size && item.color === color)
       )
     );
   };
 
-  const updateQuantity = (productId: string, size: string, color: string, quantity: number) => {
+  const updateQuantity = (variantId: string, size: string, color: string, quantity: number) => {
     if (quantity <= 0) {
-      removeFromCart(productId, size, color);
+      removeFromCart(variantId, size, color);
       return;
     }
     setCart((prev) =>
       prev.map((item) =>
-        item.productId === productId && item.size === size && item.color === color
+        item.variantId === variantId && item.size === size && item.color === color
           ? { ...item, quantity }
           : item
       )

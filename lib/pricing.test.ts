@@ -25,8 +25,8 @@ describe('formatPrice', () => {
     expect(formatPrice(8900, 'fr')).toBe('89,00 €');
   });
 
-  it('formats pounds for en with the same numeric amount', () => {
-    expect(formatPrice(8900, 'en')).toBe('£89.00');
+  it('formats pounds for en converted at the fixed EUR-to-GBP rate', () => {
+    expect(formatPrice(8900, 'en')).toBe('£77.43');
   });
 
   it('pads single-digit cents', () => {

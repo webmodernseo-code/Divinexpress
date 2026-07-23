@@ -1,7 +1,10 @@
 'use client';
 
+import { useLocale } from 'next-intl';
 import { useCart } from './CartContext';
-import { useToast } from '../Toast/ToastContext';
+import { Link } from '@/i18n/navigation';
+import { formatPrice } from '@/lib/pricing';
+import type { Locale } from '@/i18n';
 import styles from './CartDrawer.module.css';
 
 export function CartDrawer() {
@@ -11,24 +14,9 @@ export function CartDrawer() {
     subtotalCents,
     closeCart,
     updateQuantity,
-    removeFromCart,
-    clearCart
+    removeFromCart
   } = useCart();
-  const { showToast } = useToast();
-
-  const handleCheckout = () => {
-    clearCart();
-    closeCart();
-    showToast('Commande confirmée — merci pour votre achat !');
-  };
-
-  const formatPrice = (cents: number) => {
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'EUR',
-      maximumFractionDigits: 0
-    }).format(cents / 100);
-  };
+  const locale = useLocale() as Locale;
 
   return (
     <>
@@ -54,7 +42,7 @@ export function CartDrawer() {
             </div>
           ) : (
             cart.map((item) => (
-              <div key={`${item.productId}-${item.size}-${item.color}`} className={styles.item}>
+              <div key={`${item.variantId}-${item.size}-${item.color}`} className={styles.item}>
                 <img src={item.image} alt={item.name} className={styles.itemImage} />
                 <div className={styles.itemDetails}>
                   <h4 className={styles.itemName}>{item.name}</h4>
@@ -64,7 +52,7 @@ export function CartDrawer() {
                   <div className={styles.qtyActions}>
                     <div className={styles.stepper}>
                       <button
-                        onClick={() => updateQuantity(item.productId, item.size, item.color, item.quantity - 1)}
+                        onClick={() => updateQuantity(item.variantId, item.size, item.color, item.quantity - 1)}
                         className={styles.stepButton}
                         aria-label="Diminuer"
                       >
@@ -72,7 +60,7 @@ export function CartDrawer() {
                       </button>
                       <span className={styles.qtyValue}>{item.quantity}</span>
                       <button
-                        onClick={() => updateQuantity(item.productId, item.size, item.color, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.variantId, item.size, item.color, item.quantity + 1)}
                         className={styles.stepButton}
                         aria-label="Augmenter"
                       >
@@ -80,7 +68,7 @@ export function CartDrawer() {
                       </button>
                     </div>
                     <button
-                      onClick={() => removeFromCart(item.productId, item.size, item.color)}
+                      onClick={() => removeFromCart(item.variantId, item.size, item.color)}
                       className={styles.removeButton}
                       aria-label="Supprimer"
                     >
@@ -91,7 +79,7 @@ export function CartDrawer() {
                     </button>
                   </div>
                 </div>
-                <span className={styles.itemPrice}>{formatPrice(item.priceCents * item.quantity)}</span>
+                <span className={styles.itemPrice}>{formatPrice(item.priceCents * item.quantity, locale)}</span>
               </div>
             ))
           )}
@@ -102,11 +90,11 @@ export function CartDrawer() {
         <div className={styles.footer}>
           <div className={styles.summaryRow}>
             <span>Sous-total</span>
-            <span>{formatPrice(subtotalCents)}</span>
+            <span>{formatPrice(subtotalCents, locale)}</span>
           </div>
-          <button onClick={handleCheckout} className={styles.checkoutButton}>
+          <Link href="/checkout" onClick={closeCart} className={styles.checkoutButton}>
             Continuer vers le paiement
-          </button>
+          </Link>
         </div>
       </div>
     </>

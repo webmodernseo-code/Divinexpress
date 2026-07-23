@@ -1,5 +1,5 @@
 import type { Locale } from '@/i18n';
-import { currencyForLocale } from './currency';
+import { currencyForLocale, convertEurCentsToLocaleCents } from './currency';
 
 export type PriceInfo = {
   priceCents: number;
@@ -12,7 +12,8 @@ export function isOnSale({ priceCents, compareAtPriceCents }: PriceInfo): boolea
 
 export function formatPrice(cents: number, locale: Locale): string {
   const { code } = currencyForLocale(locale);
-  return new Intl.NumberFormat(locale, { style: 'currency', currency: code }).format(cents / 100);
+  const convertedCents = convertEurCentsToLocaleCents(cents, locale);
+  return new Intl.NumberFormat(locale, { style: 'currency', currency: code }).format(convertedCents / 100);
 }
 
 export function cheapestVariant<T extends PriceInfo>(variants: T[]): T | null {

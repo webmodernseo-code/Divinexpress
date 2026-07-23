@@ -229,6 +229,24 @@ async function main() {
   } else {
     console.log('ADMIN_SEED_EMAIL/ADMIN_SEED_PASSWORD not set — skipping admin account seed.');
   }
+
+  const shippingZoneCount = await prisma.shippingZone.count();
+  if (shippingZoneCount === 0) {
+    await prisma.shippingZone.createMany({
+      data: [
+        { countries: ['FR', 'GB'], carrier: 'Colissimo', etaDays: 5, costCents: 590 },
+        {
+          countries: ['BJ', 'BF', 'CI', 'GW', 'ML', 'NE', 'SN', 'TG'],
+          carrier: 'DHL Express',
+          etaDays: 7,
+          costCents: 1200
+        }
+      ]
+    });
+    console.log('Shipping zones seeded: Europe (FR, GB), Afrique (UEMOA).');
+  } else {
+    console.log(`Shipping zones already present (${shippingZoneCount}) — skipping seed.`);
+  }
 }
 
 main()
