@@ -70,18 +70,21 @@ enum OrderStatus {
 }
 
 model Order {
-  id            String      @id @default(cuid())
-  orderNumber   String      @unique
-  customerEmail String
-  shippingAddr  String
-  country       String
-  currency      String
-  status        OrderStatus @default(PENDING)
-  totalCents    Int
-  items         OrderItem[]
-  payment       Payment?
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id             String        @id @default(cuid())
+  orderNumber    String        @unique
+  customerEmail  String
+  shippingAddr   String
+  country        String
+  currency       String
+  status         OrderStatus   @default(PENDING)
+  totalCents     Int
+  discountCode   DiscountCode? @relation(fields: [discountCodeId], references: [id], onDelete: SetNull)
+  discountCodeId String?
+  discountCents  Int           @default(0)
+  items          OrderItem[]
+  payment        Payment?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
 model OrderItem {
@@ -111,6 +114,23 @@ model Payment {
   amountCents Int
   currency    String
   createdAt   DateTime      @default(now())
+}
+
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
+model DiscountCode {
+  id        String       @id @default(cuid())
+  code      String       @unique
+  type      DiscountType
+  value     Int
+  isActive  Boolean      @default(true)
+  expiresAt DateTime?
+  orders    Order[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 }
 
 model ShippingZone {
