@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { generateOrderNumber } from '@/lib/orderNumber';
 import { resolveShippingZone } from '@/lib/shippingZone';
 import { eurCentsToXof, initiatePayment } from '@/lib/geniuspay';
+import { computeDiscountCents } from '@/lib/discountCode';
 import type { Locale } from '@/i18n';
 
 export type CheckoutCartLine = { variantId: string; quantity: number };
@@ -15,9 +16,12 @@ export type CheckoutInput = {
   shippingAddr: string;
   country: string;
   cart: CheckoutCartLine[];
+  discountCode?: string;
 };
 
 export type CheckoutResult = { checkoutUrl: string } | { error: string };
+
+export type DiscountPreviewResult = { discountCents: number; code: string } | { error: string };
 
 class InsufficientStockError extends Error {}
 
@@ -25,6 +29,24 @@ function buildConfirmationUrl(locale: string, orderNumber: string): string {
   const host = headers().get('host') ?? 'divinexpress.fr';
   const protocol = host.startsWith('localhost') || host.startsWith('127.0.0.1') ? 'http' : 'https';
   return `${protocol}://${host}/${locale}/checkout/confirmation/${orderNumber}`;
+}
+
+export async function validateDiscountCode(code: string, subtotalCents: number): Promise<DiscountPreviewResult> {
+  const normalized = code.trim().toUpperCase();
+  if (!normalized) {
+    return { error: 'Merci de renseigner un code.' };
+  }
+
+  const discountCode = await prisma.discountCode.findUnique({ where: { code: normalized } });
+  if (!discountCode || !discountCode.isActive) {
+    return { error: 'Code promo invalide.' };
+  }
+  if (discountCode.expiresAt && discountCode.expiresAt < new Date()) {
+    return { error: 'Ce code a expiré.' };
+  }
+
+  const discountCents = computeDiscountCents(subtotalCents, discountCode.type, discountCode.value);
+  return { discountCents, code: normalized };
 }
 
 export async function createOrder(input: CheckoutInput): Promise<CheckoutResult> {
@@ -62,7 +84,23 @@ export async function createOrder(input: CheckoutInput): Promise<CheckoutResult>
     const variant = variants.find((v) => v.id === line.variantId)!;
     return sum + variant.priceCents * line.quantity;
   }, 0);
-  const totalCents = subtotalCents + zone.costCents;
+
+  let discountCents = 0;
+  let discountCodeId: string | null = null;
+  if (input.discountCode) {
+    const normalized = input.discountCode.trim().toUpperCase();
+    const discount = await prisma.discountCode.findUnique({ where: { code: normalized } });
+    if (!discount || !discount.isActive) {
+      return { error: "Ce code promo n'est plus valide." };
+    }
+    if (discount.expiresAt && discount.expiresAt < new Date()) {
+      return { error: 'Ce code promo a expiré.' };
+    }
+    discountCents = computeDiscountCents(subtotalCents, discount.type, discount.value);
+    discountCodeId = discount.id;
+  }
+
+  const totalCents = subtotalCents - discountCents + zone.costCents;
   const orderNumber = generateOrderNumber();
 
   let order;
@@ -87,6 +125,8 @@ export async function createOrder(input: CheckoutInput): Promise<CheckoutResult>
           currency: 'EUR',
           status: 'PENDING',
           totalCents,
+          discountCents,
+          discountCodeId,
           items: {
             create: input.cart.map((line) => {
               const variant = variants.find((v) => v.id === line.variantId)!;
