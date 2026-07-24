@@ -84,15 +84,21 @@ export function CheckoutForm({ zones, locale }: { zones: ShippingZone[]; locale:
     setCouponPending(true);
     setCouponError(null);
 
-    const result = await validateDiscountCode(couponInput, subtotalCents);
+    try {
+      const result = await validateDiscountCode(couponInput, subtotalCents);
 
-    if ('error' in result) {
-      setCouponError(result.error);
+      if ('error' in result) {
+        setCouponError(result.error);
+        setAppliedDiscount(null);
+      } else {
+        setAppliedDiscount({ code: result.code, discountCents: result.discountCents });
+      }
+    } catch {
+      setCouponError(locale === 'fr' ? 'Une erreur est survenue, réessayez.' : 'Something went wrong, try again.');
       setAppliedDiscount(null);
-    } else {
-      setAppliedDiscount({ code: result.code, discountCents: result.discountCents });
+    } finally {
+      setCouponPending(false);
     }
-    setCouponPending(false);
   }
 
   return (
@@ -161,7 +167,7 @@ export function CheckoutForm({ zones, locale }: { zones: ShippingZone[]; locale:
             </select>
           </label>
 
-          <button type="submit" disabled={submitting} className={styles.submitButton}>
+          <button type="submit" disabled={submitting || couponPending} className={styles.submitButton}>
             {submitting
               ? locale === 'fr'
                 ? 'Traitement en cours…'
