@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/components/Cart/CartContext';
 import { resolveShippingZone } from '@/lib/shippingZone';
-import { createOrder } from '@/app/[locale]/checkout/actions';
+import { createOrder, validateDiscountCode } from '@/app/[locale]/checkout/actions';
 import type { Locale } from '@/i18n';
 import { formatPrice } from '@/lib/pricing';
 import styles from './CheckoutForm.module.css';
@@ -33,10 +33,15 @@ export function CheckoutForm({ zones, locale }: { zones: ShippingZone[]; locale:
   const [country, setCountry] = useState(countryCodes[0] ?? '');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [couponInput, setCouponInput] = useState('');
+  const [couponPending, setCouponPending] = useState(false);
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; discountCents: number } | null>(null);
 
   const zoneIndex = resolveShippingZone(country, zones);
   const shippingCostCents = zoneIndex === -1 ? 0 : zones[zoneIndex].costCents;
-  const totalCents = subtotalCents + shippingCostCents;
+  const discountCents = appliedDiscount?.discountCents ?? 0;
+  const totalCents = subtotalCents - discountCents + shippingCostCents;
 
   if (cart.length === 0) {
     return (
@@ -61,7 +66,8 @@ export function CheckoutForm({ zones, locale }: { zones: ShippingZone[]; locale:
       email,
       shippingAddr,
       country,
-      cart: cart.map((item) => ({ variantId: item.variantId, quantity: item.quantity }))
+      cart: cart.map((item) => ({ variantId: item.variantId, quantity: item.quantity })),
+      discountCode: appliedDiscount?.code
     });
 
     if ('error' in result) {
@@ -72,6 +78,21 @@ export function CheckoutForm({ zones, locale }: { zones: ShippingZone[]; locale:
 
     clearCart();
     window.location.href = result.checkoutUrl;
+  }
+
+  async function handleApplyCoupon() {
+    setCouponPending(true);
+    setCouponError(null);
+
+    const result = await validateDiscountCode(couponInput, subtotalCents);
+
+    if ('error' in result) {
+      setCouponError(result.error);
+      setAppliedDiscount(null);
+    } else {
+      setAppliedDiscount({ code: result.code, discountCents: result.discountCents });
+    }
+    setCouponPending(false);
   }
 
   return (
@@ -103,6 +124,31 @@ export function CheckoutForm({ zones, locale }: { zones: ShippingZone[]; locale:
               className={styles.textarea}
             />
           </label>
+
+          <label className={styles.label}>
+            {locale === 'fr' ? 'Code promo' : 'Discount code'}
+            <input
+              type="text"
+              value={couponInput}
+              onChange={(e) => setCouponInput(e.target.value)}
+              className={styles.input}
+            />
+          </label>
+          {couponError && <p className={styles.error}>{couponError}</p>}
+          {appliedDiscount && (
+            <p className={styles.error} style={{ color: '#0d6630', background: 'rgba(13, 102, 48, 0.08)' }}>
+              {locale === 'fr' ? 'Code appliqué : ' : 'Code applied: '}
+              {appliedDiscount.code}
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={handleApplyCoupon}
+            disabled={couponPending || !couponInput.trim()}
+            className={styles.submitButton}
+          >
+            {locale === 'fr' ? 'Appliquer' : 'Apply'}
+          </button>
 
           <label className={styles.label}>
             {locale === 'fr' ? 'Pays' : 'Country'}
@@ -141,6 +187,12 @@ export function CheckoutForm({ zones, locale }: { zones: ShippingZone[]; locale:
             <span>{locale === 'fr' ? 'Sous-total' : 'Subtotal'}</span>
             <span>{formatPrice(subtotalCents, locale)}</span>
           </div>
+          {appliedDiscount && (
+            <div className={styles.summaryLine}>
+              <span>{locale === 'fr' ? 'Réduction' : 'Discount'}</span>
+              <span>-{formatPrice(discountCents, locale)}</span>
+            </div>
+          )}
           <div className={styles.summaryLine}>
             <span>{locale === 'fr' ? 'Livraison' : 'Shipping'}</span>
             <span>{formatPrice(shippingCostCents, locale)}</span>
