@@ -1,29 +1,12 @@
 import createMiddleware from 'next-intl/middleware';
-import { NextRequest, NextResponse } from 'next/server';
-import { locales, defaultLocale } from './i18n';
-import { shouldRedirectToLogin } from './lib/adminSession';
 
-const intlMiddleware = createMiddleware({
-  locales,
-  defaultLocale,
+export default createMiddleware({
+  locales: ['fr', 'en'],
+  defaultLocale: 'fr',
   localePrefix: 'always'
 });
 
-export default async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-
-  if (pathname.startsWith('/admin')) {
-    const secret = process.env.ADMIN_SESSION_SECRET ?? '';
-    const sessionCookie = request.cookies.get('admin_session')?.value;
-    if (await shouldRedirectToLogin(pathname, sessionCookie, secret)) {
-      return NextResponse.redirect(new URL('/admin/login', request.url));
-    }
-    return NextResponse.next();
-  }
-
-  return intlMiddleware(request);
-}
-
 export const config = {
-  matcher: ['/', '/(fr|en)/:path*', '/admin/:path*']
+  // Match all pathnames except API routes, static assets, etc.
+  matcher: ['/', '/(fr|en)/:path*', '/((?!api|_next|_ipx|images|.*\\..*).*)']
 };
