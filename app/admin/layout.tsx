@@ -1,19 +1,18 @@
-import type { Metadata } from 'next';
-import type { ReactNode } from 'react';
-import { Inter } from 'next/font/google';
-import '@/app/styles/tokens.css';
+import './admin.css';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
-
-export const metadata: Metadata = {
-  title: 'DivinExpress — Admin',
-  description: 'Dashboard admin DivinExpress.'
-};
-
-export default function AdminRootLayout({ children }: { children: ReactNode }) {
+export default function AdminLayout({
+  children
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="fr" className={inter.variable}>
-      <body>{children}</body>
+    <html lang="fr">
+      <head>
+        <link rel="icon" href="/images/logo-divinexpress.svg" type="image/svg+xml" />
+      </head>
+      <body style={{ backgroundColor: '#f8fafc', margin: 0, fontFamily: 'Inter, sans-serif' }}>
+        {children}
+      </body>
     </html>
   );
 }
