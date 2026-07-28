@@ -10,9 +10,9 @@ export default async function DashboardPage() {
     redirect('/admin/login');
   }
 
-  // Fetch data for the admin panel
   const orders = await prisma.order.findMany({
     include: {
+      payment: true,
       items: {
         include: {
           variant: {

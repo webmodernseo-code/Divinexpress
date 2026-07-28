@@ -596,7 +596,7 @@ export const BoutiqueClient: React.FC<BoutiqueClientProps> = ({
                   <h3>Résumé du panier</h3>
                   <div className="checkout-cart-items">
                     {cart.map((item) => (
-                      <div key={item.variantId} style={{ display: 'flex', justifyBetween: 'space-between', padding: '8px 0', borderBottom: '1.5px solid var(--accent-light)' }}>
+                      <div key={item.variantId} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1.5px solid var(--accent-light)' }}>
                         <div>{item.title} ({item.size}) x {item.quantity}</div>
                         <div>{formatPrice(item.price * item.quantity * 100)}</div>
                       </div>

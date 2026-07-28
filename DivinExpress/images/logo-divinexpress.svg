@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="9" fill="#0f172a"/>
+  <!-- Tracé géométrique de la lettre D -->
+  <path d="M10 9h6c3.866 0 7 3.134 7 7s-3.134 7-7 7h-6V9zm2 2v10h4c2.761 0 5-2.239 5-5s-2.239-5-5-5h-4z" fill="#ffffff"/>
+</svg>

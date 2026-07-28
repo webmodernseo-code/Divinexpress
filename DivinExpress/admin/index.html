@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DivinExpress - Dashboard Administration</title>
+  <link rel="icon" type="image/svg+xml" href="../images/logo-divinexpress.svg">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <header class="top-nav">
+      <a href="../index.html" class="top-nav-logo">
+        <svg viewBox="0 0 32 32" width="28" height="28" class="brand-mark">
+          <rect width="32" height="32" rx="9" fill="#0f172a"/>
+          <path d="M10 9h6c3.866 0 7 3.134 7 7s-3.134 7-7 7h-6V9zm2 2v10h4c2.761 0 5-2.239 5-5s-2.239-5-5-5h-4z" fill="#ffffff"/>
+        </svg>
+        <span class="top-nav-logo-text">DivinExpress</span>
+      </a>
+
+      <nav class="nav-tabs">
+        <div class="nav-item active" data-target="panel-dashboard">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" />
+          </svg>
+          <span class="nav-label">Dashboard</span>
+        </div>
+        <div class="nav-item" data-target="panel-products">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+          <span class="nav-label">Produits</span>
+        </div>
+        <div class="nav-item" data-target="panel-orders">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          </svg>
+          <span class="nav-label">Commandes</span>
+        </div>
+        <div class="nav-item" data-target="panel-customers">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m5-3.13a4 4 0 100-8 4 4 0 000 8zm6 0a4 4 0 10-2-7.45" />
+          </svg>
+          <span class="nav-label">Clients</span>
+        </div>
+        <div class="nav-item" data-target="panel-settings">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span class="nav-label">Attributs</span>
+        </div>
+        <div class="nav-item" data-target="panel-promos">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z" />
+          </svg>
+          <span class="nav-label">Promotions</span>
+        </div>
+      </nav>
+
+      <div class="top-nav-actions">
+        <button type="button" class="nav-bell-btn" id="nav-bell-btn" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+        </button>
+        <div class="nav-user" id="nav-user-menu">
+          <div class="user-avatar">A</div>
+          <div class="user-info">
+            <span class="user-name">Administrateur</span>
+            <span class="user-role">Super Admin</span>
+          </div>
+          <svg class="nav-user-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+          <div class="nav-user-dropdown" id="nav-user-dropdown">
+            <button type="button" class="nav-user-dropdown-item" data-action="profile" disabled title="Disponible dans une prochaine phase">Profil &amp; Paramètres</button>
+            <button type="button" class="nav-user-dropdown-item" data-action="logout">Déconnexion</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==================== PLACEHOLDER PANEL: CLIENTS ==================== -->
+    <!-- Real content arrives in a later phase (customer records don't exist yet). -->
+
+    <!-- RIGHT MAIN WORKSPACE -->
+    <main class="main-workspace">
+      
+      <!-- ==================== PANEL 1: DASHBOARD OVERVIEW ==================== -->
+      <div class="workspace-panel active" id="panel-dashboard">
+        <div class="panel-header">
+          <div>
+            <h2>Bonjour, Administrateur 👋</h2>
+            <p>Gérez produits, commandes, clients et performance en un seul endroit.</p>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <select id="kpi-date-range" class="date-range-select">
+              <option value="7d">7 derniers jours</option>
+              <option value="30d">30 derniers jours</option>
+              <option value="all">Tout</option>
+            </select>
+            <button class="btn-primary" id="btn-export-report">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" /></svg>
+              Exporter le rapport
+            </button>
+          </div>
+        </div>
+
+        <!-- Metrics cards row -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon-wrapper" style="background:#EEF2FF; color:var(--accent-primary);">
+              <svg style="width:22px; height:22px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17l6-6 4 4 8-8M17 7h8v8" /></svg>
+            </div>
+            <div>
+              <span class="metric-title">Ventes Totales</span>
+              <div class="metric-value" id="val-sales">…</div>
+              <span class="metric-trend" id="kpi-sales-trend"></span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon-wrapper" style="background:#ECFDF5; color:var(--status-green);">
+              <svg style="width:22px; height:22px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <div>
+              <span class="metric-title">Chiffre d'Affaires</span>
+              <div class="metric-value" id="val-revenue">…</div>
+              <span class="metric-trend" id="kpi-revenue-trend"></span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon-wrapper" style="background:#EFF6FF; color:var(--status-blue);">
+              <svg style="width:22px; height:22px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m5-3.13a4 4 0 100-8 4 4 0 000 8zm6 0a4 4 0 10-2-7.45" /></svg>
+            </div>
+            <div>
+              <span class="metric-title">Clients Actifs</span>
+              <div class="metric-value" id="val-customers">…</div>
+              <span class="metric-trend" id="kpi-customers-trend"></span>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon-wrapper" style="background:#FEF2F2; color:var(--status-red);">
+              <svg style="width:22px; height:22px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728" /></svg>
+            </div>
+            <div>
+              <span class="metric-title">Demandes de Remboursement</span>
+              <div class="metric-value" id="val-refunds">…</div>
+              <span class="metric-trend" id="kpi-refunds-trend"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-grid-2" id="dashboard-charts-row">
+          <div class="content-card">
+            <div class="content-card-header">
+              <h3>Chiffre d'Affaires</h3>
+              <div style="display: flex; gap: 4px; background: var(--page-bg); padding: 2px; border-radius: 6px;">
+                <button class="chart-toggle-btn active" id="btn-chart-week">Semaine</button>
+                <button class="chart-toggle-btn" id="btn-chart-month">Mois</button>
+              </div>
+            </div>
+            <div class="content-card-body" id="revenue-chart-body" style="height: 260px;"></div>
+          </div>
+          <div class="content-card">
+            <div class="content-card-header">
+              <h3>Taux de Réussite</h3>
+            </div>
+            <div class="content-card-body" id="success-gauge-body" style="height: 260px;"></div>
+          </div>
+        </div>
+
+        <div class="panel-grid-2">
+          <div class="content-card">
+            <div class="content-card-header"><h3>Commandes Récentes</h3></div>
+            <div class="content-card-body" id="recent-orders-body" style="padding:0;"></div>
+          </div>
+          <div class="content-card">
+            <div class="content-card-header"><h3>Aperçu des Ventes</h3></div>
+            <div class="content-card-body" id="sales-overview-body"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PANEL: COMMANDES ==================== -->
+      <div class="workspace-panel" id="panel-orders">
+        <div class="panel-header">
+          <div>
+            <h2>Commandes</h2>
+            <p>Suivi et mise à jour du statut des commandes clients.</p>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <div class="content-card-header"><h3>Toutes les commandes</h3></div>
+          <div class="content-card-body" style="padding:0;">
+            <table>
+              <thead>
+                <tr>
+                  <th>N° Commande</th>
+                  <th>Client</th>
+                  <th>Date</th>
+                  <th>Total</th>
+                  <th>Moyen</th>
+                  <th>Statut</th>
+                  <th>Détail</th>
+                </tr>
+              </thead>
+              <tbody id="orders-list-tbody"></tbody>
+            </table>
+            <div class="empty-state" id="orders-empty-state" style="display:none;">
+              <p>Aucune commande pour le moment.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PANEL: CLIENTS (placeholder) ==================== -->
+      <div class="workspace-panel" id="panel-customers">
+        <div class="panel-header">
+          <div>
+            <h2>Clients</h2>
+            <p>Gérez les comptes et les informations clients.</p>
+          </div>
+        </div>
+        <div class="content-card">
+          <div class="content-card-body empty-state-panel">
+            <p>Cette section arrive bientôt : la gestion des fiches clients fera l'objet d'une prochaine phase.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PANEL 2: PRODUCT MANAGEMENT ==================== -->
+      <div class="workspace-panel" id="panel-products">
+        <div class="panel-header">
+          <div>
+            <h2>Gestion du Catalogue</h2>
+            <p>Ajoutez des articles et gérez les niveaux de stock par variante.</p>
+          </div>
+        </div>
+
+        <div class="panel-header" style="padding-bottom:0;">
+          <div></div>
+          <button class="btn-primary" id="btn-open-create-product-drawer">+ Nouveau produit</button>
+        </div>
+
+        <div class="content-card">
+          <div class="content-card-header"><h3>État des Stocks</h3></div>
+          <div class="content-card-body" style="padding:0; overflow-y:auto; max-height:640px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Article</th>
+                  <th>Catégorie</th>
+                  <th style="text-align:right; width:230px;">Stock</th>
+                  <th style="text-align:center; width:130px;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-list-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PANEL 3: SETTINGS & DYNAMIC CATEGORIES ==================== -->
+      <div class="workspace-panel" id="panel-settings">
+        <div class="panel-header">
+          <div>
+            <h2>Paramètres &amp; Catégories</h2>
+            <p>Ajoutez des catégories dynamiques avec photo et des sous-catégories associées.</p>
+          </div>
+          <button class="btn-secondary" id="btn-export-legacy-data">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" /></svg>
+            Exporter toutes les données (JSON)
+          </button>
+        </div>
+
+        <div class="panel-grid-2">
+          <!-- Creation Forms -->
+          <div style="display:flex; flex-direction:column; gap:20px;">
+            
+            <!-- Category Form -->
+            <div class="content-card">
+              <div class="content-card-header">
+                <h3>Nouvelle Catégorie</h3>
+              </div>
+              <form class="content-card-body" id="form-add-category" onsubmit="return false;">
+                <div class="form-group">
+                  <label for="cat-name">Nom de la Catégorie*</label>
+                  <input type="text" id="cat-name" placeholder="Ex: Accessoires, Luxe, Bijoux" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="cat-image-file">Photo de couverture de la Catégorie*</label>
+                  <input type="file" id="cat-image-file" style="display:none;" accept="image/*">
+                  <div class="photo-uploader-label" onclick="document.getElementById('cat-image-file').click();" id="cat-uploader-box">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span id="cat-upload-label">Déposer la photo ou cliquer pour choisir</span>
+                  </div>
+                </div>
+
+                <button class="btn-primary" id="btn-save-category" style="width:100%; justify-content:center;">Créer la catégorie</button>
+              </form>
+            </div>
+
+            <!-- Subcategory Form -->
+            <div class="content-card">
+              <div class="content-card-header">
+                <h3>Nouvelle Sous-Catégorie</h3>
+              </div>
+              <form class="content-card-body" id="form-add-subcategory" onsubmit="return false;">
+                <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:12px;">
+                  <div class="form-group">
+                    <label for="subcat-name">Nom de la Sous-Catégorie*</label>
+                    <input type="text" id="subcat-name" placeholder="Ex: Maroquinerie, Chaussures" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="subcat-parent">Catégorie Parente*</label>
+                    <select id="subcat-parent" required>
+                      <!-- Dynamically populated -->
+                    </select>
+                  </div>
+                </div>
+
+                <button class="btn-primary" id="btn-save-subcategory" style="width:100%; justify-content:center;">Créer la sous-catégorie</button>
+              </form>
+            </div>
+
+          </div>
+
+          <!-- Current category structure tree -->
+          <div class="content-card">
+            <div class="content-card-header">
+              <h3>Structure des Catégories</h3>
+            </div>
+            <div class="content-card-body" style="overflow-y:auto; max-height:480px; display:flex; flex-direction:column; gap:12px;" id="list-settings-categories">
+              <!-- Injected dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PANEL 4: PROMO CODES MANAGER ==================== -->
+      <div class="workspace-panel" id="panel-promos">
+        <div class="panel-header">
+          <div>
+            <h2>Gestion des Codes Promo</h2>
+            <p>Créez, activez et désactivez des codes de réduction applicables lors du paiement.</p>
+          </div>
+        </div>
+
+        <div class="panel-grid-2" style="grid-template-columns: 1fr 1.2fr;">
+          <!-- Promo Code Form -->
+          <div class="content-card">
+            <div class="content-card-header">
+              <h3 id="form-promo-title-header">Nouveau Code Promo</h3>
+            </div>
+            <form class="content-card-body" id="form-add-promo" onsubmit="return false;">
+              <div class="form-group">
+                <label for="promo-code">Code de Réduction*</label>
+                <input type="text" id="promo-code" placeholder="Ex: ETE20, DIVINE25" style="text-transform: uppercase;" required>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:12px;">
+                <div class="form-group">
+                  <label for="promo-type">Type de Réduction*</label>
+                  <select id="promo-type" required>
+                    <option value="percent">Pourcentage (%)</option>
+                    <option value="fixed">Montant Fixe (FCFA)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="promo-value">Valeur*</label>
+                  <input type="number" id="promo-value" placeholder="Ex: 10 ou 5000" min="0" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="promo-active">Statut*</label>
+                <select id="promo-active" required>
+                  <option value="true">Actif</option>
+                  <option value="false">Inactif</option>
+                </select>
+              </div>
+
+              <button class="btn-primary" id="btn-save-promo" style="width:100%; height:38px; margin-top:10px; justify-content:center;">Enregistrer le code promo</button>
+            </form>
+          </div>
+
+          <!-- Promo Code List -->
+          <div class="content-card">
+            <div class="content-card-header">
+              <h3>Codes Promo Actifs</h3>
+            </div>
+            <div class="content-card-body" style="padding:0; overflow-y:auto; max-height:480px;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>Type</th>
+                    <th>Valeur</th>
+                    <th>Statut</th>
+                    <th style="text-align:center; width: 100px;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="promo-list-tbody">
+                  <!-- Injected dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Load Database and Dashboard JS -->
+  <script src="../js/db.js"></script>
+  <script src="../js/payment-icons.js"></script>
+  <script src="js/variant-editor.js"></script>
+  <script src="js/ui-kit.js"></script>
+  <script src="js/dashboard-charts.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/categories.js"></script>
+  <script src="js/promos.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
