@@ -867,9 +867,83 @@ tr:hover td {
 .sales-top-products { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
 .sales-top-products th { text-align: left; padding: 10px 20px; color: var(--text-body); font-weight: 600; border-top: 1px solid var(--border-light); }
 .sales-top-products td { padding: 8px 20px; border-top: 1px solid var(--border-light); }
-
 .recent-order-item-cell { display: flex; align-items: center; gap: 10px; }
 .recent-order-thumb { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
 .recent-order-thumb-empty { display: flex; align-items: center; justify-content: center; background: var(--page-bg); color: var(--text-body); }
 .recent-order-title { font-size: 0.8rem; font-weight: 600; color: var(--text-heading); }
 .recent-order-extra { font-size: 0.7rem; color: var(--text-body); }
+
+/* ==================== RESPONSIVE WORKSPACE MEDIA QUERIES ==================== */
+
+@media (max-width: 1024px) {
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .panel-grid-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .top-nav {
+    gap: 16px;
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    overflow-y: auto;
+    height: auto;
+  }
+  
+  .app-container {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .top-nav {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .nav-tabs {
+    order: 3;
+    width: 100%;
+    margin-top: 8px;
+    justify-content: flex-start;
+  }
+
+  .top-nav-actions {
+    margin-left: auto;
+  }
+
+  .user-info {
+    display: none; /* Hide name/role text on mobile to save space */
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .main-workspace {
+    padding: 16px;
+  }
+
+  /* Make all table parent containers scrollable horizontally */
+  .content-card-body {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 600px; /* Force minimum width to guarantee columns are visible and scrollable */
+  }
+}
