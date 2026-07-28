@@ -1,31 +1,54 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { getFeaturedProducts, getNewArrivals } from '@/lib/catalog';
-import { Hero } from '@/components/Hero/Hero';
-import { TrustBar } from '@/components/TrustBar/TrustBar';
-import { ProductGrid } from '@/components/ProductGrid/ProductGrid';
-import { ProductMarquee } from '@/components/ProductMarquee/ProductMarquee';
-import { CategoryStrip } from '@/components/CategoryStrip/CategoryStrip';
-import { TestimonialCarousel } from '@/components/TestimonialCarousel/TestimonialCarousel';
-import { Faq } from '@/components/Faq/Faq';
-import type { Locale } from '@/i18n';
-import styles from './page.module.css';
+import React from 'react';
+import prisma from '@/lib/db';
+import { BoutiqueClient } from '@/components/BoutiqueClient';
 
-export default async function HomePage({ params }: { params: { locale: string } }) {
-  setRequestLocale(params.locale);
-  const locale = params.locale as Locale;
-  const t = await getTranslations('home');
+export default async function StorefrontPage() {
+  // Fetch initial products and categories from database using Prisma
+  const products = await prisma.product.findMany({
+    where: { status: 'PUBLISHED' },
+    include: {
+      variants: true,
+      images: true
+    }
+  });
 
-  const [featured, newArrivals] = await Promise.all([getFeaturedProducts(), getNewArrivals()]);
+  const categories = await prisma.category.findMany();
+
+  // Map database data to fit storefront types
+  const mappedProducts = products.map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    nameFr: p.nameFr,
+    nameEn: p.nameEn,
+    descriptionFr: p.descriptionFr,
+    descriptionEn: p.descriptionEn,
+    featured: p.featured,
+    categoryId: p.categoryId,
+    variants: p.variants.map((v) => ({
+      id: v.id,
+      sku: v.sku,
+      size: v.size,
+      color: v.color,
+      priceCents: v.priceCents,
+      compareAtPriceCents: v.compareAtPriceCents,
+      stock: v.stock
+    })),
+    images: p.images.map((img) => ({
+      url: img.url,
+      alt: img.alt
+    }))
+  }));
+
+  const mappedCategories = categories.map((c) => ({
+    id: c.id,
+    name: c.name,
+    slug: c.slug
+  }));
 
   return (
-    <>
-      <Hero locale={locale} />
-      <TrustBar />
-      <ProductGrid title={t('bestSellersTitle')} products={featured} locale={locale} />
-      <CategoryStrip locale={locale} />
-      <ProductMarquee title={t('newArrivalsTitle')} products={newArrivals} locale={locale} />
-      <TestimonialCarousel locale={locale} />
-      <Faq />
-    </>
+    <BoutiqueClient
+      initialProducts={mappedProducts}
+      categories={mappedCategories}
+    />
   );
 }
