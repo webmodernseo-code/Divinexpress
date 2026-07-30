@@ -20,7 +20,7 @@ export function CurrencyProvider({
   initialLocale: string;
 }) {
   const [currency, setCurrency] = useState<CurrencyCode>(() => defaultCurrencyForLocale(initialLocale));
-  const hasHydrated = useRef(false);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     try {
@@ -28,13 +28,16 @@ export function CurrencyProvider({
       if (stored === 'EUR' || stored === 'GBP') {
         setCurrency(stored);
       }
-    } finally {
-      hasHydrated.current = true;
+    } catch {
+      // ignore malformed storage
     }
   }, []);
 
   useEffect(() => {
-    if (!hasHydrated.current) return;
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     window.localStorage.setItem(STORAGE_KEY, currency);
   }, [currency]);
 

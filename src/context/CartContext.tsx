@@ -26,7 +26,7 @@ const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
-  const hasHydrated = useRef(false);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     try {
@@ -34,13 +34,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (raw) setItems(JSON.parse(raw));
     } catch {
       // ignore malformed storage
-    } finally {
-      hasHydrated.current = true;
     }
   }, []);
 
   useEffect(() => {
-    if (!hasHydrated.current) return;
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items]);
 

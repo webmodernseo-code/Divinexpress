@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { CurrencyProvider, useCurrency } from './CurrencyContext';
 
@@ -29,5 +29,16 @@ describe('CurrencyContext', () => {
 
   it('throws when used outside a provider', () => {
     expect(() => renderHook(() => useCurrency())).toThrow();
+  });
+
+  it('does not clobber existing localStorage data during the initial hydration effects', () => {
+    window.localStorage.setItem('reign-currency', 'GBP');
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+    renderHook(() => useCurrency(), { wrapper });
+    const clobberedWithDefault = setItemSpy.mock.calls.some(
+      ([key, value]) => key === 'reign-currency' && value === 'EUR'
+    );
+    expect(clobberedWithDefault).toBe(false);
+    setItemSpy.mockRestore();
   });
 });

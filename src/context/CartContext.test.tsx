@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { CartProvider, useCart } from './CartContext';
 import { PRODUCTS } from '@/lib/products';
@@ -38,5 +38,18 @@ describe('CartContext', () => {
       result.current.addItem({ productId: product.id, size: 'M', color: 'Noir', quantity: 2 });
     });
     expect(result.current.subtotalEur).toBe(product.priceEur * 2);
+  });
+
+  it('does not clobber existing localStorage data during the initial hydration effects', () => {
+    const product = PRODUCTS[0];
+    const seeded = [{ productId: product.id, size: 'M', color: 'Noir', quantity: 1 }];
+    window.localStorage.setItem('reign-cart', JSON.stringify(seeded));
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+    renderHook(() => useCart(), { wrapper });
+    const clobberedWithEmpty = setItemSpy.mock.calls.some(
+      ([key, value]) => key === 'reign-cart' && value === '[]'
+    );
+    expect(clobberedWithEmpty).toBe(false);
+    setItemSpy.mockRestore();
   });
 });
