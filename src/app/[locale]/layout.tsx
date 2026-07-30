@@ -4,6 +4,7 @@ import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { fraunces, inter } from '@/lib/fonts';
+import { CurrencyProvider } from '@/context/CurrencyContext';
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -33,7 +34,9 @@ export default async function LocaleLayout({
     <html lang={locale} className={`${fraunces.variable} ${inter.variable}`}>
       <body className="bg-paper text-ink font-sans antialiased">
         <NextIntlClientProvider messages={messages}>
-          <main>{children}</main>
+          <CurrencyProvider initialLocale={locale}>
+            <main>{children}</main>
+          </CurrencyProvider>
         </NextIntlClientProvider>
       </body>
     </html>
