@@ -1061,7 +1061,7 @@ Résultat attendu : succès.
 
 - [ ] **Étape 9 : Brancher le provider dans le layout de langue**
 
-Modifier `src/app/[locale]/layout.tsx` — import `CurrencyProvider` depuis `@/context/CurrencyContext` and wrap `<main>{children}</main>` with it, passing the resolved `locale`:
+Modifier `src/app/[locale]/layout.tsx` — importer `CurrencyProvider` depuis `@/context/CurrencyContext` et envelopper `<main>{children}</main>` avec, en passant la `locale` résolue :
 
 ```tsx
         <NextIntlClientProvider messages={messages}>
@@ -1792,7 +1792,7 @@ git commit -m "feat: add shared UI primitives (Container, Heading, Button, Place
 
 - [ ] **Étape 1 : Obtenir l'asset du logo**
 
-Save the Reign wordmark image shared earlier in this conversation to `public/branding/logo-reign.png` (create the `public/branding/` folder if it doesn't exist). If this file is not present in the repository when this task starts, stop and ask the user for it before continuing — do not fabricate a placeholder logo; the spec requires this exact provided asset.
+Enregistrer l'image du wordmark Reign partagée plus tôt dans cette conversation vers `public/branding/logo-reign.png` (créer le dossier `public/branding/` s'il n'existe pas). Si ce fichier n'est pas présent dans le dépôt au démarrage de cette tâche, s'arrêter et le demander à l'utilisateur avant de continuer — ne pas fabriquer de logo placeholder ; la spec exige cet asset exact fourni.
 
 - [ ] **Étape 2 : Implémenter le composant Logo**
 
@@ -1820,7 +1820,7 @@ export function Logo({ className = '' }: { className?: string }) {
 
 - [ ] **Étape 3 : Vérifier que le logo s'affiche**
 
-Exécuter : `npm run dev`, visit `http://localhost:3000/fr`, and confirm the logo image loads without a broken-image icon (it will float alone on the placeholder page for now — Header wiring happens in Tâche 10).
+Exécuter : `npm run dev`, visiter `http://localhost:3000/fr`, et confirmer que l'image du logo se charge sans icône d'image cassée (elle flottera seule sur la page placeholder pour l'instant — le branchement dans le Header se fait à la Tâche 10).
 
 - [ ] **Étape 4 : Commit**
 
@@ -2081,7 +2081,7 @@ export function Header() {
 
 - [ ] **Étape 4 : Brancher le Header dans le layout de langue**
 
-Modifier `src/app/[locale]/layout.tsx` — import `Header` depuis `@/components/layout/Header` and render it just before `<main>`, still inside `FavoritesProvider`:
+Modifier `src/app/[locale]/layout.tsx` — importer `Header` depuis `@/components/layout/Header` et le rendre juste avant `<main>`, toujours à l'intérieur de `FavoritesProvider` :
 
 ```tsx
               <FavoritesProvider>
@@ -2124,7 +2124,7 @@ git commit -m "feat: add Header with navigation, search, language/currency switc
 
 - [ ] **Étape 1 : Ajouter les namespaces de messages footer et cookies**
 
-Replace the full contents of `messages/fr.json`:
+Remplacer l'intégralité du contenu de `messages/fr.json` :
 
 ```json
 {
@@ -2164,7 +2164,7 @@ Replace the full contents of `messages/fr.json`:
 }
 ```
 
-Replace the full contents of `messages/en.json`:
+Remplacer l'intégralité du contenu de `messages/en.json` :
 
 ```json
 {
@@ -2343,7 +2343,7 @@ Ceci rend `null` à la fois lors du rendu serveur et lors de la première passe 
 
 - [ ] **Étape 4 : Brancher Footer et CookieBanner dans le layout de langue**
 
-Modifier `src/app/[locale]/layout.tsx` — import `Footer` and `CookieBanner`, and render them after `<main>`:
+Modifier `src/app/[locale]/layout.tsx` — importer `Footer` et `CookieBanner`, et les rendre après `<main>` :
 
 ```tsx
               <FavoritesProvider>
@@ -2378,7 +2378,7 @@ git commit -m "feat: add Footer with newsletter/links and cookie consent banner"
 **Fichiers :**
 - Créer : `src/context/CartDrawerContext.tsx`
 - Créer : `src/components/cart/CartDrawer.tsx`
-- Modifier : `src/components/layout/Header.tsx` (cart icon opens the drawer instead of navigating)
+- Modifier : `src/components/layout/Header.tsx` (l'icône panier ouvre le drawer au lieu de naviguer)
 - Modifier : `messages/fr.json`, `messages/en.json` (add `cart` namespace)
 - Modifier : `src/app/[locale]/layout.tsx`
 
@@ -2388,7 +2388,7 @@ git commit -m "feat: add Footer with newsletter/links and cookie consent banner"
 
 - [ ] **Étape 1 : Ajouter le namespace de messages cart**
 
-Add to both `messages/fr.json` and `messages/en.json`, alongside the existing `nav`/`common`/`footer`/`cookies` keys (do not remove those — add this as a new top-level key in each file):
+Ajouter dans `messages/fr.json` et `messages/en.json`, aux côtés des clés existantes `nav`/`common`/`footer`/`cookies` (ne pas les retirer — ajouter ceci comme une nouvelle clé de premier niveau dans chaque fichier) :
 
 `messages/fr.json` addition:
 
@@ -2554,7 +2554,7 @@ export function CartDrawer() {
 
 - [ ] **Étape 4 : Faire en sorte que l'icône panier du Header ouvre le drawer au lieu de naviguer**
 
-Modifier `src/components/layout/Header.tsx` — replace the whole file content with this updated version (adds the `useCartDrawer` import/usage and swaps both cart `Link`s for buttons that open the drawer):
+Modifier `src/components/layout/Header.tsx` — remplacer tout le contenu du fichier par cette version mise à jour (ajoute l'import/usage de `useCartDrawer` et remplace les deux `Link`s du panier par des boutons qui ouvrent le drawer) :
 
 ```tsx
 'use client';
@@ -2719,7 +2719,7 @@ export function Header() {
 
 - [ ] **Étape 5 : Brancher CartDrawerProvider et CartDrawer dans le layout de langue**
 
-Modifier `src/app/[locale]/layout.tsx` so the providers/body section reads:
+Modifier `src/app/[locale]/layout.tsx` pour que la section providers/body devienne :
 
 ```tsx
         <NextIntlClientProvider messages={messages}>
@@ -2739,7 +2739,7 @@ Modifier `src/app/[locale]/layout.tsx` so the providers/body section reads:
         </NextIntlClientProvider>
 ```
 
-Add the two new imports at the top of the file: `import { CartDrawerProvider } from '@/context/CartDrawerContext';` and `import { CartDrawer } from '@/components/cart/CartDrawer';`.
+Ajouter les deux nouveaux imports en haut du fichier : `import { CartDrawerProvider } from '@/context/CartDrawerContext';` et `import { CartDrawer } from '@/components/cart/CartDrawer';`.
 
 - [ ] **Étape 6 : Vérifier manuellement**
 
@@ -2764,7 +2764,7 @@ git commit -m "feat: add cart drawer opened from the header bag icon"
 **Fichiers :**
 - Créer : `src/components/product/ProductCard.tsx`
 - Modifier : `messages/fr.json`, `messages/en.json` (add `home` and `product` namespaces)
-- Modifier : `src/app/[locale]/page.tsx` (replace the Tâche 3 placeholder with the real Home page)
+- Modifier : `src/app/[locale]/page.tsx` (remplacer le placeholder de la Tâche 3 par la vraie page d'accueil)
 
 **Interfaces :**
 - Consomme : `Container`/`Heading`/`PlaceholderBlock` (Tâche 8), `useCurrency`/`formatPrice` (Tâche 5), `useFavorites` (Tâche 7), `CATEGORIES`/`PRODUCTS` (Tâche 4), `Link` (Tâche 3).
@@ -2772,7 +2772,7 @@ git commit -m "feat: add cart drawer opened from the header bag icon"
 
 - [ ] **Étape 1 : Ajouter les namespaces de messages home et product**
 
-Ajouter dans `messages/fr.json` (alongside the existing keys):
+Ajouter dans `messages/fr.json` (aux côtés des clés existantes) :
 
 ```json
   "home": {
@@ -2790,7 +2790,7 @@ Ajouter dans `messages/fr.json` (alongside the existing keys):
   }
 ```
 
-Ajouter dans `messages/en.json` (alongside the existing keys):
+Ajouter dans `messages/en.json` (aux côtés des clés existantes) :
 
 ```json
   "home": {
@@ -2869,7 +2869,7 @@ export function ProductCard({ product }: { product: Product }) {
 
 - [ ] **Étape 3 : Implémenter la page d'accueil**
 
-Replace the contents of `src/app/[locale]/page.tsx`:
+Remplacer le contenu de `src/app/[locale]/page.tsx` :
 
 ```tsx
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -2962,7 +2962,7 @@ git commit -m "feat: build the Home page with hero, categories, new arrivals, ed
 
 **Interfaces :**
 - Consomme : `getProductsByCategory`/`CATEGORIES`/`Category` (Tâche 4), `ProductCard` (Tâche 13), `Container`/`Heading` (Tâche 8).
-- Produit : `filterAndSortProducts(products, params)`, `getAvailableSubcategories/Sizes/Colors(products)` depuis `src/lib/productFilters.ts` — this is the one dynamic route serving all four categories (`/homme`, `/femme`, `/enfant`, `/accessoires`); it lives at the same tree level as the static route folders built in later tasks (`contact/`, `favoris/`, etc.), and Next.js always resolves a matching static folder before falling back to a dynamic `[category]` segment, so there is no routing conflict.
+- Produit : `filterAndSortProducts(products, params)`, `getAvailableSubcategories/Sizes/Colors(products)` depuis `src/lib/productFilters.ts` — c'est l'unique route dynamique qui dessert les quatre catégories (`/homme`, `/femme`, `/enfant`, `/accessoires`) ; elle vit au même niveau de l'arborescence que les dossiers de route statiques construits dans les tâches suivantes (`contact/`, `favoris/`, etc.), et Next.js résout toujours un dossier statique correspondant avant de retomber sur un segment dynamique `[category]`, donc il n'y a pas de conflit de routage.
 
 - [ ] **Étape 1 : Écrire les tests en échec pour la logique de filtre/tri**
 
@@ -3332,7 +3332,7 @@ git commit -m "feat: add category listing page with subcategory/size/color/sort 
 - Créer : `src/components/product/ProductGallery.tsx`
 - Créer : `src/components/product/ProductDetailView.tsx`
 - Créer : `src/app/[locale]/produit/[slug]/page.tsx`
-- Modifier : `messages/fr.json`, `messages/en.json` (add to the existing `product` namespace)
+- Modifier : `messages/fr.json`, `messages/en.json` (ajouter au namespace `product` existant)
 
 **Interfaces :**
 - Consomme : `getProductBySlug`/`getRelatedProducts`/`PRODUCTS` (Tâche 4), `useCart` (Tâche 6), `useCartDrawer` (Tâche 12), `useCurrency`/`formatPrice` (Tâche 5), `useFavorites` (Tâche 7), `ProductCard` (Tâche 13), `Button`/`Heading`/`Container` (Tâche 8).
@@ -3340,7 +3340,7 @@ git commit -m "feat: add category listing page with subcategory/size/color/sort 
 
 - [ ] **Étape 1 : Ajouter les clés de messages product restantes**
 
-Add these keys inside the existing `product` object in `messages/fr.json` (alongside `toggleFavorite` and `new` from Tâche 13):
+Ajouter ces clés à l'intérieur de l'objet `product` existant dans `messages/fr.json` (aux côtés de `toggleFavorite` et `new` de la Tâche 13) :
 
 ```json
     "size": "Taille",
@@ -3350,7 +3350,7 @@ Add these keys inside the existing `product` object in `messages/fr.json` (along
     "relatedProducts": "Vous aimerez aussi"
 ```
 
-Add these keys inside the existing `product` object in `messages/en.json`:
+Ajouter ces clés à l'intérieur de l'objet `product` existant dans `messages/en.json` :
 
 ```json
     "size": "Size",
@@ -3608,7 +3608,7 @@ git commit -m "feat: add product detail page with variant selection and add-to-c
 - Modifier : `messages/fr.json`, `messages/en.json` (add `search` namespace)
 
 **Interfaces :**
-- Consomme : `searchProducts` (Tâche 4, already tested), `ProductCard` (Tâche 13), `Container`/`Heading` (Tâche 8). Atteint depuis le formulaire de recherche du Header (Tâche 10), qui soumet vers `/recherche?q=...`.
+- Consomme : `searchProducts` (Tâche 4, déjà testée), `ProductCard` (Tâche 13), `Container`/`Heading` (Tâche 8). Atteint depuis le formulaire de recherche du Header (Tâche 10), qui soumet vers `/recherche?q=...`.
 - Produit : la route `/recherche`.
 
 - [ ] **Étape 1 : Ajouter le namespace de messages search**
@@ -3787,9 +3787,9 @@ git commit -m "feat: add favorites page"
 
 **Fichiers :**
 - Créer : `src/components/cart/CartLineItem.tsx`
-- Modifier : `src/components/cart/CartDrawer.tsx` (reuse `CartLineItem` instead of its inline line-item markup)
+- Modifier : `src/components/cart/CartDrawer.tsx` (réutiliser `CartLineItem` au lieu de son balisage de ligne en ligne)
 - Créer : `src/app/[locale]/panier/page.tsx`
-- Modifier : `messages/fr.json`, `messages/en.json` (add `checkout` key to the existing `cart` namespace)
+- Modifier : `messages/fr.json`, `messages/en.json` (ajouter la clé `checkout` au namespace `cart` existant)
 
 **Interfaces :**
 - Consomme : `useCart` (Tâche 6), `useCurrency`/`formatPrice` (Tâche 5), `getProductById` (Tâche 4), `CartItem` (Tâche 6), `Container`/`Heading`/`Button` (Tâche 8).
@@ -3859,7 +3859,7 @@ export function CartLineItem({ line }: { line: CartItem }) {
 
 - [ ] **Étape 2 : Simplifier CartDrawer pour réutiliser CartLineItem**
 
-Modifier `src/components/cart/CartDrawer.tsx` — replace the whole file with this version (drops the inline per-line JSX and the now-unused `getProductById` import in favor of `<CartLineItem />`):
+Modifier `src/components/cart/CartDrawer.tsx` — remplacer tout le fichier par cette version (retire le JSX en ligne par ligne et l'import désormais inutilisé de `getProductById` au profit de `<CartLineItem />`) :
 
 ```tsx
 'use client';
@@ -3922,7 +3922,7 @@ export function CartDrawer() {
 
 - [ ] **Étape 3 : Ajouter le libellé du CTA de tunnel de commande**
 
-Add `"checkout": "Passer commande"` inside the existing `cart` object in `messages/fr.json`, and `"checkout": "Checkout"` inside the existing `cart` object in `messages/en.json`.
+Ajouter `"checkout": "Passer commande"` à l'intérieur de l'objet `cart` existant dans `messages/fr.json`, et `"checkout": "Checkout"` à l'intérieur de l'objet `cart` existant dans `messages/en.json`.
 
 - [ ] **Étape 4 : Implémenter la page Panier**
 
@@ -4010,7 +4010,7 @@ git commit -m "feat: add dedicated cart page, extract shared CartLineItem"
 
 **Interfaces :**
 - Consomme : `Container`/`Heading`/`Button` (Tâche 8).
-- Produit : `ShippingFormValues`, `ShippingFormErrors`, `validateShippingForm(values)` depuis `src/lib/checkoutValidation.ts` (Tâche 20 adds `PaymentFormValues`/`validatePaymentForm` to the same file); `CheckoutProvider`, `useCheckout(): { shipping, setShipping, clearShipping }` depuis `src/context/CheckoutContext.tsx` — consumed by the Payment page (Tâche 20) and Confirmation page (Tâche 21). Le tunnel de commande est en mode invité uniquement : rien ici ne touche à un système de compte ou d'authentification (section 9 de la spec).
+- Produit : `ShippingFormValues`, `ShippingFormErrors`, `validateShippingForm(values)` depuis `src/lib/checkoutValidation.ts` (la Tâche 20 ajoute `PaymentFormValues`/`validatePaymentForm` au même fichier) ; `CheckoutProvider`, `useCheckout(): { shipping, setShipping, clearShipping }` depuis `src/context/CheckoutContext.tsx` — consommé par la page Paiement (Tâche 20) et la page Confirmation (Tâche 21). Le tunnel de commande est en mode invité uniquement : rien ici ne touche à un système de compte ou d'authentification (section 9 de la spec).
 
 - [ ] **Étape 1 : Écrire les tests en échec pour la validation de la livraison**
 
@@ -4149,7 +4149,7 @@ Ajouter dans `messages/en.json`:
   }
 ```
 
-(Tâche 20 adds payment-related keys and Tâche 21 adds confirmation-related keys into this same `checkout` object.)
+(la Tâche 20 ajoute des clés liées au paiement et la Tâche 21 ajoute des clés liées à la confirmation dans ce même objet `checkout`.)
 
 - [ ] **Étape 6 : Implémenter le contexte d'état du tunnel de commande**
 
@@ -4215,7 +4215,7 @@ Ceci utilise `sessionStorage` (pas `localStorage`) délibérément — un tunnel
 
 - [ ] **Étape 7 : Brancher CheckoutProvider dans le layout de langue**
 
-Modifier `src/app/[locale]/layout.tsx` — add the import and nest `CheckoutProvider` around the same children as `CartDrawerProvider` (order relative to the other providers does not matter, since none of them read each other's context):
+Modifier `src/app/[locale]/layout.tsx` — ajouter l'import et imbriquer `CheckoutProvider` autour des mêmes enfants que `CartDrawerProvider` (l'ordre par rapport aux autres providers n'a pas d'importance, puisqu'aucun d'eux ne lit le contexte des autres) :
 
 ```tsx
                 <CartDrawerProvider>
@@ -4229,7 +4229,7 @@ Modifier `src/app/[locale]/layout.tsx` — add the import and nest `CheckoutProv
                 </CartDrawerProvider>
 ```
 
-Add `import { CheckoutProvider } from '@/context/CheckoutContext';` alongside the other context imports.
+Ajouter `import { CheckoutProvider } from '@/context/CheckoutContext';` aux côtés des autres imports de contexte.
 
 - [ ] **Étape 8 : Implémenter la page Livraison**
 
@@ -4342,15 +4342,15 @@ git commit -m "feat: add guest checkout shipping step with validation"
 - Modifier : `src/lib/checkoutValidation.ts` (add payment validation alongside shipping validation)
 - Modifier : `src/lib/checkoutValidation.test.ts` (add payment validation tests)
 - Créer : `src/app/[locale]/commande/paiement/page.tsx`
-- Modifier : `messages/fr.json`, `messages/en.json` (add payment keys to the existing `checkout` namespace)
+- Modifier : `messages/fr.json`, `messages/en.json` (ajouter les clés de paiement au namespace `checkout` existant)
 
 **Interfaces :**
 - Consomme : `useCheckout` (Tâche 19), `useCart` (Tâche 6), `Container`/`Heading`/`Button` (Tâche 8).
-- Produit : `PaymentFormValues`, `PaymentFormErrors`, `validatePaymentForm(values)` added to `src/lib/checkoutValidation.ts`; the `/commande/paiement` route. Aucun vrai processeur de paiement n'est appelé — la soumission vide le panier et enchaîne vers la Confirmation (Tâche 21), conformément au périmètre explicite de la phase 1 de la spec.
+- Produit : `PaymentFormValues`, `PaymentFormErrors`, `validatePaymentForm(values)` ajoutés à `src/lib/checkoutValidation.ts` ; la route `/commande/paiement`. Aucun vrai processeur de paiement n'est appelé — la soumission vide le panier et enchaîne vers la Confirmation (Tâche 21), conformément au périmètre explicite de la phase 1 de la spec.
 
 - [ ] **Étape 1 : Écrire les tests en échec pour la validation du paiement**
 
-Ajouter dans `src/lib/checkoutValidation.test.ts` (below the existing `validateShippingForm` describe block):
+Ajouter dans `src/lib/checkoutValidation.test.ts` (sous le bloc describe `validateShippingForm` existant) :
 
 ```ts
 import { validatePaymentForm, type PaymentFormValues } from './checkoutValidation';
@@ -4389,7 +4389,7 @@ describe('validatePaymentForm', () => {
 });
 ```
 
-Update the top of `src/lib/checkoutValidation.test.ts` so both imports are present:
+Mettre à jour le haut de `src/lib/checkoutValidation.test.ts` pour que les deux imports soient présents :
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -4408,7 +4408,7 @@ Résultat attendu : ÉCHEC — `validatePaymentForm` n'existe pas encore.
 
 - [ ] **Étape 3 : Implémenter la validation du paiement**
 
-Ajouter dans `src/lib/checkoutValidation.ts` (below the existing shipping code):
+Ajouter dans `src/lib/checkoutValidation.ts` (sous le code de livraison existant) :
 
 ```ts
 export interface PaymentFormValues {
@@ -4459,7 +4459,7 @@ Résultat attendu : succès (les deux blocs describe, livraison et paiement).
 
 - [ ] **Étape 5 : Ajouter les clés de messages de paiement**
 
-Add these keys inside the existing `checkout` object in `messages/fr.json` (alongside `shippingTitle`, `guestNotice`, `errors`, etc. from Tâche 19), and add `cardName`/`cardNumber`/`expiry`/`cvc` inside the existing `checkout.fields` object:
+Ajouter ces clés à l'intérieur de l'objet `checkout` existant dans `messages/fr.json` (aux côtés de `shippingTitle`, `guestNotice`, `errors`, etc. de la Tâche 19), et ajouter `cardName`/`cardNumber`/`expiry`/`cvc` à l'intérieur de l'objet `checkout.fields` existant :
 
 ```json
     "paymentTitle": "Paiement",
@@ -4478,7 +4478,7 @@ and inside `checkout.fields`:
       "cvc": "CVC"
 ```
 
-Add the equivalent keys inside the existing `checkout` object in `messages/en.json`:
+Ajouter les clés équivalentes à l'intérieur de l'objet `checkout` existant dans `messages/en.json` :
 
 ```json
     "paymentTitle": "Payment",
@@ -4618,7 +4618,7 @@ git commit -m "feat: add mock payment step for guest checkout"
 
 **Fichiers :**
 - Créer : `src/app/[locale]/commande/confirmation/page.tsx`
-- Modifier : `messages/fr.json`, `messages/en.json` (add confirmation keys to the existing `checkout` namespace)
+- Modifier : `messages/fr.json`, `messages/en.json` (ajouter les clés de confirmation au namespace `checkout` existant)
 
 **Interfaces :**
 - Consomme : `useCheckout` (Tâche 19), `Container`/`Heading`/`Button` (Tâche 8).
@@ -4626,7 +4626,7 @@ git commit -m "feat: add mock payment step for guest checkout"
 
 - [ ] **Étape 1 : Ajouter les clés de messages de confirmation**
 
-Add these keys inside the existing `checkout` object in `messages/fr.json`:
+Ajouter ces clés à l'intérieur de l'objet `checkout` existant dans `messages/fr.json` :
 
 ```json
     "confirmationTitle": "Merci pour votre commande",
@@ -4635,7 +4635,7 @@ Add these keys inside the existing `checkout` object in `messages/fr.json`:
     "backHome": "Retour à l'accueil"
 ```
 
-Add these keys inside the existing `checkout` object in `messages/en.json`:
+Ajouter ces clés à l'intérieur de l'objet `checkout` existant dans `messages/en.json` :
 
 ```json
     "confirmationTitle": "Thank you for your order",
@@ -4707,7 +4707,7 @@ export default function ConfirmationPage() {
 }
 ```
 
-The `hasCaptured` ref guards against re-capturing: `CheckoutContext`'s own hydration effect (Tâche 19) populates `shipping` depuis `sessionStorage` asynchronously after this page's first render, so `confirmedShipping` is deliberately captured via an effect (once `shipping` becomes available) rather than a `useState` initializer — a `useState(shipping)` initializer would freeze on the pre-hydration `null` value and never show the real confirmation.
+Le ref `hasCaptured` protège contre une nouvelle capture : l'effet d'hydratation propre à `CheckoutContext` (Tâche 19) peuple `shipping` depuis `sessionStorage` de façon asynchrone après le premier rendu de cette page, donc `confirmedShipping` est délibérément capturé via un effet (une fois que `shipping` devient disponible) plutôt que via un initialiseur `useState` — un initialiseur `useState(shipping)` resterait figé sur la valeur `null` d'avant hydratation et n'afficherait jamais la vraie confirmation.
 
 - [ ] **Étape 3 : Vérifier manuellement**
 
@@ -5307,12 +5307,12 @@ git commit -m "feat: add Shipping & Returns page"
 - Créer : `src/components/product/SizeGuideTable.tsx`
 - Créer : `src/components/product/SizeGuideModal.tsx`
 - Créer : `src/app/[locale]/guide-tailles/page.tsx`
-- Modifier : `src/components/product/ProductDetailView.tsx` (add a size-guide trigger next to the size selector)
+- Modifier : `src/components/product/ProductDetailView.tsx` (ajouter un déclencheur du guide des tailles à côté du sélecteur de taille)
 - Modifier : `messages/fr.json`, `messages/en.json` (add `sizeGuide` namespace)
 
 **Interfaces :**
 - Consomme : `Container`/`Heading` (Tâche 8).
-- Produit : `<SizeGuideTable />` (the measurements, presentational) and `<SizeGuideModal />` (un bouton déclencheur autonome + une modale enveloppant le tableau) — la page dédiée affiche le tableau directement ; la PDP (Tâche 15) affiche la modale à côté de son sélecteur de taille, remplissant l'exigence « page dédiée + modale réutilisable » de la spec pour ce contenu.
+- Produit : `<SizeGuideTable />` (les mesures, présentation) et `<SizeGuideModal />` (un bouton déclencheur autonome + une modale enveloppant le tableau) — la page dédiée affiche le tableau directement ; la PDP (Tâche 15) affiche la modale à côté de son sélecteur de taille, remplissant l'exigence « page dédiée + modale réutilisable » de la spec pour ce contenu.
 
 - [ ] **Étape 1 : Ajouter le namespace de messages sizeGuide**
 
@@ -5511,7 +5511,7 @@ export default async function SizeGuidePage({ params }: { params: Promise<{ loca
 
 - [ ] **Étape 5 : Brancher la modale dans le sélecteur de taille de la PDP**
 
-Modifier `src/components/product/ProductDetailView.tsx` — add the import `import { SizeGuideModal } from './SizeGuideModal';`. The file has two similarly-shaped blocks ending in `</select>\n          </div>` (size, then color, in that order) — this change targets only the **first** one, the size block. Replace this exact sequence (note the `id="size"` select and `{t('quantity')}` label that follow it, included here so the right occurrence is unambiguous):
+Modifier `src/components/product/ProductDetailView.tsx` — ajouter l'import `import { SizeGuideModal } from './SizeGuideModal';`. Le fichier a deux blocs de forme similaire se terminant par `</select>\n          </div>` (taille, puis couleur, dans cet ordre) — ce changement ne cible que le **premier**, le bloc taille. Remplacer cette séquence exacte (noter le select `id="size"` et le label `{t('quantity')}` qui le suivent, inclus ici pour que la bonne occurrence soit sans ambiguïté) :
 
 ```tsx
               {product.sizes.map((s) => (
@@ -5544,7 +5544,7 @@ with:
             <label htmlFor="color" className="text-sm font-medium">
 ```
 
-(Only the size block's closing `</div>` gains the new `<div className="mt-2"><SizeGuideModal /></div>` — the color block right after it is unchanged.)
+(Seul le `</div>` de fermeture du bloc taille reçoit le nouveau `<div className="mt-2"><SizeGuideModal /></div>` — le bloc couleur juste après reste inchangé.)
 
 - [ ] **Étape 6 : Vérifier manuellement**
 
@@ -5794,7 +5794,7 @@ Ceci se rend à l'intérieur de `src/app/[locale]/layout.tsx` (Header/Footer inc
 
 - [ ] **Étape 3 : Implémenter le fallback au niveau racine**
 
-Créer `src/app/not-found.tsx` (a plain, self-contained page — this only renders for requests that fail before a locale is even resolved, so it cannot rely on `next-intl` or the design tokens the way every other page does):
+Créer `src/app/not-found.tsx` (une page simple et autonome — elle ne se rend que pour les requêtes qui échouent avant même qu'une langue soit résolue, donc elle ne peut pas s'appuyer sur `next-intl` ou les tokens de design comme toutes les autres pages) :
 
 ```tsx
 export default function GlobalNotFound() {
@@ -5845,7 +5845,7 @@ git commit -m "feat: add localized 404 page"
 - Consomme : `routing` (Tâche 3), `CATEGORIES`/`PRODUCTS` (Tâche 4).
 - Produit : `buildMetadata`, `buildAlternateLanguages`, `organizationJsonLd`, `breadcrumbJsonLd`, `productJsonLd` depuis `src/lib/seo.ts`. Les pages institutionnelles (Tâches 22–27) conservent le `<title>`/description par défaut du layout de la Tâche 3 — seules les pages à plus fort trafic et les plus pertinentes pour le SEO (accueil, catégorie, produit) reçoivent des metadata et des données structurées dédiées dans cette passe ; l'étendre à chaque page institutionnelle est un petit chantier séparé à prévoir plus tard si besoin.
 
-**Note:** `SITE_URL` below is a placeholder domain (`https://www.reign-example.com`) since Reign has no real production domain yet — update this one constant once a real domain is chosen; every other function in this file derives from it.
+**Note :** `SITE_URL` ci-dessous est un domaine placeholder (`https://www.reign-example.com`) puisque Reign n'a pas encore de vrai domaine de production — mettre à jour cette seule constante une fois qu'un vrai domaine est choisi ; toutes les autres fonctions de ce fichier en dérivent.
 
 - [ ] **Étape 1 : Écrire les tests en échec pour les helpers SEO**
 
@@ -6055,7 +6055,7 @@ export default function robots(): MetadataRoute.Robots {
 
 - [ ] **Étape 6 : Injecter le JSON-LD Organization à l'échelle du site**
 
-Modifier `src/app/[locale]/layout.tsx` — import `organizationJsonLd` depuis `@/lib/seo`, and add the script tag as the first child inside `<body>`, before `<NextIntlClientProvider>`:
+Modifier `src/app/[locale]/layout.tsx` — importer `organizationJsonLd` depuis `@/lib/seo`, et ajouter la balise script comme premier enfant à l'intérieur de `<body>`, avant `<NextIntlClientProvider>` :
 
 ```tsx
       <body className="bg-paper text-ink font-sans antialiased">
@@ -6068,7 +6068,7 @@ Modifier `src/app/[locale]/layout.tsx` — import `organizationJsonLd` depuis `@
 
 - [ ] **Étape 7 : Ajouter les metadata à la page d'accueil**
 
-Modifier `src/app/[locale]/page.tsx` — add this export above `HomePage` (alongside the existing `getTranslations`/`setRequestLocale` import, which already covers what's needed):
+Modifier `src/app/[locale]/page.tsx` — ajouter cet export au-dessus de `HomePage` (aux côtés de l'import existant `getTranslations`/`setRequestLocale`, qui couvre déjà ce qu'il faut) :
 
 ```tsx
 import type { Metadata } from 'next';
@@ -6092,7 +6092,7 @@ export async function generateMetadata({
 
 - [ ] **Étape 8 : Ajouter les metadata et le fil d'Ariane à la page catégorie**
 
-Modifier `src/app/[locale]/[category]/page.tsx` — add imports `import type { Metadata } from 'next';` and `import { buildMetadata, breadcrumbJsonLd, SITE_URL } from '@/lib/seo';`, then add this export above `CategoryPage`:
+Modifier `src/app/[locale]/[category]/page.tsx` — ajouter les imports `import type { Metadata } from 'next';` et `import { buildMetadata, breadcrumbJsonLd, SITE_URL } from '@/lib/seo';`, puis ajouter cet export au-dessus de `CategoryPage` :
 
 ```tsx
 export async function generateMetadata({
@@ -6111,7 +6111,7 @@ export async function generateMetadata({
 }
 ```
 
-Inside `CategoryPage`'s returned JSX, add the breadcrumb script as the first child of the `<Container>`:
+À l'intérieur du JSX retourné par `CategoryPage`, ajouter le script de fil d'Ariane comme premier enfant du `<Container>` :
 
 ```tsx
     <Container className="py-12">
@@ -6131,7 +6131,7 @@ Inside `CategoryPage`'s returned JSX, add the breadcrumb script as the first chi
 
 - [ ] **Étape 9 : Ajouter les metadata et les données structurées à la fiche produit**
 
-Modifier `src/app/[locale]/produit/[slug]/page.tsx` — add imports `import type { Metadata } from 'next';` and `import { buildMetadata, breadcrumbJsonLd, productJsonLd, SITE_URL } from '@/lib/seo';`, then add this export above `ProductPage`:
+Modifier `src/app/[locale]/produit/[slug]/page.tsx` — ajouter les imports `import type { Metadata } from 'next';` et `import { buildMetadata, breadcrumbJsonLd, productJsonLd, SITE_URL } from '@/lib/seo';`, puis ajouter cet export au-dessus de `ProductPage` :
 
 ```tsx
 export async function generateMetadata({
@@ -6152,7 +6152,7 @@ export async function generateMetadata({
 }
 ```
 
-Modify the body of `ProductPage` to inject both JSON-LD blocks before `<ProductDetailView />`:
+Modifier le corps de `ProductPage` pour injecter les deux blocs JSON-LD avant `<ProductDetailView />` :
 
 ```tsx
   const localizedLocale = locale as 'fr' | 'en';
@@ -6215,7 +6215,7 @@ git commit -m "feat: add metadata, hreflang, JSON-LD, sitemap, and robots.txt"
 
 ### Tâche 30 : Passe de QA finale
 
-**Fichiers :** none created — this task verifies the whole site built across Tâches 1–29 and fixes anything it finds. If fixes are needed, they land in whichever existing file needs the change; if nothing is found, no commit is made.
+**Fichiers :** aucun créé — cette tâche vérifie l'ensemble du site construit à travers les Tâches 1–29 et corrige ce qu'elle trouve. Si des corrections sont nécessaires, elles atterrissent dans le fichier existant concerné ; si rien n'est trouvé, aucun commit n'est fait.
 
 **Interfaces :**
 - Consomme : l'intégralité du site construit jusqu'ici.
@@ -6223,7 +6223,7 @@ git commit -m "feat: add metadata, hreflang, JSON-LD, sitemap, and robots.txt"
 
 - [ ] **Étape 1 : Exécuter les vérifications automatisées**
 
-Run, in order, and confirm each succeeds before moving to the next:
+Exécuter, dans l'ordre, et confirmer que chacune réussit avant de passer à la suivante :
 
 ```bash
 npm run test
@@ -6231,23 +6231,23 @@ npm run lint
 npm run build
 ```
 
-If any fail, fix the underlying issue in the relevant file (not by weakening a test or disabling a lint rule) and re-run until all three pass.
+En cas d'échec, corriger le problème sous-jacent dans le fichier concerné (pas en affaiblissant un test ou en désactivant une règle de lint) et relancer jusqu'à ce que les trois réussissent.
 
 - [ ] **Étape 2 : Auditer chaque lien à la recherche de 404**
 
-Exécuter : `npm run dev`. Starting depuis `http://localhost:3000/fr`, click through: every Header nav category, the search field, the favorites and cart icons, every Footer link (À propos, Contact, FAQ, Livraison & Retours, Guide des tailles, Mentions légales, CGV, Confidentialité), the full guest checkout flow (Panier → Livraison → Paiement → Confirmation), and the "Guide des tailles" link on a PDP. None should 404 — every route referenced anywhere in the site now exists (Tâches 13–28 built all of them).
+Exécuter : `npm run dev`. En partant de `http://localhost:3000/fr`, cliquer sur : chaque catégorie de la nav du Header, le champ de recherche, les icônes favoris et panier, chaque lien du Footer (À propos, Contact, FAQ, Livraison & Retours, Guide des tailles, Mentions légales, CGV, Confidentialité), le parcours complet de tunnel de commande invité (Panier → Livraison → Paiement → Confirmation), et le lien « Guide des tailles » sur une PDP. Rien ne devrait être en 404 — chaque route référencée n'importe où sur le site existe désormais (les Tâches 13–28 les ont toutes construites).
 
 - [ ] **Étape 3 : Vérifier la parité bilingue**
 
-For at least Home, one category, one PDP, the Cart, and the Shipping step, switch between `/fr` and `/en` with the Header's language switcher and confirm every visible string is translated (no French leaking into the English version or vice versa) and the current path is preserved across the switch. Open the browser devtools console while doing this — `next-intl` logs a warning for any missing message key, so confirm the console stays clean.
+Pour au moins l'accueil, une catégorie, une PDP, le Panier, et l'étape Livraison, basculer entre `/fr` et `/en` avec le sélecteur de langue du Header et confirmer que chaque texte visible est traduit (pas de français qui fuit dans la version anglaise ou l'inverse) et que le chemin actuel est préservé lors du changement. Ouvrir la console devtools du navigateur pendant ce test — `next-intl` logue un avertissement pour toute clé de message manquante, donc confirmer que la console reste propre.
 
 - [ ] **Étape 4 : Vérifier le comportement de la devise**
 
-On a category page and a PDP, switch between EUR and GBP with the Header's currency switcher and confirm every displayed price recalculates using the fixed rate depuis `src/lib/currency.ts` (1 EUR = 0.86 GBP) and formats with the correct currency symbol for the selected currency regardless of the active language.
+Sur une page catégorie et une PDP, basculer entre EUR et GBP avec le sélecteur de devise du Header et confirmer que chaque prix affiché est recalculé en utilisant le taux fixe depuis `src/lib/currency.ts` (1 EUR = 0,86 GBP) et formaté avec le bon symbole de devise pour la devise sélectionnée, quelle que soit la langue active.
 
 - [ ] **Étape 5 : Contrôle ponctuel du responsive**
 
-Using the browser devtools device toolbar, check Home, a category listing, a PDP, the Cart, and the Shipping form at three widths: 375px (mobile), 768px (tablet), 1280px (desktop). Confirm: no horizontal scrollbar appears anywhere, the Header collapses to the hamburger menu below `md` and expands correctly, the category filter `<select>` elements and checkout forms remain fully usable (labels visible, inputs full-width) on mobile.
+En utilisant la barre d'outils device des devtools du navigateur, vérifier l'accueil, un listing catégorie, une PDP, le Panier, et le formulaire de livraison à trois largeurs : 375px (mobile), 768px (tablette), 1280px (desktop). Confirmer : aucune barre de défilement horizontale n'apparaît nulle part, le Header se replie en menu hamburger sous `md` et se déplie correctement, les éléments `<select>` de filtre catégorie et les formulaires de tunnel de commande restent pleinement utilisables (labels visibles, champs pleine largeur) sur mobile.
 
 - [ ] **Étape 6 : Commit (seulement si l'Étape 1 a nécessité des corrections)**
 
@@ -6256,6 +6256,6 @@ git add -A
 git commit -m "fix: address issues found in final QA pass"
 ```
 
-If no fixes were needed, skip this step — there is nothing to commit.
+Si aucune correction n'était nécessaire, passer cette étape — il n'y a rien à commiter.
 
 ---
