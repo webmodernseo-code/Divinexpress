@@ -292,6 +292,10 @@ export function getProductsByCategory(category: Category): Product[] {
   return PRODUCTS.filter((p) => p.category === category);
 }
 
+export function getSubcategoriesForCategory(category: Category): string[] {
+  return Array.from(new Set(getProductsByCategory(category).map((p) => p.subcategory)));
+}
+
 export function getProductBySlug(slug: string): Product | undefined {
   return PRODUCTS.find((p) => p.slug === slug);
 }

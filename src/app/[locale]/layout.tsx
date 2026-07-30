@@ -7,6 +7,7 @@ import { fraunces, inter } from '@/lib/fonts';
 import { CurrencyProvider } from '@/context/CurrencyContext';
 import { CartProvider } from '@/context/CartContext';
 import { FavoritesProvider } from '@/context/FavoritesContext';
+import { Header } from '@/components/layout/Header';
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -39,6 +40,7 @@ export default async function LocaleLayout({
           <CurrencyProvider initialLocale={locale}>
             <CartProvider>
               <FavoritesProvider>
+                <Header />
                 <main>{children}</main>
               </FavoritesProvider>
             </CartProvider>

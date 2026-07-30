@@ -7,8 +7,8 @@ export function Logo({ className = '' }: { className?: string }) {
       <Image
         src="/branding/logo-reign.png"
         alt="Reign"
-        width={160}
-        height={52}
+        width={193}
+        height={67}
         priority
         className="h-8 w-auto md:h-10"
       />

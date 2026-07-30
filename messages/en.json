@@ -6,9 +6,13 @@
     "accessoires": "Accessories",
     "search": "Search",
     "cart": "Cart",
-    "favorites": "Favorites"
+    "favorites": "Favorites",
+    "viewAll": "View all"
   },
   "common": {
     "brand": "Reign"
+  },
+  "header": {
+    "freeShippingBanner": "Free shipping over €150"
   }
 }

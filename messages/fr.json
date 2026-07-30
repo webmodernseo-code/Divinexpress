@@ -6,9 +6,13 @@
     "accessoires": "Accessoires",
     "search": "Rechercher",
     "cart": "Panier",
-    "favorites": "Favoris"
+    "favorites": "Favoris",
+    "viewAll": "Tout voir"
   },
   "common": {
     "brand": "Reign"
+  },
+  "header": {
+    "freeShippingBanner": "Livraison offerte dès 150€ d'achat"
   }
 }
