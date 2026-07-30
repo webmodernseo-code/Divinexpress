@@ -21,5 +21,26 @@
   "currency": {
     "eur": "Euro (EUR)",
     "gbp": "Pound (GBP)"
+  },
+  "footer": {
+    "newsletterTitle": "Stay in the loop",
+    "newsletterPlaceholder": "Your email",
+    "newsletterButton": "Subscribe",
+    "newsletterSuccess": "Thank you, you're subscribed.",
+    "links": {
+      "about": "About",
+      "contact": "Contact",
+      "faq": "FAQ",
+      "shippingReturns": "Shipping & Returns",
+      "sizeGuide": "Size Guide",
+      "legalNotice": "Legal Notice",
+      "terms": "Terms of Sale",
+      "privacy": "Privacy"
+    },
+    "rights": "All rights reserved."
+  },
+  "cookies": {
+    "message": "We use cookies to improve your experience on this site.",
+    "accept": "Accept"
   }
 }

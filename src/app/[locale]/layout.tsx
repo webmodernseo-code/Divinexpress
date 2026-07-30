@@ -8,6 +8,8 @@ import { CurrencyProvider } from '@/context/CurrencyContext';
 import { CartProvider } from '@/context/CartContext';
 import { FavoritesProvider } from '@/context/FavoritesContext';
 import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+import { CookieBanner } from '@/components/layout/CookieBanner';
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -42,6 +44,8 @@ export default async function LocaleLayout({
               <FavoritesProvider>
                 <Header />
                 <main>{children}</main>
+                <Footer />
+                <CookieBanner />
               </FavoritesProvider>
             </CartProvider>
           </CurrencyProvider>
