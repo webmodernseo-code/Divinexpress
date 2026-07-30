@@ -1828,7 +1828,7 @@ git commit -m "feat: add shared UI primitives (Container, Heading, Button, Place
 - Consomme : `Link` depuis `@/i18n/navigation` (Tâche 3).
 - Produit : `<Logo />` — utilisé par le Header (Tâche 10) et le Footer (Tâche 11).
 
-**Note de design :** le logo fourni est un wordmark blanc sur fond noir. Plutôt que d'aller à contre-courant, le Header (Tâche 10) utilise un fond noir (`bg-ink`) pour que le logo repose toujours sur la surface pour laquelle il a été conçu, le reste de chaque page restant blanc/noir conformément à l'identité « contraste maîtrisé » de la spec.
+**Note de design :** le logo fourni est un wordmark **noir** sur fond blanc/transparent (décision confirmée avec l'utilisateur — la version noire est celle à utiliser, pas de variante blanche sur fond noir). En conséquence, le Header (Tâche 10) utilise un fond blanc (`bg-paper`) plutôt qu'un fond noir, pour que le logo noir reste lisible — le reste de l'identité « contraste maîtrisé » (logo comme mark graphique isolé, reste du site sobre) est inchangé.
 
 - [ ] **Étape 1 : Obtenir l'asset du logo**
 
@@ -1908,7 +1908,7 @@ export function LanguageSwitcher() {
         type="button"
         onClick={() => switchTo('fr')}
         aria-pressed={locale === 'fr'}
-        className={locale === 'fr' ? 'text-paper' : 'text-mist-400 hover:text-paper'}
+        className={locale === 'fr' ? 'text-ink' : 'text-mist-400 hover:text-ink'}
       >
         FR
       </button>
@@ -1917,7 +1917,7 @@ export function LanguageSwitcher() {
         type="button"
         onClick={() => switchTo('en')}
         aria-pressed={locale === 'en'}
-        className={locale === 'en' ? 'text-paper' : 'text-mist-400 hover:text-paper'}
+        className={locale === 'en' ? 'text-ink' : 'text-mist-400 hover:text-ink'}
       >
         EN
       </button>
@@ -1950,7 +1950,7 @@ export function CurrencySwitcher() {
             type="button"
             onClick={() => setCurrency(code)}
             aria-pressed={currency === code}
-            className={currency === code ? 'text-paper' : 'text-mist-400 hover:text-paper'}
+            className={currency === code ? 'text-ink' : 'text-mist-400 hover:text-ink'}
           >
             {code}
           </button>
@@ -2021,7 +2021,7 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-ink text-paper">
+    <header className="sticky top-0 z-50 border-b border-mist-100 bg-paper text-ink">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 sm:px-6 lg:px-8">
         <Logo />
 
@@ -2040,7 +2040,7 @@ export function Header() {
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t('search')}
             aria-label={t('search')}
-            className="w-full border-b border-mist-700 bg-transparent px-1 py-1 text-sm text-paper placeholder:text-mist-500 focus:border-accent focus:outline-none"
+            className="w-full border-b border-mist-300 bg-transparent px-1 py-1 text-sm text-ink placeholder:text-mist-500 focus:border-accent focus:outline-none"
           />
         </form>
 
@@ -2050,7 +2050,7 @@ export function Header() {
           <Link href="/favoris" aria-label={t('favorites')} className="relative hover:text-accent">
             <HeartIcon />
             {favoriteIds.length > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px]">
+              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] text-paper">
                 {favoriteIds.length}
               </span>
             )}
@@ -2058,7 +2058,7 @@ export function Header() {
           <Link href="/panier" aria-label={t('cart')} className="relative hover:text-accent">
             <BagIcon />
             {itemCount > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px]">
+              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] text-paper">
                 {itemCount}
               </span>
             )}
@@ -2077,7 +2077,7 @@ export function Header() {
       </div>
 
       {isMenuOpen && (
-        <div className="border-t border-mist-800 px-4 pb-6 md:hidden">
+        <div className="border-t border-mist-100 px-4 pb-6 md:hidden">
           <nav className="flex flex-col gap-4 pt-4 text-sm tracking-wide">
             {CATEGORIES.map((category) => (
               <Link
@@ -2097,7 +2097,7 @@ export function Header() {
               onChange={(event) => setQuery(event.target.value)}
               placeholder={t('search')}
               aria-label={t('search')}
-              className="w-full border-b border-mist-700 bg-transparent px-1 py-2 text-sm text-paper placeholder:text-mist-500 focus:border-accent focus:outline-none"
+              className="w-full border-b border-mist-300 bg-transparent px-1 py-2 text-sm text-ink placeholder:text-mist-500 focus:border-accent focus:outline-none"
             />
           </form>
           <div className="mt-4 flex items-center justify-between">
@@ -2659,7 +2659,7 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-ink text-paper">
+    <header className="sticky top-0 z-50 border-b border-mist-100 bg-paper text-ink">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 sm:px-6 lg:px-8">
         <Logo />
 
@@ -2678,7 +2678,7 @@ export function Header() {
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t('search')}
             aria-label={t('search')}
-            className="w-full border-b border-mist-700 bg-transparent px-1 py-1 text-sm text-paper placeholder:text-mist-500 focus:border-accent focus:outline-none"
+            className="w-full border-b border-mist-300 bg-transparent px-1 py-1 text-sm text-ink placeholder:text-mist-500 focus:border-accent focus:outline-none"
           />
         </form>
 
@@ -2688,7 +2688,7 @@ export function Header() {
           <Link href="/favoris" aria-label={t('favorites')} className="relative hover:text-accent">
             <HeartIcon />
             {favoriteIds.length > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px]">
+              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] text-paper">
                 {favoriteIds.length}
               </span>
             )}
@@ -2696,7 +2696,7 @@ export function Header() {
           <button type="button" onClick={handleOpenCart} aria-label={t('cart')} className="relative hover:text-accent">
             <BagIcon />
             {itemCount > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px]">
+              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] text-paper">
                 {itemCount}
               </span>
             )}
@@ -2715,7 +2715,7 @@ export function Header() {
       </div>
 
       {isMenuOpen && (
-        <div className="border-t border-mist-800 px-4 pb-6 md:hidden">
+        <div className="border-t border-mist-100 px-4 pb-6 md:hidden">
           <nav className="flex flex-col gap-4 pt-4 text-sm tracking-wide">
             {CATEGORIES.map((category) => (
               <Link
@@ -2735,7 +2735,7 @@ export function Header() {
               onChange={(event) => setQuery(event.target.value)}
               placeholder={t('search')}
               aria-label={t('search')}
-              className="w-full border-b border-mist-700 bg-transparent px-1 py-2 text-sm text-paper placeholder:text-mist-500 focus:border-accent focus:outline-none"
+              className="w-full border-b border-mist-300 bg-transparent px-1 py-2 text-sm text-ink placeholder:text-mist-500 focus:border-accent focus:outline-none"
             />
           </form>
           <div className="mt-4 flex items-center justify-between">

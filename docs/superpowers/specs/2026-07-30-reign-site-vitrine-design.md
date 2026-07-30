@@ -27,8 +27,9 @@ Catégories produits : **Homme / Femme / Enfant / Accessoires**.
 ### 2.2 Typographie
 
 - **Logo** : asset graphique fourni par l'utilisateur (wordmark "Reign", sans-serif bold, découpe
-  diagonale sur le R, texture grunge légère, blanc sur noir). Utilisé tel quel comme mark isolé
-  (header, favicon) — jamais recomposé en CSS.
+  diagonale sur le R, texture grunge légère, **noir sur fond blanc/transparent**). Utilisé tel quel
+  comme mark isolé (header, favicon) — jamais recomposé en CSS. Le Header et le Footer sont donc
+  en fond blanc (`bg-paper`) pour que le logo noir y reste lisible.
 - **Titres / éditorial** : **Fraunces** (serif éditorial) — utilisé pour les titres de section,
   accroches, noms de collection.
 - **Corps de texte / UI** : **Inter** (sans-serif neutre) — utilisé pour le texte courant, les
