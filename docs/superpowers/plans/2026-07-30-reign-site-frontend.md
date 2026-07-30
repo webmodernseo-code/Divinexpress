@@ -1,99 +1,99 @@
-# Reign — Vitrine E-commerce Front-end (Phase 1) Implementation Plan
+# Reign — Vitrine E-commerce Front-end (Phase 1) — Plan d'implémentation
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **Pour les travailleurs agentiques :** SOUS-SKILL REQUIS : utiliser superpowers:subagent-driven-development (recommandé) ou superpowers:executing-plans pour exécuter ce plan tâche par tâche. Les étapes utilisent la syntaxe de case à cocher (`- [ ]`) pour le suivi.
 
-**Goal:** Build the complete Reign e-commerce storefront front-end — bilingual (FR/EN), dual-currency (EUR/GBP), premium black/white design — as specified in `docs/superpowers/specs/2026-07-30-reign-site-vitrine-design.md`, with no real backend, payment, or authentication.
+**Objectif :** Construire l'intégralité de la vitrine e-commerce front-end de Reign — bilingue (FR/EN), double devise (EUR/GBP), design premium noir/blanc — telle que spécifiée dans `docs/superpowers/specs/2026-07-30-reign-site-vitrine-design.md`, sans vrai backend, paiement ni authentification.
 
-**Architecture:** Next.js 16 (App Router, TypeScript, `src/` dir) with `next-intl` for URL-prefixed i18n routing (`/fr`, `/en`). All product, cart, favorites, and currency state lives client-side (React Context + `localStorage`); product/content data lives in local TypeScript files. Per spec section 8's "design before hard-coded logic" methodology: the shared design system, product data, and state contexts are built and unit-tested first as independent foundations (Tasks 1–12), each verified in isolation before any page depends on it. Every page task from Task 13 onward then assembles its visual layout, interactivity, and data-wiring together as one reviewable vertical slice — because the underlying logic it consumes was already built and tested as its own task, no page is ever built against unverified data or state plumbing.
+**Architecture :** Next.js 16 (App Router, TypeScript, dossier `src/`) avec `next-intl` pour un routage i18n préfixé par l'URL (`/fr`, `/en`). Tout l'état produit, panier, favoris et devise vit côté client (React Context + `localStorage`) ; les données produits/contenu vivent dans des fichiers TypeScript locaux. Conformément à la méthodologie "design avant logique codée en dur" de la section 8 de la spec : le design system partagé, les données produits et les contextes d'état sont construits et testés en premier comme des fondations indépendantes (Tâches 1–12), chacune vérifiée isolément avant qu'une page n'en dépende. Chaque tâche de page à partir de la Tâche 13 assemble ensuite sa mise en page visuelle, son interactivité et son câblage de données en une seule tranche verticale revue d'un bloc — puisque la logique sous-jacente qu'elle consomme a déjà été construite et testée dans sa propre tâche, aucune page n'est jamais construite contre une donnée ou une plomberie d'état non vérifiée.
 
-**Tech Stack:** Next.js 16.x, React 19.x, TypeScript, Tailwind CSS v4, next-intl v4, Vitest + React Testing Library + jsdom.
+**Stack technique :** Next.js 16.x, React 19.x, TypeScript, Tailwind CSS v4, next-intl v4, Vitest + React Testing Library + jsdom.
 
-## Global Constraints
+## Contraintes globales
 
-- Framework/tooling versions: use whatever `create-next-app@latest` installs at scaffold time (verified at plan-writing time: Next.js 16.2.x, React 19.2.x, Tailwind CSS 4.3.x, TypeScript 7.0.x). Do not manually downgrade.
-- i18n: `next-intl` v4, locale prefix always present in the URL (`/fr/...`, `/en/...`), locales are exactly `fr` (default) and `en`. No top-level `src/app/layout.tsx` — `src/app/[locale]/layout.tsx` is the root layout (contains `<html>`/`<body>`), per next-intl's documented App Router pattern.
-- Category and product URL slugs are **never translated** between locales — only the displayed text changes. Example: `/fr/homme` and `/en/homme` both work; there is no `/en/men`.
-- Colors: ink `#0D0D0D`, paper `#FFFFFF`, accent (steel blue) `#3B4A5A`, gray scale from `#1A1A1A` to `#F2F2F2`. Fonts: **Fraunces** (headings/editorial) + **Inter** (body/UI), loaded via `next/font/google`. The provided brand logo image is used as-is (never recreated in CSS/text).
-- Currency: fixed rate constant, 1 EUR = 0.86 GBP, isolated in `src/lib/currency.ts`. No live rate API in phase 1.
-- No backend, no database, no real payment processor, no real authentication. All state is client-side Context + `localStorage`. No account/login section exists (spec section 9) — checkout is guest-only. Favorites persist client-side without requiring an account.
-- All user-facing copy lives in `messages/fr.json` and `messages/en.json` (via `next-intl`) — never hardcode user-facing strings directly in component JSX.
-- Test strategy: logic-bearing units (`src/lib/**`, `src/context/**`) get real Vitest unit tests, written before the implementation (TDD). Presentational pages/components are verified by running `npm run build` (type/lint check) and manually checking `npm run dev` in the browser — they do not get brittle snapshot/DOM tests for static markup. Where a page includes real logic (a filter, a form validator, a search matcher), that logic is extracted into a testable `src/lib/*` function.
-- Legal page copy (mentions légales, CGV, politique de confidentialité) is realistic **template** text for a fictitious brand, explicitly marked in this plan as requiring review by a qualified professional before real-world launch — it is not vetted legal advice.
-- Package manager: npm.
+- Versions des outils/frameworks : utiliser ce que `create-next-app@latest` installe au moment du scaffold (vérifié au moment de la rédaction du plan : Next.js 16.2.x, React 19.2.x, Tailwind CSS 4.3.x, TypeScript 7.0.x). Ne pas rétrograder manuellement.
+- i18n : `next-intl` v4, préfixe de langue toujours présent dans l'URL (`/fr/...`, `/en/...`), les langues sont exactement `fr` (par défaut) et `en`. Pas de `src/app/layout.tsx` au niveau racine — `src/app/[locale]/layout.tsx` est le layout racine (contient `<html>`/`<body>`), conformément au pattern App Router documenté de next-intl.
+- Les slugs d'URL de catégorie et de produit ne sont **jamais traduits** entre les langues — seul le texte affiché change. Exemple : `/fr/homme` et `/en/homme` fonctionnent tous les deux ; il n'existe pas de `/en/men`.
+- Couleurs : noir profond `#0D0D0D`, blanc `#FFFFFF`, accent (bleu acier) `#3B4A5A`, échelle de gris de `#1A1A1A` à `#F2F2F2`. Polices : **Fraunces** (titres/éditorial) + **Inter** (texte courant/UI), chargées via `next/font/google`. Le logo de marque fourni est utilisé tel quel (jamais recréé en CSS/texte).
+- Devise : taux fixe constant, 1 EUR = 0,86 GBP, isolé dans `src/lib/currency.ts`. Pas d'API de taux en temps réel en phase 1.
+- Pas de backend, pas de base de données, pas de vrai processeur de paiement, pas de vraie authentification. Tout l'état est côté client (Context + `localStorage`). Aucune section compte/connexion n'existe (section 9 de la spec) — le tunnel de commande est en mode invité uniquement. Les favoris sont persistés côté client sans nécessiter de compte.
+- Tout le texte visible par l'utilisateur vit dans `messages/fr.json` et `messages/en.json` (via `next-intl`) — ne jamais coder en dur une chaîne visible par l'utilisateur directement dans le JSX d'un composant.
+- Stratégie de test : les unités porteuses de logique (`src/lib/**`, `src/context/**`) reçoivent de vrais tests unitaires Vitest, écrits avant l'implémentation (TDD). Les pages/composants de présentation sont vérifiés en exécutant `npm run build` (vérification des types/lint) et en vérifiant manuellement `npm run dev` dans le navigateur — ils ne reçoivent pas de tests de snapshot/DOM fragiles pour du balisage statique. Quand une page contient une vraie logique (un filtre, un validateur de formulaire, un moteur de recherche), cette logique est extraite dans une fonction testable de `src/lib/*`.
+- Le texte des pages légales (mentions légales, CGV, politique de confidentialité) est un texte de **modèle** réaliste pour une marque fictive, explicitement signalé dans ce plan comme nécessitant une relecture par un professionnel qualifié avant tout lancement réel — ce n'est pas un conseil juridique vérifié.
+- Gestionnaire de paquets : npm.
 
 ---
 
-## Task list overview
+## Vue d'ensemble des tâches
 
-1. Scaffold Next.js project + testing setup
-2. Design tokens (Tailwind theme: colors, fonts)
-3. i18n setup (next-intl routing/middleware/messages skeleton + locale layout)
-4. Product catalog data & queries (lib/products.ts)
-5. Currency utils + CurrencyContext
-6. CartContext + cart calculations (lib/cart.ts)
+1. Scaffold du projet Next.js + configuration des tests
+2. Tokens de design (thème Tailwind : couleurs, polices)
+3. Configuration i18n (routing/middleware/squelette de messages next-intl + layout de langue)
+4. Données du catalogue produits & requêtes (lib/products.ts)
+5. Utilitaires de devise + CurrencyContext
+6. CartContext + calculs de panier (lib/cart.ts)
 7. FavoritesContext
-8. Shared UI primitives (Container, Heading, Button, PlaceholderBlock)
-9. Brand logo asset + Logo component
-10. Header (nav, logo, language/currency switchers, cart/favorites counts)
-11. Footer + cookie consent banner
-12. Cart drawer
-13. Home page
-14. Category listing page (PLP) + filters, 4 categories
-15. Product detail page (PDP)
-16. Search results page
-17. Favorites page
-18. Cart page
-19. Checkout — Shipping page
-20. Checkout — Payment page (mock)
-21. Checkout — Confirmation page
-22. About page
-23. Contact page
-24. FAQ / Help page
-25. Shipping & Returns page
-26. Size guide page + modal
-27. Legal pages x3 (mentions legales, CGV, confidentialite)
-28. 404 page
-29. SEO foundations (metadata, hreflang, JSON-LD, sitemap, robots)
-30. Final QA pass
+8. Primitives UI partagées (Container, Heading, Button, PlaceholderBlock)
+9. Asset du logo de marque + composant Logo
+10. Header (nav, logo, sélecteurs langue/devise, compteurs panier/favoris)
+11. Footer + bandeau de consentement cookies
+12. Drawer panier
+13. Page d'accueil
+14. Page de listing catégorie (PLP) + filtres, 4 catégories
+15. Fiche produit (PDP)
+16. Page de résultats de recherche
+17. Page favoris
+18. Page panier
+19. Tunnel de commande — Page livraison
+20. Tunnel de commande — Page paiement (factice)
+21. Tunnel de commande — Page confirmation
+22. Page à propos
+23. Page contact
+24. Page FAQ / Aide
+25. Page livraison & retours
+26. Page guide des tailles + modale
+27. Pages légales x3 (mentions légales, CGV, confidentialité)
+28. Page 404
+29. Fondations SEO (metadata, hreflang, JSON-LD, sitemap, robots)
+30. Passe de QA finale
 
 ---
 
-### Task 1: Scaffold Next.js project + testing setup
+### Tâche 1 : Scaffold du projet Next.js + configuration des tests
 
-**Files:**
-- Create: whole project via CLI (`package.json`, `next.config.ts`, `tsconfig.json`, `src/app/globals.css`, eslint config, etc.)
-- Create: `vitest.config.ts`
-- Create: `src/test/setup.ts`
-- Modify: `package.json` (add `test` / `test:watch` scripts)
+**Fichiers :**
+- Créer : l'ensemble du projet via la CLI (`package.json`, `next.config.ts`, `tsconfig.json`, `src/app/globals.css`, config eslint, etc.)
+- Créer : `vitest.config.ts`
+- Créer : `src/test/setup.ts`
+- Modifier : `package.json` (ajouter les scripts `test` / `test:watch`)
 
-**Interfaces:**
-- Consumes: nothing (first task).
-- Produces: a runnable Next.js dev server (`npm run dev`), a working build (`npm run build`), and a working Vitest runner (`npm run test`) that all later tasks build on.
+**Interfaces :**
+- Consomme : rien (première tâche).
+- Produit : un serveur de dev Next.js fonctionnel (`npm run dev`), un build qui fonctionne (`npm run build`), et un lanceur Vitest qui fonctionne (`npm run test`), sur lesquels toutes les tâches suivantes s'appuient.
 
-- [ ] **Step 1: Scaffold the project**
+- [ ] **Étape 1 : Scaffolder le projet**
 
-Run from the repository root (it already contains `.git`, `.gitignore`, `docs/`, `claude skills/` — none of these conflict with `create-next-app`):
+À exécuter depuis la racine du dépôt (elle contient déjà `.git`, `.gitignore`, `docs/`, `claude skills/` — rien de tout ça n'entre en conflit avec `create-next-app`) :
 
 ```bash
 yes | npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"
 ```
 
-If the installed `create-next-app` rejects a flag (CLI flags occasionally change), run `npx create-next-app@latest --help` to see the current flag names and re-run with the equivalent options — the intent is: TypeScript, Tailwind CSS, ESLint, App Router, `src/` directory, `@/*` import alias.
+Si le `create-next-app` installé rejette un flag (les flags de la CLI changent parfois), exécuter `npx create-next-app@latest --help` pour voir les noms de flags actuels et relancer avec les options équivalentes — l'intention est : TypeScript, Tailwind CSS, ESLint, App Router, dossier `src/`, alias d'import `@/*`.
 
-- [ ] **Step 2: Verify the scaffold builds and runs**
+- [ ] **Étape 2 : Vérifier que le scaffold build et démarre**
 
-Run: `npm run build`
-Expected: build completes successfully (default Next.js starter page).
+Exécuter : `npm run build`
+Résultat attendu : le build se termine avec succès (page de démarrage par défaut de Next.js).
 
-- [ ] **Step 3: Install testing dependencies**
+- [ ] **Étape 3 : Installer les dépendances de test**
 
 ```bash
 npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom @vitejs/plugin-react
 ```
 
-- [ ] **Step 4: Create the Vitest config**
+- [ ] **Étape 4 : Créer la config Vitest**
 
-Create `vitest.config.ts`:
+Créer `vitest.config.ts`:
 
 ```ts
 import { defineConfig } from 'vitest/config';
@@ -115,29 +115,29 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 5: Create the test setup file**
+- [ ] **Étape 5 : Créer le fichier de setup des tests**
 
-Create `src/test/setup.ts`:
+Créer `src/test/setup.ts`:
 
 ```ts
 import '@testing-library/jest-dom/vitest';
 ```
 
-- [ ] **Step 6: Add test scripts to package.json**
+- [ ] **Étape 6 : Ajouter les scripts de test à package.json**
 
-Modify `package.json` `scripts` section to add:
+Modifier la section `scripts` de `package.json` pour ajouter :
 
 ```json
 "test": "vitest run",
 "test:watch": "vitest"
 ```
 
-- [ ] **Step 7: Verify the test runner works**
+- [ ] **Étape 7 : Vérifier que le lanceur de tests fonctionne**
 
-Run: `npm run test`
-Expected: Vitest starts, reports no test files found yet, and exits without a configuration error. This confirms the harness is wired correctly before any real tests are written in Task 4 onward.
+Exécuter : `npm run test`
+Résultat attendu : Vitest démarre, indique qu'aucun fichier de test n'a encore été trouvé, et se termine sans erreur de configuration. Cela confirme que l'environnement de test est correctement branché avant l'écriture des premiers vrais tests à la Tâche 4.
 
-- [ ] **Step 8: Commit**
+- [ ] **Étape 8 : Commit**
 
 ```bash
 git add -A
@@ -146,19 +146,19 @@ git commit -m "chore: scaffold Next.js project with Tailwind, TypeScript, and Vi
 
 ---
 
-### Task 2: Design tokens (Tailwind theme: colors, fonts)
+### Tâche 2 : Tokens de design (thème Tailwind : couleurs, polices)
 
-**Files:**
-- Create: `src/lib/fonts.ts`
-- Modify: `src/app/globals.css`
+**Fichiers :**
+- Créer : `src/lib/fonts.ts`
+- Modifier : `src/app/globals.css`
 
-**Interfaces:**
-- Consumes: nothing beyond the scaffold from Task 1.
-- Produces: Tailwind utility classes `bg-ink`, `text-ink`, `bg-paper`, `text-paper`, `bg-accent`, `text-accent`, `bg-mist-{50,100,...,900}`, plus CSS variables `--font-serif` / `--font-sans` and the `fraunces` / `inter` exports from `src/lib/fonts.ts` for use in `next/font` `className`/`variable` props.
+**Interfaces :**
+- Consomme : rien au-delà du scaffold de la Tâche 1.
+- Produit : les classes utilitaires Tailwind `bg-ink`, `text-ink`, `bg-paper`, `text-paper`, `bg-accent`, `text-accent`, `bg-mist-{50,100,...,900}`, plus les variables CSS `--font-serif` / `--font-sans` et les exports `fraunces` / `inter` de `src/lib/fonts.ts` à utiliser dans les props `className`/`variable` de `next/font`.
 
-- [ ] **Step 1: Define font loaders**
+- [ ] **Étape 1 : Définir les chargeurs de polices**
 
-Create `src/lib/fonts.ts`:
+Créer `src/lib/fonts.ts`:
 
 ```ts
 import { Fraunces, Inter } from 'next/font/google';
@@ -179,9 +179,9 @@ export const inter = Inter({
 });
 ```
 
-- [ ] **Step 2: Define the color/theme tokens in globals.css**
+- [ ] **Étape 2 : Définir les tokens couleur/thème dans globals.css**
 
-Modify `src/app/globals.css` — replace its contents with:
+Modifier `src/app/globals.css` — remplacer son contenu par :
 
 ```css
 @import "tailwindcss";
@@ -212,14 +212,14 @@ body {
 }
 ```
 
-This makes `bg-ink`, `text-ink`, `bg-paper`, `text-paper`, `bg-accent`, `text-accent`, `border-accent`, `bg-mist-50`...`bg-mist-900`, `font-sans`, and `font-serif` available as Tailwind utilities (Tailwind CSS v4 generates utilities directly from `@theme` tokens — no `tailwind.config.ts` entry needed for these).
+Cela rend `bg-ink`, `text-ink`, `bg-paper`, `text-paper`, `bg-accent`, `text-accent`, `border-accent`, `bg-mist-50`...`bg-mist-900`, `font-sans` et `font-serif` disponibles comme utilitaires Tailwind (Tailwind CSS v4 génère les utilitaires directement à partir des tokens `@theme` — pas besoin d'entrée dans `tailwind.config.ts` pour ceux-ci).
 
-- [ ] **Step 3: Verify the tokens compile**
+- [ ] **Étape 3 : Vérifier que les tokens compilent**
 
-Run: `npm run build`
-Expected: build succeeds with no Tailwind/CSS errors. (There is no dedicated unit test for CSS tokens — this is a presentational/config concern verified by the build, per the Global Constraints test strategy.)
+Exécuter : `npm run build`
+Résultat attendu : le build réussit sans erreur Tailwind/CSS. (Il n'y a pas de test unitaire dédié pour les tokens CSS — c'est un aspect présentation/configuration vérifié par le build, conformément à la stratégie de test des Contraintes globales.)
 
-- [ ] **Step 4: Commit**
+- [ ] **Étape 4 : Commit**
 
 ```bash
 git add src/lib/fonts.ts src/app/globals.css
@@ -228,30 +228,30 @@ git commit -m "feat: add Reign color and typography design tokens"
 
 ---
 
-### Task 3: i18n setup (next-intl routing/middleware/messages + locale layout)
+### Tâche 3 : Configuration i18n (routing/middleware/messages next-intl + layout de langue)
 
-**Files:**
-- Create: `src/i18n/routing.ts`
-- Create: `src/i18n/navigation.ts`
-- Create: `src/i18n/request.ts`
-- Create: `src/middleware.ts`
-- Create: `messages/fr.json`
-- Create: `messages/en.json`
-- Create: `src/app/[locale]/layout.tsx`
-- Modify: `next.config.ts`
-- Delete: `src/app/page.tsx`, `src/app/layout.tsx` (the default scaffold ones — replaced by the locale-aware versions)
+**Fichiers :**
+- Créer : `src/i18n/routing.ts`
+- Créer : `src/i18n/navigation.ts`
+- Créer : `src/i18n/request.ts`
+- Créer : `src/middleware.ts`
+- Créer : `messages/fr.json`
+- Créer : `messages/en.json`
+- Créer : `src/app/[locale]/layout.tsx`
+- Modifier : `next.config.ts`
+- Supprimer : `src/app/page.tsx`, `src/app/layout.tsx` (les fichiers par défaut du scaffold — remplacés par les versions conscientes de la langue)
 
-**Interfaces:**
-- Consumes: `fraunces` / `inter` from `src/lib/fonts.ts` (Task 2).
-- Produces: `routing` (locales `['fr','en']`, default `fr`) and `{ Link, redirect, usePathname, useRouter, getPathname }` from `src/i18n/navigation.ts` — every later page/component that needs locale-aware links or the current locale imports from here, not from `next/navigation` directly (except for reading `searchParams`, which is locale-agnostic). `src/app/[locale]/layout.tsx` renders `<html>`/`<body>` and will be extended by later tasks (5, 6, 7, 10, 11) to add providers, Header, and Footer.
+**Interfaces :**
+- Consomme : `fraunces` / `inter` de `src/lib/fonts.ts` (Tâche 2).
+- Produit : `routing` (langues `['fr','en']`, défaut `fr`) et `{ Link, redirect, usePathname, useRouter, getPathname }` de `src/i18n/navigation.ts` — toute page/composant ultérieur qui a besoin de liens conscients de la langue ou de la langue courante importe depuis ici, pas directement depuis `next/navigation` (sauf pour lire `searchParams`, qui est indépendant de la langue). `src/app/[locale]/layout.tsx` rend `<html>`/`<body>` et sera étendu par les tâches suivantes (5, 6, 7, 10, 11) pour ajouter les providers, le Header et le Footer.
 
-- [ ] **Step 1: Install next-intl**
+- [ ] **Étape 1 : Installer next-intl**
 
-Run: `npm install next-intl`
+Exécuter : `npm install next-intl`
 
-- [ ] **Step 2: Define the routing config**
+- [ ] **Étape 2 : Définir la config de routing**
 
-Create `src/i18n/routing.ts`:
+Créer `src/i18n/routing.ts`:
 
 ```ts
 import { defineRouting } from 'next-intl/routing';
@@ -262,9 +262,9 @@ export const routing = defineRouting({
 });
 ```
 
-- [ ] **Step 3: Define locale-aware navigation helpers**
+- [ ] **Étape 3 : Définir les helpers de navigation conscients de la langue**
 
-Create `src/i18n/navigation.ts`:
+Créer `src/i18n/navigation.ts`:
 
 ```ts
 import { createNavigation } from 'next-intl/navigation';
@@ -273,9 +273,9 @@ import { routing } from '@/i18n/routing';
 export const { Link, redirect, usePathname, useRouter, getPathname } = createNavigation(routing);
 ```
 
-- [ ] **Step 4: Define the request config (loads messages per request)**
+- [ ] **Étape 4 : Définir la config de requête (charge les messages par requête)**
 
-Create `src/i18n/request.ts`:
+Créer `src/i18n/request.ts`:
 
 ```ts
 import { getRequestConfig } from 'next-intl/server';
@@ -293,9 +293,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
 });
 ```
 
-- [ ] **Step 5: Wire the middleware**
+- [ ] **Étape 5 : Brancher le middleware**
 
-Create `src/middleware.ts`:
+Créer `src/middleware.ts`:
 
 ```ts
 import createMiddleware from 'next-intl/middleware';
@@ -308,9 +308,9 @@ export const config = {
 };
 ```
 
-- [ ] **Step 6: Wire the Next.js config plugin**
+- [ ] **Étape 6 : Brancher le plugin de config Next.js**
 
-Modify `next.config.ts`:
+Modifier `next.config.ts`:
 
 ```ts
 import type { NextConfig } from 'next';
@@ -323,9 +323,9 @@ const nextConfig: NextConfig = {};
 export default withNextIntl(nextConfig);
 ```
 
-- [ ] **Step 7: Create the base bilingual message files**
+- [ ] **Étape 7 : Créer les fichiers de messages bilingues de base**
 
-Create `messages/fr.json`:
+Créer `messages/fr.json`:
 
 ```json
 {
@@ -344,7 +344,7 @@ Create `messages/fr.json`:
 }
 ```
 
-Create `messages/en.json`:
+Créer `messages/en.json`:
 
 ```json
 {
@@ -363,15 +363,15 @@ Create `messages/en.json`:
 }
 ```
 
-(Later tasks add namespaces to both files as they build each page — always in both files together, in the same step, so the two never drift out of sync.)
+(Les tâches suivantes ajoutent des namespaces aux deux fichiers au fur et à mesure qu'elles construisent chaque page — toujours dans les deux fichiers ensemble, à la même étape, pour que les deux ne divergent jamais.)
 
-- [ ] **Step 8: Remove the default scaffold root page/layout**
+- [ ] **Étape 8 : Supprimer la page/layout racine par défaut du scaffold**
 
-Run: `rm src/app/page.tsx src/app/layout.tsx`
+Exécuter : `rm src/app/page.tsx src/app/layout.tsx`
 
-- [ ] **Step 9: Create the locale layout**
+- [ ] **Étape 9 : Créer le layout de langue**
 
-Create `src/app/[locale]/layout.tsx`:
+Créer `src/app/[locale]/layout.tsx`:
 
 ```tsx
 import type { Metadata } from 'next';
@@ -417,25 +417,25 @@ export default async function LocaleLayout({
 }
 ```
 
-This is intentionally minimal for now — Tasks 5, 6, and 7 will each wrap `{children}` with their own Context provider, and Tasks 10/11 will add `<Header />`/`<Footer />`/`<CookieBanner />` around `<main>`.
+C'est volontairement minimal pour l'instant — les Tâches 5, 6 et 7 vont chacune envelopper `{children}` avec leur propre Context provider, et les Tâches 10/11 ajouteront `<Header />`/`<Footer />`/`<CookieBanner />` autour de `<main>`.
 
-- [ ] **Step 10: Add a temporary home placeholder so the route resolves**
+- [ ] **Étape 10 : Ajouter un placeholder d'accueil temporaire pour que la route se résolve**
 
-Create `src/app/[locale]/page.tsx`:
+Créer `src/app/[locale]/page.tsx`:
 
 ```tsx
 export default function HomePage() {
-  return <div className="p-12 text-center">Reign — home page coming in Task 13.</div>;
+  return <div className="p-12 text-center">Reign — home page coming in Tâche 13.</div>;
 }
 ```
 
-(This file's real content is written in Task 13 — its only purpose right now is to prove the `[locale]` routing works end-to-end.)
+(Le vrai contenu de ce fichier est écrit à la Tâche 13 — son seul but pour l'instant est de prouver que le routage `[locale]` fonctionne de bout en bout.)
 
-- [ ] **Step 11: Verify routing works**
+- [ ] **Étape 11 : Vérifier que le routage fonctionne**
 
-Run: `npm run dev`, then visit `http://localhost:3000/` — expect a redirect to `http://localhost:3000/fr` showing the placeholder text. Visit `http://localhost:3000/en` directly — expect the same placeholder (content is locale-agnostic at this stage; translation wiring is exercised for real starting Task 10's Header). Visit `http://localhost:3000/de` — expect a 404.
+Exécuter : `npm run dev`, puis visiter `http://localhost:3000/` — on s'attend à une redirection vers `http://localhost:3000/fr` affichant le texte placeholder. Visiter `http://localhost:3000/en` directement — on s'attend au même placeholder (le contenu est indépendant de la langue à ce stade ; le câblage de traduction sera vraiment exercé à partir du Header de la Tâche 10). Visiter `http://localhost:3000/de` — on s'attend à un 404.
 
-- [ ] **Step 12: Commit**
+- [ ] **Étape 12 : Commit**
 
 ```bash
 git add -A
@@ -444,19 +444,19 @@ git commit -m "feat: add next-intl i18n routing and locale layout"
 
 ---
 
-### Task 4: Product catalog data & queries (lib/products.ts)
+### Tâche 4 : Données du catalogue produits & requêtes (lib/products.ts)
 
-**Files:**
-- Create: `src/lib/products.ts`
-- Test: `src/lib/products.test.ts`
+**Fichiers :**
+- Créer : `src/lib/products.ts`
+- Test : `src/lib/products.test.ts`
 
-**Interfaces:**
-- Consumes: nothing.
-- Produces (used by nearly every later task): `Category` type, `CATEGORIES` array, `Product` interface, `COLOR_SWATCHES` map, `PRODUCTS` array, `getProductsByCategory(category)`, `getProductBySlug(slug)`, `getProductById(id)`, `searchProducts(query, locale)`, `getRelatedProducts(product)`.
+**Interfaces :**
+- Consomme : rien.
+- Produit (utilisé par presque toutes les tâches suivantes) : le type `Category`, le tableau `CATEGORIES`, l'interface `Product`, la map `COLOR_SWATCHES`, le tableau `PRODUCTS`, `getProductsByCategory(category)`, `getProductBySlug(slug)`, `getProductById(id)`, `searchProducts(query, locale)`, `getRelatedProducts(product)`.
 
-- [ ] **Step 1: Write the failing tests**
+- [ ] **Étape 1 : Écrire les tests en échec**
 
-Create `src/lib/products.test.ts`:
+Créer `src/lib/products.test.ts`:
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -523,14 +523,14 @@ describe('getRelatedProducts', () => {
 });
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [ ] **Étape 2 : Exécuter les tests pour vérifier qu'ils échouent**
 
-Run: `npm run test -- src/lib/products.test.ts`
-Expected: FAIL — `products.ts` does not exist yet.
+Exécuter : `npm run test -- src/lib/products.test.ts`
+Résultat attendu : ÉCHEC — `products.ts` n'existe pas encore.
 
-- [ ] **Step 3: Implement the product catalog**
+- [ ] **Étape 3 : Implémenter le catalogue produits**
 
-Create `src/lib/products.ts`:
+Créer `src/lib/products.ts`:
 
 ```ts
 export type Category = 'homme' | 'femme' | 'enfant' | 'accessoires';
@@ -849,12 +849,12 @@ export function getRelatedProducts(product: Product): Product[] {
 }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [ ] **Étape 4 : Exécuter les tests pour vérifier qu'ils réussissent**
 
-Run: `npm run test -- src/lib/products.test.ts`
-Expected: PASS (all cases).
+Exécuter : `npm run test -- src/lib/products.test.ts`
+Résultat attendu : succès (tous les cas).
 
-- [ ] **Step 5: Commit**
+- [ ] **Étape 5 : Commit**
 
 ```bash
 git add src/lib/products.ts src/lib/products.test.ts
@@ -863,22 +863,22 @@ git commit -m "feat: add product catalog data and query helpers"
 
 ---
 
-### Task 5: Currency utils + CurrencyContext
+### Tâche 5 : Utilitaires de devise + CurrencyContext
 
-**Files:**
-- Create: `src/lib/currency.ts`
-- Test: `src/lib/currency.test.ts`
-- Create: `src/context/CurrencyContext.tsx`
-- Test: `src/context/CurrencyContext.test.tsx`
-- Modify: `src/app/[locale]/layout.tsx`
+**Fichiers :**
+- Créer : `src/lib/currency.ts`
+- Test : `src/lib/currency.test.ts`
+- Créer : `src/context/CurrencyContext.tsx`
+- Test : `src/context/CurrencyContext.test.tsx`
+- Modifier : `src/app/[locale]/layout.tsx`
 
-**Interfaces:**
-- Consumes: nothing beyond the locale string already available in the layout.
-- Produces: `CurrencyCode` (`'EUR' | 'GBP'`), `convertFromEur(amountEur, currency)`, `formatPrice(amountEur, currency, locale)`, `defaultCurrencyForLocale(locale)` from `src/lib/currency.ts`; `CurrencyProvider`, `useCurrency(): { currency, setCurrency }` from `src/context/CurrencyContext.tsx`. Every later task that displays a price uses `formatPrice` + `useCurrency()`.
+**Interfaces :**
+- Consomme : rien au-delà de la chaîne de langue déjà disponible dans le layout.
+- Produit : `CurrencyCode` (`'EUR' | 'GBP'`), `convertFromEur(amountEur, currency)`, `formatPrice(amountEur, currency, locale)`, `defaultCurrencyForLocale(locale)` depuis `src/lib/currency.ts`; `CurrencyProvider`, `useCurrency(): { currency, setCurrency }` depuis `src/context/CurrencyContext.tsx`. Chaque tâche suivante qui affiche un prix utilise `formatPrice` + `useCurrency()`.
 
-- [ ] **Step 1: Write the failing tests for the currency utilities**
+- [ ] **Étape 1 : Écrire les tests en échec pour les utilitaires de devise**
 
-Create `src/lib/currency.test.ts`:
+Créer `src/lib/currency.test.ts`:
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -918,14 +918,14 @@ describe('defaultCurrencyForLocale', () => {
 });
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [ ] **Étape 2 : Exécuter les tests pour vérifier qu'ils échouent**
 
-Run: `npm run test -- src/lib/currency.test.ts`
-Expected: FAIL — `currency.ts` does not exist yet.
+Exécuter : `npm run test -- src/lib/currency.test.ts`
+Résultat attendu : ÉCHEC — `currency.ts` n'existe pas encore.
 
-- [ ] **Step 3: Implement the currency utilities**
+- [ ] **Étape 3 : Implémenter les utilitaires de devise**
 
-Create `src/lib/currency.ts`:
+Créer `src/lib/currency.ts`:
 
 ```ts
 export type CurrencyCode = 'EUR' | 'GBP';
@@ -949,14 +949,14 @@ export function defaultCurrencyForLocale(locale: string): CurrencyCode {
 }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [ ] **Étape 4 : Exécuter les tests pour vérifier qu'ils réussissent**
 
-Run: `npm run test -- src/lib/currency.test.ts`
-Expected: PASS.
+Exécuter : `npm run test -- src/lib/currency.test.ts`
+Résultat attendu : succès.
 
-- [ ] **Step 5: Write the failing tests for CurrencyContext**
+- [ ] **Étape 5 : Écrire les tests en échec pour CurrencyContext**
 
-Create `src/context/CurrencyContext.test.tsx`:
+Créer `src/context/CurrencyContext.test.tsx`:
 
 ```tsx
 import { describe, expect, it, beforeEach } from 'vitest';
@@ -994,14 +994,14 @@ describe('CurrencyContext', () => {
 });
 ```
 
-- [ ] **Step 6: Run tests to verify they fail**
+- [ ] **Étape 6 : Exécuter les tests pour vérifier qu'ils échouent**
 
-Run: `npm run test -- src/context/CurrencyContext.test.tsx`
-Expected: FAIL — `CurrencyContext.tsx` does not exist yet.
+Exécuter : `npm run test -- src/context/CurrencyContext.test.tsx`
+Résultat attendu : ÉCHEC — `CurrencyContext.tsx` n'existe pas encore.
 
-- [ ] **Step 7: Implement CurrencyContext**
+- [ ] **Étape 7 : Implémenter CurrencyContext**
 
-Create `src/context/CurrencyContext.tsx`:
+Créer `src/context/CurrencyContext.tsx`:
 
 ```tsx
 'use client';
@@ -1054,14 +1054,14 @@ export function useCurrency(): CurrencyContextValue {
 }
 ```
 
-- [ ] **Step 8: Run tests to verify they pass**
+- [ ] **Étape 8 : Exécuter les tests pour vérifier qu'ils réussissent**
 
-Run: `npm run test -- src/context/CurrencyContext.test.tsx`
-Expected: PASS.
+Exécuter : `npm run test -- src/context/CurrencyContext.test.tsx`
+Résultat attendu : succès.
 
-- [ ] **Step 9: Wire the provider into the locale layout**
+- [ ] **Étape 9 : Brancher le provider dans le layout de langue**
 
-Modify `src/app/[locale]/layout.tsx` — import `CurrencyProvider` from `@/context/CurrencyContext` and wrap `<main>{children}</main>` with it, passing the resolved `locale`:
+Modifier `src/app/[locale]/layout.tsx` — import `CurrencyProvider` depuis `@/context/CurrencyContext` and wrap `<main>{children}</main>` with it, passing the resolved `locale`:
 
 ```tsx
         <NextIntlClientProvider messages={messages}>
@@ -1071,15 +1071,15 @@ Modify `src/app/[locale]/layout.tsx` — import `CurrencyProvider` from `@/conte
         </NextIntlClientProvider>
 ```
 
-- [ ] **Step 10: Verify the full test suite and build still pass**
+- [ ] **Étape 10 : Vérifier que toute la suite de tests et le build passent toujours**
 
-Run: `npm run test`
-Expected: PASS (all suites).
+Exécuter : `npm run test`
+Résultat attendu : succès (toutes les suites).
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 11: Commit**
+- [ ] **Étape 11 : Commit**
 
 ```bash
 git add src/lib/currency.ts src/lib/currency.test.ts src/context/CurrencyContext.tsx src/context/CurrencyContext.test.tsx src/app/[locale]/layout.tsx
@@ -1088,22 +1088,22 @@ git commit -m "feat: add fixed-rate currency conversion and CurrencyContext"
 
 ---
 
-### Task 6: CartContext + cart calculations (lib/cart.ts)
+### Tâche 6 : CartContext + calculs de panier (lib/cart.ts)
 
-**Files:**
-- Create: `src/lib/cart.ts`
-- Test: `src/lib/cart.test.ts`
-- Create: `src/context/CartContext.tsx`
-- Test: `src/context/CartContext.test.tsx`
-- Modify: `src/app/[locale]/layout.tsx`
+**Fichiers :**
+- Créer : `src/lib/cart.ts`
+- Test : `src/lib/cart.test.ts`
+- Créer : `src/context/CartContext.tsx`
+- Test : `src/context/CartContext.test.tsx`
+- Modifier : `src/app/[locale]/layout.tsx`
 
-**Interfaces:**
-- Consumes: `getProductById` from `src/lib/products.ts` (Task 4).
-- Produces: `CartItem { productId, size, color, quantity }`, `addLine`, `removeLine`, `updateLineQuantity`, `getCartItemCount`, `getCartSubtotalEur` from `src/lib/cart.ts`; `CartProvider`, `useCart(): { items, addItem, removeItem, updateQuantity, clearCart, itemCount, subtotalEur }` from `src/context/CartContext.tsx`. The Header (Task 10) and Cart drawer (Task 12) both depend on `useCart()`.
+**Interfaces :**
+- Consomme : `getProductById` depuis `src/lib/products.ts` (Tâche 4).
+- Produit : `CartItem { productId, size, color, quantity }`, `addLine`, `removeLine`, `updateLineQuantity`, `getCartItemCount`, `getCartSubtotalEur` depuis `src/lib/cart.ts`; `CartProvider`, `useCart(): { items, addItem, removeItem, updateQuantity, clearCart, itemCount, subtotalEur }` depuis `src/context/CartContext.tsx`. Le Header (Tâche 10) et le drawer panier (Tâche 12) dépendent tous deux de `useCart()`.
 
-- [ ] **Step 1: Write the failing tests for the pure cart logic**
+- [ ] **Étape 1 : Écrire les tests en échec pour la logique pure du panier**
 
-Create `src/lib/cart.test.ts`:
+Créer `src/lib/cart.test.ts`:
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -1180,14 +1180,14 @@ describe('getCartSubtotalEur', () => {
 });
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [ ] **Étape 2 : Exécuter les tests pour vérifier qu'ils échouent**
 
-Run: `npm run test -- src/lib/cart.test.ts`
-Expected: FAIL — `cart.ts` does not exist yet.
+Exécuter : `npm run test -- src/lib/cart.test.ts`
+Résultat attendu : ÉCHEC — `cart.ts` n'existe pas encore.
 
-- [ ] **Step 3: Implement the pure cart logic**
+- [ ] **Étape 3 : Implémenter la logique pure du panier**
 
-Create `src/lib/cart.ts`:
+Créer `src/lib/cart.ts`:
 
 ```ts
 import { getProductById } from '@/lib/products';
@@ -1241,14 +1241,14 @@ export function updateLineQuantity(
 }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [ ] **Étape 4 : Exécuter les tests pour vérifier qu'ils réussissent**
 
-Run: `npm run test -- src/lib/cart.test.ts`
-Expected: PASS.
+Exécuter : `npm run test -- src/lib/cart.test.ts`
+Résultat attendu : succès.
 
-- [ ] **Step 5: Write the failing tests for CartContext**
+- [ ] **Étape 5 : Écrire les tests en échec pour CartContext**
 
-Create `src/context/CartContext.test.tsx`:
+Créer `src/context/CartContext.test.tsx`:
 
 ```tsx
 import { describe, expect, it, beforeEach } from 'vitest';
@@ -1295,14 +1295,14 @@ describe('CartContext', () => {
 });
 ```
 
-- [ ] **Step 6: Run tests to verify they fail**
+- [ ] **Étape 6 : Exécuter les tests pour vérifier qu'ils échouent**
 
-Run: `npm run test -- src/context/CartContext.test.tsx`
-Expected: FAIL — `CartContext.tsx` does not exist yet.
+Exécuter : `npm run test -- src/context/CartContext.test.tsx`
+Résultat attendu : ÉCHEC — `CartContext.tsx` n'existe pas encore.
 
-- [ ] **Step 7: Implement CartContext**
+- [ ] **Étape 7 : Implémenter CartContext**
 
-Create `src/context/CartContext.tsx`:
+Créer `src/context/CartContext.tsx`:
 
 ```tsx
 'use client';
@@ -1372,14 +1372,14 @@ export function useCart(): CartContextValue {
 }
 ```
 
-- [ ] **Step 8: Run tests to verify they pass**
+- [ ] **Étape 8 : Exécuter les tests pour vérifier qu'ils réussissent**
 
-Run: `npm run test -- src/context/CartContext.test.tsx`
-Expected: PASS.
+Exécuter : `npm run test -- src/context/CartContext.test.tsx`
+Résultat attendu : succès.
 
-- [ ] **Step 9: Wire the provider into the locale layout**
+- [ ] **Étape 9 : Brancher le provider dans le layout de langue**
 
-Modify `src/app/[locale]/layout.tsx` — import `CartProvider` from `@/context/CartContext` and nest it inside `CurrencyProvider`:
+Modifier `src/app/[locale]/layout.tsx` — import `CartProvider` depuis `@/context/CartContext` and nest it inside `CurrencyProvider`:
 
 ```tsx
           <CurrencyProvider initialLocale={locale}>
@@ -1389,15 +1389,15 @@ Modify `src/app/[locale]/layout.tsx` — import `CartProvider` from `@/context/C
           </CurrencyProvider>
 ```
 
-- [ ] **Step 10: Verify the full test suite and build still pass**
+- [ ] **Étape 10 : Vérifier que toute la suite de tests et le build passent toujours**
 
-Run: `npm run test`
-Expected: PASS.
+Exécuter : `npm run test`
+Résultat attendu : succès.
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 11: Commit**
+- [ ] **Étape 11 : Commit**
 
 ```bash
 git add src/lib/cart.ts src/lib/cart.test.ts src/context/CartContext.tsx src/context/CartContext.test.tsx src/app/[locale]/layout.tsx
@@ -1406,22 +1406,22 @@ git commit -m "feat: add cart line-item logic and CartContext"
 
 ---
 
-### Task 7: FavoritesContext
+### Tâche 7 : FavoritesContext
 
-**Files:**
-- Create: `src/lib/favorites.ts`
-- Test: `src/lib/favorites.test.ts`
-- Create: `src/context/FavoritesContext.tsx`
-- Test: `src/context/FavoritesContext.test.tsx`
-- Modify: `src/app/[locale]/layout.tsx`
+**Fichiers :**
+- Créer : `src/lib/favorites.ts`
+- Test : `src/lib/favorites.test.ts`
+- Créer : `src/context/FavoritesContext.tsx`
+- Test : `src/context/FavoritesContext.test.tsx`
+- Modifier : `src/app/[locale]/layout.tsx`
 
-**Interfaces:**
-- Consumes: nothing.
-- Produces: `toggleFavoriteId(ids, id)` from `src/lib/favorites.ts`; `FavoritesProvider`, `useFavorites(): { favoriteIds, toggleFavorite, isFavorite }` from `src/context/FavoritesContext.tsx`. Used by the Header (favorites count), the product card/PDP heart toggle, and the Favorites page (Task 17).
+**Interfaces :**
+- Consomme : rien.
+- Produit : `toggleFavoriteId(ids, id)` depuis `src/lib/favorites.ts`; `FavoritesProvider`, `useFavorites(): { favoriteIds, toggleFavorite, isFavorite }` depuis `src/context/FavoritesContext.tsx`. Utilisé par le Header (compteur de favoris), le bouton cœur de la fiche produit/PDP, et la page Favoris (Tâche 17).
 
-- [ ] **Step 1: Write the failing test for the pure toggle logic**
+- [ ] **Étape 1 : Écrire le test en échec pour la logique pure de bascule**
 
-Create `src/lib/favorites.test.ts`:
+Créer `src/lib/favorites.test.ts`:
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -1438,14 +1438,14 @@ describe('toggleFavoriteId', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [ ] **Étape 2 : Exécuter le test pour vérifier qu'il échoue**
 
-Run: `npm run test -- src/lib/favorites.test.ts`
-Expected: FAIL — `favorites.ts` does not exist yet.
+Exécuter : `npm run test -- src/lib/favorites.test.ts`
+Résultat attendu : ÉCHEC — `favorites.ts` n'existe pas encore.
 
-- [ ] **Step 3: Implement the pure toggle logic**
+- [ ] **Étape 3 : Implémenter la logique pure de bascule**
 
-Create `src/lib/favorites.ts`:
+Créer `src/lib/favorites.ts`:
 
 ```ts
 export function toggleFavoriteId(ids: string[], id: string): string[] {
@@ -1453,14 +1453,14 @@ export function toggleFavoriteId(ids: string[], id: string): string[] {
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [ ] **Étape 4 : Exécuter le test pour vérifier qu'il réussit**
 
-Run: `npm run test -- src/lib/favorites.test.ts`
-Expected: PASS.
+Exécuter : `npm run test -- src/lib/favorites.test.ts`
+Résultat attendu : succès.
 
-- [ ] **Step 5: Write the failing tests for FavoritesContext**
+- [ ] **Étape 5 : Écrire les tests en échec pour FavoritesContext**
 
-Create `src/context/FavoritesContext.test.tsx`:
+Créer `src/context/FavoritesContext.test.tsx`:
 
 ```tsx
 import { describe, expect, it, beforeEach } from 'vitest';
@@ -1507,14 +1507,14 @@ describe('FavoritesContext', () => {
 });
 ```
 
-- [ ] **Step 6: Run tests to verify they fail**
+- [ ] **Étape 6 : Exécuter les tests pour vérifier qu'ils échouent**
 
-Run: `npm run test -- src/context/FavoritesContext.test.tsx`
-Expected: FAIL — `FavoritesContext.tsx` does not exist yet.
+Exécuter : `npm run test -- src/context/FavoritesContext.test.tsx`
+Résultat attendu : ÉCHEC — `FavoritesContext.tsx` n'existe pas encore.
 
-- [ ] **Step 7: Implement FavoritesContext**
+- [ ] **Étape 7 : Implémenter FavoritesContext**
 
-Create `src/context/FavoritesContext.tsx`:
+Créer `src/context/FavoritesContext.tsx`:
 
 ```tsx
 'use client';
@@ -1568,14 +1568,14 @@ export function useFavorites(): FavoritesContextValue {
 }
 ```
 
-- [ ] **Step 8: Run tests to verify they pass**
+- [ ] **Étape 8 : Exécuter les tests pour vérifier qu'ils réussissent**
 
-Run: `npm run test -- src/context/FavoritesContext.test.tsx`
-Expected: PASS.
+Exécuter : `npm run test -- src/context/FavoritesContext.test.tsx`
+Résultat attendu : succès.
 
-- [ ] **Step 9: Wire the provider into the locale layout**
+- [ ] **Étape 9 : Brancher le provider dans le layout de langue**
 
-Modify `src/app/[locale]/layout.tsx` — nest `FavoritesProvider` inside `CartProvider`:
+Modifier `src/app/[locale]/layout.tsx` — nest `FavoritesProvider` inside `CartProvider`:
 
 ```tsx
             <CartProvider>
@@ -1585,15 +1585,15 @@ Modify `src/app/[locale]/layout.tsx` — nest `FavoritesProvider` inside `CartPr
             </CartProvider>
 ```
 
-- [ ] **Step 10: Verify the full test suite and build still pass**
+- [ ] **Étape 10 : Vérifier que toute la suite de tests et le build passent toujours**
 
-Run: `npm run test`
-Expected: PASS.
+Exécuter : `npm run test`
+Résultat attendu : succès.
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 11: Commit**
+- [ ] **Étape 11 : Commit**
 
 ```bash
 git add src/lib/favorites.ts src/lib/favorites.test.ts src/context/FavoritesContext.tsx src/context/FavoritesContext.test.tsx src/app/[locale]/layout.tsx
@@ -1602,22 +1602,22 @@ git commit -m "feat: add favorites toggle logic and FavoritesContext"
 
 ---
 
-### Task 8: Shared UI primitives (Container, Heading, Button, PlaceholderBlock)
+### Tâche 8 : Primitives UI partagées (Container, Heading, Button, PlaceholderBlock)
 
-**Files:**
-- Create: `src/components/ui/Container.tsx`
-- Create: `src/components/ui/Heading.tsx`
-- Create: `src/components/ui/Button.tsx`
-- Test: `src/components/ui/Button.test.ts`
-- Create: `src/components/ui/PlaceholderBlock.tsx`
+**Fichiers :**
+- Créer : `src/components/ui/Container.tsx`
+- Créer : `src/components/ui/Heading.tsx`
+- Créer : `src/components/ui/Button.tsx`
+- Test : `src/components/ui/Button.test.ts`
+- Créer : `src/components/ui/PlaceholderBlock.tsx`
 
-**Interfaces:**
-- Consumes: Tailwind tokens from Task 2.
-- Produces: `<Container>`, `<Heading level={1|2|3}>`, `<Button variant="primary"|"secondary">`, `buttonClassName(variant)`, `<PlaceholderBlock aspect="portrait"|"square"|"wide" label="...">`. Every page from Task 10 onward is built with these instead of ad-hoc markup.
+**Interfaces :**
+- Consomme : les tokens Tailwind de la Tâche 2.
+- Produit : `<Container>`, `<Heading level={1|2|3}>`, `<Button variant="primary"|"secondary">`, `buttonClassName(variant)`, `<PlaceholderBlock aspect="portrait"|"square"|"wide" label="...">`. Chaque page à partir de la Tâche 10 est construite avec ceux-ci plutôt qu'avec du balisage ad hoc.
 
-- [ ] **Step 1: Write the failing test for the one piece of real logic (button variant classes)**
+- [ ] **Étape 1 : Écrire le test en échec pour l'unique bout de logique réelle (les classes de variante du bouton)**
 
-Create `src/components/ui/Button.test.ts`:
+Créer `src/components/ui/Button.test.ts`:
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -1638,14 +1638,14 @@ describe('buttonClassName', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [ ] **Étape 2 : Exécuter le test pour vérifier qu'il échoue**
 
-Run: `npm run test -- src/components/ui/Button.test.ts`
-Expected: FAIL — `Button.tsx` does not exist yet.
+Exécuter : `npm run test -- src/components/ui/Button.test.ts`
+Résultat attendu : ÉCHEC — `Button.tsx` n'existe pas encore.
 
-- [ ] **Step 3: Implement Container**
+- [ ] **Étape 3 : Implémenter Container**
 
-Create `src/components/ui/Container.tsx`:
+Créer `src/components/ui/Container.tsx`:
 
 ```tsx
 export function Container({
@@ -1659,9 +1659,9 @@ export function Container({
 }
 ```
 
-- [ ] **Step 4: Implement Heading**
+- [ ] **Étape 4 : Implémenter Heading**
 
-Create `src/components/ui/Heading.tsx`:
+Créer `src/components/ui/Heading.tsx`:
 
 ```tsx
 type HeadingLevel = 1 | 2 | 3;
@@ -1686,9 +1686,9 @@ export function Heading({
 }
 ```
 
-- [ ] **Step 5: Implement Button (and the tested buttonClassName helper)**
+- [ ] **Étape 5 : Implémenter Button (et le helper buttonClassName testé)**
 
-Create `src/components/ui/Button.tsx`:
+Créer `src/components/ui/Button.tsx`:
 
 ```tsx
 type ButtonVariant = 'primary' | 'secondary';
@@ -1718,16 +1718,16 @@ export function Button({
 }
 ```
 
-Note the explicit `className = ''` destructured out of `props`: this means a caller-supplied `className` is *appended* to the variant's base classes instead of silently replacing them (which is what would happen if `{...props}` were spread after a fixed `className` attribute).
+Remarquer le `className = ''` explicitement déstructuré de `props` : cela signifie qu'un `className` fourni par l'appelant est *ajouté* aux classes de base de la variante au lieu de les remplacer silencieusement (ce qui arriverait si `{...props}` était étalé après un attribut `className` fixe).
 
-- [ ] **Step 6: Run test to verify it passes**
+- [ ] **Étape 6 : Exécuter le test pour vérifier qu'il réussit**
 
-Run: `npm run test -- src/components/ui/Button.test.ts`
-Expected: PASS.
+Exécuter : `npm run test -- src/components/ui/Button.test.ts`
+Résultat attendu : succès.
 
-- [ ] **Step 7: Implement PlaceholderBlock**
+- [ ] **Étape 7 : Implémenter PlaceholderBlock**
 
-Create `src/components/ui/PlaceholderBlock.tsx`:
+Créer `src/components/ui/PlaceholderBlock.tsx`:
 
 ```tsx
 type Aspect = 'portrait' | 'square' | 'wide';
@@ -1761,15 +1761,15 @@ export function PlaceholderBlock({
 }
 ```
 
-- [ ] **Step 8: Verify the full test suite and build still pass**
+- [ ] **Étape 8 : Vérifier que toute la suite de tests et le build passent toujours**
 
-Run: `npm run test`
-Expected: PASS.
+Exécuter : `npm run test`
+Résultat attendu : succès.
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 9: Commit**
+- [ ] **Étape 9 : Commit**
 
 ```bash
 git add src/components/ui/Container.tsx src/components/ui/Heading.tsx src/components/ui/Button.tsx src/components/ui/Button.test.ts src/components/ui/PlaceholderBlock.tsx
@@ -1778,25 +1778,25 @@ git commit -m "feat: add shared UI primitives (Container, Heading, Button, Place
 
 ---
 
-### Task 9: Brand logo asset + Logo component
+### Tâche 9 : Asset du logo de marque + composant Logo
 
-**Files:**
-- Create: `public/branding/logo-reign.png` (the brand asset the user provided in chat)
-- Create: `src/components/ui/Logo.tsx`
+**Fichiers :**
+- Créer : `public/branding/logo-reign.png` (l'asset de marque fourni par l'utilisateur dans la conversation)
+- Créer : `src/components/ui/Logo.tsx`
 
-**Interfaces:**
-- Consumes: `Link` from `@/i18n/navigation` (Task 3).
-- Produces: `<Logo />` — used by the Header (Task 10) and the Footer (Task 11).
+**Interfaces :**
+- Consomme : `Link` depuis `@/i18n/navigation` (Tâche 3).
+- Produit : `<Logo />` — utilisé par le Header (Tâche 10) et le Footer (Tâche 11).
 
-**Design note:** the provided logo is a white wordmark on a black background. Rather than fight that, the Header (Task 10) uses a black (`bg-ink`) background so the logo always sits on the surface it was designed for, with the rest of each page staying white/black per the "contraste maîtrisé" identity from the spec.
+**Note de design :** le logo fourni est un wordmark blanc sur fond noir. Plutôt que d'aller à contre-courant, le Header (Tâche 10) utilise un fond noir (`bg-ink`) pour que le logo repose toujours sur la surface pour laquelle il a été conçu, le reste de chaque page restant blanc/noir conformément à l'identité « contraste maîtrisé » de la spec.
 
-- [ ] **Step 1: Obtain the logo asset**
+- [ ] **Étape 1 : Obtenir l'asset du logo**
 
 Save the Reign wordmark image shared earlier in this conversation to `public/branding/logo-reign.png` (create the `public/branding/` folder if it doesn't exist). If this file is not present in the repository when this task starts, stop and ask the user for it before continuing — do not fabricate a placeholder logo; the spec requires this exact provided asset.
 
-- [ ] **Step 2: Implement the Logo component**
+- [ ] **Étape 2 : Implémenter le composant Logo**
 
-Create `src/components/ui/Logo.tsx`:
+Créer `src/components/ui/Logo.tsx`:
 
 ```tsx
 import Image from 'next/image';
@@ -1818,11 +1818,11 @@ export function Logo({ className = '' }: { className?: string }) {
 }
 ```
 
-- [ ] **Step 3: Verify the logo renders**
+- [ ] **Étape 3 : Vérifier que le logo s'affiche**
 
-Run: `npm run dev`, visit `http://localhost:3000/fr`, and confirm the logo image loads without a broken-image icon (it will float alone on the placeholder page for now — Header wiring happens in Task 10).
+Exécuter : `npm run dev`, visit `http://localhost:3000/fr`, and confirm the logo image loads without a broken-image icon (it will float alone on the placeholder page for now — Header wiring happens in Tâche 10).
 
-- [ ] **Step 4: Commit**
+- [ ] **Étape 4 : Commit**
 
 ```bash
 git add public/branding/logo-reign.png src/components/ui/Logo.tsx
@@ -1831,21 +1831,21 @@ git commit -m "feat: add brand logo asset and Logo component"
 
 ---
 
-### Task 10: Header (nav, logo, language/currency switchers, cart/favorites counts)
+### Tâche 10 : Header (nav, logo, sélecteurs langue/devise, compteurs panier/favoris)
 
-**Files:**
-- Create: `src/components/layout/Header.tsx`
-- Create: `src/components/layout/LanguageSwitcher.tsx`
-- Create: `src/components/layout/CurrencySwitcher.tsx`
-- Modify: `src/app/[locale]/layout.tsx`
+**Fichiers :**
+- Créer : `src/components/layout/Header.tsx`
+- Créer : `src/components/layout/LanguageSwitcher.tsx`
+- Créer : `src/components/layout/CurrencySwitcher.tsx`
+- Modifier : `src/app/[locale]/layout.tsx`
 
-**Interfaces:**
-- Consumes: `Logo` (Task 9), `CATEGORIES` (Task 4), `useCart` (Task 6), `useFavorites` (Task 7), `useCurrency`/`CurrencyCode` (Task 5), `Link`/`useRouter` from `@/i18n/navigation` (Task 3), `nav.*` messages (Task 3).
-- Produces: `<Header />`, rendered globally by the locale layout, on every page from here on.
+**Interfaces :**
+- Consomme : `Logo` (Tâche 9), `CATEGORIES` (Tâche 4), `useCart` (Tâche 6), `useFavorites` (Tâche 7), `useCurrency`/`CurrencyCode` (Tâche 5), `Link`/`useRouter` depuis `@/i18n/navigation` (Tâche 3), `nav.*` messages (Tâche 3).
+- Produit : `<Header />`, rendu globalement par le layout de langue, sur toutes les pages à partir d'ici.
 
-- [ ] **Step 1: Implement the language switcher**
+- [ ] **Étape 1 : Implémenter le sélecteur de langue**
 
-Create `src/components/layout/LanguageSwitcher.tsx`:
+Créer `src/components/layout/LanguageSwitcher.tsx`:
 
 ```tsx
 'use client';
@@ -1886,9 +1886,9 @@ export function LanguageSwitcher() {
 }
 ```
 
-- [ ] **Step 2: Implement the currency switcher**
+- [ ] **Étape 2 : Implémenter le sélecteur de devise**
 
-Create `src/components/layout/CurrencySwitcher.tsx`:
+Créer `src/components/layout/CurrencySwitcher.tsx`:
 
 ```tsx
 'use client';
@@ -1921,9 +1921,9 @@ export function CurrencySwitcher() {
 }
 ```
 
-- [ ] **Step 3: Implement the Header**
+- [ ] **Étape 3 : Implémenter le Header**
 
-Create `src/components/layout/Header.tsx`:
+Créer `src/components/layout/Header.tsx`:
 
 ```tsx
 'use client';
@@ -2079,9 +2079,9 @@ export function Header() {
 }
 ```
 
-- [ ] **Step 4: Wire the Header into the locale layout**
+- [ ] **Étape 4 : Brancher le Header dans le layout de langue**
 
-Modify `src/app/[locale]/layout.tsx` — import `Header` from `@/components/layout/Header` and render it just before `<main>`, still inside `FavoritesProvider`:
+Modifier `src/app/[locale]/layout.tsx` — import `Header` depuis `@/components/layout/Header` and render it just before `<main>`, still inside `FavoritesProvider`:
 
 ```tsx
               <FavoritesProvider>
@@ -2090,18 +2090,18 @@ Modify `src/app/[locale]/layout.tsx` — import `Header` from `@/components/layo
               </FavoritesProvider>
 ```
 
-- [ ] **Step 5: Verify manually**
+- [ ] **Étape 5 : Vérifier manuellement**
 
-Run: `npm run dev` and check on `http://localhost:3000/fr`:
-- The header shows the logo, the four category links (Homme/Femme/Enfant/Accessoires), a search field, FR/EN, EUR/GBP, and the favorites/cart icons.
-- Clicking "EN" navigates to `/en` with the same path and swaps every label (Men/Women/Kids/Accessories).
-- Resizing the viewport below the `md` breakpoint hides the desktop nav and shows the hamburger button; opening it reveals the same links stacked vertically.
-- Category links currently 404 (category pages arrive in Task 14) — that is expected at this point.
+Exécuter : `npm run dev` et vérifier sur `http://localhost:3000/fr` :
+- Le header affiche le logo, les quatre liens de catégorie (Homme/Femme/Enfant/Accessoires), un champ de recherche, FR/EN, EUR/GBP, et les icônes favoris/panier.
+- Cliquer sur « EN » navigue vers `/en` avec le même chemin et remplace chaque libellé (Men/Women/Kids/Accessories).
+- Redimensionner la fenêtre sous le point de rupture `md` masque la nav desktop et affiche le bouton hamburger ; l'ouvrir révèle les mêmes liens empilés verticalement.
+- Les liens de catégorie sont en 404 pour l'instant (les pages catégorie arrivent à la Tâche 14) — c'est attendu à ce stade.
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 6: Commit**
+- [ ] **Étape 6 : Commit**
 
 ```bash
 git add src/components/layout/Header.tsx src/components/layout/LanguageSwitcher.tsx src/components/layout/CurrencySwitcher.tsx src/app/[locale]/layout.tsx
@@ -2110,19 +2110,19 @@ git commit -m "feat: add Header with navigation, search, language/currency switc
 
 ---
 
-### Task 11: Footer + cookie consent banner
+### Tâche 11 : Footer + bandeau de consentement cookies
 
-**Files:**
-- Create: `src/components/layout/Footer.tsx`
-- Create: `src/components/layout/CookieBanner.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add `footer` and `cookies` namespaces)
-- Modify: `src/app/[locale]/layout.tsx`
+**Fichiers :**
+- Créer : `src/components/layout/Footer.tsx`
+- Créer : `src/components/layout/CookieBanner.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add `footer` and `cookies` namespaces)
+- Modifier : `src/app/[locale]/layout.tsx`
 
-**Interfaces:**
-- Consumes: `Container` (Task 8), `Button` (Task 8), `Link` from `@/i18n/navigation` (Task 3).
-- Produces: `<Footer />`, `<CookieBanner />`, rendered globally by the locale layout on every page. The institutional links in the Footer point at routes built in Tasks 22–27; they 404 until those tasks land, which is expected until then.
+**Interfaces :**
+- Consomme : `Container` (Tâche 8), `Button` (Tâche 8), `Link` depuis `@/i18n/navigation` (Tâche 3).
+- Produit : `<Footer />`, `<CookieBanner />`, rendus globalement par le layout de langue sur toutes les pages. Les liens institutionnels du Footer pointent vers des routes construites dans les Tâches 22–27 ; ils sont en 404 jusqu'à ce que ces tâches arrivent, ce qui est attendu jusque-là.
 
-- [ ] **Step 1: Add the footer and cookie message namespaces**
+- [ ] **Étape 1 : Ajouter les namespaces de messages footer et cookies**
 
 Replace the full contents of `messages/fr.json`:
 
@@ -2204,9 +2204,9 @@ Replace the full contents of `messages/en.json`:
 }
 ```
 
-- [ ] **Step 2: Implement the Footer**
+- [ ] **Étape 2 : Implémenter le Footer**
 
-Create `src/components/layout/Footer.tsx`:
+Créer `src/components/layout/Footer.tsx`:
 
 ```tsx
 'use client';
@@ -2295,9 +2295,9 @@ export function Footer() {
 }
 ```
 
-- [ ] **Step 3: Implement the cookie banner**
+- [ ] **Étape 3 : Implémenter le bandeau cookies**
 
-Create `src/components/layout/CookieBanner.tsx`:
+Créer `src/components/layout/CookieBanner.tsx`:
 
 ```tsx
 'use client';
@@ -2339,11 +2339,11 @@ export function CookieBanner() {
 }
 ```
 
-This renders `null` on both the server render and the client's first hydration pass (state starts `false`), then flips to visible after the `useEffect` check — the same hydration-safe pattern used by the Context providers in Tasks 5–7.
+Ceci rend `null` à la fois lors du rendu serveur et lors de la première passe d'hydratation côté client (l'état démarre à `false`), puis bascule vers visible après la vérification `useEffect` — le même pattern sûr vis-à-vis de l'hydratation que celui utilisé par les Context providers des Tâches 5–7.
 
-- [ ] **Step 4: Wire Footer and CookieBanner into the locale layout**
+- [ ] **Étape 4 : Brancher Footer et CookieBanner dans le layout de langue**
 
-Modify `src/app/[locale]/layout.tsx` — import `Footer` and `CookieBanner`, and render them after `<main>`:
+Modifier `src/app/[locale]/layout.tsx` — import `Footer` and `CookieBanner`, and render them after `<main>`:
 
 ```tsx
               <FavoritesProvider>
@@ -2354,17 +2354,17 @@ Modify `src/app/[locale]/layout.tsx` — import `Footer` and `CookieBanner`, and
               </FavoritesProvider>
 ```
 
-- [ ] **Step 5: Verify manually**
+- [ ] **Étape 5 : Vérifier manuellement**
 
-Run: `npm run dev`, visit `http://localhost:3000/fr`:
-- The footer shows the newsletter form, the 8 institutional links (they 404 for now — expected until Tasks 22–27), and the 3 social placeholders.
-- Submitting the newsletter form with a non-empty email swaps it for the thank-you message.
-- The cookie banner appears at the bottom on first visit; clicking "Accepter" dismisses it and it stays dismissed after a page reload (check `localStorage` in devtools for `reign-cookie-consent`).
+Exécuter : `npm run dev`, visiter `http://localhost:3000/fr` :
+- Le footer affiche le formulaire de newsletter, les 8 liens institutionnels (ils sont en 404 pour l'instant — attendu jusqu'aux Tâches 22–27), et les 3 placeholders sociaux.
+- Soumettre le formulaire de newsletter avec un email non vide le remplace par le message de remerciement.
+- Le bandeau cookies apparaît en bas lors de la première visite ; cliquer sur « Accepter » le fait disparaître et il reste masqué après un rechargement de page (vérifier `localStorage` dans les devtools pour `reign-cookie-consent`).
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 6: Commit**
+- [ ] **Étape 6 : Commit**
 
 ```bash
 git add src/components/layout/Footer.tsx src/components/layout/CookieBanner.tsx messages/fr.json messages/en.json src/app/[locale]/layout.tsx
@@ -2373,20 +2373,20 @@ git commit -m "feat: add Footer with newsletter/links and cookie consent banner"
 
 ---
 
-### Task 12: Cart drawer
+### Tâche 12 : Drawer panier
 
-**Files:**
-- Create: `src/context/CartDrawerContext.tsx`
-- Create: `src/components/cart/CartDrawer.tsx`
-- Modify: `src/components/layout/Header.tsx` (cart icon opens the drawer instead of navigating)
-- Modify: `messages/fr.json`, `messages/en.json` (add `cart` namespace)
-- Modify: `src/app/[locale]/layout.tsx`
+**Fichiers :**
+- Créer : `src/context/CartDrawerContext.tsx`
+- Créer : `src/components/cart/CartDrawer.tsx`
+- Modifier : `src/components/layout/Header.tsx` (cart icon opens the drawer instead of navigating)
+- Modifier : `messages/fr.json`, `messages/en.json` (add `cart` namespace)
+- Modifier : `src/app/[locale]/layout.tsx`
 
-**Interfaces:**
-- Consumes: `useCart` (Task 6), `useCurrency`/`formatPrice` (Task 5), `getProductById` (Task 4), `Button`/`PlaceholderBlock` (Task 8), `Link` (Task 3).
-- Produces: `CartDrawerProvider`, `useCartDrawer(): { isOpen, open, close }` from `src/context/CartDrawerContext.tsx`; `<CartDrawer />` rendered globally. The Cart page (Task 18) reuses the same `useCart()`/`formatPrice` pattern shown here for its own full-page layout.
+**Interfaces :**
+- Consomme : `useCart` (Tâche 6), `useCurrency`/`formatPrice` (Tâche 5), `getProductById` (Tâche 4), `Button`/`PlaceholderBlock` (Tâche 8), `Link` (Tâche 3).
+- Produit : `CartDrawerProvider`, `useCartDrawer(): { isOpen, open, close }` depuis `src/context/CartDrawerContext.tsx`; `<CartDrawer />` rendu globalement. La page Panier (Tâche 18) réutilise le même pattern `useCart()`/`formatPrice` montré ici pour sa propre mise en page pleine page.
 
-- [ ] **Step 1: Add the cart message namespace**
+- [ ] **Étape 1 : Ajouter le namespace de messages cart**
 
 Add to both `messages/fr.json` and `messages/en.json`, alongside the existing `nav`/`common`/`footer`/`cookies` keys (do not remove those — add this as a new top-level key in each file):
 
@@ -2418,9 +2418,9 @@ Add to both `messages/fr.json` and `messages/en.json`, alongside the existing `n
   }
 ```
 
-- [ ] **Step 2: Implement the drawer's open/close state**
+- [ ] **Étape 2 : Implémenter l'état ouvert/fermé du drawer**
 
-Create `src/context/CartDrawerContext.tsx`:
+Créer `src/context/CartDrawerContext.tsx`:
 
 ```tsx
 'use client';
@@ -2452,9 +2452,9 @@ export function useCartDrawer(): CartDrawerContextValue {
 }
 ```
 
-- [ ] **Step 3: Implement the CartDrawer**
+- [ ] **Étape 3 : Implémenter le CartDrawer**
 
-Create `src/components/cart/CartDrawer.tsx`:
+Créer `src/components/cart/CartDrawer.tsx`:
 
 ```tsx
 'use client';
@@ -2552,9 +2552,9 @@ export function CartDrawer() {
 }
 ```
 
-- [ ] **Step 4: Make the Header's cart icon open the drawer instead of navigating**
+- [ ] **Étape 4 : Faire en sorte que l'icône panier du Header ouvre le drawer au lieu de naviguer**
 
-Modify `src/components/layout/Header.tsx` — replace the whole file content with this updated version (adds the `useCartDrawer` import/usage and swaps both cart `Link`s for buttons that open the drawer):
+Modifier `src/components/layout/Header.tsx` — replace the whole file content with this updated version (adds the `useCartDrawer` import/usage and swaps both cart `Link`s for buttons that open the drawer):
 
 ```tsx
 'use client';
@@ -2717,9 +2717,9 @@ export function Header() {
 }
 ```
 
-- [ ] **Step 5: Wire CartDrawerProvider and CartDrawer into the locale layout**
+- [ ] **Étape 5 : Brancher CartDrawerProvider et CartDrawer dans le layout de langue**
 
-Modify `src/app/[locale]/layout.tsx` so the providers/body section reads:
+Modifier `src/app/[locale]/layout.tsx` so the providers/body section reads:
 
 ```tsx
         <NextIntlClientProvider messages={messages}>
@@ -2741,16 +2741,16 @@ Modify `src/app/[locale]/layout.tsx` so the providers/body section reads:
 
 Add the two new imports at the top of the file: `import { CartDrawerProvider } from '@/context/CartDrawerContext';` and `import { CartDrawer } from '@/components/cart/CartDrawer';`.
 
-- [ ] **Step 6: Verify manually**
+- [ ] **Étape 6 : Vérifier manuellement**
 
-Run: `npm run dev`, visit `http://localhost:3000/fr`:
-- Clicking the bag icon opens the drawer with "Votre panier est vide." (no add-to-cart UI exists yet — that lands in Task 15 — so verify the empty state and that the overlay/close button work).
-- Clicking the overlay or the × closes the drawer.
+Exécuter : `npm run dev`, visiter `http://localhost:3000/fr` :
+- Cliquer sur l'icône panier ouvre le drawer avec « Votre panier est vide. » (aucune UI d'ajout au panier n'existe encore — elle arrive à la Tâche 15 — donc vérifier l'état vide et que le bouton overlay/fermeture fonctionne).
+- Cliquer sur l'overlay ou sur le × ferme le drawer.
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 7: Commit**
+- [ ] **Étape 7 : Commit**
 
 ```bash
 git add src/context/CartDrawerContext.tsx src/components/cart/CartDrawer.tsx src/components/layout/Header.tsx messages/fr.json messages/en.json src/app/[locale]/layout.tsx
@@ -2759,20 +2759,20 @@ git commit -m "feat: add cart drawer opened from the header bag icon"
 
 ---
 
-### Task 13: Home page
+### Tâche 13 : Page d'accueil
 
-**Files:**
-- Create: `src/components/product/ProductCard.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add `home` and `product` namespaces)
-- Modify: `src/app/[locale]/page.tsx` (replace the Task 3 placeholder with the real Home page)
+**Fichiers :**
+- Créer : `src/components/product/ProductCard.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add `home` and `product` namespaces)
+- Modifier : `src/app/[locale]/page.tsx` (replace the Tâche 3 placeholder with the real Home page)
 
-**Interfaces:**
-- Consumes: `Container`/`Heading`/`PlaceholderBlock` (Task 8), `useCurrency`/`formatPrice` (Task 5), `useFavorites` (Task 7), `CATEGORIES`/`PRODUCTS` (Task 4), `Link` (Task 3).
-- Produces: `<ProductCard product={Product} />` — reused as-is by Tasks 14, 15, and 17.
+**Interfaces :**
+- Consomme : `Container`/`Heading`/`PlaceholderBlock` (Tâche 8), `useCurrency`/`formatPrice` (Tâche 5), `useFavorites` (Tâche 7), `CATEGORIES`/`PRODUCTS` (Tâche 4), `Link` (Tâche 3).
+- Produit : `<ProductCard product={Product} />` — réutilisé tel quel par les Tâches 14, 15 et 17.
 
-- [ ] **Step 1: Add the home and product message namespaces**
+- [ ] **Étape 1 : Ajouter les namespaces de messages home et product**
 
-Add to `messages/fr.json` (alongside the existing keys):
+Ajouter dans `messages/fr.json` (alongside the existing keys):
 
 ```json
   "home": {
@@ -2790,7 +2790,7 @@ Add to `messages/fr.json` (alongside the existing keys):
   }
 ```
 
-Add to `messages/en.json` (alongside the existing keys):
+Ajouter dans `messages/en.json` (alongside the existing keys):
 
 ```json
   "home": {
@@ -2808,9 +2808,9 @@ Add to `messages/en.json` (alongside the existing keys):
   }
 ```
 
-- [ ] **Step 2: Implement ProductCard**
+- [ ] **Étape 2 : Implémenter ProductCard**
 
-Create `src/components/product/ProductCard.tsx`:
+Créer `src/components/product/ProductCard.tsx`:
 
 ```tsx
 'use client';
@@ -2867,7 +2867,7 @@ export function ProductCard({ product }: { product: Product }) {
 }
 ```
 
-- [ ] **Step 3: Implement the Home page**
+- [ ] **Étape 3 : Implémenter la page d'accueil**
 
 Replace the contents of `src/app/[locale]/page.tsx`:
 
@@ -2931,18 +2931,18 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 }
 ```
 
-- [ ] **Step 4: Verify manually**
+- [ ] **Étape 4 : Vérifier manuellement**
 
-Run: `npm run dev`, visit `http://localhost:3000/fr`:
-- Hero, the 4-category grid, a "Nouveautés" grid of 4 products, and the editorial banner all render.
-- Clicking the heart icon on a product card toggles it and updates the Header's favorites count (Task 10).
-- Category grid links still 404 for now (expected until Task 14).
-- Switch to `/en` and confirm every string above is in English.
+Exécuter : `npm run dev`, visiter `http://localhost:3000/fr` :
+- Le hero, la grille des 4 catégories, une grille « Nouveautés » de 4 produits, et la bannière éditoriale s'affichent tous.
+- Cliquer sur l'icône cœur d'une fiche produit la bascule et met à jour le compteur de favoris du Header (Tâche 10).
+- Les liens de la grille catégorie sont encore en 404 pour l'instant (attendu jusqu'à la Tâche 14).
+- Passer sur `/en` et confirmer que chaque texte ci-dessus est en anglais.
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 5: Commit**
+- [ ] **Étape 5 : Commit**
 
 ```bash
 git add src/components/product/ProductCard.tsx messages/fr.json messages/en.json src/app/[locale]/page.tsx
@@ -2951,22 +2951,22 @@ git commit -m "feat: build the Home page with hero, categories, new arrivals, ed
 
 ---
 
-### Task 14: Category listing page (PLP) + filters, 4 categories
+### Tâche 14 : Page de listing catégorie (PLP) + filtres, 4 catégories
 
-**Files:**
-- Create: `src/lib/productFilters.ts`
-- Test: `src/lib/productFilters.test.ts`
-- Create: `src/components/product/CategoryFilters.tsx`
-- Create: `src/app/[locale]/[category]/page.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add `category` namespace)
+**Fichiers :**
+- Créer : `src/lib/productFilters.ts`
+- Test : `src/lib/productFilters.test.ts`
+- Créer : `src/components/product/CategoryFilters.tsx`
+- Créer : `src/app/[locale]/[category]/page.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add `category` namespace)
 
-**Interfaces:**
-- Consumes: `getProductsByCategory`/`CATEGORIES`/`Category` (Task 4), `ProductCard` (Task 13), `Container`/`Heading` (Task 8).
-- Produces: `filterAndSortProducts(products, params)`, `getAvailableSubcategories/Sizes/Colors(products)` from `src/lib/productFilters.ts` — this is the one dynamic route serving all four categories (`/homme`, `/femme`, `/enfant`, `/accessoires`); it lives at the same tree level as the static route folders built in later tasks (`contact/`, `favoris/`, etc.), and Next.js always resolves a matching static folder before falling back to a dynamic `[category]` segment, so there is no routing conflict.
+**Interfaces :**
+- Consomme : `getProductsByCategory`/`CATEGORIES`/`Category` (Tâche 4), `ProductCard` (Tâche 13), `Container`/`Heading` (Tâche 8).
+- Produit : `filterAndSortProducts(products, params)`, `getAvailableSubcategories/Sizes/Colors(products)` depuis `src/lib/productFilters.ts` — this is the one dynamic route serving all four categories (`/homme`, `/femme`, `/enfant`, `/accessoires`); it lives at the same tree level as the static route folders built in later tasks (`contact/`, `favoris/`, etc.), and Next.js always resolves a matching static folder before falling back to a dynamic `[category]` segment, so there is no routing conflict.
 
-- [ ] **Step 1: Write the failing tests for the filter/sort logic**
+- [ ] **Étape 1 : Écrire les tests en échec pour la logique de filtre/tri**
 
-Create `src/lib/productFilters.test.ts`:
+Créer `src/lib/productFilters.test.ts`:
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -3039,14 +3039,14 @@ describe('getAvailableSubcategories/Sizes/Colors', () => {
 });
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [ ] **Étape 2 : Exécuter les tests pour vérifier qu'ils échouent**
 
-Run: `npm run test -- src/lib/productFilters.test.ts`
-Expected: FAIL — `productFilters.ts` does not exist yet.
+Exécuter : `npm run test -- src/lib/productFilters.test.ts`
+Résultat attendu : ÉCHEC — `productFilters.ts` n'existe pas encore.
 
-- [ ] **Step 3: Implement the filter/sort logic**
+- [ ] **Étape 3 : Implémenter la logique de filtre/tri**
 
-Create `src/lib/productFilters.ts`:
+Créer `src/lib/productFilters.ts`:
 
 ```ts
 import type { Product } from './products';
@@ -3096,14 +3096,14 @@ export function getAvailableColors(products: Product[]): string[] {
 }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [ ] **Étape 4 : Exécuter les tests pour vérifier qu'ils réussissent**
 
-Run: `npm run test -- src/lib/productFilters.test.ts`
-Expected: PASS.
+Exécuter : `npm run test -- src/lib/productFilters.test.ts`
+Résultat attendu : succès.
 
-- [ ] **Step 5: Add the category message namespace**
+- [ ] **Étape 5 : Ajouter le namespace de messages category**
 
-Add to `messages/fr.json`:
+Ajouter dans `messages/fr.json`:
 
 ```json
   "category": {
@@ -3128,7 +3128,7 @@ Add to `messages/fr.json`:
   }
 ```
 
-Add to `messages/en.json`:
+Ajouter dans `messages/en.json`:
 
 ```json
   "category": {
@@ -3153,9 +3153,9 @@ Add to `messages/en.json`:
   }
 ```
 
-- [ ] **Step 6: Implement the filter controls**
+- [ ] **Étape 6 : Implémenter les contrôles de filtre**
 
-Create `src/components/product/CategoryFilters.tsx`:
+Créer `src/components/product/CategoryFilters.tsx`:
 
 ```tsx
 'use client';
@@ -3246,9 +3246,9 @@ export function CategoryFilters({ products }: { products: Product[] }) {
 }
 ```
 
-- [ ] **Step 7: Implement the category page**
+- [ ] **Étape 7 : Implémenter la page catégorie**
 
-Create `src/app/[locale]/[category]/page.tsx`:
+Créer `src/app/[locale]/[category]/page.tsx`:
 
 ```tsx
 import { notFound } from 'next/navigation';
@@ -3306,18 +3306,18 @@ export default async function CategoryPage({
 }
 ```
 
-- [ ] **Step 8: Verify manually**
+- [ ] **Étape 8 : Vérifier manuellement**
 
-Run: `npm run dev`, visit `http://localhost:3000/fr/homme`:
-- The 4 seeded homme products render as cards.
-- Changing each filter/sort `<select>` updates the URL query string and the visible product grid.
-- Visit `/fr/femme`, `/fr/enfant`, `/fr/accessoires` — same template, correct products for each.
-- Visit `/fr/does-not-exist` — expect a 404.
+Exécuter : `npm run dev`, visiter `http://localhost:3000/fr/homme` :
+- Les 4 produits homme du jeu de données s'affichent en cartes.
+- Changer chaque `<select>` de filtre/tri met à jour la chaîne de requête de l'URL et la grille de produits visible.
+- Visiter `/fr/femme`, `/fr/enfant`, `/fr/accessoires` — même template, bons produits pour chacune.
+- Visiter `/fr/does-not-exist` — on s'attend à un 404.
 
-Run: `npm run test && npm run build`
-Expected: both succeed.
+Exécuter : `npm run test && npm run build`
+Résultat attendu : les deux réussissent.
 
-- [ ] **Step 9: Commit**
+- [ ] **Étape 9 : Commit**
 
 ```bash
 git add src/lib/productFilters.ts src/lib/productFilters.test.ts src/components/product/CategoryFilters.tsx src/app/[locale]/[category]/page.tsx messages/fr.json messages/en.json
@@ -3326,21 +3326,21 @@ git commit -m "feat: add category listing page with subcategory/size/color/sort 
 
 ---
 
-### Task 15: Product detail page (PDP)
+### Tâche 15 : Fiche produit (PDP)
 
-**Files:**
-- Create: `src/components/product/ProductGallery.tsx`
-- Create: `src/components/product/ProductDetailView.tsx`
-- Create: `src/app/[locale]/produit/[slug]/page.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add to the existing `product` namespace)
+**Fichiers :**
+- Créer : `src/components/product/ProductGallery.tsx`
+- Créer : `src/components/product/ProductDetailView.tsx`
+- Créer : `src/app/[locale]/produit/[slug]/page.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add to the existing `product` namespace)
 
-**Interfaces:**
-- Consumes: `getProductBySlug`/`getRelatedProducts`/`PRODUCTS` (Task 4), `useCart` (Task 6), `useCartDrawer` (Task 12), `useCurrency`/`formatPrice` (Task 5), `useFavorites` (Task 7), `ProductCard` (Task 13), `Button`/`Heading`/`Container` (Task 8).
-- Produces: the `/produit/[slug]` route used by every `ProductCard` link built so far.
+**Interfaces :**
+- Consomme : `getProductBySlug`/`getRelatedProducts`/`PRODUCTS` (Tâche 4), `useCart` (Tâche 6), `useCartDrawer` (Tâche 12), `useCurrency`/`formatPrice` (Tâche 5), `useFavorites` (Tâche 7), `ProductCard` (Tâche 13), `Button`/`Heading`/`Container` (Tâche 8).
+- Produit : la route `/produit/[slug]` utilisée par tous les liens `ProductCard` construits jusqu'ici.
 
-- [ ] **Step 1: Add the remaining product message keys**
+- [ ] **Étape 1 : Ajouter les clés de messages product restantes**
 
-Add these keys inside the existing `product` object in `messages/fr.json` (alongside `toggleFavorite` and `new` from Task 13):
+Add these keys inside the existing `product` object in `messages/fr.json` (alongside `toggleFavorite` and `new` from Tâche 13):
 
 ```json
     "size": "Taille",
@@ -3360,9 +3360,9 @@ Add these keys inside the existing `product` object in `messages/en.json`:
     "relatedProducts": "You may also like"
 ```
 
-- [ ] **Step 2: Implement the gallery**
+- [ ] **Étape 2 : Implémenter la galerie**
 
-Create `src/components/product/ProductGallery.tsx`:
+Créer `src/components/product/ProductGallery.tsx`:
 
 ```tsx
 'use client';
@@ -3396,9 +3396,9 @@ export function ProductGallery({ imageCount, productName }: { imageCount: number
 }
 ```
 
-- [ ] **Step 3: Implement the interactive detail view**
+- [ ] **Étape 3 : Implémenter la vue de détail interactive**
 
-Create `src/components/product/ProductDetailView.tsx`:
+Créer `src/components/product/ProductDetailView.tsx`:
 
 ```tsx
 'use client';
@@ -3540,9 +3540,9 @@ export function ProductDetailView({
 }
 ```
 
-- [ ] **Step 4: Implement the page**
+- [ ] **Étape 4 : Implémenter la page**
 
-Create `src/app/[locale]/produit/[slug]/page.tsx`:
+Créer `src/app/[locale]/produit/[slug]/page.tsx`:
 
 ```tsx
 import { notFound } from 'next/navigation';
@@ -3579,20 +3579,20 @@ export default async function ProductPage({
 }
 ```
 
-- [ ] **Step 5: Verify manually**
+- [ ] **Étape 5 : Vérifier manuellement**
 
-Run: `npm run dev`, visit `http://localhost:3000/fr/produit/homme-veste-oversize`:
-- Gallery thumbnails switch the main placeholder's label.
-- Changing size/color updates the selects; changing quantity accepts only positive integers.
-- "Ajouter au panier" adds the line to the cart and opens the drawer (Task 12) with the correct product, size, color, quantity, and price.
-- The heart button toggles favorites and is reflected on the Header's badge (Task 10).
-- The related-products grid shows the two products referenced by `relatedProductIds` (`homme-pantalon-droit`, `homme-chemise-col-mao`).
-- Visit `/fr/produit/does-not-exist` — expect a 404.
+Exécuter : `npm run dev`, visiter `http://localhost:3000/fr/produit/homme-veste-oversize` :
+- Les vignettes de la galerie changent le libellé du placeholder principal.
+- Changer la taille/couleur met à jour les selects ; changer la quantité n'accepte que des entiers positifs.
+- « Ajouter au panier » ajoute la ligne au panier et ouvre le drawer (Tâche 12) avec le bon produit, la bonne taille, couleur, quantité et prix.
+- Le bouton cœur bascule les favoris et se reflète sur le badge du Header (Tâche 10).
+- La grille de produits associés affiche les deux produits référencés par `relatedProductIds` (`homme-pantalon-droit`, `homme-chemise-col-mao`).
+- Visiter `/fr/produit/does-not-exist` — on s'attend à un 404.
 
-Run: `npm run test && npm run build`
-Expected: both succeed.
+Exécuter : `npm run test && npm run build`
+Résultat attendu : les deux réussissent.
 
-- [ ] **Step 6: Commit**
+- [ ] **Étape 6 : Commit**
 
 ```bash
 git add src/components/product/ProductGallery.tsx src/components/product/ProductDetailView.tsx src/app/[locale]/produit messages/fr.json messages/en.json
@@ -3601,19 +3601,19 @@ git commit -m "feat: add product detail page with variant selection and add-to-c
 
 ---
 
-### Task 16: Search results page
+### Tâche 16 : Page de résultats de recherche
 
-**Files:**
-- Create: `src/app/[locale]/recherche/page.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add `search` namespace)
+**Fichiers :**
+- Créer : `src/app/[locale]/recherche/page.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add `search` namespace)
 
-**Interfaces:**
-- Consumes: `searchProducts` (Task 4, already tested), `ProductCard` (Task 13), `Container`/`Heading` (Task 8). Reached from the Header's search form (Task 10), which submits to `/recherche?q=...`.
-- Produces: the `/recherche` route.
+**Interfaces :**
+- Consomme : `searchProducts` (Tâche 4, already tested), `ProductCard` (Tâche 13), `Container`/`Heading` (Tâche 8). Atteint depuis le formulaire de recherche du Header (Tâche 10), qui soumet vers `/recherche?q=...`.
+- Produit : la route `/recherche`.
 
-- [ ] **Step 1: Add the search message namespace**
+- [ ] **Étape 1 : Ajouter le namespace de messages search**
 
-Add to `messages/fr.json`:
+Ajouter dans `messages/fr.json`:
 
 ```json
   "search": {
@@ -3624,7 +3624,7 @@ Add to `messages/fr.json`:
   }
 ```
 
-Add to `messages/en.json`:
+Ajouter dans `messages/en.json`:
 
 ```json
   "search": {
@@ -3635,9 +3635,9 @@ Add to `messages/en.json`:
   }
 ```
 
-- [ ] **Step 2: Implement the search page**
+- [ ] **Étape 2 : Implémenter la page de recherche**
 
-Create `src/app/[locale]/recherche/page.tsx`:
+Créer `src/app/[locale]/recherche/page.tsx`:
 
 ```tsx
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -3677,18 +3677,18 @@ export default async function SearchPage({
 }
 ```
 
-- [ ] **Step 3: Verify manually**
+- [ ] **Étape 3 : Vérifier manuellement**
 
-Run: `npm run dev`:
-- Visit `http://localhost:3000/fr/recherche` (no query) — expect the "entrez un mot-clé" prompt and no results grid.
-- Visit `http://localhost:3000/fr/recherche?q=veste` — expect at least the oversized jacket to appear.
-- Use the Header's search field (Task 10) and confirm it navigates here with the typed query.
-- Visit `http://localhost:3000/fr/recherche?q=zzznomatch` — expect the "aucun résultat" message.
+Exécuter : `npm run dev` :
+- Visiter `http://localhost:3000/fr/recherche` (sans requête) — on s'attend au message « entrez un mot-clé » et à aucune grille de résultats.
+- Visiter `http://localhost:3000/fr/recherche?q=veste` — on s'attend à voir au moins la veste oversize apparaître.
+- Utiliser le champ de recherche du Header (Tâche 10) et confirmer qu'il navigue ici avec la requête saisie.
+- Visiter `http://localhost:3000/fr/recherche?q=zzznomatch` — on s'attend au message « aucun résultat ».
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 4: Commit**
+- [ ] **Étape 4 : Commit**
 
 ```bash
 git add src/app/[locale]/recherche messages/fr.json messages/en.json
@@ -3697,19 +3697,19 @@ git commit -m "feat: add search results page"
 
 ---
 
-### Task 17: Favorites page
+### Tâche 17 : Page favoris
 
-**Files:**
-- Create: `src/app/[locale]/favoris/page.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add `favorites` namespace)
+**Fichiers :**
+- Créer : `src/app/[locale]/favoris/page.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add `favorites` namespace)
 
-**Interfaces:**
-- Consumes: `useFavorites` (Task 7), `getProductById` (Task 4), `ProductCard` (Task 13), `Container`/`Heading` (Task 8).
-- Produces: the `/favoris` route linked from the Header (Task 10).
+**Interfaces :**
+- Consomme : `useFavorites` (Tâche 7), `getProductById` (Tâche 4), `ProductCard` (Tâche 13), `Container`/`Heading` (Tâche 8).
+- Produit : la route `/favoris` liée depuis le Header (Tâche 10).
 
-- [ ] **Step 1: Add the favorites message namespace**
+- [ ] **Étape 1 : Ajouter le namespace de messages favorites**
 
-Add to `messages/fr.json`:
+Ajouter dans `messages/fr.json`:
 
 ```json
   "favorites": {
@@ -3718,7 +3718,7 @@ Add to `messages/fr.json`:
   }
 ```
 
-Add to `messages/en.json`:
+Ajouter dans `messages/en.json`:
 
 ```json
   "favorites": {
@@ -3727,9 +3727,9 @@ Add to `messages/en.json`:
   }
 ```
 
-- [ ] **Step 2: Implement the Favorites page**
+- [ ] **Étape 2 : Implémenter la page Favoris**
 
-Create `src/app/[locale]/favoris/page.tsx`:
+Créer `src/app/[locale]/favoris/page.tsx`:
 
 ```tsx
 'use client';
@@ -3765,16 +3765,16 @@ export default function FavoritesPage() {
 }
 ```
 
-This is a Client Component page (no `params`/server data needed) since favorites live entirely in `localStorage` via `useFavorites()`.
+C'est une page Client Component (pas besoin de `params`/données serveur) puisque les favoris vivent entièrement dans `localStorage` via `useFavorites()`.
 
-- [ ] **Step 3: Verify manually**
+- [ ] **Étape 3 : Vérifier manuellement**
 
-Run: `npm run dev`, visit `http://localhost:3000/fr/favoris` with no favorites — expect the empty-state message. Favorite a couple of products from the Home page or a category page (Task 13/14), then revisit `/fr/favoris` — expect those exact products to appear as cards, with working heart-toggle (unfavoriting from this page removes the card immediately since it re-reads `favoriteIds`).
+Exécuter : `npm run dev`, visiter `http://localhost:3000/fr/favoris` sans favoris — on s'attend au message d'état vide. Ajouter aux favoris quelques produits depuis la page d'accueil ou une page catégorie (Tâche 13/14), puis revisiter `/fr/favoris` — on s'attend à voir exactement ces produits apparaître en cartes, avec le bouton cœur fonctionnel (retirer des favoris depuis cette page fait disparaître la carte immédiatement puisqu'elle relit `favoriteIds`).
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 4: Commit**
+- [ ] **Étape 4 : Commit**
 
 ```bash
 git add src/app/[locale]/favoris messages/fr.json messages/en.json
@@ -3783,21 +3783,21 @@ git commit -m "feat: add favorites page"
 
 ---
 
-### Task 18: Cart page
+### Tâche 18 : Page panier
 
-**Files:**
-- Create: `src/components/cart/CartLineItem.tsx`
-- Modify: `src/components/cart/CartDrawer.tsx` (reuse `CartLineItem` instead of its inline line-item markup)
-- Create: `src/app/[locale]/panier/page.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add `checkout` key to the existing `cart` namespace)
+**Fichiers :**
+- Créer : `src/components/cart/CartLineItem.tsx`
+- Modifier : `src/components/cart/CartDrawer.tsx` (reuse `CartLineItem` instead of its inline line-item markup)
+- Créer : `src/app/[locale]/panier/page.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add `checkout` key to the existing `cart` namespace)
 
-**Interfaces:**
-- Consumes: `useCart` (Task 6), `useCurrency`/`formatPrice` (Task 5), `getProductById` (Task 4), `CartItem` (Task 6), `Container`/`Heading`/`Button` (Task 8).
-- Produces: `<CartLineItem line={CartItem} />` (shared by the drawer and this page), the `/panier` route (linked from the Header cart icon's drawer "view cart" action and from the Cart drawer itself).
+**Interfaces :**
+- Consomme : `useCart` (Tâche 6), `useCurrency`/`formatPrice` (Tâche 5), `getProductById` (Tâche 4), `CartItem` (Tâche 6), `Container`/`Heading`/`Button` (Tâche 8).
+- Produit : `<CartLineItem line={CartItem} />` (partagé par le drawer et cette page), la route `/panier` (liée depuis l'action « voir le panier » du drawer de l'icône panier du Header, et depuis le drawer panier lui-même).
 
-- [ ] **Step 1: Extract the shared cart line-item row**
+- [ ] **Étape 1 : Extraire la ligne de panier partagée**
 
-Create `src/components/cart/CartLineItem.tsx`:
+Créer `src/components/cart/CartLineItem.tsx`:
 
 ```tsx
 'use client';
@@ -3857,9 +3857,9 @@ export function CartLineItem({ line }: { line: CartItem }) {
 }
 ```
 
-- [ ] **Step 2: Simplify CartDrawer to reuse CartLineItem**
+- [ ] **Étape 2 : Simplifier CartDrawer pour réutiliser CartLineItem**
 
-Modify `src/components/cart/CartDrawer.tsx` — replace the whole file with this version (drops the inline per-line JSX and the now-unused `getProductById` import in favor of `<CartLineItem />`):
+Modifier `src/components/cart/CartDrawer.tsx` — replace the whole file with this version (drops the inline per-line JSX and the now-unused `getProductById` import in favor of `<CartLineItem />`):
 
 ```tsx
 'use client';
@@ -3920,13 +3920,13 @@ export function CartDrawer() {
 }
 ```
 
-- [ ] **Step 3: Add the checkout CTA label**
+- [ ] **Étape 3 : Ajouter le libellé du CTA de tunnel de commande**
 
 Add `"checkout": "Passer commande"` inside the existing `cart` object in `messages/fr.json`, and `"checkout": "Checkout"` inside the existing `cart` object in `messages/en.json`.
 
-- [ ] **Step 4: Implement the Cart page**
+- [ ] **Étape 4 : Implémenter la page Panier**
 
-Create `src/app/[locale]/panier/page.tsx`:
+Créer `src/app/[locale]/panier/page.tsx`:
 
 ```tsx
 'use client';
@@ -3977,19 +3977,19 @@ export default function CartPage() {
 }
 ```
 
-- [ ] **Step 5: Verify manually**
+- [ ] **Étape 5 : Vérifier manuellement**
 
-Run: `npm run dev`:
-- Add a couple of products to the cart from a PDP (Task 15).
-- Open the drawer (bag icon) — it should look and behave exactly as before (now backed by `CartLineItem`).
-- Visit `http://localhost:3000/fr/panier` directly — same line items, quantities, and subtotal; changing a quantity or removing a line here updates the Header's badge too (shared `CartContext`).
-- Click "Passer commande" — expect a 404 for now (the checkout route lands in Task 19).
-- Empty the cart (remove all lines) and confirm the empty-state message shows.
+Exécuter : `npm run dev` :
+- Ajouter quelques produits au panier depuis une PDP (Tâche 15).
+- Ouvrir le drawer (icône panier) — il doit avoir le même aspect et comportement qu'avant (maintenant appuyé sur `CartLineItem`).
+- Visiter `http://localhost:3000/fr/panier` directement — mêmes lignes, quantités et sous-total ; changer une quantité ou retirer une ligne ici met aussi à jour le badge du Header (`CartContext` partagé).
+- Cliquer sur « Passer commande » — on s'attend à un 404 pour l'instant (la route de tunnel de commande arrive à la Tâche 19).
+- Vider le panier (retirer toutes les lignes) et confirmer que le message d'état vide s'affiche.
 
-Run: `npm run test && npm run build`
-Expected: both succeed.
+Exécuter : `npm run test && npm run build`
+Résultat attendu : les deux réussissent.
 
-- [ ] **Step 6: Commit**
+- [ ] **Étape 6 : Commit**
 
 ```bash
 git add src/components/cart/CartLineItem.tsx src/components/cart/CartDrawer.tsx src/app/[locale]/panier messages/fr.json messages/en.json
@@ -3998,23 +3998,23 @@ git commit -m "feat: add dedicated cart page, extract shared CartLineItem"
 
 ---
 
-### Task 19: Checkout — Shipping page
+### Tâche 19 : Tunnel de commande — Page livraison
 
-**Files:**
-- Create: `src/lib/checkoutValidation.ts`
-- Test: `src/lib/checkoutValidation.test.ts`
-- Create: `src/context/CheckoutContext.tsx`
-- Create: `src/app/[locale]/commande/livraison/page.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add `checkout` namespace)
-- Modify: `src/app/[locale]/layout.tsx`
+**Fichiers :**
+- Créer : `src/lib/checkoutValidation.ts`
+- Test : `src/lib/checkoutValidation.test.ts`
+- Créer : `src/context/CheckoutContext.tsx`
+- Créer : `src/app/[locale]/commande/livraison/page.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add `checkout` namespace)
+- Modifier : `src/app/[locale]/layout.tsx`
 
-**Interfaces:**
-- Consumes: `Container`/`Heading`/`Button` (Task 8).
-- Produces: `ShippingFormValues`, `ShippingFormErrors`, `validateShippingForm(values)` from `src/lib/checkoutValidation.ts` (Task 20 adds `PaymentFormValues`/`validatePaymentForm` to the same file); `CheckoutProvider`, `useCheckout(): { shipping, setShipping, clearShipping }` from `src/context/CheckoutContext.tsx` — consumed by the Payment page (Task 20) and Confirmation page (Task 21). Checkout is guest-only: nothing here touches an account or auth system (spec section 9).
+**Interfaces :**
+- Consomme : `Container`/`Heading`/`Button` (Tâche 8).
+- Produit : `ShippingFormValues`, `ShippingFormErrors`, `validateShippingForm(values)` depuis `src/lib/checkoutValidation.ts` (Tâche 20 adds `PaymentFormValues`/`validatePaymentForm` to the same file); `CheckoutProvider`, `useCheckout(): { shipping, setShipping, clearShipping }` depuis `src/context/CheckoutContext.tsx` — consumed by the Payment page (Tâche 20) and Confirmation page (Tâche 21). Le tunnel de commande est en mode invité uniquement : rien ici ne touche à un système de compte ou d'authentification (section 9 de la spec).
 
-- [ ] **Step 1: Write the failing tests for shipping validation**
+- [ ] **Étape 1 : Écrire les tests en échec pour la validation de la livraison**
 
-Create `src/lib/checkoutValidation.test.ts`:
+Créer `src/lib/checkoutValidation.test.ts`:
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -4055,14 +4055,14 @@ describe('validateShippingForm', () => {
 });
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [ ] **Étape 2 : Exécuter les tests pour vérifier qu'ils échouent**
 
-Run: `npm run test -- src/lib/checkoutValidation.test.ts`
-Expected: FAIL — `checkoutValidation.ts` does not exist yet.
+Exécuter : `npm run test -- src/lib/checkoutValidation.test.ts`
+Résultat attendu : ÉCHEC — `checkoutValidation.ts` n'existe pas encore.
 
-- [ ] **Step 3: Implement shipping validation**
+- [ ] **Étape 3 : Implémenter la validation de la livraison**
 
-Create `src/lib/checkoutValidation.ts`:
+Créer `src/lib/checkoutValidation.ts`:
 
 ```ts
 export interface ShippingFormValues {
@@ -4098,14 +4098,14 @@ export function validateShippingForm(values: ShippingFormValues): ShippingFormEr
 }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [ ] **Étape 4 : Exécuter les tests pour vérifier qu'ils réussissent**
 
-Run: `npm run test -- src/lib/checkoutValidation.test.ts`
-Expected: PASS.
+Exécuter : `npm run test -- src/lib/checkoutValidation.test.ts`
+Résultat attendu : succès.
 
-- [ ] **Step 5: Add the checkout message namespace**
+- [ ] **Étape 5 : Ajouter le namespace de messages checkout**
 
-Add to `messages/fr.json`:
+Ajouter dans `messages/fr.json`:
 
 ```json
   "checkout": {
@@ -4127,7 +4127,7 @@ Add to `messages/fr.json`:
   }
 ```
 
-Add to `messages/en.json`:
+Ajouter dans `messages/en.json`:
 
 ```json
   "checkout": {
@@ -4149,11 +4149,11 @@ Add to `messages/en.json`:
   }
 ```
 
-(Task 20 adds payment-related keys and Task 21 adds confirmation-related keys into this same `checkout` object.)
+(Tâche 20 adds payment-related keys and Tâche 21 adds confirmation-related keys into this same `checkout` object.)
 
-- [ ] **Step 6: Implement the checkout state context**
+- [ ] **Étape 6 : Implémenter le contexte d'état du tunnel de commande**
 
-Create `src/context/CheckoutContext.tsx`:
+Créer `src/context/CheckoutContext.tsx`:
 
 ```tsx
 'use client';
@@ -4211,11 +4211,11 @@ export function useCheckout(): CheckoutContextValue {
 }
 ```
 
-This uses `sessionStorage` (not `localStorage`) deliberately — an in-progress checkout is transient and should not survive across browser sessions the way the cart or favorites do.
+Ceci utilise `sessionStorage` (pas `localStorage`) délibérément — un tunnel de commande en cours est transitoire et ne doit pas survivre entre les sessions de navigateur comme le panier ou les favoris.
 
-- [ ] **Step 7: Wire CheckoutProvider into the locale layout**
+- [ ] **Étape 7 : Brancher CheckoutProvider dans le layout de langue**
 
-Modify `src/app/[locale]/layout.tsx` — add the import and nest `CheckoutProvider` around the same children as `CartDrawerProvider` (order relative to the other providers does not matter, since none of them read each other's context):
+Modifier `src/app/[locale]/layout.tsx` — add the import and nest `CheckoutProvider` around the same children as `CartDrawerProvider` (order relative to the other providers does not matter, since none of them read each other's context):
 
 ```tsx
                 <CartDrawerProvider>
@@ -4231,9 +4231,9 @@ Modify `src/app/[locale]/layout.tsx` — add the import and nest `CheckoutProvid
 
 Add `import { CheckoutProvider } from '@/context/CheckoutContext';` alongside the other context imports.
 
-- [ ] **Step 8: Implement the Shipping page**
+- [ ] **Étape 8 : Implémenter la page Livraison**
 
-Create `src/app/[locale]/commande/livraison/page.tsx`:
+Créer `src/app/[locale]/commande/livraison/page.tsx`:
 
 ```tsx
 'use client';
@@ -4316,18 +4316,18 @@ export default function ShippingPage() {
 }
 ```
 
-- [ ] **Step 9: Verify manually**
+- [ ] **Étape 9 : Vérifier manuellement**
 
-Run: `npm run dev`, visit `http://localhost:3000/fr/commande/livraison`:
-- Submitting the empty form shows a "requis" error under every field.
-- Typing an invalid email (e.g. `abc`) and submitting shows the "format invalide" error under email only.
-- Filling every field with valid values and submitting navigates to `/fr/commande/paiement` (404 for now — Task 20).
-- Reopen `/fr/commande/livraison` after a successful submit — the fields are pre-filled from `sessionStorage` (via `useCheckout()`).
+Exécuter : `npm run dev`, visiter `http://localhost:3000/fr/commande/livraison` :
+- Soumettre le formulaire vide affiche une erreur « requis » sous chaque champ.
+- Saisir un email invalide (ex. `abc`) et soumettre affiche l'erreur « format invalide » uniquement sous l'email.
+- Remplir tous les champs avec des valeurs valides et soumettre navigue vers `/fr/commande/paiement` (404 pour l'instant — Tâche 20).
+- Rouvrir `/fr/commande/livraison` après une soumission réussie — les champs sont pré-remplis depuis `sessionStorage` (via `useCheckout()`).
 
-Run: `npm run test && npm run build`
-Expected: both succeed.
+Exécuter : `npm run test && npm run build`
+Résultat attendu : les deux réussissent.
 
-- [ ] **Step 10: Commit**
+- [ ] **Étape 10 : Commit**
 
 ```bash
 git add src/lib/checkoutValidation.ts src/lib/checkoutValidation.test.ts src/context/CheckoutContext.tsx src/app/[locale]/commande/livraison messages/fr.json messages/en.json src/app/[locale]/layout.tsx
@@ -4336,21 +4336,21 @@ git commit -m "feat: add guest checkout shipping step with validation"
 
 ---
 
-### Task 20: Checkout — Payment page (mock)
+### Tâche 20 : Tunnel de commande — Page paiement (factice)
 
-**Files:**
-- Modify: `src/lib/checkoutValidation.ts` (add payment validation alongside shipping validation)
-- Modify: `src/lib/checkoutValidation.test.ts` (add payment validation tests)
-- Create: `src/app/[locale]/commande/paiement/page.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add payment keys to the existing `checkout` namespace)
+**Fichiers :**
+- Modifier : `src/lib/checkoutValidation.ts` (add payment validation alongside shipping validation)
+- Modifier : `src/lib/checkoutValidation.test.ts` (add payment validation tests)
+- Créer : `src/app/[locale]/commande/paiement/page.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add payment keys to the existing `checkout` namespace)
 
-**Interfaces:**
-- Consumes: `useCheckout` (Task 19), `useCart` (Task 6), `Container`/`Heading`/`Button` (Task 8).
-- Produces: `PaymentFormValues`, `PaymentFormErrors`, `validatePaymentForm(values)` added to `src/lib/checkoutValidation.ts`; the `/commande/paiement` route. No real payment processor is called — submitting clears the cart and proceeds to Confirmation (Task 21), per the spec's explicit phase-1 scope.
+**Interfaces :**
+- Consomme : `useCheckout` (Tâche 19), `useCart` (Tâche 6), `Container`/`Heading`/`Button` (Tâche 8).
+- Produit : `PaymentFormValues`, `PaymentFormErrors`, `validatePaymentForm(values)` added to `src/lib/checkoutValidation.ts`; the `/commande/paiement` route. Aucun vrai processeur de paiement n'est appelé — la soumission vide le panier et enchaîne vers la Confirmation (Tâche 21), conformément au périmètre explicite de la phase 1 de la spec.
 
-- [ ] **Step 1: Write the failing tests for payment validation**
+- [ ] **Étape 1 : Écrire les tests en échec pour la validation du paiement**
 
-Add to `src/lib/checkoutValidation.test.ts` (below the existing `validateShippingForm` describe block):
+Ajouter dans `src/lib/checkoutValidation.test.ts` (below the existing `validateShippingForm` describe block):
 
 ```ts
 import { validatePaymentForm, type PaymentFormValues } from './checkoutValidation';
@@ -4401,14 +4401,14 @@ import {
 } from './checkoutValidation';
 ```
 
-- [ ] **Step 2: Run tests to verify the new ones fail**
+- [ ] **Étape 2 : Exécuter les tests pour vérifier que les nouveaux échouent**
 
-Run: `npm run test -- src/lib/checkoutValidation.test.ts`
-Expected: FAIL — `validatePaymentForm` does not exist yet.
+Exécuter : `npm run test -- src/lib/checkoutValidation.test.ts`
+Résultat attendu : ÉCHEC — `validatePaymentForm` n'existe pas encore.
 
-- [ ] **Step 3: Implement payment validation**
+- [ ] **Étape 3 : Implémenter la validation du paiement**
 
-Add to `src/lib/checkoutValidation.ts` (below the existing shipping code):
+Ajouter dans `src/lib/checkoutValidation.ts` (below the existing shipping code):
 
 ```ts
 export interface PaymentFormValues {
@@ -4452,14 +4452,14 @@ export function validatePaymentForm(values: PaymentFormValues): PaymentFormError
 }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [ ] **Étape 4 : Exécuter les tests pour vérifier qu'ils réussissent**
 
-Run: `npm run test -- src/lib/checkoutValidation.test.ts`
-Expected: PASS (both shipping and payment describe blocks).
+Exécuter : `npm run test -- src/lib/checkoutValidation.test.ts`
+Résultat attendu : succès (les deux blocs describe, livraison et paiement).
 
-- [ ] **Step 5: Add the payment message keys**
+- [ ] **Étape 5 : Ajouter les clés de messages de paiement**
 
-Add these keys inside the existing `checkout` object in `messages/fr.json` (alongside `shippingTitle`, `guestNotice`, `errors`, etc. from Task 19), and add `cardName`/`cardNumber`/`expiry`/`cvc` inside the existing `checkout.fields` object:
+Add these keys inside the existing `checkout` object in `messages/fr.json` (alongside `shippingTitle`, `guestNotice`, `errors`, etc. from Tâche 19), and add `cardName`/`cardNumber`/`expiry`/`cvc` inside the existing `checkout.fields` object:
 
 ```json
     "paymentTitle": "Paiement",
@@ -4497,9 +4497,9 @@ and inside `checkout.fields`:
       "cvc": "CVC"
 ```
 
-- [ ] **Step 6: Implement the Payment page**
+- [ ] **Étape 6 : Implémenter la page Paiement**
 
-Create `src/app/[locale]/commande/paiement/page.tsx`:
+Créer `src/app/[locale]/commande/paiement/page.tsx`:
 
 ```tsx
 'use client';
@@ -4595,17 +4595,17 @@ export default function PaymentPage() {
 }
 ```
 
-- [ ] **Step 7: Verify manually**
+- [ ] **Étape 7 : Vérifier manuellement**
 
-Run: `npm run dev`:
-- Visit `http://localhost:3000/fr/commande/paiement` directly without having submitted shipping first — expect the "missingShipping" fallback with a link back to `/commande/livraison`.
-- Complete shipping (Task 19), land on `/fr/commande/paiement`, submit an invalid card number (e.g. `1234`) — expect the "invalide" error under card number only.
-- Submit fully valid mock card values — expect navigation to `/fr/commande/confirmation` (404 for now — Task 21) and the cart to be empty afterward (check the Header badge).
+Exécuter : `npm run dev` :
+- Visiter `http://localhost:3000/fr/commande/paiement` directement sans avoir d'abord soumis la livraison — on s'attend au fallback « missingShipping » avec un lien retour vers `/commande/livraison`.
+- Compléter la livraison (Tâche 19), arriver sur `/fr/commande/paiement`, soumettre un numéro de carte invalide (ex. `1234`) — on s'attend à l'erreur « invalide » uniquement sous le numéro de carte.
+- Soumettre des valeurs de carte factices entièrement valides — on s'attend à une navigation vers `/fr/commande/confirmation` (404 pour l'instant — Tâche 21) et à un panier vide ensuite (vérifier le badge du Header).
 
-Run: `npm run test && npm run build`
-Expected: both succeed.
+Exécuter : `npm run test && npm run build`
+Résultat attendu : les deux réussissent.
 
-- [ ] **Step 8: Commit**
+- [ ] **Étape 8 : Commit**
 
 ```bash
 git add src/lib/checkoutValidation.ts src/lib/checkoutValidation.test.ts src/app/[locale]/commande/paiement messages/fr.json messages/en.json
@@ -4614,17 +4614,17 @@ git commit -m "feat: add mock payment step for guest checkout"
 
 ---
 
-### Task 21: Checkout — Confirmation page
+### Tâche 21 : Tunnel de commande — Page confirmation
 
-**Files:**
-- Create: `src/app/[locale]/commande/confirmation/page.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add confirmation keys to the existing `checkout` namespace)
+**Fichiers :**
+- Créer : `src/app/[locale]/commande/confirmation/page.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add confirmation keys to the existing `checkout` namespace)
 
-**Interfaces:**
-- Consumes: `useCheckout` (Task 19), `Container`/`Heading`/`Button` (Task 8).
-- Produces: the `/commande/confirmation` route, the final step of the guest checkout flow.
+**Interfaces :**
+- Consomme : `useCheckout` (Tâche 19), `Container`/`Heading`/`Button` (Tâche 8).
+- Produit : la route `/commande/confirmation`, l'étape finale du tunnel de commande invité.
 
-- [ ] **Step 1: Add the confirmation message keys**
+- [ ] **Étape 1 : Ajouter les clés de messages de confirmation**
 
 Add these keys inside the existing `checkout` object in `messages/fr.json`:
 
@@ -4644,9 +4644,9 @@ Add these keys inside the existing `checkout` object in `messages/en.json`:
     "backHome": "Back to home"
 ```
 
-- [ ] **Step 2: Implement the Confirmation page**
+- [ ] **Étape 2 : Implémenter la page Confirmation**
 
-Create `src/app/[locale]/commande/confirmation/page.tsx`:
+Créer `src/app/[locale]/commande/confirmation/page.tsx`:
 
 ```tsx
 'use client';
@@ -4707,20 +4707,20 @@ export default function ConfirmationPage() {
 }
 ```
 
-The `hasCaptured` ref guards against re-capturing: `CheckoutContext`'s own hydration effect (Task 19) populates `shipping` from `sessionStorage` asynchronously after this page's first render, so `confirmedShipping` is deliberately captured via an effect (once `shipping` becomes available) rather than a `useState` initializer — a `useState(shipping)` initializer would freeze on the pre-hydration `null` value and never show the real confirmation.
+The `hasCaptured` ref guards against re-capturing: `CheckoutContext`'s own hydration effect (Tâche 19) populates `shipping` depuis `sessionStorage` asynchronously after this page's first render, so `confirmedShipping` is deliberately captured via an effect (once `shipping` becomes available) rather than a `useState` initializer — a `useState(shipping)` initializer would freeze on the pre-hydration `null` value and never show the real confirmation.
 
-- [ ] **Step 3: Verify manually**
+- [ ] **Étape 3 : Vérifier manuellement**
 
-Run: `npm run dev`:
-- Visit `http://localhost:3000/fr/commande/confirmation` directly (no prior checkout) — expect the "noOrder" fallback.
-- Complete the full flow: add a product to the cart → `/commande/livraison` (fill and submit) → `/commande/paiement` (fill and submit) → land on `/commande/confirmation` with a generated order number and the shipping address shown.
-- Reload the confirmation page — expect it to fall back to "noOrder" (the shipping data was intentionally cleared after being displayed once).
-- Confirm the cart is empty (Header badge) after this flow.
+Exécuter : `npm run dev` :
+- Visiter `http://localhost:3000/fr/commande/confirmation` directement (sans tunnel de commande préalable) — on s'attend au fallback « noOrder ».
+- Réaliser le parcours complet : ajouter un produit au panier → `/commande/livraison` (remplir et soumettre) → `/commande/paiement` (remplir et soumettre) → arriver sur `/commande/confirmation` avec un numéro de commande généré et l'adresse de livraison affichée.
+- Recharger la page de confirmation — on s'attend à ce qu'elle retombe sur « noOrder » (les données de livraison ont été volontairement effacées après un seul affichage).
+- Confirmer que le panier est vide (badge du Header) après ce parcours.
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 4: Commit**
+- [ ] **Étape 4 : Commit**
 
 ```bash
 git add src/app/[locale]/commande/confirmation messages/fr.json messages/en.json
@@ -4729,19 +4729,19 @@ git commit -m "feat: add checkout confirmation page, completing the guest checko
 
 ---
 
-### Task 22: About page
+### Tâche 22 : Page à propos
 
-**Files:**
-- Create: `src/app/[locale]/a-propos/page.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add `about` namespace)
+**Fichiers :**
+- Créer : `src/app/[locale]/a-propos/page.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add `about` namespace)
 
-**Interfaces:**
-- Consumes: `Container`/`Heading`/`PlaceholderBlock` (Task 8).
-- Produces: the `/a-propos` route linked from the Footer (Task 11).
+**Interfaces :**
+- Consomme : `Container`/`Heading`/`PlaceholderBlock` (Tâche 8).
+- Produit : la route `/a-propos` liée depuis le Footer (Tâche 11).
 
-- [ ] **Step 1: Add the about message namespace**
+- [ ] **Étape 1 : Ajouter le namespace de messages about**
 
-Add to `messages/fr.json`:
+Ajouter dans `messages/fr.json`:
 
 ```json
   "about": {
@@ -4752,7 +4752,7 @@ Add to `messages/fr.json`:
   }
 ```
 
-Add to `messages/en.json`:
+Ajouter dans `messages/en.json`:
 
 ```json
   "about": {
@@ -4763,9 +4763,9 @@ Add to `messages/en.json`:
   }
 ```
 
-- [ ] **Step 2: Implement the About page**
+- [ ] **Étape 2 : Implémenter la page À propos**
 
-Create `src/app/[locale]/a-propos/page.tsx`:
+Créer `src/app/[locale]/a-propos/page.tsx`:
 
 ```tsx
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -4794,14 +4794,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 }
 ```
 
-- [ ] **Step 3: Verify manually**
+- [ ] **Étape 3 : Vérifier manuellement**
 
-Run: `npm run dev`, visit `http://localhost:3000/fr/a-propos` and `http://localhost:3000/en/a-propos` — confirm the heading, placeholder image, and three paragraphs render correctly translated in each locale, and that the Footer's "À propos"/"About" link now resolves instead of 404ing.
+Exécuter : `npm run dev`, visiter `http://localhost:3000/fr/a-propos` et `http://localhost:3000/en/a-propos` — confirmer que le titre, l'image placeholder et les trois paragraphes s'affichent correctement traduits dans chaque langue, et que le lien « À propos »/« About » du Footer se résout maintenant au lieu de faire un 404.
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 4: Commit**
+- [ ] **Étape 4 : Commit**
 
 ```bash
 git add src/app/[locale]/a-propos messages/fr.json messages/en.json
@@ -4810,21 +4810,21 @@ git commit -m "feat: add About page"
 
 ---
 
-### Task 23: Contact page
+### Tâche 23 : Page contact
 
-**Files:**
-- Create: `src/lib/contactValidation.ts`
-- Test: `src/lib/contactValidation.test.ts`
-- Create: `src/app/[locale]/contact/page.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add `contact` namespace)
+**Fichiers :**
+- Créer : `src/lib/contactValidation.ts`
+- Test : `src/lib/contactValidation.test.ts`
+- Créer : `src/app/[locale]/contact/page.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add `contact` namespace)
 
-**Interfaces:**
-- Consumes: `Container`/`Heading`/`Button` (Task 8).
-- Produces: `ContactFormValues`, `ContactFormErrors`, `validateContactForm(values)` from `src/lib/contactValidation.ts`; the `/contact` route linked from the Footer.
+**Interfaces :**
+- Consomme : `Container`/`Heading`/`Button` (Tâche 8).
+- Produit : `ContactFormValues`, `ContactFormErrors`, `validateContactForm(values)` depuis `src/lib/contactValidation.ts`; la route `/contact` liée depuis le Footer.
 
-- [ ] **Step 1: Write the failing tests for contact validation**
+- [ ] **Étape 1 : Écrire les tests en échec pour la validation du contact**
 
-Create `src/lib/contactValidation.test.ts`:
+Créer `src/lib/contactValidation.test.ts`:
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -4863,14 +4863,14 @@ describe('validateContactForm', () => {
 });
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [ ] **Étape 2 : Exécuter les tests pour vérifier qu'ils échouent**
 
-Run: `npm run test -- src/lib/contactValidation.test.ts`
-Expected: FAIL — `contactValidation.ts` does not exist yet.
+Exécuter : `npm run test -- src/lib/contactValidation.test.ts`
+Résultat attendu : ÉCHEC — `contactValidation.ts` n'existe pas encore.
 
-- [ ] **Step 3: Implement contact validation**
+- [ ] **Étape 3 : Implémenter la validation du contact**
 
-Create `src/lib/contactValidation.ts`:
+Créer `src/lib/contactValidation.ts`:
 
 ```ts
 export interface ContactFormValues {
@@ -4904,14 +4904,14 @@ export function validateContactForm(values: ContactFormValues): ContactFormError
 }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [ ] **Étape 4 : Exécuter les tests pour vérifier qu'ils réussissent**
 
-Run: `npm run test -- src/lib/contactValidation.test.ts`
-Expected: PASS.
+Exécuter : `npm run test -- src/lib/contactValidation.test.ts`
+Résultat attendu : succès.
 
-- [ ] **Step 5: Add the contact message namespace**
+- [ ] **Étape 5 : Ajouter le namespace de messages contact**
 
-Add to `messages/fr.json`:
+Ajouter dans `messages/fr.json`:
 
 ```json
   "contact": {
@@ -4932,7 +4932,7 @@ Add to `messages/fr.json`:
   }
 ```
 
-Add to `messages/en.json`:
+Ajouter dans `messages/en.json`:
 
 ```json
   "contact": {
@@ -4953,9 +4953,9 @@ Add to `messages/en.json`:
   }
 ```
 
-- [ ] **Step 6: Implement the Contact page**
+- [ ] **Étape 6 : Implémenter la page Contact**
 
-Create `src/app/[locale]/contact/page.tsx`:
+Créer `src/app/[locale]/contact/page.tsx`:
 
 ```tsx
 'use client';
@@ -5057,18 +5057,18 @@ export default function ContactPage() {
 }
 ```
 
-- [ ] **Step 7: Verify manually**
+- [ ] **Étape 7 : Vérifier manuellement**
 
-Run: `npm run dev`, visit `http://localhost:3000/fr/contact`:
-- Submitting empty shows "requis" under all three fields.
-- An invalid email shows "format invalide" under email only.
-- A message under 10 characters shows the "trop court" error.
-- Valid input shows the success message in place of the form.
+Exécuter : `npm run dev`, visiter `http://localhost:3000/fr/contact` :
+- Soumettre le formulaire vide affiche « requis » sous les trois champs.
+- Un email invalide affiche « format invalide » uniquement sous l'email.
+- Un message de moins de 10 caractères affiche l'erreur « trop court ».
+- Une saisie valide affiche le message de succès à la place du formulaire.
 
-Run: `npm run test && npm run build`
-Expected: both succeed.
+Exécuter : `npm run test && npm run build`
+Résultat attendu : les deux réussissent.
 
-- [ ] **Step 8: Commit**
+- [ ] **Étape 8 : Commit**
 
 ```bash
 git add src/lib/contactValidation.ts src/lib/contactValidation.test.ts src/app/[locale]/contact messages/fr.json messages/en.json
@@ -5077,20 +5077,20 @@ git commit -m "feat: add Contact page with validated form"
 
 ---
 
-### Task 24: FAQ / Help page
+### Tâche 24 : Page FAQ / Aide
 
-**Files:**
-- Create: `src/components/ui/Accordion.tsx`
-- Create: `src/app/[locale]/aide/page.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add `faq` namespace)
+**Fichiers :**
+- Créer : `src/components/ui/Accordion.tsx`
+- Créer : `src/app/[locale]/aide/page.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add `faq` namespace)
 
-**Interfaces:**
-- Consumes: `Container`/`Heading` (Task 8).
-- Produces: `<Accordion items={AccordionItem[]} />` (a generic reusable primitive, not FAQ-specific — usable for any future Q&A-shaped content); the `/aide` route linked from the Footer.
+**Interfaces :**
+- Consomme : `Container`/`Heading` (Tâche 8).
+- Produit : `<Accordion items={AccordionItem[]} />` (une primitive générique réutilisable, pas spécifique à la FAQ — utilisable pour tout futur contenu en forme de Q&R) ; la route `/aide` liée depuis le Footer.
 
-- [ ] **Step 1: Implement the Accordion primitive**
+- [ ] **Étape 1 : Implémenter la primitive Accordion**
 
-Create `src/components/ui/Accordion.tsx`:
+Créer `src/components/ui/Accordion.tsx`:
 
 ```tsx
 'use client';
@@ -5129,9 +5129,9 @@ export function Accordion({ items }: { items: AccordionItem[] }) {
 }
 ```
 
-- [ ] **Step 2: Add the FAQ message namespace**
+- [ ] **Étape 2 : Ajouter le namespace de messages FAQ**
 
-Add to `messages/fr.json`:
+Ajouter dans `messages/fr.json`:
 
 ```json
   "faq": {
@@ -5146,7 +5146,7 @@ Add to `messages/fr.json`:
   }
 ```
 
-Add to `messages/en.json`:
+Ajouter dans `messages/en.json`:
 
 ```json
   "faq": {
@@ -5161,9 +5161,9 @@ Add to `messages/en.json`:
   }
 ```
 
-- [ ] **Step 3: Implement the FAQ page**
+- [ ] **Étape 3 : Implémenter la page FAQ**
 
-Create `src/app/[locale]/aide/page.tsx`:
+Créer `src/app/[locale]/aide/page.tsx`:
 
 ```tsx
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -5188,17 +5188,17 @@ export default async function FaqPage({ params }: { params: Promise<{ locale: st
 }
 ```
 
-- [ ] **Step 4: Verify manually**
+- [ ] **Étape 4 : Vérifier manuellement**
 
-Run: `npm run dev`, visit `http://localhost:3000/fr/aide`:
-- All 5 questions render collapsed.
-- Clicking a question expands its answer and collapses whichever other one was open; clicking it again collapses it.
-- Switch to `/en/aide` and confirm the English translations.
+Exécuter : `npm run dev`, visiter `http://localhost:3000/fr/aide` :
+- Les 5 questions s'affichent repliées.
+- Cliquer sur une question déplie sa réponse et replie celle qui était éventuellement ouverte ; cliquer à nouveau la replie.
+- Passer sur `/en/aide` et confirmer les traductions anglaises.
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 5: Commit**
+- [ ] **Étape 5 : Commit**
 
 ```bash
 git add src/components/ui/Accordion.tsx src/app/[locale]/aide messages/fr.json messages/en.json
@@ -5207,19 +5207,19 @@ git commit -m "feat: add FAQ page with reusable Accordion primitive"
 
 ---
 
-### Task 25: Shipping & Returns page
+### Tâche 25 : Page livraison & retours
 
-**Files:**
-- Create: `src/app/[locale]/livraison-retours/page.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add `shippingReturns` namespace)
+**Fichiers :**
+- Créer : `src/app/[locale]/livraison-retours/page.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add `shippingReturns` namespace)
 
-**Interfaces:**
-- Consumes: `Container`/`Heading` (Task 8).
-- Produces: the `/livraison-retours` route linked from the Footer and referenced by the FAQ (Task 24).
+**Interfaces :**
+- Consomme : `Container`/`Heading` (Tâche 8).
+- Produit : la route `/livraison-retours` liée depuis le Footer et référencée par la FAQ (Tâche 24).
 
-- [ ] **Step 1: Add the shippingReturns message namespace**
+- [ ] **Étape 1 : Ajouter le namespace de messages shippingReturns**
 
-Add to `messages/fr.json`:
+Ajouter dans `messages/fr.json`:
 
 ```json
   "shippingReturns": {
@@ -5233,7 +5233,7 @@ Add to `messages/fr.json`:
   }
 ```
 
-Add to `messages/en.json`:
+Ajouter dans `messages/en.json`:
 
 ```json
   "shippingReturns": {
@@ -5247,9 +5247,9 @@ Add to `messages/en.json`:
   }
 ```
 
-- [ ] **Step 2: Implement the Shipping & Returns page**
+- [ ] **Étape 2 : Implémenter la page Livraison & Retours**
 
-Create `src/app/[locale]/livraison-retours/page.tsx`:
+Créer `src/app/[locale]/livraison-retours/page.tsx`:
 
 ```tsx
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -5285,14 +5285,14 @@ export default async function ShippingReturnsPage({ params }: { params: Promise<
 }
 ```
 
-- [ ] **Step 3: Verify manually**
+- [ ] **Étape 3 : Vérifier manuellement**
 
-Run: `npm run dev`, visit `http://localhost:3000/fr/livraison-retours` and `/en/livraison-retours` — confirm the three sections (Shipping, Returns, Exchanges) render translated correctly, and that the Footer link now resolves.
+Exécuter : `npm run dev`, visiter `http://localhost:3000/fr/livraison-retours` et `/en/livraison-retours` — confirmer que les trois sections (Livraison, Retours, Échanges) s'affichent correctement traduites, et que le lien du Footer se résout maintenant.
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 4: Commit**
+- [ ] **Étape 4 : Commit**
 
 ```bash
 git add src/app/[locale]/livraison-retours messages/fr.json messages/en.json
@@ -5301,22 +5301,22 @@ git commit -m "feat: add Shipping & Returns page"
 
 ---
 
-### Task 26: Size guide page + modal
+### Tâche 26 : Page guide des tailles + modale
 
-**Files:**
-- Create: `src/components/product/SizeGuideTable.tsx`
-- Create: `src/components/product/SizeGuideModal.tsx`
-- Create: `src/app/[locale]/guide-tailles/page.tsx`
-- Modify: `src/components/product/ProductDetailView.tsx` (add a size-guide trigger next to the size selector)
-- Modify: `messages/fr.json`, `messages/en.json` (add `sizeGuide` namespace)
+**Fichiers :**
+- Créer : `src/components/product/SizeGuideTable.tsx`
+- Créer : `src/components/product/SizeGuideModal.tsx`
+- Créer : `src/app/[locale]/guide-tailles/page.tsx`
+- Modifier : `src/components/product/ProductDetailView.tsx` (add a size-guide trigger next to the size selector)
+- Modifier : `messages/fr.json`, `messages/en.json` (add `sizeGuide` namespace)
 
-**Interfaces:**
-- Consumes: `Container`/`Heading` (Task 8).
-- Produces: `<SizeGuideTable />` (the measurements, presentational) and `<SizeGuideModal />` (a self-contained trigger button + modal wrapping the table) — the dedicated page renders the table directly; the PDP (Task 15) renders the modal next to its size selector, fulfilling the spec's "dedicated page + reusable modal" requirement for this content.
+**Interfaces :**
+- Consomme : `Container`/`Heading` (Tâche 8).
+- Produit : `<SizeGuideTable />` (the measurements, presentational) and `<SizeGuideModal />` (un bouton déclencheur autonome + une modale enveloppant le tableau) — la page dédiée affiche le tableau directement ; la PDP (Tâche 15) affiche la modale à côté de son sélecteur de taille, remplissant l'exigence « page dédiée + modale réutilisable » de la spec pour ce contenu.
 
-- [ ] **Step 1: Add the size guide message namespace**
+- [ ] **Étape 1 : Ajouter le namespace de messages sizeGuide**
 
-Add to `messages/fr.json`:
+Ajouter dans `messages/fr.json`:
 
 ```json
   "sizeGuide": {
@@ -5333,7 +5333,7 @@ Add to `messages/fr.json`:
   }
 ```
 
-Add to `messages/en.json`:
+Ajouter dans `messages/en.json`:
 
 ```json
   "sizeGuide": {
@@ -5350,9 +5350,9 @@ Add to `messages/en.json`:
   }
 ```
 
-- [ ] **Step 2: Implement the measurements table**
+- [ ] **Étape 2 : Implémenter le tableau des mesures**
 
-Create `src/components/product/SizeGuideTable.tsx`:
+Créer `src/components/product/SizeGuideTable.tsx`:
 
 ```tsx
 'use client';
@@ -5427,9 +5427,9 @@ export function SizeGuideTable() {
 }
 ```
 
-- [ ] **Step 3: Implement the modal wrapper**
+- [ ] **Étape 3 : Implémenter l'enveloppe de la modale**
 
-Create `src/components/product/SizeGuideModal.tsx`:
+Créer `src/components/product/SizeGuideModal.tsx`:
 
 ```tsx
 'use client';
@@ -5483,9 +5483,9 @@ export function SizeGuideModal() {
 }
 ```
 
-- [ ] **Step 4: Implement the dedicated page**
+- [ ] **Étape 4 : Implémenter la page dédiée**
 
-Create `src/app/[locale]/guide-tailles/page.tsx`:
+Créer `src/app/[locale]/guide-tailles/page.tsx`:
 
 ```tsx
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -5509,9 +5509,9 @@ export default async function SizeGuidePage({ params }: { params: Promise<{ loca
 }
 ```
 
-- [ ] **Step 5: Wire the modal into the PDP's size selector**
+- [ ] **Étape 5 : Brancher la modale dans le sélecteur de taille de la PDP**
 
-Modify `src/components/product/ProductDetailView.tsx` — add the import `import { SizeGuideModal } from './SizeGuideModal';`. The file has two similarly-shaped blocks ending in `</select>\n          </div>` (size, then color, in that order) — this change targets only the **first** one, the size block. Replace this exact sequence (note the `id="size"` select and `{t('quantity')}` label that follow it, included here so the right occurrence is unambiguous):
+Modifier `src/components/product/ProductDetailView.tsx` — add the import `import { SizeGuideModal } from './SizeGuideModal';`. The file has two similarly-shaped blocks ending in `</select>\n          </div>` (size, then color, in that order) — this change targets only the **first** one, the size block. Replace this exact sequence (note the `id="size"` select and `{t('quantity')}` label that follow it, included here so the right occurrence is unambiguous):
 
 ```tsx
               {product.sizes.map((s) => (
@@ -5546,17 +5546,17 @@ with:
 
 (Only the size block's closing `</div>` gains the new `<div className="mt-2"><SizeGuideModal /></div>` — the color block right after it is unchanged.)
 
-- [ ] **Step 6: Verify manually**
+- [ ] **Étape 6 : Vérifier manuellement**
 
-Run: `npm run dev`:
-- Visit `http://localhost:3000/fr/guide-tailles` — both measurement tables render.
-- Visit a PDP (e.g. `/fr/produit/homme-veste-oversize`) — a "Guide des tailles" link appears under the size selector; clicking it opens the same table in a modal, closable via the × or the overlay.
-- Switch to `/en` and confirm the English labels in both the page and the modal.
+Exécuter : `npm run dev` :
+- Visiter `http://localhost:3000/fr/guide-tailles` — les deux tableaux de mesures s'affichent.
+- Visiter une PDP (ex. `/fr/produit/homme-veste-oversize`) — un lien « Guide des tailles » apparaît sous le sélecteur de taille ; cliquer dessus ouvre le même tableau dans une modale, refermable via le × ou l'overlay.
+- Passer sur `/en` et confirmer les libellés anglais à la fois sur la page et dans la modale.
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 7: Commit**
+- [ ] **Étape 7 : Commit**
 
 ```bash
 git add src/components/product/SizeGuideTable.tsx src/components/product/SizeGuideModal.tsx src/app/[locale]/guide-tailles src/components/product/ProductDetailView.tsx messages/fr.json messages/en.json
@@ -5565,24 +5565,24 @@ git commit -m "feat: add size guide page and reusable modal, wired into the PDP"
 
 ---
 
-### Task 27: Legal pages x3 (mentions légales, CGV, confidentialité)
+### Tâche 27 : Pages légales x3 (mentions légales, CGV, confidentialité)
 
-**Files:**
-- Create: `src/components/legal/LegalPageLayout.tsx`
-- Create: `src/app/[locale]/mentions-legales/page.tsx`
-- Create: `src/app/[locale]/cgv/page.tsx`
-- Create: `src/app/[locale]/confidentialite/page.tsx`
-- Modify: `messages/fr.json`, `messages/en.json` (add `legalNotice`, `terms`, `privacy` namespaces)
+**Fichiers :**
+- Créer : `src/components/legal/LegalPageLayout.tsx`
+- Créer : `src/app/[locale]/mentions-legales/page.tsx`
+- Créer : `src/app/[locale]/cgv/page.tsx`
+- Créer : `src/app/[locale]/confidentialite/page.tsx`
+- Modifier : `messages/fr.json`, `messages/en.json` (add `legalNotice`, `terms`, `privacy` namespaces)
 
-**Interfaces:**
-- Consumes: `Container`/`Heading` (Task 8).
-- Produces: `<LegalPageLayout title={string} paragraphs={string[]} />`, and the `/mentions-legales`, `/cgv`, `/confidentialite` routes linked from the Footer.
+**Interfaces :**
+- Consomme : `Container`/`Heading` (Tâche 8).
+- Produit : `<LegalPageLayout title={string} paragraphs={string[]} />`, et les routes `/mentions-legales`, `/cgv`, `/confidentialite` liées depuis le Footer.
 
-**Important:** the legal copy below is realistic **template** text for a fictitious brand, written for a working demo — it is not vetted legal advice. It must be reviewed and adapted by a qualified professional before any real-world launch, per the Global Constraints.
+**Important :** le texte légal ci-dessous est un texte de **modèle** réaliste pour une marque fictive, écrit pour une démo fonctionnelle — ce n'est pas un conseil juridique vérifié. Il doit être relu et adapté par un professionnel qualifié avant tout lancement réel, conformément aux Contraintes globales.
 
-- [ ] **Step 1: Add the three legal message namespaces**
+- [ ] **Étape 1 : Ajouter les trois namespaces de messages légaux**
 
-Add to `messages/fr.json`:
+Ajouter dans `messages/fr.json`:
 
 ```json
   "legalNotice": {
@@ -5614,7 +5614,7 @@ Add to `messages/fr.json`:
   }
 ```
 
-Add to `messages/en.json`:
+Ajouter dans `messages/en.json`:
 
 ```json
   "legalNotice": {
@@ -5646,9 +5646,9 @@ Add to `messages/en.json`:
   }
 ```
 
-- [ ] **Step 2: Implement the shared legal layout**
+- [ ] **Étape 2 : Implémenter le layout légal partagé**
 
-Create `src/components/legal/LegalPageLayout.tsx`:
+Créer `src/components/legal/LegalPageLayout.tsx`:
 
 ```tsx
 import { Container } from '@/components/ui/Container';
@@ -5668,9 +5668,9 @@ export function LegalPageLayout({ title, paragraphs }: { title: string; paragrap
 }
 ```
 
-- [ ] **Step 3: Implement the three pages**
+- [ ] **Étape 3 : Implémenter les trois pages**
 
-Create `src/app/[locale]/mentions-legales/page.tsx`:
+Créer `src/app/[locale]/mentions-legales/page.tsx`:
 
 ```tsx
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -5685,7 +5685,7 @@ export default async function LegalNoticePage({ params }: { params: Promise<{ lo
 }
 ```
 
-Create `src/app/[locale]/cgv/page.tsx`:
+Créer `src/app/[locale]/cgv/page.tsx`:
 
 ```tsx
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -5700,7 +5700,7 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
 }
 ```
 
-Create `src/app/[locale]/confidentialite/page.tsx`:
+Créer `src/app/[locale]/confidentialite/page.tsx`:
 
 ```tsx
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -5715,14 +5715,14 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
 }
 ```
 
-- [ ] **Step 4: Verify manually**
+- [ ] **Étape 4 : Vérifier manuellement**
 
-Run: `npm run dev`, visit `/fr/mentions-legales`, `/fr/cgv`, `/fr/confidentialite` and their `/en/...` equivalents — confirm each renders its title and four paragraphs, correctly translated, and that all three Footer links now resolve (every Footer link built since Task 11 now points at a real page).
+Exécuter : `npm run dev`, visiter `/fr/mentions-legales`, `/fr/cgv`, `/fr/confidentialite` et leurs équivalents `/en/...` — confirmer que chacune affiche son titre et ses quatre paragraphes, correctement traduits, et que les trois liens du Footer se résolvent maintenant (chaque lien du Footer construit depuis la Tâche 11 pointe désormais vers une vraie page).
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 5: Commit**
+- [ ] **Étape 5 : Commit**
 
 ```bash
 git add src/components/legal/LegalPageLayout.tsx src/app/[locale]/mentions-legales src/app/[locale]/cgv src/app/[locale]/confidentialite messages/fr.json messages/en.json
@@ -5731,20 +5731,20 @@ git commit -m "feat: add legal notice, terms of sale, and privacy policy templat
 
 ---
 
-### Task 28: 404 page
+### Tâche 28 : Page 404
 
-**Files:**
-- Create: `src/app/not-found.tsx` (root-level fallback, outside any locale)
-- Create: `src/app/[locale]/not-found.tsx` (styled, locale-aware — used by every `notFound()` call from Tasks 14, 15, 21)
-- Modify: `messages/fr.json`, `messages/en.json` (add `notFound` namespace)
+**Fichiers :**
+- Créer : `src/app/not-found.tsx` (root-level fallback, outside any locale)
+- Créer : `src/app/[locale]/not-found.tsx` (stylisée, consciente de la langue — utilisée par chaque appel à `notFound()` depuis les Tâches 14, 15, 21)
+- Modifier : `messages/fr.json`, `messages/en.json` (add `notFound` namespace)
 
-**Interfaces:**
-- Consumes: `Container`/`Heading`/`Button` (Task 8), `Link` (Task 3).
-- Produces: the boundary rendered for any unmatched route or explicit `notFound()` call.
+**Interfaces :**
+- Consomme : `Container`/`Heading`/`Button` (Tâche 8), `Link` (Tâche 3).
+- Produit : la limite affichée pour toute route non appariée ou tout appel explicite à `notFound()`.
 
-- [ ] **Step 1: Add the notFound message namespace**
+- [ ] **Étape 1 : Ajouter le namespace de messages notFound**
 
-Add to `messages/fr.json`:
+Ajouter dans `messages/fr.json`:
 
 ```json
   "notFound": {
@@ -5754,7 +5754,7 @@ Add to `messages/fr.json`:
   }
 ```
 
-Add to `messages/en.json`:
+Ajouter dans `messages/en.json`:
 
 ```json
   "notFound": {
@@ -5764,9 +5764,9 @@ Add to `messages/en.json`:
   }
 ```
 
-- [ ] **Step 2: Implement the locale-aware 404**
+- [ ] **Étape 2 : Implémenter le 404 conscient de la langue**
 
-Create `src/app/[locale]/not-found.tsx`:
+Créer `src/app/[locale]/not-found.tsx`:
 
 ```tsx
 import { getTranslations } from 'next-intl/server';
@@ -5790,11 +5790,11 @@ export default async function LocaleNotFound() {
 }
 ```
 
-This renders inside `src/app/[locale]/layout.tsx` (Header/Footer included) for every `notFound()` call already used by the category page (Task 14), product page (Task 15), and the locale guard itself (Task 3).
+Ceci se rend à l'intérieur de `src/app/[locale]/layout.tsx` (Header/Footer inclus) pour chaque appel à `notFound()` déjà utilisé par la page catégorie (Tâche 14), la fiche produit (Tâche 15), et le garde-fou de langue lui-même (Tâche 3).
 
-- [ ] **Step 3: Implement the root-level fallback**
+- [ ] **Étape 3 : Implémenter le fallback au niveau racine**
 
-Create `src/app/not-found.tsx` (a plain, self-contained page — this only renders for requests that fail before a locale is even resolved, so it cannot rely on `next-intl` or the design tokens the way every other page does):
+Créer `src/app/not-found.tsx` (a plain, self-contained page — this only renders for requests that fail before a locale is even resolved, so it cannot rely on `next-intl` or the design tokens the way every other page does):
 
 ```tsx
 export default function GlobalNotFound() {
@@ -5810,17 +5810,17 @@ export default function GlobalNotFound() {
 }
 ```
 
-- [ ] **Step 4: Verify manually**
+- [ ] **Étape 4 : Vérifier manuellement**
 
-Run: `npm run dev`:
-- Visit `http://localhost:3000/fr/this-does-not-exist` — expect the styled 404 (Header/Footer present, "Page introuvable", a working "Retour à l'accueil" button).
-- Visit `http://localhost:3000/en/this-does-not-exist` — same, in English.
-- Visit `http://localhost:3000/de/anything` (an unconfigured locale) — expect the same locale-aware 404 (the `[locale]/layout.tsx` guard from Task 3 calls `notFound()` for unknown locales).
+Exécuter : `npm run dev` :
+- Visiter `http://localhost:3000/fr/this-does-not-exist` — on s'attend au 404 stylisé (Header/Footer présents, « Page introuvable », un bouton « Retour à l'accueil » fonctionnel).
+- Visiter `http://localhost:3000/en/this-does-not-exist` — pareil, en anglais.
+- Visiter `http://localhost:3000/de/anything` (une langue non configurée) — on s'attend au même 404 conscient de la langue (le garde-fou de `[locale]/layout.tsx` de la Tâche 3 appelle `notFound()` pour les langues inconnues).
 
-Run: `npm run build`
-Expected: succeeds.
+Exécuter : `npm run build`
+Résultat attendu : succès.
 
-- [ ] **Step 5: Commit**
+- [ ] **Étape 5 : Commit**
 
 ```bash
 git add src/app/not-found.tsx src/app/[locale]/not-found.tsx messages/fr.json messages/en.json
@@ -5829,27 +5829,27 @@ git commit -m "feat: add localized 404 page"
 
 ---
 
-### Task 29: SEO foundations (metadata, hreflang, JSON-LD, sitemap, robots)
+### Tâche 29 : Fondations SEO (metadata, hreflang, JSON-LD, sitemap, robots)
 
-**Files:**
-- Create: `src/lib/seo.ts`
-- Test: `src/lib/seo.test.ts`
-- Create: `src/app/sitemap.ts`
-- Create: `src/app/robots.ts`
-- Modify: `src/app/[locale]/layout.tsx` (inject site-wide Organization JSON-LD)
-- Modify: `src/app/[locale]/page.tsx` (add `generateMetadata`)
-- Modify: `src/app/[locale]/[category]/page.tsx` (add `generateMetadata` + BreadcrumbList JSON-LD)
-- Modify: `src/app/[locale]/produit/[slug]/page.tsx` (add `generateMetadata` + Product and BreadcrumbList JSON-LD)
+**Fichiers :**
+- Créer : `src/lib/seo.ts`
+- Test : `src/lib/seo.test.ts`
+- Créer : `src/app/sitemap.ts`
+- Créer : `src/app/robots.ts`
+- Modifier : `src/app/[locale]/layout.tsx` (inject site-wide Organization JSON-LD)
+- Modifier : `src/app/[locale]/page.tsx` (add `generateMetadata`)
+- Modifier : `src/app/[locale]/[category]/page.tsx` (add `generateMetadata` + BreadcrumbList JSON-LD)
+- Modifier : `src/app/[locale]/produit/[slug]/page.tsx` (add `generateMetadata` + Product and BreadcrumbList JSON-LD)
 
-**Interfaces:**
-- Consumes: `routing` (Task 3), `CATEGORIES`/`PRODUCTS` (Task 4).
-- Produces: `buildMetadata`, `buildAlternateLanguages`, `organizationJsonLd`, `breadcrumbJsonLd`, `productJsonLd` from `src/lib/seo.ts`. Institutional pages (Tasks 22–27) keep the layout's default `<title>`/description from Task 3 — only the highest-traffic, most SEO-relevant pages (Home, category, product) get dedicated metadata and structured data in this pass; extending it to every institutional page is a small, separately-scoped follow-up if needed later.
+**Interfaces :**
+- Consomme : `routing` (Tâche 3), `CATEGORIES`/`PRODUCTS` (Tâche 4).
+- Produit : `buildMetadata`, `buildAlternateLanguages`, `organizationJsonLd`, `breadcrumbJsonLd`, `productJsonLd` depuis `src/lib/seo.ts`. Les pages institutionnelles (Tâches 22–27) conservent le `<title>`/description par défaut du layout de la Tâche 3 — seules les pages à plus fort trafic et les plus pertinentes pour le SEO (accueil, catégorie, produit) reçoivent des metadata et des données structurées dédiées dans cette passe ; l'étendre à chaque page institutionnelle est un petit chantier séparé à prévoir plus tard si besoin.
 
 **Note:** `SITE_URL` below is a placeholder domain (`https://www.reign-example.com`) since Reign has no real production domain yet — update this one constant once a real domain is chosen; every other function in this file derives from it.
 
-- [ ] **Step 1: Write the failing tests for the SEO helpers**
+- [ ] **Étape 1 : Écrire les tests en échec pour les helpers SEO**
 
-Create `src/lib/seo.test.ts`:
+Créer `src/lib/seo.test.ts`:
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -5890,14 +5890,14 @@ describe('productJsonLd', () => {
 });
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [ ] **Étape 2 : Exécuter les tests pour vérifier qu'ils échouent**
 
-Run: `npm run test -- src/lib/seo.test.ts`
-Expected: FAIL — `seo.ts` does not exist yet.
+Exécuter : `npm run test -- src/lib/seo.test.ts`
+Résultat attendu : ÉCHEC — `seo.ts` n'existe pas encore.
 
-- [ ] **Step 3: Implement the SEO helpers**
+- [ ] **Étape 3 : Implémenter les helpers SEO**
 
-Create `src/lib/seo.ts`:
+Créer `src/lib/seo.ts`:
 
 ```ts
 import type { Metadata } from 'next';
@@ -5988,14 +5988,14 @@ export function productJsonLd({
 }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [ ] **Étape 4 : Exécuter les tests pour vérifier qu'ils réussissent**
 
-Run: `npm run test -- src/lib/seo.test.ts`
-Expected: PASS.
+Exécuter : `npm run test -- src/lib/seo.test.ts`
+Résultat attendu : succès.
 
-- [ ] **Step 5: Add the sitemap and robots routes**
+- [ ] **Étape 5 : Ajouter les routes sitemap et robots**
 
-Create `src/app/sitemap.ts`:
+Créer `src/app/sitemap.ts`:
 
 ```ts
 import type { MetadataRoute } from 'next';
@@ -6036,7 +6036,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 }
 ```
 
-Create `src/app/robots.ts`:
+Créer `src/app/robots.ts`:
 
 ```ts
 import type { MetadataRoute } from 'next';
@@ -6053,9 +6053,9 @@ export default function robots(): MetadataRoute.Robots {
 }
 ```
 
-- [ ] **Step 6: Inject site-wide Organization JSON-LD**
+- [ ] **Étape 6 : Injecter le JSON-LD Organization à l'échelle du site**
 
-Modify `src/app/[locale]/layout.tsx` — import `organizationJsonLd` from `@/lib/seo`, and add the script tag as the first child inside `<body>`, before `<NextIntlClientProvider>`:
+Modifier `src/app/[locale]/layout.tsx` — import `organizationJsonLd` depuis `@/lib/seo`, and add the script tag as the first child inside `<body>`, before `<NextIntlClientProvider>`:
 
 ```tsx
       <body className="bg-paper text-ink font-sans antialiased">
@@ -6066,9 +6066,9 @@ Modify `src/app/[locale]/layout.tsx` — import `organizationJsonLd` from `@/lib
         <NextIntlClientProvider messages={messages}>
 ```
 
-- [ ] **Step 7: Add metadata to the Home page**
+- [ ] **Étape 7 : Ajouter les metadata à la page d'accueil**
 
-Modify `src/app/[locale]/page.tsx` — add this export above `HomePage` (alongside the existing `getTranslations`/`setRequestLocale` import, which already covers what's needed):
+Modifier `src/app/[locale]/page.tsx` — add this export above `HomePage` (alongside the existing `getTranslations`/`setRequestLocale` import, which already covers what's needed):
 
 ```tsx
 import type { Metadata } from 'next';
@@ -6090,9 +6090,9 @@ export async function generateMetadata({
 }
 ```
 
-- [ ] **Step 8: Add metadata and breadcrumbs to the category page**
+- [ ] **Étape 8 : Ajouter les metadata et le fil d'Ariane à la page catégorie**
 
-Modify `src/app/[locale]/[category]/page.tsx` — add imports `import type { Metadata } from 'next';` and `import { buildMetadata, breadcrumbJsonLd, SITE_URL } from '@/lib/seo';`, then add this export above `CategoryPage`:
+Modifier `src/app/[locale]/[category]/page.tsx` — add imports `import type { Metadata } from 'next';` and `import { buildMetadata, breadcrumbJsonLd, SITE_URL } from '@/lib/seo';`, then add this export above `CategoryPage`:
 
 ```tsx
 export async function generateMetadata({
@@ -6129,9 +6129,9 @@ Inside `CategoryPage`'s returned JSX, add the breadcrumb script as the first chi
       <Heading level={1}>{t(`title.${category}`)}</Heading>
 ```
 
-- [ ] **Step 9: Add metadata and structured data to the product page**
+- [ ] **Étape 9 : Ajouter les metadata et les données structurées à la fiche produit**
 
-Modify `src/app/[locale]/produit/[slug]/page.tsx` — add imports `import type { Metadata } from 'next';` and `import { buildMetadata, breadcrumbJsonLd, productJsonLd, SITE_URL } from '@/lib/seo';`, then add this export above `ProductPage`:
+Modifier `src/app/[locale]/produit/[slug]/page.tsx` — add imports `import type { Metadata } from 'next';` and `import { buildMetadata, breadcrumbJsonLd, productJsonLd, SITE_URL } from '@/lib/seo';`, then add this export above `ProductPage`:
 
 ```tsx
 export async function generateMetadata({
@@ -6191,20 +6191,20 @@ Modify the body of `ProductPage` to inject both JSON-LD blocks before `<ProductD
   );
 ```
 
-(The `imageUrl` falls back to the brand logo since there are no real product photos in phase 1 — swap it for the real product image URL once photography is added in phase 2.)
+(`imageUrl` retombe sur le logo de la marque puisqu'il n'y a pas de vraies photos produits en phase 1 — le remplacer par la vraie URL de l'image produit une fois la photographie ajoutée en phase 2.)
 
-- [ ] **Step 10: Verify manually**
+- [ ] **Étape 10 : Vérifier manuellement**
 
-Run: `npm run dev`:
-- Visit `http://localhost:3000/fr` and view page source — confirm the Organization JSON-LD script is present and valid JSON.
-- Visit a category and a product page, view source, and confirm their `<title>`, canonical/hreflang `<link>` tags, and JSON-LD scripts are present and well-formed (paste into a JSON validator if unsure).
-- Visit `http://localhost:3000/sitemap.xml` — expect entries for every static path, category, and product, in both locales.
-- Visit `http://localhost:3000/robots.txt` — expect the allow-all rule and a sitemap reference.
+Exécuter : `npm run dev` :
+- Visiter `http://localhost:3000/fr` et afficher le code source de la page — confirmer que le script JSON-LD Organization est présent et est un JSON valide.
+- Visiter une page catégorie et une fiche produit, afficher le code source, et confirmer que leur `<title>`, leurs balises `<link>` canonical/hreflang, et les scripts JSON-LD sont présents et bien formés (les coller dans un validateur JSON en cas de doute).
+- Visiter `http://localhost:3000/sitemap.xml` — on s'attend à des entrées pour chaque chemin statique, catégorie et produit, dans les deux langues.
+- Visiter `http://localhost:3000/robots.txt` — on s'attend à la règle allow-all et à une référence au sitemap.
 
-Run: `npm run test && npm run build`
-Expected: both succeed.
+Exécuter : `npm run test && npm run build`
+Résultat attendu : les deux réussissent.
 
-- [ ] **Step 11: Commit**
+- [ ] **Étape 11 : Commit**
 
 ```bash
 git add src/lib/seo.ts src/lib/seo.test.ts src/app/sitemap.ts src/app/robots.ts src/app/[locale]/layout.tsx src/app/[locale]/page.tsx src/app/[locale]/[category]/page.tsx src/app/[locale]/produit/[slug]/page.tsx
@@ -6213,15 +6213,15 @@ git commit -m "feat: add metadata, hreflang, JSON-LD, sitemap, and robots.txt"
 
 ---
 
-### Task 30: Final QA pass
+### Tâche 30 : Passe de QA finale
 
-**Files:** none created — this task verifies the whole site built across Tasks 1–29 and fixes anything it finds. If fixes are needed, they land in whichever existing file needs the change; if nothing is found, no commit is made.
+**Fichiers :** none created — this task verifies the whole site built across Tâches 1–29 and fixes anything it finds. If fixes are needed, they land in whichever existing file needs the change; if nothing is found, no commit is made.
 
-**Interfaces:**
-- Consumes: the entire site built so far.
-- Produces: confidence that every route, every locale, both currencies, and the full cart/checkout flow work end to end — the exit criterion for this plan.
+**Interfaces :**
+- Consomme : l'intégralité du site construit jusqu'ici.
+- Produit : la confiance que chaque route, chaque langue, les deux devises, et le parcours complet panier/tunnel de commande fonctionnent de bout en bout — le critère de sortie de ce plan.
 
-- [ ] **Step 1: Run the automated checks**
+- [ ] **Étape 1 : Exécuter les vérifications automatisées**
 
 Run, in order, and confirm each succeeds before moving to the next:
 
@@ -6233,23 +6233,23 @@ npm run build
 
 If any fail, fix the underlying issue in the relevant file (not by weakening a test or disabling a lint rule) and re-run until all three pass.
 
-- [ ] **Step 2: Audit every link for 404s**
+- [ ] **Étape 2 : Auditer chaque lien à la recherche de 404**
 
-Run: `npm run dev`. Starting from `http://localhost:3000/fr`, click through: every Header nav category, the search field, the favorites and cart icons, every Footer link (À propos, Contact, FAQ, Livraison & Retours, Guide des tailles, Mentions légales, CGV, Confidentialité), the full guest checkout flow (Panier → Livraison → Paiement → Confirmation), and the "Guide des tailles" link on a PDP. None should 404 — every route referenced anywhere in the site now exists (Tasks 13–28 built all of them).
+Exécuter : `npm run dev`. Starting depuis `http://localhost:3000/fr`, click through: every Header nav category, the search field, the favorites and cart icons, every Footer link (À propos, Contact, FAQ, Livraison & Retours, Guide des tailles, Mentions légales, CGV, Confidentialité), the full guest checkout flow (Panier → Livraison → Paiement → Confirmation), and the "Guide des tailles" link on a PDP. None should 404 — every route referenced anywhere in the site now exists (Tâches 13–28 built all of them).
 
-- [ ] **Step 3: Verify bilingual parity**
+- [ ] **Étape 3 : Vérifier la parité bilingue**
 
 For at least Home, one category, one PDP, the Cart, and the Shipping step, switch between `/fr` and `/en` with the Header's language switcher and confirm every visible string is translated (no French leaking into the English version or vice versa) and the current path is preserved across the switch. Open the browser devtools console while doing this — `next-intl` logs a warning for any missing message key, so confirm the console stays clean.
 
-- [ ] **Step 4: Verify currency behavior**
+- [ ] **Étape 4 : Vérifier le comportement de la devise**
 
-On a category page and a PDP, switch between EUR and GBP with the Header's currency switcher and confirm every displayed price recalculates using the fixed rate from `src/lib/currency.ts` (1 EUR = 0.86 GBP) and formats with the correct currency symbol for the selected currency regardless of the active language.
+On a category page and a PDP, switch between EUR and GBP with the Header's currency switcher and confirm every displayed price recalculates using the fixed rate depuis `src/lib/currency.ts` (1 EUR = 0.86 GBP) and formats with the correct currency symbol for the selected currency regardless of the active language.
 
-- [ ] **Step 5: Responsive spot-check**
+- [ ] **Étape 5 : Contrôle ponctuel du responsive**
 
 Using the browser devtools device toolbar, check Home, a category listing, a PDP, the Cart, and the Shipping form at three widths: 375px (mobile), 768px (tablet), 1280px (desktop). Confirm: no horizontal scrollbar appears anywhere, the Header collapses to the hamburger menu below `md` and expands correctly, the category filter `<select>` elements and checkout forms remain fully usable (labels visible, inputs full-width) on mobile.
 
-- [ ] **Step 6: Commit (only if Step 1 required fixes)**
+- [ ] **Étape 6 : Commit (seulement si l'Étape 1 a nécessité des corrections)**
 
 ```bash
 git add -A
