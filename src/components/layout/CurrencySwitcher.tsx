@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useCurrency } from '@/context/CurrencyContext';
 import type { CurrencyCode } from '@/lib/currency';
 
-const CURRENCIES: { code: CurrencyCode; symbol: string; name: string }[] = [
-  { code: 'EUR', symbol: '€', name: 'Euro (EUR)' },
-  { code: 'GBP', symbol: '£', name: 'Livre (GBP)' }
+const CURRENCIES: { code: CurrencyCode; symbol: string; messageKey: 'eur' | 'gbp' }[] = [
+  { code: 'EUR', symbol: '€', messageKey: 'eur' },
+  { code: 'GBP', symbol: '£', messageKey: 'gbp' }
 ];
 
 function CurrencySymbol({ symbol, className = '' }: { symbol: string; className?: string }) {
@@ -36,6 +37,7 @@ function CheckIcon({ className = '' }: { className?: string }) {
 }
 
 export function CurrencySwitcher() {
+  const t = useTranslations('currency');
   const { currency, setCurrency } = useCurrency();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -68,7 +70,7 @@ export function CurrencySwitcher() {
       </button>
       {isOpen && (
         <div className="absolute right-0 top-[calc(100%+8px)] z-20 flex min-w-[150px] flex-col gap-0.5 rounded-2xl border border-mist-100 bg-paper p-1.5 shadow-lg">
-          {CURRENCIES.map(({ code, symbol, name }) => {
+          {CURRENCIES.map(({ code, symbol, messageKey }) => {
             const isActive = currency === code;
             return (
               <button
@@ -85,7 +87,7 @@ export function CurrencySwitcher() {
               >
                 <span className="flex items-center gap-2">
                   <CurrencySymbol symbol={symbol} className="h-3 w-3" />
-                  <span>{name}</span>
+                  <span>{t(messageKey)}</span>
                 </span>
                 <CheckIcon className={`h-[13px] w-[13px] flex-shrink-0 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
               </button>

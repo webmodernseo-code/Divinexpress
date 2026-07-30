@@ -7,12 +7,19 @@
     "search": "Rechercher",
     "cart": "Panier",
     "favorites": "Favoris",
-    "viewAll": "Tout voir"
+    "viewAll": "Tout voir",
+    "menu": "Menu",
+    "closeMenu": "Fermer le menu",
+    "closeSearch": "Fermer la recherche"
   },
   "common": {
     "brand": "Reign"
   },
   "header": {
     "freeShippingBanner": "Livraison offerte dès 150€ d'achat"
+  },
+  "currency": {
+    "eur": "Euro (EUR)",
+    "gbp": "Livre (GBP)"
   }
 }

@@ -286,7 +286,7 @@ export function Header() {
             <button
               type="button"
               onClick={openMobileMenu}
-              aria-label="Menu"
+              aria-label={t('menu')}
               aria-expanded={isMenuOpen}
               className="inline-flex h-[38px] w-[38px] items-center justify-center rounded-2xl border-[1.5px] border-ink bg-paper text-ink"
             >
@@ -321,7 +321,7 @@ export function Header() {
               <button
                 type="button"
                 onClick={() => setIsSearchOpen(false)}
-                aria-label={t('search')}
+                aria-label={t('closeSearch')}
                 className="inline-flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-2xl bg-ink text-paper"
               >
                 <CloseIcon className="h-[15px] w-[15px]" />
@@ -334,13 +334,13 @@ export function Header() {
       {/* Mobile drawer */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-[60] md:hidden">
-          <button type="button" aria-label="Fermer le menu" className="absolute inset-0 bg-ink/40" onClick={closeMobileMenu} />
+          <button type="button" aria-label={t('closeMenu')} className="absolute inset-0 bg-ink/40" onClick={closeMobileMenu} />
           <div className="absolute inset-y-0 right-0 flex w-full max-w-sm flex-col overflow-y-auto bg-paper shadow-2xl">
             <div className="relative flex items-center border-b border-mist-100 px-5 py-4">
               <button
                 type="button"
                 onClick={closeMobileMenu}
-                aria-label="Fermer le menu"
+                aria-label={t('closeMenu')}
                 className="inline-flex h-[38px] w-[38px] items-center justify-center rounded-2xl border-[1.5px] border-ink bg-paper text-ink"
               >
                 <CloseIcon className="h-4 w-4" />

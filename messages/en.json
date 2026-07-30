@@ -7,12 +7,19 @@
     "search": "Search",
     "cart": "Cart",
     "favorites": "Favorites",
-    "viewAll": "View all"
+    "viewAll": "View all",
+    "menu": "Menu",
+    "closeMenu": "Close menu",
+    "closeSearch": "Close search"
   },
   "common": {
     "brand": "Reign"
   },
   "header": {
     "freeShippingBanner": "Free shipping over €150"
+  },
+  "currency": {
+    "eur": "Euro (EUR)",
+    "gbp": "Pound (GBP)"
   }
 }
