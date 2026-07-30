@@ -6,6 +6,7 @@ import { routing } from '@/i18n/routing';
 import { fraunces, inter } from '@/lib/fonts';
 import { CurrencyProvider } from '@/context/CurrencyContext';
 import { CartProvider } from '@/context/CartContext';
+import { FavoritesProvider } from '@/context/FavoritesContext';
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -37,7 +38,9 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <CurrencyProvider initialLocale={locale}>
             <CartProvider>
-              <main>{children}</main>
+              <FavoritesProvider>
+                <main>{children}</main>
+              </FavoritesProvider>
             </CartProvider>
           </CurrencyProvider>
         </NextIntlClientProvider>
