@@ -959,7 +959,7 @@ Résultat attendu : succès.
 Créer `src/context/CurrencyContext.test.tsx`:
 
 ```tsx
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { CurrencyProvider, useCurrency } from './CurrencyContext';
 
@@ -990,6 +990,17 @@ describe('CurrencyContext', () => {
 
   it('throws when used outside a provider', () => {
     expect(() => renderHook(() => useCurrency())).toThrow();
+  });
+
+  it('does not clobber existing localStorage data during the initial hydration effects', () => {
+    window.localStorage.setItem('reign-currency', 'GBP');
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+    renderHook(() => useCurrency(), { wrapper });
+    const clobberedWithDefault = setItemSpy.mock.calls.some(
+      ([key, value]) => key === 'reign-currency' && value === 'EUR'
+    );
+    expect(clobberedWithDefault).toBe(false);
+    setItemSpy.mockRestore();
   });
 });
 ```
@@ -1026,7 +1037,7 @@ export function CurrencyProvider({
   initialLocale: string;
 }) {
   const [currency, setCurrency] = useState<CurrencyCode>(() => defaultCurrencyForLocale(initialLocale));
-  const hasHydrated = useRef(false);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     try {
@@ -1034,13 +1045,16 @@ export function CurrencyProvider({
       if (stored === 'EUR' || stored === 'GBP') {
         setCurrency(stored);
       }
-    } finally {
-      hasHydrated.current = true;
+    } catch {
+      // ignore malformed storage
     }
   }, []);
 
   useEffect(() => {
-    if (!hasHydrated.current) return;
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     window.localStorage.setItem(STORAGE_KEY, currency);
   }, [currency]);
 
@@ -1251,7 +1265,7 @@ Résultat attendu : succès.
 Créer `src/context/CartContext.test.tsx`:
 
 ```tsx
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { CartProvider, useCart } from './CartContext';
 import { PRODUCTS } from '@/lib/products';
@@ -1291,6 +1305,19 @@ describe('CartContext', () => {
       result.current.addItem({ productId: product.id, size: 'M', color: 'Noir', quantity: 2 });
     });
     expect(result.current.subtotalEur).toBe(product.priceEur * 2);
+  });
+
+  it('does not clobber existing localStorage data during the initial hydration effects', () => {
+    const product = PRODUCTS[0];
+    const seeded = [{ productId: product.id, size: 'M', color: 'Noir', quantity: 1 }];
+    window.localStorage.setItem('reign-cart', JSON.stringify(seeded));
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+    renderHook(() => useCart(), { wrapper });
+    const clobberedWithEmpty = setItemSpy.mock.calls.some(
+      ([key, value]) => key === 'reign-cart' && value === '[]'
+    );
+    expect(clobberedWithEmpty).toBe(false);
+    setItemSpy.mockRestore();
   });
 });
 ```
@@ -1333,7 +1360,7 @@ const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
-  const hasHydrated = useRef(false);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     try {
@@ -1341,13 +1368,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (raw) setItems(JSON.parse(raw));
     } catch {
       // ignore malformed storage
-    } finally {
-      hasHydrated.current = true;
     }
   }, []);
 
   useEffect(() => {
-    if (!hasHydrated.current) return;
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items]);
 
@@ -1463,7 +1491,7 @@ Résultat attendu : succès.
 Créer `src/context/FavoritesContext.test.tsx`:
 
 ```tsx
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { FavoritesProvider, useFavorites } from './FavoritesContext';
 
@@ -1504,6 +1532,17 @@ describe('FavoritesContext', () => {
     });
     expect(result.current.isFavorite('p1')).toBe(false);
   });
+
+  it('does not clobber existing localStorage data during the initial hydration effects', () => {
+    window.localStorage.setItem('reign-favorites', JSON.stringify(['p1']));
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+    renderHook(() => useFavorites(), { wrapper });
+    const clobberedWithEmpty = setItemSpy.mock.calls.some(
+      ([key, value]) => key === 'reign-favorites' && value === '[]'
+    );
+    expect(clobberedWithEmpty).toBe(false);
+    setItemSpy.mockRestore();
+  });
 });
 ```
 
@@ -1534,7 +1573,7 @@ const FavoritesContext = createContext<FavoritesContextValue | null>(null);
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
-  const hasHydrated = useRef(false);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     try {
@@ -1542,13 +1581,14 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
       if (raw) setFavoriteIds(JSON.parse(raw));
     } catch {
       // ignore malformed storage
-    } finally {
-      hasHydrated.current = true;
     }
   }, []);
 
   useEffect(() => {
-    if (!hasHydrated.current) return;
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(favoriteIds));
   }, [favoriteIds]);
 
@@ -4173,7 +4213,7 @@ const CheckoutContext = createContext<CheckoutContextValue | null>(null);
 
 export function CheckoutProvider({ children }: { children: React.ReactNode }) {
   const [shipping, setShippingState] = useState<ShippingFormValues | null>(null);
-  const hasHydrated = useRef(false);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     try {
@@ -4181,13 +4221,14 @@ export function CheckoutProvider({ children }: { children: React.ReactNode }) {
       if (raw) setShippingState(JSON.parse(raw));
     } catch {
       // ignore malformed storage
-    } finally {
-      hasHydrated.current = true;
     }
   }, []);
 
   useEffect(() => {
-    if (!hasHydrated.current) return;
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     if (shipping) {
       window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(shipping));
     } else {
