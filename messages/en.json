@@ -1,0 +1,14 @@
+{
+  "nav": {
+    "homme": "Men",
+    "femme": "Women",
+    "enfant": "Kids",
+    "accessoires": "Accessories",
+    "search": "Search",
+    "cart": "Cart",
+    "favorites": "Favorites"
+  },
+  "common": {
+    "brand": "Reign"
+  }
+}
