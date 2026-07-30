@@ -1,0 +1,15 @@
+## Reference material, not part of the project source
+claude skills/
+
+## Node / Next.js (added ahead of scaffolding, harmless if unused yet)
+node_modules/
+.next/
+out/
+build/
+dist/
+
+## Env & OS
+.env
+.env.local
+.DS_Store
+Thumbs.db
