@@ -29,3 +29,17 @@ export function validateShippingForm(values: ShippingFormValues): ShippingFormEr
 
   return errors;
 }
+
+export interface PaymentFormValues {
+  method: 'stripe' | 'genius' | '';
+}
+
+export type PaymentFormErrors = Partial<Record<keyof PaymentFormValues, string>>;
+
+export function validatePaymentForm(values: PaymentFormValues): PaymentFormErrors {
+  const errors: PaymentFormErrors = {};
+  if (values.method !== 'stripe' && values.method !== 'genius') {
+    errors.method = 'required';
+  }
+  return errors;
+}

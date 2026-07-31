@@ -176,6 +176,21 @@
       "required": "Ce champ est requis.",
       "invalid": "Format invalide."
     },
-    "continueToPayment": "Continuer vers le paiement"
+    "continueToPayment": "Continuer vers le paiement",
+    "paymentTitle": "Paiement",
+    "mockNotice": "Aucun paiement réel n'est traité — ceci est une démonstration.",
+    "missingShipping": "Merci de renseigner d'abord vos informations de livraison.",
+    "backToShipping": "Retour à la livraison",
+    "confirmPayment": "Confirmer le paiement",
+    "paymentMethods": {
+      "stripe": {
+        "name": "Stripe",
+        "description": "Carte bancaire, Apple Pay, Google Pay"
+      },
+      "genius": {
+        "name": "Genius Pay",
+        "description": "Carte bancaire, Orange Money, Wave"
+      }
+    }
   }
 }

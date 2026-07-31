@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { validateShippingForm, type ShippingFormValues } from './checkoutValidation';
+import {
+  validateShippingForm,
+  validatePaymentForm,
+  type ShippingFormValues,
+  type PaymentFormValues
+} from './checkoutValidation';
 
 const validValues: ShippingFormValues = {
   fullName: 'Alex Martin',
@@ -32,5 +37,20 @@ describe('validateShippingForm', () => {
     expect(validateShippingForm({ ...validValues, city: '' }).city).toBe('required');
     expect(validateShippingForm({ ...validValues, postalCode: '' }).postalCode).toBe('required');
     expect(validateShippingForm({ ...validValues, country: '' }).country).toBe('required');
+  });
+});
+
+describe('validatePaymentForm', () => {
+  it('returns no errors when method is stripe', () => {
+    expect(validatePaymentForm({ method: 'stripe' })).toEqual({});
+  });
+
+  it('returns no errors when method is genius', () => {
+    expect(validatePaymentForm({ method: 'genius' })).toEqual({});
+  });
+
+  it('flags a missing method', () => {
+    const values: PaymentFormValues = { method: '' };
+    expect(validatePaymentForm(values)).toEqual({ method: 'required' });
   });
 });
