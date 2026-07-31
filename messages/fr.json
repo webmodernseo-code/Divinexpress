@@ -191,6 +191,10 @@
         "name": "Genius Pay",
         "description": "Carte bancaire, Orange Money, Wave"
       }
-    }
+    },
+    "confirmationTitle": "Merci pour votre commande",
+    "thankYou": "Votre commande {orderNumber} est confirmée. Un email de confirmation vous sera envoyé.",
+    "noOrder": "Aucune commande à afficher.",
+    "backHome": "Retour à l'accueil"
   }
 }
