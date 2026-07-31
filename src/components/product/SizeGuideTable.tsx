@@ -97,7 +97,7 @@ export function SizeGuideTable({ sizes, oneSizeLabel }: { sizes?: string[]; oneS
     const variant = getSizeGuideVariant(sizes);
 
     if (variant === 'oneSize') {
-      return oneSizeLabel ? <p className="text-sm text-mist-600">{oneSizeLabel}</p> : null;
+      return oneSizeLabel ? <p>{oneSizeLabel}</p> : null;
     }
 
     return (
