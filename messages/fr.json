@@ -218,5 +218,14 @@
     },
     "submit": "Envoyer",
     "success": "Merci, votre message a bien été envoyé. Nous vous répondrons rapidement."
+  },
+  "shippingReturns": {
+    "title": "Livraison & Retours",
+    "shippingTitle": "Livraison",
+    "shippingBody": "Commandes expédiées sous 24 à 48h ouvrées. Livraison estimée : 2 à 4 jours ouvrés en France, 4 à 7 jours ouvrés au Royaume-Uni.",
+    "returnsTitle": "Retours",
+    "returnsBody": "Retour possible sous 30 jours à compter de la réception, article non porté et dans son emballage d'origine.",
+    "exchangesTitle": "Échanges",
+    "exchangesBody": "Pour un échange de taille ou de couleur, retournez l'article puis passez une nouvelle commande — le remboursement est déclenché dès réception du retour."
   }
 }

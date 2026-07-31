@@ -218,5 +218,14 @@
     },
     "submit": "Send",
     "success": "Thank you, your message has been sent. We'll get back to you shortly."
+  },
+  "shippingReturns": {
+    "title": "Shipping & Returns",
+    "shippingTitle": "Shipping",
+    "shippingBody": "Orders ship within 24 to 48 business hours. Estimated delivery: 2 to 4 business days in France, 4 to 7 business days for the UK.",
+    "returnsTitle": "Returns",
+    "returnsBody": "Returns are accepted within 30 days of receipt, unworn and in original packaging.",
+    "exchangesTitle": "Exchanges",
+    "exchangesBody": "For a size or color exchange, return the item and place a new order — your refund is triggered as soon as the return is received."
   }
 }
