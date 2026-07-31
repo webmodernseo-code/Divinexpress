@@ -8,6 +8,7 @@ import { CurrencyProvider } from '@/context/CurrencyContext';
 import { CartProvider } from '@/context/CartContext';
 import { FavoritesProvider } from '@/context/FavoritesContext';
 import { CartDrawerProvider } from '@/context/CartDrawerContext';
+import { CheckoutProvider } from '@/context/CheckoutContext';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CookieBanner } from '@/components/layout/CookieBanner';
@@ -45,11 +46,13 @@ export default async function LocaleLayout({
             <CartProvider>
               <FavoritesProvider>
                 <CartDrawerProvider>
-                  <Header />
-                  <main>{children}</main>
-                  <Footer />
-                  <CookieBanner />
-                  <CartDrawer />
+                  <CheckoutProvider>
+                    <Header />
+                    <main>{children}</main>
+                    <Footer />
+                    <CookieBanner />
+                    <CartDrawer />
+                  </CheckoutProvider>
                 </CartDrawerProvider>
               </FavoritesProvider>
             </CartProvider>

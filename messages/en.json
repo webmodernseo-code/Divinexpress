@@ -155,5 +155,27 @@
   "favorites": {
     "title": "Favorites",
     "empty": "You haven't added any favorites yet."
+  },
+  "checkout": {
+    "steps": {
+      "shipping": "Shipping",
+      "payment": "Payment",
+      "confirmation": "Confirmation"
+    },
+    "shippingTitle": "Shipping",
+    "guestNotice": "Checking out as a guest — no account required.",
+    "fields": {
+      "fullName": "Full name",
+      "email": "Email",
+      "address": "Address",
+      "city": "City",
+      "postalCode": "Postal code",
+      "country": "Country"
+    },
+    "errors": {
+      "required": "This field is required.",
+      "invalid": "Invalid format."
+    },
+    "continueToPayment": "Continue to payment"
   }
 }

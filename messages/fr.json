@@ -155,5 +155,27 @@
   "favorites": {
     "title": "Favoris",
     "empty": "Vous n'avez pas encore ajouté de favoris."
+  },
+  "checkout": {
+    "steps": {
+      "shipping": "Livraison",
+      "payment": "Paiement",
+      "confirmation": "Confirmation"
+    },
+    "shippingTitle": "Livraison",
+    "guestNotice": "Commande en tant qu'invité·e — aucune création de compte n'est nécessaire.",
+    "fields": {
+      "fullName": "Nom complet",
+      "email": "Email",
+      "address": "Adresse",
+      "city": "Ville",
+      "postalCode": "Code postal",
+      "country": "Pays"
+    },
+    "errors": {
+      "required": "Ce champ est requis.",
+      "invalid": "Format invalide."
+    },
+    "continueToPayment": "Continuer vers le paiement"
   }
 }
