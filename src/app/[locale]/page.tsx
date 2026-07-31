@@ -1,9 +1,42 @@
+import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { buildMetadata, breadcrumbJsonLd, SITE_URL } from '@/lib/seo';
 import { PlaceholderBlock } from '@/components/ui/PlaceholderBlock';
 import { HomeCollection } from '@/components/home/HomeCollection';
 import { PromoBanner } from '@/components/home/PromoBanner';
 import { HomeFaq } from '@/components/home/HomeFaq';
 import { CATEGORIES, getSubcategoriesForCategory, type Category } from '@/lib/products';
+
+export async function generateMetadata({
+  params,
+  searchParams
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const sp = await searchParams;
+  const requestedCategory = typeof sp.categorie === 'string' ? sp.categorie : undefined;
+
+  if (requestedCategory && CATEGORIES.includes(requestedCategory as Category)) {
+    const tNav = await getTranslations({ locale, namespace: 'nav' });
+    const categoryName = tNav(requestedCategory);
+    return buildMetadata({
+      locale,
+      pathname: `?categorie=${requestedCategory}`,
+      title: `${categoryName} — Reign`,
+      description: categoryName
+    });
+  }
+
+  const tHome = await getTranslations({ locale, namespace: 'home' });
+  return buildMetadata({
+    locale,
+    pathname: '',
+    title: `Reign — ${tHome('heroTitle')}`,
+    description: tHome('heroSubtitle')
+  });
+}
 
 export default async function HomePage({
   params,
@@ -31,8 +64,31 @@ export default async function HomePage({
       ? requestedSubcategory
       : null;
 
+  const tNav = await getTranslations('nav');
+
   return (
     <>
+      {initialCategory && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(
+              breadcrumbJsonLd(
+                [
+                  { name: 'Reign', url: `${SITE_URL}/${locale}` },
+                  { name: tNav(initialCategory), url: `${SITE_URL}/${locale}?categorie=${initialCategory}` },
+                  initialSubcategory
+                    ? {
+                        name: initialSubcategory,
+                        url: `${SITE_URL}/${locale}?categorie=${initialCategory}&sousCategorie=${initialSubcategory}`
+                      }
+                    : null
+                ].filter(Boolean) as { name: string; url: string }[]
+              )
+            )
+          }}
+        />
+      )}
       <section className="relative">
         <PlaceholderBlock aspect="wide" className="w-full" />
         <div className="absolute inset-0 flex flex-col items-start justify-end bg-linear-to-b from-ink/10 to-ink/60 p-8 text-paper md:p-16">

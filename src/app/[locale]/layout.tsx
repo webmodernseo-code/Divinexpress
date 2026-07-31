@@ -4,6 +4,7 @@ import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { fraunces, inter } from '@/lib/fonts';
+import { organizationJsonLd } from '@/lib/seo';
 import { CurrencyProvider } from '@/context/CurrencyContext';
 import { CartProvider } from '@/context/CartContext';
 import { FavoritesProvider } from '@/context/FavoritesContext';
@@ -41,6 +42,10 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${fraunces.variable} ${inter.variable}`}>
       <body className="bg-paper text-ink font-sans antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
+        />
         <NextIntlClientProvider messages={messages}>
           <CurrencyProvider initialLocale={locale}>
             <CartProvider>
