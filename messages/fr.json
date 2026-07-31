@@ -227,5 +227,197 @@
     "returnsBody": "Retour possible sous 30 jours à compter de la réception, article non porté et dans son emballage d'origine.",
     "exchangesTitle": "Échanges",
     "exchangesBody": "Pour un échange de taille ou de couleur, retournez l'article puis passez une nouvelle commande — le remboursement est déclenché dès réception du retour."
+  },
+  "legal": {
+    "disclaimer": "Ce texte est un modèle générique fourni à titre indicatif pour une démonstration fonctionnelle. Il doit être relu, complété et validé par un professionnel du droit avant toute mise en ligne réelle."
+  },
+  "legalNotice": {
+    "title": "Mentions légales",
+    "updatedLabel": "Dernière mise à jour : **à compléter**",
+    "sections": [
+      {
+        "heading": "Éditeur du site",
+        "body": [
+          "Le site Reign (ci-après « le Site ») est édité par Reign SAS, société par actions simplifiée au capital de 10 000 €, immatriculée au Registre du Commerce et des Sociétés de Paris sous le numéro SIREN **à compléter**, dont le siège social est situé **adresse à compléter**.",
+          "Numéro de TVA intracommunautaire : **à compléter**",
+          "Directeur de la publication : **nom à compléter**",
+          "Contact : contact@reign.example — Téléphone : **à compléter**"
+        ]
+      },
+      {
+        "heading": "Hébergement",
+        "body": [
+          "Le Site est hébergé par **nom de l'hébergeur à compléter**, **adresse de l'hébergeur à compléter**, **téléphone à compléter**."
+        ]
+      },
+      {
+        "heading": "Propriété intellectuelle",
+        "body": [
+          "L'ensemble des éléments présents sur le Site (textes, images, logos, illustrations, mise en page, code source) est protégé par le droit de la propriété intellectuelle et reste la propriété exclusive de Reign SAS ou de ses partenaires, sauf mention contraire. Toute reproduction, représentation ou exploitation, totale ou partielle, sans autorisation écrite préalable, est interdite et pourra faire l'objet de poursuites."
+        ]
+      },
+      {
+        "heading": "Données personnelles",
+        "body": [
+          "Le traitement des données personnelles collectées sur le Site est décrit en détail dans notre Politique de confidentialité, accessible depuis le pied de page."
+        ]
+      },
+      {
+        "heading": "Cookies",
+        "body": [
+          "Le Site utilise des cookies nécessaires à son fonctionnement (préférences de langue et de devise, contenu du panier). Pour en savoir plus sur leur usage et vos droits, consultez notre Politique de confidentialité."
+        ]
+      },
+      {
+        "heading": "Droit applicable et litiges",
+        "body": [
+          "Les présentes mentions légales sont soumises au droit français. En cas de litige et à défaut de résolution amiable, les tribunaux français seront seuls compétents."
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Conditions Générales de Vente",
+    "updatedLabel": "Dernière mise à jour : **à compléter**",
+    "sections": [
+      {
+        "heading": "Objet et champ d'application",
+        "body": [
+          "Les présentes Conditions Générales de Vente (CGV) régissent les ventes de produits conclues à distance entre Reign SAS (« le Vendeur ») et toute personne physique effectuant un achat sur le Site (« le Client »). Toute commande passée sur le Site implique l'acceptation sans réserve des présentes CGV, dans leur version en vigueur au jour de la commande."
+        ]
+      },
+      {
+        "heading": "Produits",
+        "body": [
+          "Les produits proposés à la vente sont ceux présentés sur le Site au jour de la consultation, dans la limite des stocks disponibles. Reign se réserve le droit de modifier son offre de produits à tout moment."
+        ]
+      },
+      {
+        "heading": "Prix",
+        "body": [
+          "Les prix sont indiqués en euros (€) ou en livres sterling (£) selon la devise sélectionnée par le Client, toutes taxes comprises (TTC), hors frais de livraison. Ces derniers sont précisés avant la validation définitive de la commande. Reign se réserve le droit de modifier ses prix à tout moment, les produits étant facturés sur la base des tarifs en vigueur au moment de la validation de la commande."
+        ]
+      },
+      {
+        "heading": "Commande",
+        "body": [
+          "Le Client sélectionne les produits de son choix, les ajoute à son panier, renseigne ses coordonnées de livraison puis procède au paiement. Un récapitulatif de commande (produits, quantités, prix, frais de livraison) est présenté avant validation finale. Une confirmation de commande est envoyée par email à l'adresse fournie par le Client."
+        ]
+      },
+      {
+        "heading": "Paiement",
+        "body": [
+          "Le paiement s'effectue en ligne, au moment de la commande, via l'un des moyens proposés sur le Site (carte bancaire, Stripe, Genius Pay). La commande est considérée comme définitive après confirmation du paiement par le prestataire de paiement concerné. Aucune donnée de paiement n'est conservée par Reign."
+        ]
+      },
+      {
+        "heading": "Livraison",
+        "body": [
+          "Reign expédie actuellement en France et au Royaume-Uni. Les délais indicatifs sont de 2 à 4 jours ouvrés en France et de 4 à 7 jours ouvrés au Royaume-Uni, à compter de l'expédition de la commande. Voir notre page Livraison & Retours pour le détail complet."
+        ]
+      },
+      {
+        "heading": "Droit de rétractation",
+        "body": [
+          "Conformément aux articles L221-18 et suivants du Code de la consommation, le Client dispose d'un délai de 14 jours francs à compter de la réception de sa commande pour exercer son droit de rétractation, sans avoir à justifier de motif ni à payer de pénalité, à l'exception des frais de retour."
+        ]
+      },
+      {
+        "heading": "Retours et remboursements",
+        "body": [
+          "Les articles doivent être retournés non portés, non lavés, dans leur emballage d'origine, dans un délai de 30 jours à compter de la réception. Le remboursement est effectué via le même moyen de paiement que celui utilisé lors de la commande, dans un délai de **à compléter** jours après réception et contrôle de l'article retourné."
+        ]
+      },
+      {
+        "heading": "Garanties légales",
+        "body": [
+          "Les produits vendus bénéficient de la garantie légale de conformité (articles L217-3 et suivants du Code de la consommation) et de la garantie contre les vices cachés (articles 1641 et suivants du Code civil), sans préjudice des dispositions prises par Reign au titre de sa politique de retours."
+        ]
+      },
+      {
+        "heading": "Responsabilité",
+        "body": [
+          "Reign ne saurait être tenue responsable de l'inexécution du contrat en cas de rupture de stock ou d'indisponibilité du produit, de force majeure, de perturbation ou grève totale ou partielle des services postaux ou moyens de transport, ou de faute du Client."
+        ]
+      },
+      {
+        "heading": "Données personnelles",
+        "body": [
+          "Les données collectées dans le cadre du traitement de la commande sont traitées conformément à notre Politique de confidentialité."
+        ]
+      },
+      {
+        "heading": "Droit applicable et litiges",
+        "body": [
+          "Les présentes CGV sont soumises au droit français. En cas de litige, le Client peut recourir à une médiation conventionnelle ou à tout autre mode alternatif de règlement des différends. À défaut de résolution amiable, les tribunaux français seront seuls compétents."
+        ]
+      }
+    ]
+  },
+  "privacy": {
+    "title": "Politique de confidentialité",
+    "updatedLabel": "Dernière mise à jour : **à compléter**",
+    "sections": [
+      {
+        "heading": "Responsable du traitement",
+        "body": [
+          "Le responsable du traitement des données personnelles collectées sur le Site est Reign SAS, **adresse à compléter**, contact : contact@reign.example."
+        ]
+      },
+      {
+        "heading": "Données collectées",
+        "body": [
+          "Dans le cadre de l'utilisation du Site, nous collectons : les données d'identification et de livraison fournies lors d'une commande (nom, adresse postale, email), les données transmises via le formulaire de contact (nom, email, message), les préférences de langue et de devise, ainsi que le contenu du panier et des favoris — ces trois derniers étant stockés localement dans le navigateur du Client, non transmis à nos serveurs."
+        ]
+      },
+      {
+        "heading": "Finalités du traitement",
+        "body": [
+          "Ces données sont utilisées pour : traiter et livrer les commandes, assurer le service après-vente et répondre aux demandes de contact, personnaliser l'affichage du Site (langue, devise), et respecter nos obligations légales et comptables."
+        ]
+      },
+      {
+        "heading": "Base légale",
+        "body": [
+          "Le traitement repose selon les cas sur : l'exécution du contrat de vente (traitement des commandes), le consentement du Client (préférences enregistrées localement), et l'intérêt légitime de Reign (amélioration du service, réponse aux demandes de contact)."
+        ]
+      },
+      {
+        "heading": "Destinataires des données",
+        "body": [
+          "Les données sont destinées aux services internes de Reign SAS ainsi qu'à ses prestataires techniques (hébergement : **à compléter** ; paiement : Stripe, Genius Pay) dans la stricte mesure nécessaire à l'exécution des commandes. Aucune donnée de paiement n'est traitée ni conservée directement par Reign."
+        ]
+      },
+      {
+        "heading": "Durée de conservation",
+        "body": [
+          "Les données liées aux commandes sont conservées pendant la durée nécessaire à leur traitement, puis archivées conformément aux obligations légales et comptables en vigueur (**durée précise à compléter**). Les préférences stockées localement (langue, devise, panier, favoris) restent sur l'appareil du Client jusqu'à suppression manuelle de son navigateur."
+        ]
+      },
+      {
+        "heading": "Vos droits",
+        "body": [
+          "Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité de vos données. Vous pouvez exercer ces droits à tout moment en nous contactant à contact@reign.example, en précisant votre identité."
+        ]
+      },
+      {
+        "heading": "Cookies",
+        "body": [
+          "Le Site utilise des cookies strictement nécessaires à son fonctionnement (mémorisation de la langue, de la devise et du contenu du panier). Aucun cookie de mesure d'audience ou publicitaire tiers n'est utilisé à ce stade (**à confirmer avant mise en production**)."
+        ]
+      },
+      {
+        "heading": "Sécurité",
+        "body": [
+          "Reign met en œuvre les mesures techniques et organisationnelles raisonnables afin de protéger vos données contre tout accès non autorisé, perte, altération ou divulgation."
+        ]
+      },
+      {
+        "heading": "Réclamation",
+        "body": [
+          "Si vous estimez, après nous avoir contactés, que vos droits ne sont pas respectés, vous pouvez adresser une réclamation auprès de la Commission Nationale de l'Informatique et des Libertés (CNIL) : www.cnil.fr."
+        ]
+      }
+    ]
   }
 }

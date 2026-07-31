@@ -227,5 +227,197 @@
     "returnsBody": "Returns are accepted within 30 days of receipt, unworn and in original packaging.",
     "exchangesTitle": "Exchanges",
     "exchangesBody": "For a size or color exchange, return the item and place a new order — your refund is triggered as soon as the return is received."
+  },
+  "legal": {
+    "disclaimer": "This text is a generic template provided for illustrative purposes as part of a functional demonstration. It must be reviewed, completed, and validated by a qualified legal professional before any real-world launch."
+  },
+  "legalNotice": {
+    "title": "Legal Notice",
+    "updatedLabel": "Last updated: **to be completed**",
+    "sections": [
+      {
+        "heading": "Site editor",
+        "body": [
+          "The Reign website (hereinafter \"the Site\") is published by Reign SAS, a simplified joint-stock company (SAS) with capital of €10,000, registered with the Paris Trade and Companies Register under SIREN number **to be completed**, with its registered office located at **address to be completed**.",
+          "Intra-community VAT number: **to be completed**",
+          "Publication director: **name to be completed**",
+          "Contact: contact@reign.example — Phone: **to be completed**"
+        ]
+      },
+      {
+        "heading": "Hosting",
+        "body": [
+          "The Site is hosted by **host name to be completed**, **host address to be completed**, **phone to be completed**."
+        ]
+      },
+      {
+        "heading": "Intellectual property",
+        "body": [
+          "All elements present on the Site (text, images, logos, illustrations, layout, source code) are protected by intellectual property law and remain the exclusive property of Reign SAS or its partners, unless otherwise stated. Any reproduction, representation, or use, in whole or in part, without prior written authorization, is prohibited and may result in legal action."
+        ]
+      },
+      {
+        "heading": "Personal data",
+        "body": [
+          "The processing of personal data collected on the Site is described in detail in our Privacy Policy, accessible from the footer."
+        ]
+      },
+      {
+        "heading": "Cookies",
+        "body": [
+          "The Site uses cookies necessary for its operation (language and currency preferences, cart contents). To learn more about their use and your rights, see our Privacy Policy."
+        ]
+      },
+      {
+        "heading": "Applicable law and disputes",
+        "body": [
+          "These legal notices are governed by French law. In the event of a dispute and failing an amicable resolution, French courts shall have sole jurisdiction."
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Terms of Sale",
+    "updatedLabel": "Last updated: **to be completed**",
+    "sections": [
+      {
+        "heading": "Purpose and scope",
+        "body": [
+          "These Terms of Sale govern the sale of products concluded remotely between Reign SAS (\"the Seller\") and any individual making a purchase on the Site (\"the Customer\"). Any order placed on the Site implies unreserved acceptance of these Terms of Sale, in the version in force on the day of the order."
+        ]
+      },
+      {
+        "heading": "Products",
+        "body": [
+          "The products offered for sale are those presented on the Site on the day of consultation, within the limit of available stock. Reign reserves the right to modify its product range at any time."
+        ]
+      },
+      {
+        "heading": "Price",
+        "body": [
+          "Prices are shown in euros (€) or pounds sterling (£) depending on the currency selected by the Customer, all taxes included, excluding delivery fees. Delivery fees are specified before the order is finally confirmed. Reign reserves the right to change its prices at any time; products are invoiced based on the rates in effect at the time the order is confirmed."
+        ]
+      },
+      {
+        "heading": "Order",
+        "body": [
+          "The Customer selects the products of their choice, adds them to their cart, enters their delivery details, and proceeds to payment. An order summary (products, quantities, prices, delivery fees) is shown before final confirmation. An order confirmation is sent by email to the address provided by the Customer."
+        ]
+      },
+      {
+        "heading": "Payment",
+        "body": [
+          "Payment is made online, at the time of ordering, via one of the methods offered on the Site (credit card, Stripe, Genius Pay). The order is considered final once payment is confirmed by the relevant payment provider. No payment data is retained by Reign."
+        ]
+      },
+      {
+        "heading": "Delivery",
+        "body": [
+          "Reign currently ships to France and the United Kingdom. Estimated delivery times are 2 to 4 business days in France and 4 to 7 business days in the United Kingdom, from the date of shipment. See our Shipping & Returns page for full details."
+        ]
+      },
+      {
+        "heading": "Right of withdrawal",
+        "body": [
+          "In accordance with Articles L221-18 et seq. of the French Consumer Code, the Customer has a period of 14 full days from receipt of their order to exercise their right of withdrawal, without having to justify a reason or pay a penalty, except for return shipping costs."
+        ]
+      },
+      {
+        "heading": "Returns and refunds",
+        "body": [
+          "Items must be returned unworn, unwashed, and in their original packaging, within 30 days of receipt. Refunds are issued via the same payment method used for the order, within **to be completed** days after receipt and inspection of the returned item."
+        ]
+      },
+      {
+        "heading": "Legal warranties",
+        "body": [
+          "Products sold benefit from the legal warranty of conformity (Articles L217-3 et seq. of the French Consumer Code) and the warranty against hidden defects (Articles 1641 et seq. of the French Civil Code), without prejudice to the provisions taken by Reign under its returns policy."
+        ]
+      },
+      {
+        "heading": "Liability",
+        "body": [
+          "Reign cannot be held liable for non-performance of the contract in the event of stock shortage or product unavailability, force majeure, total or partial disruption or strike affecting postal services or means of transport, or fault on the part of the Customer."
+        ]
+      },
+      {
+        "heading": "Personal data",
+        "body": [
+          "Data collected as part of order processing is handled in accordance with our Privacy Policy."
+        ]
+      },
+      {
+        "heading": "Applicable law and disputes",
+        "body": [
+          "These Terms of Sale are governed by French law. In the event of a dispute, the Customer may resort to conventional mediation or any other alternative dispute resolution method. Failing an amicable resolution, French courts shall have sole jurisdiction."
+        ]
+      }
+    ]
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "updatedLabel": "Last updated: **to be completed**",
+    "sections": [
+      {
+        "heading": "Data controller",
+        "body": [
+          "The controller responsible for processing personal data collected on the Site is Reign SAS, **address to be completed**, contact: contact@reign.example."
+        ]
+      },
+      {
+        "heading": "Data collected",
+        "body": [
+          "As part of using the Site, we collect: identification and delivery data provided when placing an order (name, postal address, email), data submitted via the contact form (name, email, message), language and currency preferences, and the contents of the cart and favorites — the latter three being stored locally in the Customer's browser and not transmitted to our servers."
+        ]
+      },
+      {
+        "heading": "Purposes of processing",
+        "body": [
+          "This data is used to: process and deliver orders, provide after-sales service and respond to contact requests, personalize the display of the Site (language, currency), and comply with our legal and accounting obligations."
+        ]
+      },
+      {
+        "heading": "Legal basis",
+        "body": [
+          "Processing is based, depending on the case, on: performance of the sales contract (order processing), the Customer's consent (locally saved preferences), and Reign's legitimate interest (service improvement, responding to contact requests)."
+        ]
+      },
+      {
+        "heading": "Data recipients",
+        "body": [
+          "Data is intended for Reign SAS's internal departments as well as its technical service providers (hosting: **to be completed**; payment: Stripe, Genius Pay), strictly to the extent necessary to process orders. No payment data is processed or retained directly by Reign."
+        ]
+      },
+      {
+        "heading": "Retention period",
+        "body": [
+          "Order-related data is retained for as long as necessary to process it, then archived in accordance with applicable legal and accounting obligations (**exact duration to be completed**). Preferences stored locally (language, currency, cart, favorites) remain on the Customer's device until manually cleared from their browser."
+        ]
+      },
+      {
+        "heading": "Your rights",
+        "body": [
+          "In accordance with the General Data Protection Regulation (GDPR) and the French Data Protection Act, you have the right to access, rectify, erase, restrict, object to, and port your data. You may exercise these rights at any time by contacting us at contact@reign.example, specifying your identity."
+        ]
+      },
+      {
+        "heading": "Cookies",
+        "body": [
+          "The Site uses cookies strictly necessary for its operation (remembering language, currency, and cart contents). No third-party analytics or advertising cookies are used at this stage (**to be confirmed before production launch**)."
+        ]
+      },
+      {
+        "heading": "Security",
+        "body": [
+          "Reign implements reasonable technical and organizational measures to protect your data against unauthorized access, loss, alteration, or disclosure."
+        ]
+      },
+      {
+        "heading": "Complaints",
+        "body": [
+          "If, after contacting us, you believe your rights are not being respected, you may file a complaint with the French Data Protection Authority (CNIL): www.cnil.fr."
+        ]
+      }
+    ]
   }
 }
