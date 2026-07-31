@@ -76,9 +76,11 @@ export function LegalPageLayout({
       <div className="mt-10 space-y-10 md:mt-12">
         {sections.map((section, index) => (
           <section key={sectionAnchor(index)} id={sectionAnchor(index)} className="scroll-mt-28 md:scroll-mt-32">
-            <Heading level={2} className="text-xl md:text-2xl">
+            {/* Plain h2 (same pattern as CartDrawer/SizeGuideTable): `Heading` bakes in a
+                `md:text-4xl` that would win over any smaller responsive size passed here. */}
+            <h2 className="font-serif text-xl md:text-2xl">
               {index + 1}. {section.heading}
-            </Heading>
+            </h2>
             <div className="mt-3 space-y-3 text-sm leading-relaxed text-mist-700">
               {section.body.map((paragraph, paragraphIndex) => (
                 <p key={paragraphIndex}>
