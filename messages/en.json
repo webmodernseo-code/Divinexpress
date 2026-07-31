@@ -76,7 +76,23 @@
   },
   "product": {
     "toggleFavorite": "Add to favorites",
-    "new": "New"
+    "new": "New",
+    "size": "Size",
+    "color": "Color",
+    "quantity": "Quantity",
+    "decreaseQuantity": "Decrease quantity",
+    "increaseQuantity": "Increase quantity",
+    "addToCart": "Add to cart",
+    "buyNow": "Buy now",
+    "tabDescription": "Description",
+    "tabDetails": "Details",
+    "tabCare": "Care",
+    "detailsBody": "Materials chosen for their structure and longevity, reinforced seams and finishes checked one by one. Every piece is built to hold its shape season after season.",
+    "careBody": "Favour gentle care: low-temperature washing or the cleaning method suited to the material, then air dry. Store your pieces away from direct light to preserve their colour.",
+    "oneSize": "One size",
+    "needHelp": "Need help?",
+    "contactUs": "Contact us",
+    "relatedProducts": "You may also like"
   },
   "category": {
     "filterSubcategory": "Subcategory",
@@ -116,5 +132,17 @@
         "answer": "A confirmation email is sent after your order, including your order number."
       }
     ]
+  },
+  "sizeGuide": {
+    "title": "Size Guide",
+    "modalTrigger": "Size guide",
+    "unitsNote": "Measurements in centimeters.",
+    "adultsTitle": "Men & Women",
+    "kidsTitle": "Kids",
+    "size": "Size",
+    "chest": "Chest",
+    "waist": "Waist",
+    "height": "Height",
+    "close": "Close"
   }
 }

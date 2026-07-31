@@ -76,7 +76,23 @@
   },
   "product": {
     "toggleFavorite": "Ajouter aux favoris",
-    "new": "Nouveau"
+    "new": "Nouveau",
+    "size": "Taille",
+    "color": "Couleur",
+    "quantity": "Quantité",
+    "decreaseQuantity": "Diminuer la quantité",
+    "increaseQuantity": "Augmenter la quantité",
+    "addToCart": "Ajouter au panier",
+    "buyNow": "Acheter maintenant",
+    "tabDescription": "Description",
+    "tabDetails": "Détails",
+    "tabCare": "Entretien",
+    "detailsBody": "Matières sélectionnées pour leur tenue et leur longévité, coutures renforcées et finitions contrôlées une à une. Chaque pièce est pensée pour garder sa forme au fil des saisons.",
+    "careBody": "Privilégiez un entretien doux : lavage à basse température ou nettoyage adapté à la matière, puis séchage à l'air libre. Rangez vos pièces à l'abri de la lumière directe pour en préserver les couleurs.",
+    "oneSize": "Taille unique",
+    "needHelp": "Besoin d'aide ?",
+    "contactUs": "Contactez-nous",
+    "relatedProducts": "Vous aimerez aussi"
   },
   "category": {
     "filterSubcategory": "Sous-catégorie",
@@ -116,5 +132,17 @@
         "answer": "Un email de confirmation vous est envoyé après votre commande, avec le numéro de commande."
       }
     ]
+  },
+  "sizeGuide": {
+    "title": "Guide des tailles",
+    "modalTrigger": "Guide des tailles",
+    "unitsNote": "Mesures en centimètres.",
+    "adultsTitle": "Homme & Femme",
+    "kidsTitle": "Enfant",
+    "size": "Taille",
+    "chest": "Tour de poitrine",
+    "waist": "Tour de taille",
+    "height": "Taille (hauteur)",
+    "close": "Fermer"
   }
 }
