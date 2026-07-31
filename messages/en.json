@@ -50,7 +50,8 @@
     "remove": "Remove",
     "subtotal": "Subtotal",
     "viewCart": "View cart",
-    "close": "Close"
+    "close": "Close",
+    "checkout": "Checkout"
   },
   "home": {
     "heroKicker": "Fall 2026 Collection",
