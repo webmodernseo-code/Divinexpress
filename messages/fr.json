@@ -42,5 +42,14 @@
   "cookies": {
     "message": "Nous utilisons des cookies pour améliorer votre expérience sur ce site.",
     "accept": "Accepter"
+  },
+  "cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide.",
+    "quantity": "Quantité",
+    "remove": "Retirer",
+    "subtotal": "Sous-total",
+    "viewCart": "Voir le panier",
+    "close": "Fermer"
   }
 }

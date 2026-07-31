@@ -7,9 +7,11 @@ import { fraunces, inter } from '@/lib/fonts';
 import { CurrencyProvider } from '@/context/CurrencyContext';
 import { CartProvider } from '@/context/CartContext';
 import { FavoritesProvider } from '@/context/FavoritesContext';
+import { CartDrawerProvider } from '@/context/CartDrawerContext';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CookieBanner } from '@/components/layout/CookieBanner';
+import { CartDrawer } from '@/components/cart/CartDrawer';
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -42,10 +44,13 @@ export default async function LocaleLayout({
           <CurrencyProvider initialLocale={locale}>
             <CartProvider>
               <FavoritesProvider>
-                <Header />
-                <main>{children}</main>
-                <Footer />
-                <CookieBanner />
+                <CartDrawerProvider>
+                  <Header />
+                  <main>{children}</main>
+                  <Footer />
+                  <CookieBanner />
+                  <CartDrawer />
+                </CartDrawerProvider>
               </FavoritesProvider>
             </CartProvider>
           </CurrencyProvider>

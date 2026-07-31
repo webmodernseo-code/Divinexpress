@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/navigation';
 import { CATEGORIES, getSubcategoriesForCategory, type Category } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
+import { useCartDrawer } from '@/context/CartDrawerContext';
 import { useFavorites } from '@/context/FavoritesContext';
 import { Logo } from '@/components/ui/Logo';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -103,6 +104,7 @@ function HeaderIcons({
   favoriteCount,
   cartCount,
   onSearchToggle,
+  onOpenCart,
   onNavigate
 }: {
   favoritesLabel: string;
@@ -111,6 +113,7 @@ function HeaderIcons({
   favoriteCount: number;
   cartCount: number;
   onSearchToggle: () => void;
+  onOpenCart: () => void;
   onNavigate?: () => void;
 }) {
   return (
@@ -126,14 +129,22 @@ function HeaderIcons({
           </span>
         )}
       </Link>
-      <Link href="/panier" aria-label={cartLabel} onClick={onNavigate} className={ICON_CIRCLE_CLASS}>
+      <button
+        type="button"
+        onClick={() => {
+          onOpenCart();
+          onNavigate?.();
+        }}
+        aria-label={cartLabel}
+        className={ICON_CIRCLE_CLASS}
+      >
         <BagIcon className={ICON_SVG_CLASS} />
         {cartCount > 0 && (
           <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-[1.5px] border-paper bg-accent text-[9px] font-medium tabular-nums text-paper">
             {cartCount}
           </span>
         )}
-      </Link>
+      </button>
     </div>
   );
 }
@@ -143,6 +154,7 @@ export function Header() {
   const tHeader = useTranslations('header');
   const router = useRouter();
   const { itemCount } = useCart();
+  const { open: openCartDrawer } = useCartDrawer();
   const { favoriteIds } = useFavorites();
 
   const [query, setQuery] = useState('');
@@ -278,6 +290,7 @@ export function Header() {
               favoriteCount={favoriteIds.length}
               cartCount={itemCount}
               onSearchToggle={() => setIsSearchOpen((open) => !open)}
+              onOpenCart={openCartDrawer}
             />
           </div>
 
@@ -302,6 +315,7 @@ export function Header() {
               favoriteCount={favoriteIds.length}
               cartCount={itemCount}
               onSearchToggle={() => setIsSearchOpen((open) => !open)}
+              onOpenCart={openCartDrawer}
             />
           </div>
         </div>

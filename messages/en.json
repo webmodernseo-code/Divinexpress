@@ -42,5 +42,14 @@
   "cookies": {
     "message": "We use cookies to improve your experience on this site.",
     "accept": "Accept"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty.",
+    "quantity": "Quantity",
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "viewCart": "View cart",
+    "close": "Close"
   }
 }
