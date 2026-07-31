@@ -13,6 +13,7 @@ import { Heading } from '@/components/ui/Heading';
 import { ProductCard } from '@/components/product/ProductCard';
 import { ProductGallery } from '@/components/product/ProductGallery';
 import { ProductTabs } from '@/components/product/ProductTabs';
+import { SizeGuideModal } from '@/components/product/SizeGuideModal';
 
 /** Shipping funnel (Tâche 19) — not built yet, 404 for now. */
 const CHECKOUT_PATH = '/commande/livraison';
@@ -94,6 +95,9 @@ export function ProductDetailView({
                   </button>
                 );
               })}
+            </div>
+            <div className="mt-2">
+              <SizeGuideModal sizes={product.sizes} oneSizeLabel={t('oneSize')} />
             </div>
           </div>
 
