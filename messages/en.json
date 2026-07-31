@@ -202,5 +202,21 @@
     "paragraph1": "Reign was built on a simple conviction: clothing should hold its shape, literally and figuratively. Every collection starts from a silhouette, not a trend.",
     "paragraph2": "We work with a deliberately small number of materials and suppliers, to keep full control over the cut, construction, and finish of every piece.",
     "paragraph3": "Men, women, kids, accessories: one standard runs through every category — every piece is built to last, and built to command attention."
+  },
+  "contact": {
+    "title": "Contact",
+    "intro": "A question about an order, a collection, or a partnership? Write to us.",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message"
+    },
+    "errors": {
+      "required": "This field is required.",
+      "invalid": "Invalid format.",
+      "tooShort": "Your message is too short (minimum 10 characters)."
+    },
+    "submit": "Send",
+    "success": "Thank you, your message has been sent. We'll get back to you shortly."
   }
 }
