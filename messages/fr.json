@@ -51,5 +51,70 @@
     "subtotal": "Sous-total",
     "viewCart": "Voir le panier",
     "close": "Fermer"
+  },
+  "home": {
+    "heroKicker": "Collection Automne 2026",
+    "heroTitle": "Une silhouette qui s'impose",
+    "heroSubtitle": "Vêtements et accessoires pensés pour durer, façonnés pour marquer.",
+    "categoriesTitle": "Explorer par catégorie",
+    "newArrivalsTitle": "Nouveautés",
+    "collectionTitle": "La Collection",
+    "loadMore": "Charger plus",
+    "promoKicker": "Offre limitée",
+    "promoTitle": "-10% sur toute la collection",
+    "promoBody": "Utilisez ce code au moment de passer commande. Offre valable jusqu'à la fin du mois.",
+    "promoCode": "REIGN10",
+    "promoCopyButton": "Copier",
+    "promoCopiedConfirmation": "Copié !",
+    "promoDays": "Jours",
+    "promoHours": "Heures",
+    "promoMinutes": "Min",
+    "promoSeconds": "Sec",
+    "faqTitle": "Questions fréquentes",
+    "editorialTitle": "L'exigence comme signature",
+    "editorialBody": "Chaque pièce Reign naît d'un choix : celui de la matière, de la coupe, du détail qui ne se voit pas mais se ressent."
+  },
+  "product": {
+    "toggleFavorite": "Ajouter aux favoris",
+    "new": "Nouveau"
+  },
+  "category": {
+    "filterSubcategory": "Sous-catégorie",
+    "allSubcategories": "Toutes les sous-catégories",
+    "filterSize": "Taille",
+    "allSizes": "Toutes les tailles",
+    "filterColor": "Couleur",
+    "allColors": "Toutes les couleurs",
+    "sortBy": "Trier par",
+    "sortDefault": "Par défaut",
+    "sortPriceAsc": "Prix croissant",
+    "sortPriceDesc": "Prix décroissant",
+    "sortNewest": "Nouveautés",
+    "empty": "Aucun article ne correspond à ces filtres."
+  },
+  "faq": {
+    "title": "FAQ",
+    "items": [
+      {
+        "question": "Quels sont les délais de livraison ?",
+        "answer": "Comptez 2 à 4 jours ouvrés en France, 4 à 7 jours ouvrés pour le Royaume-Uni."
+      },
+      {
+        "question": "Puis-je retourner un article ?",
+        "answer": "Oui, sous 30 jours à compter de la réception, dans son état d'origine. Voir notre page Livraison & Retours pour le détail."
+      },
+      {
+        "question": "Comment connaître ma taille ?",
+        "answer": "Consultez notre guide des tailles, accessible depuis chaque fiche produit et depuis le pied de page."
+      },
+      {
+        "question": "Proposez-vous la livraison internationale ?",
+        "answer": "Nous livrons actuellement en France et au Royaume-Uni. D'autres pays suivront."
+      },
+      {
+        "question": "Comment suivre ma commande ?",
+        "answer": "Un email de confirmation vous est envoyé après votre commande, avec le numéro de commande."
+      }
+    ]
   }
 }

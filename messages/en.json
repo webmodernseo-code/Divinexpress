@@ -51,5 +51,70 @@
     "subtotal": "Subtotal",
     "viewCart": "View cart",
     "close": "Close"
+  },
+  "home": {
+    "heroKicker": "Fall 2026 Collection",
+    "heroTitle": "A silhouette that commands",
+    "heroSubtitle": "Clothing and accessories built to last, shaped to leave a mark.",
+    "categoriesTitle": "Shop by category",
+    "newArrivalsTitle": "New Arrivals",
+    "collectionTitle": "The Collection",
+    "loadMore": "Load more",
+    "promoKicker": "Limited offer",
+    "promoTitle": "-10% on the whole collection",
+    "promoBody": "Use this code at checkout. Valid until the end of the month.",
+    "promoCode": "REIGN10",
+    "promoCopyButton": "Copy",
+    "promoCopiedConfirmation": "Copied!",
+    "promoDays": "Days",
+    "promoHours": "Hours",
+    "promoMinutes": "Min",
+    "promoSeconds": "Sec",
+    "faqTitle": "Frequently asked questions",
+    "editorialTitle": "Precision as a signature",
+    "editorialBody": "Every Reign piece starts with a choice: the fabric, the cut, the detail you don't see but always feel."
+  },
+  "product": {
+    "toggleFavorite": "Add to favorites",
+    "new": "New"
+  },
+  "category": {
+    "filterSubcategory": "Subcategory",
+    "allSubcategories": "All subcategories",
+    "filterSize": "Size",
+    "allSizes": "All sizes",
+    "filterColor": "Color",
+    "allColors": "All colors",
+    "sortBy": "Sort by",
+    "sortDefault": "Default",
+    "sortPriceAsc": "Price: low to high",
+    "sortPriceDesc": "Price: high to low",
+    "sortNewest": "Newest",
+    "empty": "No items match these filters."
+  },
+  "faq": {
+    "title": "FAQ",
+    "items": [
+      {
+        "question": "What are the delivery times?",
+        "answer": "Allow 2 to 4 business days in France, 4 to 7 business days for the UK."
+      },
+      {
+        "question": "Can I return an item?",
+        "answer": "Yes, within 30 days of receipt, unworn and in its original packaging. See our Shipping & Returns page for details."
+      },
+      {
+        "question": "How do I know my size?",
+        "answer": "Check our size guide, accessible from every product page and from the footer."
+      },
+      {
+        "question": "Do you ship internationally?",
+        "answer": "We currently ship to France and the UK. More countries will follow."
+      },
+      {
+        "question": "How do I track my order?",
+        "answer": "A confirmation email is sent after your order, including your order number."
+      }
+    ]
   }
 }
