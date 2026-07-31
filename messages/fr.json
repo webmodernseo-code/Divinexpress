@@ -144,5 +144,11 @@
     "waist": "Tour de taille",
     "height": "Taille (hauteur)",
     "close": "Fermer"
+  },
+  "search": {
+    "title": "Recherche",
+    "resultsFor": "Résultats pour « {query} »",
+    "noQuery": "Entrez un mot-clé pour rechercher un article.",
+    "empty": "Aucun résultat pour cette recherche."
   }
 }

@@ -144,5 +144,11 @@
     "waist": "Waist",
     "height": "Height",
     "close": "Close"
+  },
+  "search": {
+    "title": "Search",
+    "resultsFor": "Results for \"{query}\"",
+    "noQuery": "Enter a keyword to search for an item.",
+    "empty": "No results for this search."
   }
 }
