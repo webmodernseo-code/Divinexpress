@@ -150,5 +150,9 @@
     "resultsFor": "Résultats pour « {query} »",
     "noQuery": "Entrez un mot-clé pour rechercher un article.",
     "empty": "Aucun résultat pour cette recherche."
+  },
+  "favorites": {
+    "title": "Favoris",
+    "empty": "Vous n'avez pas encore ajouté de favoris."
   }
 }

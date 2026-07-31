@@ -150,5 +150,9 @@
     "resultsFor": "Results for \"{query}\"",
     "noQuery": "Enter a keyword to search for an item.",
     "empty": "No results for this search."
+  },
+  "favorites": {
+    "title": "Favorites",
+    "empty": "You haven't added any favorites yet."
   }
 }
