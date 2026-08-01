@@ -23,6 +23,8 @@
     "gbp": "Pound (GBP)"
   },
   "footer": {
+    "tagline": "Premium clothing and accessories, made to last.",
+    "securePayments": "Secure payments",
     "newsletterTitle": "Stay in the loop",
     "newsletterPlaceholder": "Your email",
     "newsletterButton": "Subscribe",

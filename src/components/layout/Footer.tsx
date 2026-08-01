@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
+import { Logo } from '@/components/ui/Logo';
 import { SOCIAL_LINKS } from '@/components/ui/SocialIcons';
 
 const INSTITUTIONAL_LINKS: { href: string; key: string }[] = [
@@ -17,6 +19,21 @@ const INSTITUTIONAL_LINKS: { href: string; key: string }[] = [
   { href: '/cgv', key: 'terms' },
   { href: '/confidentialite', key: 'privacy' }
 ];
+
+const PAYMENT_LOGOS = [
+  { src: '/payment/visa-mastercard.png', width: 1231, height: 496 },
+  { src: '/payment/paypal.png', width: 600, height: 400 },
+  { src: '/payment/orange-money.png', width: 3840, height: 1025 },
+  { src: '/payment/wave.png', width: 701, height: 437 }
+];
+
+function ChevronRightIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+      <path d="M9 6l6 6-6 6" />
+    </svg>
+  );
+}
 
 export function Footer() {
   const t = useTranslations('footer');
@@ -33,47 +50,77 @@ export function Footer() {
 
   return (
     <footer className="border-t border-mist-100 bg-paper text-ink">
-      <Container className="grid gap-12 py-16 md:grid-cols-3">
-        <div>
-          <h2 className="font-serif text-xl">{t('newsletterTitle')}</h2>
-          {hasSubscribed ? (
-            <p className="mt-4 text-sm text-mist-600">{t('newsletterSuccess')}</p>
-          ) : (
-            <form onSubmit={handleSubmit} className="mt-4 flex gap-2">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder={t('newsletterPlaceholder')}
-                className="w-full border-b border-mist-300 bg-transparent px-1 py-2 text-sm focus:border-accent focus:outline-none"
-              />
-              <Button type="submit" variant="secondary">
-                {t('newsletterButton')}
-              </Button>
-            </form>
-          )}
+      <Container className="py-16">
+        <div className="flex flex-col items-start gap-3">
+          <Logo />
+          <p className="max-w-xs text-sm text-mist-600">{t('tagline')}</p>
         </div>
 
-        <nav aria-label="Footer" className="grid grid-cols-2 gap-2 text-sm">
-          {INSTITUTIONAL_LINKS.map(({ href, key }) => (
-            <Link key={href} href={href} className="text-mist-700 hover:text-accent">
-              {t(`links.${key}`)}
-            </Link>
-          ))}
-        </nav>
+        <div className="mt-12 grid gap-12 md:grid-cols-3">
+          <div>
+            <h2 className="font-serif text-xl">{t('newsletterTitle')}</h2>
+            {hasSubscribed ? (
+              <p className="mt-4 text-sm text-mist-600">{t('newsletterSuccess')}</p>
+            ) : (
+              <form onSubmit={handleSubmit} className="mt-4 flex gap-2">
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder={t('newsletterPlaceholder')}
+                  className="w-full rounded-full border border-mist-100 bg-paper px-4 py-2.5 text-sm focus:border-accent focus:outline-none"
+                />
+                <Button type="submit" variant="secondary" className="flex-shrink-0 rounded-full">
+                  {t('newsletterButton')}
+                </Button>
+              </form>
+            )}
+          </div>
 
-        <div className="flex gap-4 md:justify-end">
-          {SOCIAL_LINKS.map(({ label, Icon }) => (
-            <a
-              key={label}
-              href="#"
-              aria-label={label}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-mist-300 text-ink hover:border-accent hover:text-accent"
-            >
-              <Icon className="h-4 w-4" />
-            </a>
-          ))}
+          <nav aria-label="Footer" className="flex flex-col gap-3.5 text-sm">
+            {INSTITUTIONAL_LINKS.map(({ href, key }) => (
+              <Link
+                key={href}
+                href={href}
+                className="flex items-center justify-between text-mist-700 transition-colors hover:text-accent"
+              >
+                {t(`links.${key}`)}
+                <ChevronRightIcon />
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex flex-col items-start gap-6 md:items-end">
+            <div className="flex gap-3">
+              {SOCIAL_LINKS.map(({ label, Icon }) => (
+                <a
+                  key={label}
+                  href="#"
+                  aria-label={label}
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-mist-100 bg-paper text-ink shadow-sm transition-colors hover:border-accent hover:text-accent"
+                >
+                  <Icon className="h-[18px] w-[18px]" />
+                </a>
+              ))}
+            </div>
+
+            <div className="w-full rounded-2xl border border-mist-100 px-5 py-4 md:max-w-[240px]">
+              <p className="text-[11px] font-bold uppercase tracking-[0.05em] text-mist-500">{t('securePayments')}</p>
+              <div className="mt-3 flex flex-wrap items-center gap-2.5">
+                {PAYMENT_LOGOS.map((logo) => (
+                  <Image
+                    key={logo.src}
+                    src={logo.src}
+                    alt=""
+                    width={logo.width}
+                    height={logo.height}
+                    className="h-5 w-auto rounded-sm object-contain"
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </Container>
 
