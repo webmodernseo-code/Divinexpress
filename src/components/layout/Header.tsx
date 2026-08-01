@@ -13,8 +13,9 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { CurrencySwitcher } from './CurrencySwitcher';
 
 const ICON_CIRCLE_CLASS =
-  'relative inline-flex h-9 w-9 items-center justify-center rounded-full bg-mist-50 text-ink transition-colors hover:text-accent md:h-[42px] md:w-[42px]';
-const ICON_SVG_CLASS = 'h-4 w-4 md:h-[18px] md:w-[18px]';
+  'relative grid size-11 place-items-center rounded-full border border-[#DDD8CF] text-[#0B0B0B] transition-colors hover:bg-[#F1EDE5]';
+const ICON_SVG_CLASS = 'size-5';
+const ICON_BADGE_CLASS = 'absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#0B0B0B] text-[10px] font-semibold text-white';
 
 function HeartIcon({ className = '' }: { className?: string }) {
   return (
@@ -93,9 +94,7 @@ function HeaderIcons({
       <Link href="/favoris" aria-label={favoritesLabel} onClick={onNavigate} className={ICON_CIRCLE_CLASS}>
         <HeartIcon className={ICON_SVG_CLASS} />
         {favoriteCount > 0 && (
-          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-[1.5px] border-paper bg-accent text-[9px] font-medium tabular-nums text-paper">
-            {favoriteCount}
-          </span>
+          <span className={`${ICON_BADGE_CLASS} tabular-nums`}>{favoriteCount}</span>
         )}
       </Link>
       <button
@@ -109,9 +108,7 @@ function HeaderIcons({
       >
         <BagIcon className={ICON_SVG_CLASS} />
         {cartCount > 0 && (
-          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full border-[1.5px] border-paper bg-accent text-[9px] font-medium tabular-nums text-paper">
-            {cartCount}
-          </span>
+          <span className={`${ICON_BADGE_CLASS} tabular-nums`}>{cartCount}</span>
         )}
       </button>
     </div>
