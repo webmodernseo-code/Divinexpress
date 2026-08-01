@@ -8,6 +8,8 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Logo } from '@/components/ui/Logo';
 import { SOCIAL_LINKS } from '@/components/ui/SocialIcons';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { CurrencySwitcher } from './CurrencySwitcher';
 
 const INSTITUTIONAL_LINKS: { href: string; key: string }[] = [
   { href: '/a-propos', key: 'about' },
@@ -123,6 +125,11 @@ export function Footer() {
           </div>
         </div>
       </Container>
+
+      <div className="flex justify-center gap-5 bg-ink px-4 py-4">
+        <LanguageSwitcher variant="footer" />
+        <CurrencySwitcher variant="footer" />
+      </div>
 
       <div className="border-t border-mist-100 py-6 text-center text-xs text-mist-500">
         © {new Date().getFullYear()} Reign — {t('rights')}

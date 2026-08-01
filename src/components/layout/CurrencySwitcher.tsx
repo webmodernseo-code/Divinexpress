@@ -36,11 +36,20 @@ function CheckIcon({ className = '' }: { className?: string }) {
   );
 }
 
-export function CurrencySwitcher() {
+type SwitcherVariant = 'utility' | 'footer';
+
+export function CurrencySwitcher({ variant = 'utility' }: { variant?: SwitcherVariant }) {
   const t = useTranslations('currency');
   const { currency, setCurrency } = useCurrency();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const isFooter = variant === 'footer';
+  const triggerClassName = isFooter
+    ? 'inline-flex min-h-11 items-center gap-2 bg-transparent text-sm font-medium text-paper transition-colors hover:text-paper/70'
+    : 'inline-flex items-center gap-1.5 rounded-full border border-paper/20 bg-paper/10 px-2.5 py-1 text-[11px] font-bold tracking-wide text-paper hover:bg-paper/20';
+  const menuPositionClassName = isFooter
+    ? 'absolute bottom-[calc(100%+8px)] right-0 z-20'
+    : 'absolute right-0 top-[calc(100%+8px)] z-20';
 
   useEffect(() => {
     if (!isOpen) return;
@@ -62,14 +71,14 @@ export function CurrencySwitcher() {
         onClick={() => setIsOpen((open) => !open)}
         aria-haspopup="true"
         aria-expanded={isOpen}
-        className="inline-flex items-center gap-1.5 rounded-full border border-paper/20 bg-paper/10 px-2.5 py-1 text-[11px] font-bold tracking-wide text-paper hover:bg-paper/20"
+        className={triggerClassName}
       >
         <CurrencySymbol symbol={active.symbol} className="h-3 w-3" />
-        <span>{active.code}</span>
+        <span>{isFooter ? t(active.messageKey) : active.code}</span>
         <ChevronIcon className={`h-[9px] w-[9px] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       {isOpen && (
-        <div className="absolute right-0 top-[calc(100%+8px)] z-20 flex min-w-[150px] flex-col gap-0.5 rounded-2xl border border-mist-100 bg-paper p-1.5 shadow-lg">
+        <div className={`${menuPositionClassName} flex min-w-[150px] flex-col gap-0.5 rounded-2xl border border-mist-100 bg-paper p-1.5 shadow-lg`}>
           {CURRENCIES.map(({ code, symbol, messageKey }) => {
             const isActive = currency === code;
             return (
