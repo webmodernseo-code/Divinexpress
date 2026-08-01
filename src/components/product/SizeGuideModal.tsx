@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import type { Category } from '@/lib/products';
 import { SizeGuideTable } from './SizeGuideTable';
 
 /**
  * Reusable trigger + modal wrapping `SizeGuideTable` (Tâche 26). Used on the PDP next to the
- * size pills; `sizes` scopes the table to the current product (adults/kids/one-size), same as
+ * size pills; `category` scopes the table to the current product (adults/kids/one-size), same as
  * the inline PDP tab in `ProductTabs.tsx`.
  */
-export function SizeGuideModal({ sizes, oneSizeLabel }: { sizes: string[]; oneSizeLabel?: string }) {
+export function SizeGuideModal({ category, oneSizeLabel }: { category: Category; oneSizeLabel?: string }) {
   const t = useTranslations('sizeGuide');
   const [isOpen, setIsOpen] = useState(false);
 
@@ -44,7 +45,7 @@ export function SizeGuideModal({ sizes, oneSizeLabel }: { sizes: string[]; oneSi
               </button>
             </div>
             <div className="mt-6">
-              <SizeGuideTable sizes={sizes} oneSizeLabel={oneSizeLabel} />
+              <SizeGuideTable category={category} oneSizeLabel={oneSizeLabel} />
             </div>
           </div>
         </div>

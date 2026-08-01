@@ -159,8 +159,9 @@ describe('ProductDetailView', () => {
   it('shows the kids height table for kids sizes', async () => {
     renderPdp(kidsHoodie);
     await userEvent.click(screen.getByRole('tab', { name: 'Guide des tailles' }));
+    expect(screen.getByRole('columnheader', { name: 'Âge (ans)' })).toBeVisible();
     expect(screen.getByRole('columnheader', { name: 'Taille (hauteur)' })).toBeVisible();
-    expect(screen.getByRole('cell', { name: '146-152' })).toBeVisible();
+    expect(screen.getByRole('cell', { name: '152-158' })).toBeVisible();
     expect(screen.queryByRole('columnheader', { name: 'Tour de poitrine' })).toBeNull();
   });
 

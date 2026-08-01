@@ -32,8 +32,8 @@ export const COLOR_SWATCHES: Record<string, string> = {
   Camel: '#a9744f'
 };
 
-const CLOTHING_SIZES = ['XS', 'S', 'M', 'L', 'XL'];
-const KIDS_SIZES = ['4A', '6A', '8A', '10A', '12A'];
+/** Shared across Homme/Femme/Enfant so every clothing product uses the same pill selector. */
+const CLOTHING_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 export const PRODUCTS: Product[] = [
   {
@@ -66,7 +66,8 @@ export const PRODUCTS: Product[] = [
     priceEur: 65,
     sizes: CLOTHING_SIZES,
     colors: ['Noir', 'Blanc', 'Écru'],
-    imageCount: 3
+    imageCount: 3,
+    relatedProductIds: ['homme-chemise-col-mao', 'homme-pantalon-droit']
   },
   {
     id: 'homme-pantalon-droit',
@@ -97,7 +98,8 @@ export const PRODUCTS: Product[] = [
     priceEur: 110,
     sizes: CLOTHING_SIZES,
     colors: ['Blanc', 'Noir'],
-    imageCount: 3
+    imageCount: 3,
+    relatedProductIds: ['homme-t-shirt-essentiel', 'homme-veste-oversize']
   },
   {
     id: 'femme-robe-fluide',
@@ -129,7 +131,8 @@ export const PRODUCTS: Product[] = [
     priceEur: 62,
     sizes: CLOTHING_SIZES,
     colors: ['Noir', 'Blanc', 'Écru'],
-    imageCount: 3
+    imageCount: 3,
+    relatedProductIds: ['femme-pantalon-tailleur', 'femme-robe-fluide']
   },
   {
     id: 'femme-manteau-long',
@@ -160,7 +163,8 @@ export const PRODUCTS: Product[] = [
     priceEur: 155,
     sizes: CLOTHING_SIZES,
     colors: ['Noir', 'Bleu acier'],
-    imageCount: 3
+    imageCount: 3,
+    relatedProductIds: ['femme-t-shirt-essentiel', 'femme-manteau-long']
   },
   {
     id: 'enfant-t-shirt-graphique',
@@ -173,10 +177,11 @@ export const PRODUCTS: Product[] = [
       en: 'Soft jersey, subtle graphic print, comfortable fit.'
     },
     priceEur: 45,
-    sizes: KIDS_SIZES,
+    sizes: CLOTHING_SIZES,
     colors: ['Noir', 'Blanc'],
     imageCount: 2,
-    isNew: true
+    isNew: true,
+    relatedProductIds: ['enfant-sweat-capuche', 'enfant-pantalon-jogger']
   },
   {
     id: 'enfant-sweat-capuche',
@@ -189,9 +194,10 @@ export const PRODUCTS: Product[] = [
       en: 'Heavyweight fleece, lined hood, kangaroo pocket.'
     },
     priceEur: 68,
-    sizes: KIDS_SIZES,
+    sizes: CLOTHING_SIZES,
     colors: ['Noir', 'Gris'],
-    imageCount: 3
+    imageCount: 3,
+    relatedProductIds: ['enfant-veste-legere', 'enfant-pantalon-jogger']
   },
   {
     id: 'enfant-pantalon-jogger',
@@ -204,9 +210,10 @@ export const PRODUCTS: Product[] = [
       en: 'Elastic waist, tapered ankles, everyday comfort.'
     },
     priceEur: 52,
-    sizes: KIDS_SIZES,
+    sizes: CLOTHING_SIZES,
     colors: ['Noir', 'Gris'],
-    imageCount: 2
+    imageCount: 2,
+    relatedProductIds: ['enfant-t-shirt-graphique', 'enfant-sweat-capuche']
   },
   {
     id: 'enfant-veste-legere',
@@ -219,9 +226,10 @@ export const PRODUCTS: Product[] = [
       en: 'Water-repellent fabric, removable hood, straight cut.'
     },
     priceEur: 78,
-    sizes: KIDS_SIZES,
+    sizes: CLOTHING_SIZES,
     colors: ['Noir', 'Bleu acier'],
-    imageCount: 2
+    imageCount: 2,
+    relatedProductIds: ['enfant-sweat-capuche', 'enfant-t-shirt-graphique']
   },
   {
     id: 'accessoires-sac-cabas',
@@ -269,7 +277,8 @@ export const PRODUCTS: Product[] = [
     priceEur: 85,
     sizes: ['UNIQUE'],
     colors: ['Bleu acier'],
-    imageCount: 2
+    imageCount: 2,
+    relatedProductIds: ['accessoires-chapeau-laine', 'accessoires-ceinture-cuir']
   },
   {
     id: 'accessoires-chapeau-laine',
@@ -284,7 +293,8 @@ export const PRODUCTS: Product[] = [
     priceEur: 55,
     sizes: ['UNIQUE'],
     colors: ['Noir', 'Gris'],
-    imageCount: 2
+    imageCount: 2,
+    relatedProductIds: ['accessoires-bijou-anneau', 'accessoires-sac-cabas']
   }
 ];
 

@@ -14,6 +14,7 @@ import { ProductCard } from '@/components/product/ProductCard';
 import { ProductGallery } from '@/components/product/ProductGallery';
 import { ProductTabs } from '@/components/product/ProductTabs';
 import { SizeGuideModal } from '@/components/product/SizeGuideModal';
+import { KIDS_ROWS } from '@/components/product/SizeGuideTable';
 
 /** Shipping funnel (Tâche 19) — not built yet, 404 for now. */
 const CHECKOUT_PATH = '/commande/livraison';
@@ -77,7 +78,14 @@ export function ProductDetailView({
           <p className="mt-2.5 text-lg font-bold">{formatPrice(product.priceEur, currency, locale)}</p>
 
           <div className="mt-7">
-            <FieldLabel label={t('size')} value={size} />
+            <FieldLabel
+              label={t('size')}
+              value={
+                product.category === 'enfant'
+                  ? `${size} · ${KIDS_ROWS.find((row) => row.size === size)?.age} ${t('yearsAbbr')}`
+                  : size
+              }
+            />
             <div className="flex flex-wrap gap-2">
               {product.sizes.map((option) => {
                 const isActive = option === size;
@@ -97,7 +105,7 @@ export function ProductDetailView({
               })}
             </div>
             <div className="mt-2">
-              <SizeGuideModal sizes={product.sizes} oneSizeLabel={t('oneSize')} />
+              <SizeGuideModal category={product.category} oneSizeLabel={t('oneSize')} />
             </div>
           </div>
 
@@ -189,7 +197,7 @@ export function ProductDetailView({
             {t('buyNow')}
           </button>
 
-          <ProductTabs description={product.description[locale]} sizes={product.sizes} />
+          <ProductTabs description={product.description[locale]} category={product.category} />
 
           <div className="mt-6 flex flex-col items-start gap-2.5 rounded-2xl border border-mist-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
             <span className="text-sm text-mist-600">{t('needHelp')}</span>

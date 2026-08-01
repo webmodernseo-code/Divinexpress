@@ -120,8 +120,10 @@ describe('getAvailableSubcategories/Sizes/Colors', () => {
   });
 
   it('only reports values from the products it is given', () => {
-    const enfant = getProductsByCategory('enfant');
-    expect(getAvailableSizes(enfant)).not.toContain('XL');
+    // Homme/Femme/Enfant share the same letter sizes, so use Accessoires (its own
+    // 'UNIQUE'/'S/M'/'L/XL' vocabulary) to prove sizes stay scoped to the given products.
+    const accessoires = getProductsByCategory('accessoires');
+    expect(getAvailableSizes(accessoires)).not.toContain('XL');
   });
 });
 

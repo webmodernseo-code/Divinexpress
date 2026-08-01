@@ -91,6 +91,7 @@
     "detailsBody": "Materials chosen for their structure and longevity, reinforced seams and finishes checked one by one. Every piece is built to hold its shape season after season.",
     "careBody": "Favour gentle care: low-temperature washing or the cleaning method suited to the material, then air dry. Store your pieces away from direct light to preserve their colour.",
     "oneSize": "One size",
+    "yearsAbbr": "years",
     "needHelp": "Need help?",
     "contactUs": "Contact us",
     "relatedProducts": "You may also like"
@@ -143,6 +144,7 @@
     "size": "Size",
     "chest": "Chest",
     "waist": "Waist",
+    "age": "Age (years)",
     "height": "Height",
     "close": "Close"
   },

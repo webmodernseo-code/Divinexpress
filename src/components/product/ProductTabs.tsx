@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import type { Category } from '@/lib/products';
 import { SizeGuideTable } from './SizeGuideTable';
 
 type TabId = 'description' | 'details' | 'care' | 'sizeGuide';
@@ -9,7 +10,7 @@ type TabId = 'description' | 'details' | 'care' | 'sizeGuide';
 const TAB_BUTTON_CLASS =
   'flex-shrink-0 whitespace-nowrap border-b-2 pb-3 text-[11px] font-bold uppercase tracking-[0.03em] transition-colors md:pb-3.5 md:text-[13px] md:tracking-[0.05em]';
 
-export function ProductTabs({ description, sizes }: { description: string; sizes: string[] }) {
+export function ProductTabs({ description, category }: { description: string; category: Category }) {
   const t = useTranslations('product');
   const tSizeGuide = useTranslations('sizeGuide');
   const [activeTab, setActiveTab] = useState<TabId>('description');
@@ -93,7 +94,7 @@ export function ProductTabs({ description, sizes }: { description: string; sizes
       </div>
 
       <div {...panelProps('sizeGuide')}>
-        <SizeGuideTable sizes={sizes} oneSizeLabel={t('oneSize')} />
+        <SizeGuideTable category={category} oneSizeLabel={t('oneSize')} />
       </div>
     </div>
   );
