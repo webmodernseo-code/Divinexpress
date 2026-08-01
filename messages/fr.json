@@ -23,6 +23,8 @@
     "gbp": "Livre (GBP)"
   },
   "footer": {
+    "tagline": "Vêtements et accessoires premium, façonnés pour durer.",
+    "securePayments": "Paiements sécurisés",
     "newsletterTitle": "Restez informé·e",
     "newsletterPlaceholder": "Votre email",
     "newsletterButton": "S'inscrire",
