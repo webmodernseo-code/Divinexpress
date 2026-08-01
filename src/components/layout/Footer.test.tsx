@@ -68,4 +68,50 @@ describe('Footer', () => {
     expect(screen.getByRole('button', { name: /fr/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /eur/i })).toBeInTheDocument();
   });
+
+  it('shows the approved newsletter copy and confirms a valid local subscription', async () => {
+    const user = userEvent.setup();
+    render(<Footer />);
+    expect(screen.getByText('ACCÈS PRIVÉ')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Gardez une longueur d’avance sur la prochaine sortie.' })).toBeInTheDocument();
+    await user.type(screen.getByLabelText('Adresse email'), 'client@example.com');
+    await user.click(screen.getByRole('button', { name: 'REJOINDRE LA LISTE' }));
+    expect(screen.getByText('Merci, vous êtes inscrit·e à la liste privée.')).toHaveAttribute('role', 'status');
+  });
+
+  it('does not confirm an invalid email', async () => {
+    const user = userEvent.setup();
+    render(<Footer />);
+    await user.type(screen.getByLabelText('Adresse email'), 'incorrect');
+    await user.click(screen.getByRole('button', { name: 'REJOINDRE LA LISTE' }));
+    expect(screen.queryByText('Merci, vous êtes inscrit·e à la liste privée.')).not.toBeInTheDocument();
+  });
+
+  it('renders the three desktop navigation groups and their localized links', () => {
+    render(<Footer />);
+    expect(screen.getAllByText('SHOP').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('AIDE').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('LÉGAL').length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: 'Accessoires' })[0]).toHaveAttribute('href');
+    expect(screen.getAllByRole('link', { name: 'Contact' })[0]).toHaveAttribute('href', '/contact');
+    expect(screen.getAllByRole('link', { name: 'Confidentialité' })[0]).toHaveAttribute('href', '/confidentialite');
+  });
+
+  it('opens and closes a mobile navigation accordion accessibly', async () => {
+    const user = userEvent.setup();
+    render(<Footer />);
+    const trigger = screen.getByRole('button', { name: 'SHOP' });
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    await user.click(trigger);
+    expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    expect(document.getElementById(trigger.getAttribute('aria-controls')!)).not.toHaveAttribute('hidden');
+    await user.click(trigger);
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('uses the supplied white logo and labels the secure payment area', () => {
+    render(<Footer />);
+    expect(screen.getByAltText('Reign')).toHaveAttribute('src', '/branding/logo-reign-white.png');
+    expect(screen.getByText('Paiements sécurisés')).toBeInTheDocument();
+  });
 });

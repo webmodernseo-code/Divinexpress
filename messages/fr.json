@@ -23,14 +23,20 @@
     "gbp": "Livre (GBP)"
   },
   "footer": {
+    "newsletterKicker": "ACCÈS PRIVÉ",
+    "newsletterTitle": "Gardez une longueur d’avance sur la prochaine sortie.",
+    "newsletterBody": "Soyez parmi les premiers à découvrir les nouveautés, les offres exclusives et plus encore.",
+    "newsletterLabel": "Adresse email",
+    "newsletterPlaceholder": "Adresse email",
+    "newsletterButton": "REJOINDRE LA LISTE",
+    "newsletterSuccess": "Merci, vous êtes inscrit·e à la liste privée.",
     "tagline": "Vêtements et accessoires premium, façonnés pour durer.",
-    "securePayments": "Paiements sécurisés",
-    "newsletterTitle": "Restez informé·e",
-    "newsletterPlaceholder": "Votre email",
-    "newsletterButton": "S'inscrire",
-    "newsletterSuccess": "Merci, vous êtes inscrit·e.",
+    "groups": { "shop": "SHOP", "help": "AIDE", "legal": "LÉGAL" },
     "links": {
-      "about": "À propos",
+      "newArrivals": "Nouveautés",
+      "clothing": "Vêtements",
+      "accessories": "Accessoires",
+      "bestSellers": "Meilleures ventes",
       "contact": "Contact",
       "faq": "FAQ",
       "shippingReturns": "Livraison & Retours",
@@ -39,6 +45,7 @@
       "terms": "CGV",
       "privacy": "Confidentialité"
     },
+    "securePayments": "Paiements sécurisés",
     "rights": "Tous droits réservés."
   },
   "cookies": {

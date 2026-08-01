@@ -23,14 +23,20 @@
     "gbp": "Pound (GBP)"
   },
   "footer": {
+    "newsletterKicker": "PRIVATE ACCESS",
+    "newsletterTitle": "Stay ahead of the next drop.",
+    "newsletterBody": "Be the first to know about new arrivals, exclusive offers and more.",
+    "newsletterLabel": "Email address",
+    "newsletterPlaceholder": "Email address",
+    "newsletterButton": "JOIN THE LIST",
+    "newsletterSuccess": "Thank you, you have joined the private list.",
     "tagline": "Premium clothing and accessories, made to last.",
-    "securePayments": "Secure payments",
-    "newsletterTitle": "Stay in the loop",
-    "newsletterPlaceholder": "Your email",
-    "newsletterButton": "Subscribe",
-    "newsletterSuccess": "Thank you, you're subscribed.",
+    "groups": { "shop": "SHOP", "help": "HELP", "legal": "LEGAL" },
     "links": {
-      "about": "About",
+      "newArrivals": "New arrivals",
+      "clothing": "Clothing",
+      "accessories": "Accessories",
+      "bestSellers": "Best sellers",
       "contact": "Contact",
       "faq": "FAQ",
       "shippingReturns": "Shipping & Returns",
@@ -39,6 +45,7 @@
       "terms": "Terms of Sale",
       "privacy": "Privacy"
     },
+    "securePayments": "Secure payments",
     "rights": "All rights reserved."
   },
   "cookies": {
