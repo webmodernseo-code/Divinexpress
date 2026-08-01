@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useCart } from '@/context/CartContext';
@@ -12,6 +13,18 @@ import { Button } from '@/components/ui/Button';
 import { CheckoutSteps } from '@/components/checkout/CheckoutSteps';
 
 const PAYMENT_METHODS = ['stripe', 'genius'] as const;
+
+const PAYMENT_LOGOS: Record<(typeof PAYMENT_METHODS)[number], { src: string; width: number; height: number }[]> = {
+  stripe: [
+    { src: '/payment/visa-mastercard.png', width: 1231, height: 496 },
+    { src: '/payment/paypal.png', width: 600, height: 400 }
+  ],
+  genius: [
+    { src: '/payment/visa-mastercard.png', width: 1231, height: 496 },
+    { src: '/payment/orange-money.png', width: 3840, height: 1025 },
+    { src: '/payment/wave.png', width: 701, height: 437 }
+  ]
+};
 
 const DEFAULT_VALUES: PaymentFormValues = { method: 'stripe' };
 
@@ -79,6 +92,18 @@ export default function PaymentPage() {
                   <span className="block text-sm font-bold">{t(`paymentMethods.${method}.name`)}</span>
                   <span className="mt-1 block text-xs text-mist-600">
                     {t(`paymentMethods.${method}.description`)}
+                  </span>
+                  <span className="mt-2 flex items-center gap-2">
+                    {PAYMENT_LOGOS[method].map((logo) => (
+                      <Image
+                        key={logo.src}
+                        src={logo.src}
+                        alt=""
+                        width={logo.width}
+                        height={logo.height}
+                        className="h-5 w-auto rounded-sm object-contain"
+                      />
+                    ))}
                   </span>
                 </span>
                 <span

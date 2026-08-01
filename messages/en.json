@@ -185,7 +185,7 @@
     "paymentMethods": {
       "stripe": {
         "name": "Stripe",
-        "description": "Card, Apple Pay, Google Pay"
+        "description": "Card, PayPal"
       },
       "genius": {
         "name": "Genius Pay",
