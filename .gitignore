@@ -42,3 +42,6 @@ next-env.d.ts
 
 # reference material, not part of the project source
 claude skills/
+
+# isolated feature worktrees
+/.worktrees/
