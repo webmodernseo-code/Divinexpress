@@ -23,15 +23,20 @@ export function CookieBanner() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 flex flex-col items-center justify-between gap-4 bg-ink px-4 py-4 text-sm text-paper sm:flex-row sm:px-8">
-      <p className="max-w-2xl">{t('message')}</p>
-      <Button
-        variant="secondary"
-        onClick={accept}
-        className="border-paper text-paper hover:border-accent hover:text-accent"
-      >
-        {t('accept')}
-      </Button>
-    </div>
+    <>
+      <div className="fixed inset-x-0 bottom-0 z-40 flex flex-col items-center justify-between gap-4 bg-ink px-4 py-4 text-sm text-paper sm:flex-row sm:px-8">
+        <p className="max-w-2xl">{t('message')}</p>
+        <Button
+          variant="secondary"
+          onClick={accept}
+          className="border-paper text-paper hover:border-accent hover:text-accent"
+        >
+          {t('accept')}
+        </Button>
+      </div>
+      {/* Reserves the fixed banner's height in normal flow so it can never trap content
+          (e.g. a form's submit button) underneath it — see Task 30 QA audit. */}
+      <div aria-hidden="true" className="h-36 sm:h-20" />
+    </>
   );
 }
