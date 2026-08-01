@@ -111,7 +111,7 @@ describe('Footer', () => {
 
   it('uses the supplied white logo and labels the secure payment area', () => {
     render(<Footer />);
-    expect(screen.getByAltText('Reign')).toHaveAttribute('src', '/branding/logo-reign-white.png');
+    expect(screen.getByAltText('Reign')).toHaveAttribute('src', '/branding/logo-reign.png');
     expect(screen.getByText('Paiements sécurisés')).toBeInTheDocument();
   });
 });

@@ -73,9 +73,9 @@ export function Footer() {
   }
 
   return (
-    <footer className="bg-ink text-paper">
+    <footer className="bg-mist-50 text-ink">
       <Container className="px-4 pb-8 pt-8 sm:px-6 md:pt-12 lg:px-8 lg:pb-7">
-        <section className="rounded-[24px] bg-[#f4f1ec] px-6 py-9 text-ink sm:px-8 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.8fr)] lg:items-center lg:gap-14 lg:px-12 lg:py-11">
+        <section className="rounded-[24px] border border-mist-200 bg-paper px-6 py-9 text-ink sm:px-8 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.8fr)] lg:items-center lg:gap-14 lg:px-12 lg:py-11">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-mist-600">{t('newsletterKicker')}</p>
             <h2 className="mt-4 max-w-xl font-serif text-[32px] leading-[1.05] tracking-tight sm:text-4xl lg:text-[42px]">
@@ -117,20 +117,20 @@ export function Footer() {
         <div className="py-12 lg:grid lg:grid-cols-[1.35fr_0.8fr_0.8fr_0.8fr] lg:gap-16 lg:py-16">
           <div className="mb-10 flex flex-col items-start gap-6 lg:mb-0">
             <Image
-              src="/branding/logo-reign-white.png"
+              src="/branding/logo-reign.png"
               alt="Reign"
               width={193}
               height={67}
               className="h-auto w-[170px] object-contain"
             />
-            <p className="max-w-xs text-[15px] leading-7 text-paper/70">{t('tagline')}</p>
+            <p className="max-w-xs text-[15px] leading-7 text-mist-600">{t('tagline')}</p>
             <div className="flex gap-3">
               {SOCIAL_LINKS.map(({ label, Icon }) => (
                 <a
                   key={label}
                   href="#"
                   aria-label={label}
-                  className="flex h-12 w-12 items-center justify-center rounded-full border border-paper/70 text-paper transition-colors hover:border-paper hover:bg-paper hover:text-ink"
+                  className="flex h-12 w-12 items-center justify-center rounded-full border border-ink/25 text-ink transition-colors hover:border-ink hover:bg-ink hover:text-paper"
                 >
                   <Icon className="h-[18px] w-[18px]" />
                 </a>
@@ -140,13 +140,13 @@ export function Footer() {
 
           {FOOTER_GROUPS.map((group) => (
             <nav key={group.key} aria-label={t(`groups.${group.key}`)} className="hidden lg:block">
-              <h3 className="border-b border-paper/20 pb-5 text-xs font-semibold tracking-[0.22em] text-paper/70">
+              <h3 className="border-b border-mist-200 pb-5 text-xs font-semibold tracking-[0.22em] text-mist-500">
                 {t(`groups.${group.key}`)}
               </h3>
               <ul className="mt-6 space-y-4">
                 {group.links.map((link) => (
                   <li key={link.key}>
-                    <Link href={link.href} className="text-[15px] text-paper/70 transition-colors hover:text-paper">
+                    <Link href={link.href} className="text-[15px] text-mist-600 transition-colors hover:text-ink">
                       {t(`links.${link.key}`)}
                     </Link>
                   </li>
@@ -155,17 +155,17 @@ export function Footer() {
             </nav>
           ))}
 
-          <div className="border-t border-paper/20 lg:hidden">
+          <div className="border-t border-mist-200 lg:hidden">
             {FOOTER_GROUPS.map((group) => {
               const isOpen = openGroup === group.key;
               return (
-                <div key={group.key} className="border-b border-paper/20">
+                <div key={group.key} className="border-b border-mist-200">
                   <button
                     type="button"
                     aria-expanded={isOpen}
                     aria-controls={`footer-${group.key}-panel`}
                     onClick={() => setOpenGroup((current) => (current === group.key ? null : group.key))}
-                    className="flex w-full items-center justify-between py-5 text-xs font-semibold tracking-[0.22em] text-paper"
+                    className="flex w-full items-center justify-between py-5 text-xs font-semibold tracking-[0.22em] text-ink"
                   >
                     <span>{t(`groups.${group.key}`)}</span>
                     <span aria-hidden="true" className="text-base">{isOpen ? '−' : '+'}</span>
@@ -174,7 +174,7 @@ export function Footer() {
                     <ul className="space-y-4 pb-6">
                       {group.links.map((link) => (
                         <li key={link.key}>
-                          <Link href={link.href} className="text-sm text-paper/70 transition-colors hover:text-paper">
+                          <Link href={link.href} className="text-sm text-mist-600 transition-colors hover:text-ink">
                             {t(`links.${link.key}`)}
                           </Link>
                         </li>
@@ -187,13 +187,13 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-paper/15 pt-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-8">
-          <p className="hidden text-sm text-paper/60 lg:block">
+        <div className="border-t border-mist-200 pt-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-8">
+          <p className="hidden text-sm text-mist-500 lg:block">
             © {new Date().getFullYear()} Reign — {t('rights')}
           </p>
 
           <div>
-            <p className="mb-5 text-center text-[11px] font-semibold tracking-[0.2em] text-paper/60 lg:text-left">
+            <p className="mb-5 text-center text-[11px] font-semibold tracking-[0.2em] text-mist-500 lg:text-left">
               {t('securePayments')}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 lg:justify-start">
@@ -215,7 +215,7 @@ export function Footer() {
             <CurrencySwitcher variant="footer" />
           </div>
 
-          <p className="pt-7 text-center text-sm text-paper/60 lg:hidden">
+          <p className="pt-7 text-center text-sm text-mist-500 lg:hidden">
             © {new Date().getFullYear()} Reign — {t('rights')}
           </p>
         </div>
