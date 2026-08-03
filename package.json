@@ -7,14 +7,17 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "tsc --noEmit --incremental false",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "dependencies": {
+    "lucide-react": "^1.28.0",
     "next": "16.2.12",
     "next-intl": "^4.13.4",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "recharts": "^3.10.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
