@@ -5,6 +5,16 @@
   --color-paper: #ffffff;
   --color-accent: #3b4a5a;
   --color-success: #3f7355;
+  --color-admin-ivory: #fbfaf7;
+  --color-admin-surface: #ffffff;
+  --color-admin-text: #111111;
+  --color-admin-muted: #6b6965;
+  --color-admin-border: #dfddd8;
+  --color-admin-soft: #f4f2ed;
+  --color-admin-success: #128640;
+  --color-admin-warning: #d48806;
+  --color-admin-danger: #d92d3a;
+  --color-admin-info: #2764d8;
 
   --color-mist-50: #f2f2f2;
   --color-mist-100: #e6e6e6;
@@ -24,4 +34,20 @@
 body {
   background-color: var(--color-paper);
   color: var(--color-ink);
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  outline-offset: 3px;
+}
+
+:focus-visible {
+  outline: 2px solid #111111;
+}
+
+@keyframes admin-spin {
+  to { transform: rotate(360deg); }
 }

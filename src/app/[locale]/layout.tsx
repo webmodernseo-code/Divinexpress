@@ -10,10 +10,7 @@ import { CartProvider } from '@/context/CartContext';
 import { FavoritesProvider } from '@/context/FavoritesContext';
 import { CartDrawerProvider } from '@/context/CartDrawerContext';
 import { CheckoutProvider } from '@/context/CheckoutContext';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { CookieBanner } from '@/components/layout/CookieBanner';
-import { CartDrawer } from '@/components/cart/CartDrawer';
+import { SiteChrome } from '@/components/layout/SiteChrome';
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -52,11 +49,7 @@ export default async function LocaleLayout({
               <FavoritesProvider>
                 <CartDrawerProvider>
                   <CheckoutProvider>
-                    <Header />
-                    <main>{children}</main>
-                    <Footer />
-                    <CookieBanner />
-                    <CartDrawer />
+                    <SiteChrome>{children}</SiteChrome>
                   </CheckoutProvider>
                 </CartDrawerProvider>
               </FavoritesProvider>
