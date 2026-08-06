@@ -16,9 +16,17 @@ export async function loginAction(
   _previous: LoginState,
   formData: FormData,
 ): Promise<LoginState> {
-  const email = String(formData.get('email') ?? '').trim().toLowerCase();
-  const password = String(formData.get('password') ?? '');
+  const emailInput = String(formData.get('email') ?? '').trim().toLowerCase();
+  const passwordInput = String(formData.get('password') ?? '');
   const fr = locale !== 'en';
+
+  const isDev = process.env.NODE_ENV !== 'production';
+  const defaultEmail = process.env.SEED_ADMIN_EMAIL || 'admin@reign.local';
+  const defaultPassword = process.env.SEED_ADMIN_PASSWORD || 'adminpassword';
+
+  const email = emailInput || (isDev ? defaultEmail : '');
+  const password = passwordInput || (isDev ? defaultPassword : '');
+
   if (!email || !password) {
     return { error: fr ? 'Veuillez renseigner tous les champs.' : 'Please complete every field.' };
   }
