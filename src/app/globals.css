@@ -5,16 +5,23 @@
   --color-paper: #ffffff;
   --color-accent: #3b4a5a;
   --color-success: #3f7355;
-  --color-admin-ivory: #fbfaf7;
+
+  /* Reign Administration SaaS Theme Colors */
+  --color-admin-ivory: #f8fafc;
   --color-admin-surface: #ffffff;
-  --color-admin-text: #111111;
-  --color-admin-muted: #6b6965;
-  --color-admin-border: #dfddd8;
-  --color-admin-soft: #f4f2ed;
-  --color-admin-success: #128640;
-  --color-admin-warning: #d48806;
-  --color-admin-danger: #d92d3a;
-  --color-admin-info: #2764d8;
+  --color-admin-text: #0f172a;
+  --color-admin-muted: #64748b;
+  --color-admin-border: #e2e8f0;
+  --color-admin-secondary: #f1f5f9;
+  --color-admin-soft: #f8fafc;
+  --color-admin-success: #10b981;
+  --color-admin-warning: #f59e0b;
+  --color-admin-alert: #f59e0b;
+  --color-admin-danger: #ef4444;
+  --color-admin-error: #ef4444;
+  --color-admin-info: #3b82f6;
+  --color-admin-primary: #6366f1;
+  --color-admin-primary-hover: #4f46e5;
 
   --color-mist-50: #f2f2f2;
   --color-mist-100: #e6e6e6;
@@ -29,6 +36,27 @@
 
   --font-sans: var(--reign-font-sans);
   --font-serif: var(--reign-font-serif);
+
+  --animate-fade-in: fade-in 0.25s ease-out;
+  --animate-slide-in-right: slide-in-right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
 }
 
 body {
@@ -50,4 +78,21 @@ textarea {
 
 @keyframes admin-spin {
   to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer-progress {
+  background: linear-gradient(90deg, #0d0d0d 0%, #4b5563 50%, #0d0d0d 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite linear;
+}
+
+.shimmer-progress-unlocked {
+  background: linear-gradient(90deg, #d97706 0%, #fbbf24 50%, #d97706 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
 }

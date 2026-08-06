@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { buildMetadata, breadcrumbJsonLd, SITE_URL } from '@/lib/seo';
-import { PlaceholderBlock } from '@/components/ui/PlaceholderBlock';
 import { HomeCollection } from '@/components/home/HomeCollection';
+import { HeroCarousel } from '@/components/home/HeroCarousel';
 import { PromoBanner } from '@/components/home/PromoBanner';
 import { HomeFaq } from '@/components/home/HomeFaq';
 import { CATEGORIES, getSubcategoriesForCategory, type Category } from '@/lib/products';
@@ -89,14 +90,28 @@ export default async function HomePage({
           }}
         />
       )}
-      <section className="relative">
-        <PlaceholderBlock aspect="wide" className="w-full" />
-        <div className="absolute inset-0 flex flex-col items-start justify-end bg-linear-to-b from-ink/10 to-ink/60 p-8 text-paper md:p-16">
-          <p className="text-xs uppercase tracking-[0.3em]">{t('heroKicker')}</p>
-          <h1 className="mt-4 max-w-xl font-serif text-3xl md:text-6xl">{t('heroTitle')}</h1>
-          <p className="mt-4 max-w-md text-sm text-paper/85 md:text-base">{t('heroSubtitle')}</p>
-        </div>
-      </section>
+      <HeroCarousel
+        slides={[
+          {
+            image: '/image/hero_1.png',
+            kicker: t('heroKicker'),
+            title: t('heroTitle'),
+            subtitle: t('heroSubtitle')
+          },
+          {
+            image: '/image/hero_2.png',
+            kicker: t('heroKicker2'),
+            title: t('heroTitle2'),
+            subtitle: t('heroSubtitle2')
+          },
+          {
+            image: '/image/hero_3.png',
+            kicker: t('heroKicker3'),
+            title: t('heroTitle3'),
+            subtitle: t('heroSubtitle3')
+          }
+        ]}
+      />
 
       {/* Remounts when the Header navigates to a different category/subcategory. */}
       <HomeCollection
@@ -109,8 +124,15 @@ export default async function HomePage({
 
       <HomeFaq />
 
-      <section className="relative">
-        <PlaceholderBlock aspect="wide" className="w-full" />
+      <section className="relative aspect-[16/9] w-full overflow-hidden">
+        <Image
+          src="/image/hero_3.png"
+          alt={t('editorialTitle')}
+          fill
+          className="object-cover"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-ink/50" />
         <div className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center text-paper">
           <h2 className="max-w-2xl font-serif text-3xl md:text-4xl">{t('editorialTitle')}</h2>
           <p className="mt-4 max-w-xl text-sm md:text-base">{t('editorialBody')}</p>

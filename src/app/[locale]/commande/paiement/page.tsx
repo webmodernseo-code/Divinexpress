@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useCart } from '@/context/CartContext';
 import { useCheckout } from '@/context/CheckoutContext';
@@ -30,23 +30,50 @@ const DEFAULT_VALUES: PaymentFormValues = { method: 'stripe' };
 
 export default function PaymentPage() {
   const t = useTranslations('checkout');
+  const locale = useLocale();
   const router = useRouter();
   const { shipping } = useCheckout();
-  const { clearCart } = useCart();
+  const { items, clearCart } = useCart();
   const [values, setValues] = useState<PaymentFormValues>(DEFAULT_VALUES);
   const [errors, setErrors] = useState<PaymentFormErrors>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [serverError, setServerError] = useState('');
 
   function handleSelect(method: PaymentFormValues['method']) {
     setValues({ method });
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const validationErrors = validatePaymentForm(values);
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
-      clearCart();
-      router.push('/commande/confirmation');
+      setSubmitting(true);
+      setServerError('');
+      try {
+        const storageKey = 'reign-checkout-idempotency';
+        const idempotencyKey = window.sessionStorage.getItem(storageKey) ?? crypto.randomUUID();
+        window.sessionStorage.setItem(storageKey, idempotencyKey);
+        const response = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ idempotencyKey, method: values.method, shipping, items }),
+        });
+        const result = await response.json() as { orderNumber: string; checkoutUrl?: string };
+        window.sessionStorage.removeItem(storageKey);
+        clearCart();
+        if (result.checkoutUrl) {
+          window.location.href = result.checkoutUrl;
+        } else {
+          router.push(`/commande/confirmation?order=${encodeURIComponent(result.orderNumber)}`);
+        }
+      } catch {
+        setServerError(locale === 'fr'
+          ? 'Le paiement n’a pas pu être finalisé. Vérifiez votre panier et réessayez.'
+          : 'Payment could not be completed. Check your cart and try again.');
+      } finally {
+        setSubmitting(false);
+      }
     }
   }
 
@@ -119,9 +146,10 @@ export default function PaymentPage() {
           })}
         </div>
         {errors.method && <p className="text-xs text-accent">{t(`errors.${errors.method}`)}</p>}
+        {serverError && <p role="alert" className="text-sm text-accent">{serverError}</p>}
 
-        <Button type="submit" className="w-full rounded-2xl">
-          {t('confirmPayment')}
+        <Button type="submit" disabled={submitting || items.length === 0} className="w-full rounded-2xl">
+          {submitting ? (locale === 'fr' ? 'TRAITEMENT…' : 'PROCESSING…') : t('confirmPayment')}
         </Button>
       </form>
     </Container>

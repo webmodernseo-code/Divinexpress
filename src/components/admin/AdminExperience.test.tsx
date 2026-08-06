@@ -1,10 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { AdminDemoProvider } from '@/context/AdminDemoContext';
 import { AdminShell } from './AdminShell';
 import { LoginPanel } from './LoginPanel';
 import { DashboardOverview } from './DashboardOverview';
+
+vi.mock('next-intl', () => ({
+  useLocale: () => 'fr',
+  useTranslations: () => (key: string) => key,
+}));
 
 describe('premium admin experience', () => {
   it('opens and closes the responsive navigation', async () => {
@@ -18,7 +23,7 @@ describe('premium admin experience', () => {
 
   it('toggles password visibility', async () => {
     const user = userEvent.setup();
-    render(<LoginPanel locale="fr" />);
+    render(<LoginPanel locale="fr" action={async () => ({ error: '' })} />);
     const password = screen.getByLabelText(/^mot de passe$/i);
     await user.click(screen.getByRole('button', { name: /afficher le mot de passe/i }));
     expect(password).toHaveAttribute('type', 'text');

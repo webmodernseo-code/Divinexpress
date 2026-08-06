@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { Search } from 'lucide-react';
 
@@ -15,17 +15,46 @@ type ClientItem = {
   joined: string;
 };
 
-const INITIAL_CLIENTS: ClientItem[] = [
-  { id: 'CUST-001', name: 'Alice Martin', email: 'alice.martin@email.com', phone: '+33 6 12 34 56 78', country: 'France', totalOrders: 3, totalSpent: '272,00 €', joined: 'Mai 2025' },
-  { id: 'CUST-002', name: 'Lucas Bernard', email: 'lucas.bernard@email.com', phone: '+33 6 98 76 54 32', country: 'France', totalOrders: 1, totalSpent: '89,90 €', joined: 'Juin 2025' },
-  { id: 'CUST-003', name: 'Chloé Dubois', email: 'chloe.dubois@email.com', phone: '+33 7 45 67 89 01', country: 'Belgique', totalOrders: 2, totalSpent: '162,50 €', joined: 'Mai 2025' },
-  { id: 'CUST-004', name: 'Thomas Leroy', email: 'thomas.leroy@email.com', phone: '+33 6 32 14 58 79', country: 'France', totalOrders: 1, totalSpent: '49,00 €', joined: 'Avril 2025' }
-];
+interface CustomerRaw {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string | null;
+  createdAt: string;
+  orderCount: number;
+  totalSpentMinor: number;
+}
+
+const INITIAL_CLIENTS: ClientItem[] = [];
 
 export default function ClientsPage() {
   const systemLocale = useLocale() as 'fr' | 'en';
-  const [clients] = useState<ClientItem[]>(INITIAL_CLIENTS);
+  const [clients, setClients] = useState<ClientItem[]>(INITIAL_CLIENTS);
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    fetch('/api/admin/customers')
+      .then(res => res.ok ? res.json() : Promise.reject())
+      .then(data => {
+        const mapped = (data as CustomerRaw[]).map((c) => {
+          const joinedDate = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' }).format(new Date(c.createdAt));
+          const totalSpentFormatted = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(c.totalSpentMinor / 100);
+          return {
+            id: c.id.slice(0, 8).toUpperCase(),
+            name: [c.firstName, c.lastName].filter(Boolean).join(' ') || 'Client invité',
+            email: c.email || '',
+            phone: c.phone || '',
+            country: 'France',
+            totalOrders: c.orderCount || 0,
+            totalSpent: totalSpentFormatted,
+            joined: joinedDate,
+          };
+        });
+        setClients(mapped);
+      })
+      .catch(() => undefined);
+  }, []);
 
   const filteredClients = clients.filter(c => 
     c.name.toLowerCase().includes(search.toLowerCase()) ||

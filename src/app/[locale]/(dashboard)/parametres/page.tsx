@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { 
   Store, 
@@ -18,22 +18,73 @@ import {
 
 type Tab = 'general' | 'paiements' | 'livraison' | 'retours' | 'notifications' | 'whatsapp' | 'equipe' | 'securite' | 'facturation';
 
+interface StoreSettings {
+  shop_name?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  country?: string;
+  currency?: string;
+  timezone?: string;
+  accent_color?: string;
+  min_shipping_free?: string;
+  return_period?: string;
+  whatsapp_sync?: boolean;
+  whatsapp_assignee?: string;
+}
+
 export default function ParametresPage() {
   const systemLocale = useLocale() as 'fr' | 'en';
   const [activeTab, setActiveTab] = useState<Tab>('general');
   const [isSaved, setIsSaved] = useState(false);
-  const [hasChanges, setHasChanges] = useState(true);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [settings, setSettings] = useState<StoreSettings>({
+    shop_name: 'Reign',
+    email: 'contact@reign-store.com',
+    phone: '+33 6 12 34 56 78',
+    address: '12 Rue de la Paix, 75002 Paris',
+    country: 'France',
+    currency: 'EUR',
+    timezone: 'Europe/Paris',
+    accent_color: '#0B0B0B',
+    min_shipping_free: '150,00',
+    return_period: '14 jours',
+    whatsapp_sync: true,
+    whatsapp_assignee: 'Service client',
+  });
 
-  const handleSave = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetch('/api/admin/settings')
+      .then(res => res.ok ? res.json() : Promise.reject())
+      .then(data => {
+        setSettings(data as StoreSettings);
+        setHasChanges(false);
+      })
+      .catch(() => undefined);
+  }, []);
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSaved(true);
-    setHasChanges(false);
-    setTimeout(() => {
-      setIsSaved(false);
-    }, 4000);
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings),
+      });
+      if (res.ok) {
+        setIsSaved(true);
+        setHasChanges(false);
+        setTimeout(() => {
+          setIsSaved(false);
+        }, 4000);
+      }
+    } catch {
+      alert('Error saving settings');
+    }
   };
 
-  const handleChange = () => {
+  const updateSetting = (key: keyof StoreSettings, value: string | boolean) => {
+    setSettings((prev) => ({ ...prev, [key]: value }));
     setHasChanges(true);
   };
 
@@ -108,13 +159,13 @@ export default function ParametresPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-xs font-bold transition cursor-pointer text-left ${
+                className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer text-left border ${
                   isActive 
-                    ? 'bg-admin-secondary text-black' 
-                    : 'text-admin-muted hover:text-black hover:bg-neutral-50/60'
+                    ? 'bg-indigo-50/70 border-indigo-100/50 text-indigo-600 shadow-xs' 
+                    : 'bg-transparent border-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <Icon className="size-4 shrink-0" />
+                <Icon className={`size-4 shrink-0 ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} />
                 <span>{tab.label}</span>
               </button>
             );
@@ -146,56 +197,74 @@ export default function ParametresPage() {
                     <label className="block text-[10px] uppercase tracking-wider text-admin-muted mb-2">Nom de la boutique</label>
                     <input 
                       type="text" 
-                      defaultValue="Reign" 
-                      onChange={handleChange}
-                      className="w-full h-11 px-4 border border-admin-border rounded-xl outline-none focus:border-black transition text-black"
+                      value={settings.shop_name || ''} 
+                      onChange={(e) => updateSetting('shop_name', e.target.value)}
+                      className="w-full h-11 px-4 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-black shadow-2xs"
                     />
                   </div>
                   <div>
                     <label className="block text-[10px] uppercase tracking-wider text-admin-muted mb-2">Email</label>
                     <input 
                       type="email" 
-                      defaultValue="contact@reign-store.com" 
-                      onChange={handleChange}
-                      className="w-full h-11 px-4 border border-admin-border rounded-xl outline-none focus:border-black transition text-black"
+                      value={settings.email || ''} 
+                      onChange={(e) => updateSetting('email', e.target.value)}
+                      className="w-full h-11 px-4 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-black shadow-2xs"
                     />
                   </div>
                   <div>
                     <label className="block text-[10px] uppercase tracking-wider text-admin-muted mb-2">Téléphone</label>
                     <input 
                       type="text" 
-                      defaultValue="+33 6 12 34 56 78" 
-                      onChange={handleChange}
-                      className="w-full h-11 px-4 border border-admin-border rounded-xl outline-none focus:border-black transition text-black"
+                      value={settings.phone || ''} 
+                      onChange={(e) => updateSetting('phone', e.target.value)}
+                      className="w-full h-11 px-4 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-black shadow-2xs"
                     />
                   </div>
                   <div>
                     <label className="block text-[10px] uppercase tracking-wider text-admin-muted mb-2">Adresse</label>
                     <input 
                       type="text" 
-                      defaultValue="12 Rue de la Paix, 75002 Paris" 
-                      onChange={handleChange}
-                      className="w-full h-11 px-4 border border-admin-border rounded-xl outline-none focus:border-black transition text-black"
+                      value={settings.address || ''} 
+                      onChange={(e) => updateSetting('address', e.target.value)}
+                      className="w-full h-11 px-4 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-black shadow-2xs"
                     />
                   </div>
 
                   <div className="grid grid-cols-3 gap-3">
                     <div>
                       <label className="block text-[10px] uppercase tracking-wider text-admin-muted mb-2">Pays</label>
-                      <select className="w-full h-11 px-3 border border-admin-border bg-white rounded-xl outline-none cursor-pointer">
+                      <select 
+                        value={settings.country || 'France'}
+                        onChange={(e) => updateSetting('country', e.target.value)}
+                        className="w-full h-11 px-3 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 cursor-pointer shadow-2xs"
+                      >
                         <option>France</option>
+                        <option>Belgique</option>
+                        <option>Canada</option>
                       </select>
                     </div>
                     <div>
                       <label className="block text-[10px] uppercase tracking-wider text-admin-muted mb-2">Devise</label>
-                      <select className="w-full h-11 px-3 border border-admin-border bg-white rounded-xl outline-none cursor-pointer">
-                        <option>EUR (€)</option>
+                      <select 
+                        value={settings.currency || 'EUR'}
+                        onChange={(e) => updateSetting('currency', e.target.value)}
+                        className="w-full h-11 px-3 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 cursor-pointer shadow-2xs"
+                      >
+                        <option value="EUR">EUR (€)</option>
+                        <option value="USD">USD ($)</option>
+                        <option value="CAD">CAD ($)</option>
                       </select>
                     </div>
                     <div>
                       <label className="block text-[10px] uppercase tracking-wider text-admin-muted mb-2">Fuseau horaire</label>
-                      <select className="w-full h-11 px-3 border border-admin-border bg-white rounded-xl outline-none cursor-pointer">
+                      <select 
+                        value={settings.timezone || 'Europe/Paris'}
+                        onChange={(e) => updateSetting('timezone', e.target.value)}
+                        className="w-full h-11 px-3 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 cursor-pointer shadow-2xs"
+                      >
                         <option>Europe/Paris</option>
+                        <option>America/New_York</option>
+                        <option>Europe/London</option>
                       </select>
                     </div>
                   </div>
@@ -213,7 +282,7 @@ export default function ParametresPage() {
                   <div>
                     <label className="block text-[10px] uppercase tracking-wider text-admin-muted mb-2">Logo de la boutique</label>
                     <div className="p-4 border border-admin-border rounded-xl flex items-center justify-between">
-                      <span className="font-serif text-xl font-bold tracking-widest text-black">Reign</span>
+                      <span className="font-serif text-xl font-bold tracking-widest text-black">{settings.shop_name || 'Reign'}</span>
                       <div className="flex gap-2">
                         <button type="button" className="h-8 px-3 rounded-lg border border-admin-border hover:border-black text-[10px] font-bold text-admin-text transition cursor-pointer bg-white">
                           Changer le logo
@@ -229,7 +298,9 @@ export default function ParametresPage() {
                   <div>
                     <label className="block text-[10px] uppercase tracking-wider text-admin-muted mb-2">Favicon</label>
                     <div className="p-4 border border-admin-border rounded-xl flex items-center justify-between">
-                      <div className="size-9 rounded bg-black text-white font-serif font-bold text-lg flex items-center justify-center">R</div>
+                      <div className="size-9 rounded bg-black text-white font-serif font-bold text-lg flex items-center justify-center">
+                        {(settings.shop_name || 'R').charAt(0).toUpperCase()}
+                      </div>
                       <div className="flex gap-2">
                         <button type="button" className="h-8 px-3 rounded-lg border border-admin-border hover:border-black text-[10px] font-bold text-admin-text transition cursor-pointer bg-white">
                           Changer
@@ -245,12 +316,12 @@ export default function ParametresPage() {
                   <div>
                     <label className="block text-[10px] uppercase tracking-wider text-admin-muted mb-2">Couleur principale</label>
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 size-4.5 rounded-full bg-black border border-admin-border" />
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 size-4.5 rounded-full bg-black border border-slate-200" />
                       <input 
                         type="text" 
-                        defaultValue="#0B0B0B" 
-                        onChange={handleChange}
-                        className="w-full h-11 pl-11 pr-4 border border-admin-border rounded-xl outline-none focus:border-black transition text-black"
+                        value={settings.accent_color || '#0B0B0B'} 
+                        onChange={(e) => updateSetting('accent_color', e.target.value)}
+                        className="w-full h-11 pl-11 pr-4 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-black shadow-2xs"
                       />
                     </div>
                     <p className="text-[10px] text-admin-muted mt-2">Couleur utilisée pour les boutons et éléments clés.</p>
@@ -270,7 +341,7 @@ export default function ParametresPage() {
                     { name: 'PayPal', status: 'connected', label: systemLocale === 'fr' ? 'Connecté' : 'Connected', btn: systemLocale === 'fr' ? 'Configurer' : 'Configure' },
                     { name: 'GeniusPay', status: 'config', label: systemLocale === 'fr' ? 'À configurer' : 'To configure', btn: systemLocale === 'fr' ? 'Connecter' : 'Connect' }
                   ].map((p) => (
-                    <div key={p.name} className="p-4 border border-admin-border rounded-xl flex items-center justify-between">
+                    <div key={p.name} className="p-4 border border-slate-100 rounded-xl flex items-center justify-between hover:bg-slate-50/50 transition-colors">
                       <div className="flex items-center gap-3">
                         <span className="font-bold text-xs text-black">{p.name}</span>
                         <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold border ${
@@ -281,7 +352,7 @@ export default function ParametresPage() {
                           {p.label}
                         </span>
                       </div>
-                      <button type="button" className="h-8 px-3 rounded-lg border border-admin-border hover:border-black text-[10px] font-bold text-admin-text transition cursor-pointer bg-white">
+                      <button type="button" className="h-8 px-3 rounded-lg border border-slate-200 hover:border-black text-[10px] font-bold text-slate-700 hover:text-black transition cursor-pointer bg-white">
                         {p.btn}
                       </button>
                     </div>
@@ -302,23 +373,29 @@ export default function ParametresPage() {
                     <div className="relative">
                       <input 
                         type="text" 
-                        defaultValue="150,00" 
-                        onChange={handleChange}
-                        className="w-full h-11 px-4 pr-8 border border-admin-border rounded-xl outline-none focus:border-black transition text-black font-bold text-right"
+                        value={settings.min_shipping_free || '150,00'} 
+                        onChange={(e) => updateSetting('min_shipping_free', e.target.value)}
+                        className="w-full h-11 px-4 pr-8 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-black font-bold text-right shadow-2xs"
                       />
-                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-admin-muted font-bold">€</span>
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">€</span>
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-[10px] uppercase tracking-wider text-admin-muted mb-2">Délai de retour</label>
-                    <select className="w-full h-11 px-3 border border-admin-border bg-white rounded-xl outline-none cursor-pointer">
+                    <select 
+                      value={settings.return_period || '14 jours'}
+                      onChange={(e) => updateSetting('return_period', e.target.value)}
+                      className="w-full h-11 px-3 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 cursor-pointer shadow-2xs"
+                    >
                       <option>14 jours</option>
+                      <option>30 jours</option>
+                      <option>60 jours</option>
                     </select>
                   </div>
 
                   <label className="flex items-center gap-3 text-xs text-black font-semibold cursor-pointer select-none pt-2">
-                    <input type="checkbox" defaultChecked className="size-4.5 rounded border-admin-border accent-black" />
+                    <input type="checkbox" defaultChecked className="size-4.5 rounded border-slate-300 accent-indigo-600 focus:ring-indigo-500/20" />
                     <span>Remettre automatiquement en stock après approbation</span>
                   </label>
                 </div>
@@ -336,7 +413,7 @@ export default function ParametresPage() {
                       <p className="font-bold text-xs text-black">Numéro connecté</p>
                       <p className="text-[10px] text-admin-muted mt-1">+33 6 12 34 56 78</p>
                     </div>
-                    <button type="button" className="h-8 px-3 rounded-lg border border-admin-border hover:border-black text-[10px] font-bold text-admin-text transition cursor-pointer bg-white">
+                    <button type="button" className="h-8 px-3 rounded-lg border border-slate-200 hover:border-black text-[10px] font-bold text-slate-700 hover:text-black transition cursor-pointer bg-white">
                       Gérer la connexion
                     </button>
                   </div>
@@ -355,15 +432,26 @@ export default function ParametresPage() {
                     </div>
                   </div>
 
-                  <label className="flex items-center gap-3 text-xs text-black font-semibold cursor-pointer select-none border-t border-admin-border/50 pt-4">
-                    <input type="checkbox" defaultChecked className="size-4.5 rounded border-admin-border accent-black" />
+                  <label className="flex items-center gap-3 text-xs text-black font-semibold cursor-pointer select-none border-t border-slate-150 pt-4">
+                    <input 
+                      type="checkbox" 
+                      checked={settings.whatsapp_sync ?? true} 
+                      onChange={(e) => updateSetting('whatsapp_sync', e.target.checked)}
+                      className="size-4.5 rounded border-slate-300 accent-indigo-600 focus:ring-indigo-500/20" 
+                    />
                     <span>Synchroniser les nouveaux messages</span>
                   </label>
 
                   <div>
                     <label className="block text-[10px] uppercase tracking-wider text-admin-muted mb-2">Assignation par défaut</label>
-                    <select className="w-full h-11 px-3 border border-admin-border bg-white rounded-xl outline-none cursor-pointer">
+                    <select 
+                      value={settings.whatsapp_assignee || 'Service client'} 
+                      onChange={(e) => updateSetting('whatsapp_assignee', e.target.value)}
+                      className="w-full h-11 px-3 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 cursor-pointer shadow-2xs"
+                    >
                       <option>Service client</option>
+                      <option>Support Technique</option>
+                      <option>Administration</option>
                     </select>
                   </div>
                 </div>

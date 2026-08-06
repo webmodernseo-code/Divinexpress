@@ -1,8 +1,6 @@
 'use client';
 
-/* eslint-disable react-hooks/purity */
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { 
   Send, 
@@ -54,153 +52,109 @@ type Chat = {
   };
 };
 
-const INITIAL_CHATS: Chat[] = [
-  {
-    id: '1',
-    customerName: 'Alice Martin',
-    phone: '+33 6 12 34 56 78',
-    email: 'alice.martin@email.com',
-    avatar: 'AM',
-    unread: 2,
-    lastMsg: 'Bonjour, où en est ma commande ?',
-    lastTime: '10:42',
-    status: 'none',
-    ordersCount: 3,
-    totalSpent: '272,00 €',
-    returnCount: 0,
-    history: [
-      { id: 'h1', sender: 'client', text: 'Bonjour, où en est ma commande ?', time: '10:32' },
-      { id: 'h2', sender: 'system', text: 'Commande expédiée · 10:35', time: '10:35' },
-      { id: 'h3', sender: 'admin', text: 'Bonjour Alice, votre commande a été expédiée ce matin.', time: '10:36', isRead: true },
-      { id: 'h4', sender: 'client', text: 'Merci ! Puis-je avoir le numéro de suivi ?', time: '10:37' },
-      { id: 'h5', sender: 'admin', text: 'Bien sûr : 6A1234567890. Livraison prévue vendredi.', time: '10:38', isRead: true }
-    ],
-    linkedOrder: {
-      id: '#RG-2841',
-      productName: 'Fleece hoodie',
-      productVariant: 'XL · Noir · x2',
-      productImage: '/images/products/fleece-hoodie-black.jpg',
-      total: '136,00 €',
-      status: 'Expédiée',
-      date: '10 mai · Vendredi'
-    }
-  },
-  {
-    id: '2',
-    customerName: 'Lucas Bernard',
-    phone: '+33 6 98 76 54 32',
-    email: 'lucas.b@gmail.com',
-    avatar: 'LB',
-    unread: 0,
-    lastMsg: 'Merci beaucoup',
-    lastTime: '10:15',
-    status: 'none',
-    ordersCount: 1,
-    totalSpent: '89,90 €',
-    returnCount: 0,
-    history: [
-      { id: 'l1', sender: 'client', text: 'Bonjour, avez-vous reçu le paiement ?', time: '09:50' },
-      { id: 'l2', sender: 'admin', text: 'Oui Lucas, le paiement a bien été validé.', time: '09:55', isRead: true },
-      { id: 'l3', sender: 'client', text: 'Merci beaucoup', time: '10:15' }
-    ]
-  },
-  {
-    id: '3',
-    customerName: 'Chloé Dubois',
-    phone: '+33 7 45 67 89 01',
-    email: 'chloe.dubois@email.com',
-    avatar: 'CD',
-    unread: 0,
-    lastMsg: 'Je souhaite retourner le hoodie...',
-    lastTime: '09:47',
-    status: 'pending',
-    ordersCount: 2,
-    totalSpent: '162,50 €',
-    returnCount: 1,
-    history: [
-      { id: 'c1', sender: 'client', text: 'Je souhaite retourner le hoodie car il est trop grand.', time: '09:47' }
-    ]
-  },
-  {
-    id: '4',
-    customerName: 'Thomas Leroy',
-    phone: '+33 6 32 14 58 79',
-    email: 'thomas.l@gmail.com',
-    avatar: 'TL',
-    unread: 0,
-    lastMsg: 'Est-ce que vous avez d\'autres...',
-    lastTime: '09:30',
-    status: 'resolved',
-    ordersCount: 1,
-    totalSpent: '49,00 €',
-    returnCount: 0,
-    history: [
-      { id: 't1', sender: 'client', text: 'Est-ce que vous avez d\'autres modèles de portefeuille ?', time: '09:30' }
-    ]
-  }
-];
+const INITIAL_CHATS: Chat[] = [];
 
 export default function MessagesPage() {
   const systemLocale = useLocale() as 'fr' | 'en';
   const [chats, setChats] = useState<Chat[]>(INITIAL_CHATS);
-  const [activeChatId, setActiveChatId] = useState('1');
+  const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [inputText, setInputText] = useState('');
   const [noteText, setNoteText] = useState('');
   const [search, setSearch] = useState('');
   const [statusTab, setStatusTab] = useState<'all' | 'unread' | 'pending' | 'resolved'>('all');
 
-  const activeChat = chats.find((c) => c.id === activeChatId) || chats[0];
-
-  const handleSendMessage = (textToSend = inputText) => {
-    if (!textToSend.trim()) return;
-
-    const newMessage: Message = {
-      id: Math.random().toString(),
-      sender: 'admin',
-      text: textToSend,
-      time: new Date().toLocaleTimeString(systemLocale === 'fr' ? 'fr-FR' : 'en-US', { hour: '2-digit', minute: '2-digit' }),
-      isRead: true
-    };
-
-    const updatedChats = chats.map((c) => {
-      if (c.id === activeChat.id) {
-        return {
-          ...c,
-          lastMsg: textToSend,
-          lastTime: 'À l\'instant',
-          unread: 0,
-          history: [...c.history, newMessage]
-        };
-      }
-      return c;
-    });
-
-    setChats(updatedChats);
-    setInputText('');
-
-    // Response Simulator
-    setTimeout(() => {
-      const replyMessage: Message = {
-        id: Math.random().toString(),
-        sender: 'client',
-        text: systemLocale === 'fr' ? 'Parfait, merci !' : 'Perfect, thank you!',
-        time: new Date().toLocaleTimeString(systemLocale === 'fr' ? 'fr-FR' : 'en-US', { hour: '2-digit', minute: '2-digit' })
-      };
-
-      setChats((prevChats) =>
-        prevChats.map((c) => {
-          if (c.id === activeChat.id) {
-            return {
-              ...c,
-              lastMsg: replyMessage.text,
-              lastTime: 'À l\'instant',
-              history: [...c.history, replyMessage]
-            };
+  const refreshChats = (nextActiveEmail?: string) => {
+    fetch('/api/admin/messages')
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => {
+        setChats(data);
+        if (data.length > 0) {
+          if (nextActiveEmail) {
+            setActiveChatId(nextActiveEmail);
+          } else if (!activeChatId) {
+            setActiveChatId(data[0].id);
           }
-          return c;
-        })
-      );
-    }, 2500);
+        }
+      })
+      .catch(() => undefined);
+  };
+
+  useEffect(() => {
+    refreshChats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const activeChat = chats.find((c) => c.id === activeChatId) || chats[0] || {
+    id: '',
+    customerName: '',
+    phone: '',
+    email: '',
+    avatar: '',
+    unread: 0,
+    lastMsg: '',
+    lastTime: '',
+    status: 'none',
+    history: [],
+    ordersCount: 0,
+    totalSpent: '0,00 €',
+    returnCount: 0,
+  };
+
+  // Mark active chat messages as read/open
+  useEffect(() => {
+    if (!activeChat.email) return;
+    fetch('/api/admin/messages', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: activeChat.email, status: 'open' }),
+    }).catch(() => undefined);
+  }, [activeChatId, activeChat.email]);
+
+  const handleSendMessage = async (textToSend = inputText) => {
+    if (!textToSend.trim() || !activeChat.email) return;
+
+    try {
+      const response = await fetch('/api/admin/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: activeChat.email, text: textToSend }),
+      });
+      if (response.ok) {
+        setInputText('');
+        refreshChats(activeChat.email);
+
+        // Response Simulator: send a mock WhatsApp contact response back to SQLite DB after 2 seconds
+        setTimeout(async () => {
+          await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: activeChat.customerName,
+              email: activeChat.email,
+              message: systemLocale === 'fr' ? 'Parfait, merci !' : 'Perfect, thank you!',
+            }),
+          });
+          refreshChats(activeChat.email);
+        }, 2000);
+      }
+    } catch {
+      alert('Error sending message');
+    }
+  };
+
+  const handleResolveChat = async (email: string) => {
+    try {
+      const response = await fetch('/api/admin/messages', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, status: 'closed' }),
+      });
+      if (response.ok) {
+        refreshChats(email);
+      }
+    } catch {
+      alert('Error resolving chat');
+    }
   };
 
   const handleSuggestClick = (suggestion: string) => {
@@ -382,8 +336,11 @@ export default function MessagesPage() {
               <select className="h-9 px-2 rounded-xl border border-admin-border bg-white text-[11px] font-semibold outline-none cursor-pointer text-admin-muted hover:text-black">
                 <option>Assigner à Jean</option>
               </select>
-              <button className="h-9 px-3 rounded-xl border border-admin-border bg-white text-[11px] font-bold text-admin-text hover:border-black transition cursor-pointer">
-                Marquer résolu
+              <button 
+                onClick={() => handleResolveChat(activeChat.email)}
+                className="h-9 px-3 rounded-xl border border-admin-border bg-white text-[11px] font-bold text-admin-text hover:border-black transition cursor-pointer"
+              >
+                {systemLocale === 'fr' ? 'Marquer résolu' : 'Mark resolved'}
               </button>
             </div>
           </div>

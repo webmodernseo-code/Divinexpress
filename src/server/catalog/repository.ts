@@ -1,0 +1,113 @@
+import { randomUUID } from 'node:crypto';
+import type { Database } from '../db/client';
+import { DomainError } from '../domain/errors';
+import { createProductInputSchema, type CreateProductInput } from './schemas';
+
+type ProductStatus = 'draft' | 'active' | 'archived';
+type InventoryReason = 'initial' | 'adjustment' | 'reservation' | 'release' | 'sale' | 'return';
+
+export interface CatalogVariant {
+  id: string; sku: string; size: string | null; color: string | null;
+  priceMinor: number; currency: 'EUR' | 'GBP'; stock: number;
+}
+
+export interface CatalogProduct {
+  id: string; categoryId: string; slug: string; nameFr: string; nameEn: string;
+  descriptionFr: string; descriptionEn: string; status: ProductStatus;
+  variants: CatalogVariant[];
+}
+
+interface ProductRow {
+  id: string; category_id: string; slug: string; name_fr: string; name_en: string;
+  description_fr: string; description_en: string; status: ProductStatus;
+}
+
+interface VariantRow {
+  id: string; product_id: string; sku: string; size: string | null; color: string | null;
+  price_minor: number; currency: 'EUR' | 'GBP'; stock: number;
+}
+
+export class CatalogRepository {
+  constructor(private readonly database: Database) {}
+
+  async createProduct(rawInput: CreateProductInput): Promise<CatalogProduct> {
+    const input = createProductInputSchema.parse(rawInput);
+    await this.database.exec('BEGIN IMMEDIATE');
+    try {
+      await this.database.prepare(`INSERT INTO products
+        (id, category_id, slug, name_fr, name_en, description_fr, description_en, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'active')`)
+        .run(input.id, input.categoryId, input.slug, input.nameFr, input.nameEn, input.descriptionFr, input.descriptionEn);
+      const insertVariant = this.database.prepare(`INSERT INTO product_variants
+        (id, product_id, sku, size, color, price_minor, currency)
+        VALUES (?, ?, ?, ?, ?, ?, ?)`);
+      for (const variant of input.variants) {
+        await insertVariant.run(variant.id, input.id, variant.sku, variant.size, variant.color, variant.priceMinor, variant.currency);
+      }
+      await this.database.exec('COMMIT');
+    } catch {
+      await this.database.exec('ROLLBACK');
+      throw new DomainError('CONFLICT', 'Product slug or SKU already exists');
+    }
+    return (await this.findBySlug(input.slug, true))!;
+  }
+
+  async listProducts(options: { includeArchived?: boolean } = {}): Promise<CatalogProduct[]> {
+    const products = (await this.database.prepare(`SELECT id, category_id, slug, name_fr, name_en,
+      description_fr, description_en, status FROM products
+      ${options.includeArchived ? '' : "WHERE status <> 'archived'"} ORDER BY created_at, id`)
+      .all()) as unknown as ProductRow[];
+    if (products.length === 0) return [];
+    const variants = (await this.database.prepare(`SELECT v.id, v.product_id, v.sku, v.size, v.color,
+      v.price_minor, v.currency, COALESCE(SUM(m.quantity_delta), 0) AS stock
+      FROM product_variants v LEFT JOIN inventory_movements m ON m.variant_id = v.id
+      GROUP BY v.id ORDER BY v.created_at, v.id`).all()) as unknown as VariantRow[];
+    return products.map((product) => ({
+      id: product.id,
+      categoryId: product.category_id,
+      slug: product.slug,
+      nameFr: product.name_fr,
+      nameEn: product.name_en,
+      descriptionFr: product.description_fr,
+      descriptionEn: product.description_en,
+      status: product.status,
+      variants: variants.filter((variant) => variant.product_id === product.id).map((variant) => ({
+        id: variant.id, sku: variant.sku, size: variant.size, color: variant.color,
+        priceMinor: variant.price_minor, currency: variant.currency, stock: variant.stock,
+      })),
+    }));
+  }
+
+  async findBySlug(slug: string, includeArchived = false): Promise<CatalogProduct | null> {
+    return (await this.listProducts({ includeArchived })).find((product) => product.slug === slug) ?? null;
+  }
+
+  async archiveProduct(id: string): Promise<void> {
+    const result = await this.database.prepare(`UPDATE products SET status = 'archived',
+      archived_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE id = ?`).run(id);
+    if (result.changes === 0) throw new DomainError('NOT_FOUND', 'Product not found', 404);
+  }
+
+  async adjustInventory(input: { variantId: string; quantityDelta: number; reason: InventoryReason }): Promise<number> {
+    if (!Number.isSafeInteger(input.quantityDelta) || input.quantityDelta === 0) {
+      throw new DomainError('CONFLICT', 'Inventory adjustment must be a non-zero integer');
+    }
+    await this.database.exec('BEGIN IMMEDIATE');
+    try {
+      const row = (await this.database.prepare(`SELECT COALESCE(SUM(quantity_delta), 0) AS stock
+        FROM inventory_movements WHERE variant_id = ?`).get(input.variantId)) as { stock: number } | undefined;
+      const stockVal = row?.stock ?? 0;
+      const nextStock = stockVal + input.quantityDelta;
+      if (nextStock < 0) throw new DomainError('CONFLICT', 'Insufficient stock');
+      await this.database.prepare(`INSERT INTO inventory_movements
+        (id, variant_id, quantity_delta, reason) VALUES (?, ?, ?, ?)`)
+        .run(randomUUID(), input.variantId, input.quantityDelta, input.reason);
+      await this.database.exec('COMMIT');
+      return nextStock;
+    } catch (error) {
+      await this.database.exec('ROLLBACK');
+      if (error instanceof DomainError) throw error;
+      throw new DomainError('NOT_FOUND', 'Variant not found', 404);
+    }
+  }
+}

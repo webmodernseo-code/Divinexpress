@@ -29,11 +29,14 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage({
-  params
+  params,
+  searchParams
 }: {
   params: Promise<{ locale: string; slug: string }>;
+  searchParams: Promise<{ couleur?: string }>;
 }) {
   const { locale, slug } = await params;
+  const { couleur } = await searchParams;
   setRequestLocale(locale);
 
   const product = getProductBySlug(slug);
@@ -74,7 +77,11 @@ export default async function ProductPage({
           )
         }}
       />
-      <ProductDetailView product={product} relatedProducts={relatedProducts} />
+      <ProductDetailView
+        product={product}
+        relatedProducts={relatedProducts}
+        initialColor={couleur && product.colors.includes(couleur) ? couleur : undefined}
+      />
     </Container>
   );
 }

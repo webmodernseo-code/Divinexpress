@@ -38,10 +38,12 @@ function FieldLabel({ label, value }: { label: string; value?: string }) {
 
 export function ProductDetailView({
   product,
-  relatedProducts
+  relatedProducts,
+  initialColor
 }: {
   product: Product;
   relatedProducts: Product[];
+  initialColor?: string;
 }) {
   const locale = useLocale() as 'fr' | 'en';
   const t = useTranslations('product');
@@ -52,7 +54,7 @@ export function ProductDetailView({
   const { isFavorite, toggleFavorite } = useFavorites();
 
   const [size, setSize] = useState(product.sizes[0]);
-  const [color, setColor] = useState(product.colors[0]);
+  const [color, setColor] = useState(initialColor || product.colors[0]);
   const [quantity, setQuantity] = useState(1);
 
   const favorite = isFavorite(product.id);
@@ -71,7 +73,13 @@ export function ProductDetailView({
   return (
     <div>
       <div className="grid gap-9 md:grid-cols-2 md:gap-14">
-        <ProductGallery imageCount={product.imageCount} productName={product.name[locale]} />
+        <ProductGallery
+          imageCount={product.imageCount}
+          productName={product.name[locale]}
+          product={product}
+          selectedColor={color}
+          onChangeColor={setColor}
+        />
 
         <div>
           <h1 className="font-serif text-2xl md:text-[32px]">{product.name[locale]}</h1>
@@ -197,8 +205,6 @@ export function ProductDetailView({
             {t('buyNow')}
           </button>
 
-          <ProductTabs description={product.description[locale]} category={product.category} />
-
           <div className="mt-6 flex flex-col items-start gap-2.5 rounded-2xl border border-mist-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
             <span className="text-sm text-mist-600">{t('needHelp')}</span>
             <Link
@@ -210,6 +216,10 @@ export function ProductDetailView({
             </Link>
           </div>
         </div>
+      </div>
+
+      <div className="mt-14 max-w-4xl">
+        <ProductTabs description={product.description[locale]} category={product.category} />
       </div>
 
       {relatedProducts.length > 0 && (

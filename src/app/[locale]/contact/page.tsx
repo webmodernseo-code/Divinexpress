@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { validateContactForm, type ContactFormValues, type ContactFormErrors } from '@/lib/contactValidation';
 import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
@@ -11,20 +11,37 @@ const EMPTY_VALUES: ContactFormValues = { name: '', email: '', message: '' };
 
 export default function ContactPage() {
   const t = useTranslations('contact');
+  const locale = useLocale();
   const [values, setValues] = useState<ContactFormValues>(EMPTY_VALUES);
   const [errors, setErrors] = useState<ContactFormErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [serverError, setServerError] = useState('');
 
   function handleChange(field: keyof ContactFormValues, value: string) {
     setValues((prev) => ({ ...prev, [field]: value }));
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const validationErrors = validateContactForm(values);
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
-      setIsSubmitted(true);
+      setSubmitting(true);
+      setServerError('');
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(values),
+        });
+        if (!response.ok) throw new Error('contact failed');
+        setIsSubmitted(true);
+      } catch {
+        setServerError(locale === 'fr'
+          ? 'Votre message n’a pas pu être envoyé. Réessayez plus tard.'
+          : 'Your message could not be sent. Try again later.');
+      } finally {
+        setSubmitting(false);
+      }
     }
   }
 
@@ -103,8 +120,9 @@ export default function ContactPage() {
           )}
         </div>
 
-        <Button type="submit" className="w-full rounded-2xl">
-          {t('submit')}
+        {serverError && <p role="alert" className="text-sm text-accent">{serverError}</p>}
+        <Button type="submit" disabled={submitting} className="w-full rounded-2xl">
+          {submitting ? (locale === 'fr' ? 'ENVOI…' : 'SENDING…') : t('submit')}
         </Button>
       </form>
     </Container>

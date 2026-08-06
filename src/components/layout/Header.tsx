@@ -8,14 +8,52 @@ import { useCart } from '@/context/CartContext';
 import { useCartDrawer } from '@/context/CartDrawerContext';
 import { useFavorites } from '@/context/FavoritesContext';
 import { Logo } from '@/components/ui/Logo';
-import { SOCIAL_LINKS } from '@/components/ui/SocialIcons';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { FaFacebookF, FaInstagram, FaTiktok } from 'react-icons/fa6';
+import { FiShoppingBag } from 'react-icons/fi';
+
+const socialLinks = [
+  {
+    name: 'Facebook',
+    href: 'https://facebook.com/ton-compte',
+    icon: FaFacebookF
+  },
+  {
+    name: 'Instagram',
+    href: 'https://instagram.com/ton-compte',
+    icon: FaInstagram
+  },
+  {
+    name: 'TikTok',
+    href: 'https://tiktok.com/@ton-compte',
+    icon: FaTiktok
+  }
+];
+
+export function TopBarSocials() {
+  return (
+    <div className="flex items-center gap-4">
+      {socialLinks.map(({ name, href, icon: Icon }) => (
+        <a
+          key={name}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={name}
+          className="text-paper transition-colors duration-200 hover:text-[#777168] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper"
+        >
+          <Icon className="size-[17px]" aria-hidden="true" />
+        </a>
+      ))}
+    </div>
+  );
+}
 import { CurrencySwitcher } from './CurrencySwitcher';
 
 const ICON_CIRCLE_CLASS =
-  'relative grid size-11 place-items-center rounded-full border border-[#DDD8CF] text-[#0B0B0B] transition-colors hover:bg-[#F1EDE5]';
+  'relative grid size-11 place-items-center rounded-full border border-neutral-200 text-black transition-colors hover:bg-neutral-100';
 const ICON_SVG_CLASS = 'size-5';
-const ICON_BADGE_CLASS = 'absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#0B0B0B] text-[10px] font-semibold text-white';
+const ICON_BADGE_CLASS = 'absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-black text-[10px] font-semibold text-white';
 
 function HeartIcon({ className = '' }: { className?: string }) {
   return (
@@ -25,14 +63,6 @@ function HeartIcon({ className = '' }: { className?: string }) {
   );
 }
 
-function BagIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
-      <path d="M6 8h12l-1 12H7L6 8z" />
-      <path d="M9 8V6a3 3 0 0 1 6 0v2" />
-    </svg>
-  );
-}
 
 function SearchIcon({ className = '' }: { className?: string }) {
   return (
@@ -106,7 +136,7 @@ function HeaderIcons({
         aria-label={cartLabel}
         className={ICON_CIRCLE_CLASS}
       >
-        <BagIcon className={ICON_SVG_CLASS} />
+        <FiShoppingBag className={ICON_SVG_CLASS} />
         {cartCount > 0 && (
           <span className={`${ICON_BADGE_CLASS} tabular-nums`}>{cartCount}</span>
         )}
@@ -187,14 +217,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-paper text-ink">
       {/* Utility bar */}
-      <div className="flex items-center justify-between gap-3 bg-mist-800 px-4 py-2 text-xs text-paper sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3">
-          {SOCIAL_LINKS.map(({ label, Icon }) => (
-            <a key={label} href="#" aria-label={label} className="inline-flex text-paper/85 transition-colors hover:text-accent hover:opacity-100">
-              <Icon className="h-[15px] w-[15px]" />
-            </a>
-          ))}
-        </div>
+      <div className="flex items-center justify-between gap-3 bg-black px-4 py-2 text-xs text-paper sm:px-6 lg:px-8">
+        <TopBarSocials />
         <p className="hidden flex-1 text-center tracking-wide sm:block">{tHeader('freeShippingBanner')}</p>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />

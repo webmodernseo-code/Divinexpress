@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { 
   Check, 
@@ -19,17 +19,54 @@ type ReturnItem = {
   date: string;
 };
 
-const INITIAL_RETURNS: ReturnItem[] = [
-  { id: 'RET-001', orderId: '#1081', customer: 'Pierre Leroux', reason: 'Taille trop petite', reasonEn: 'Size too small', status: 'refunded', date: 'Hier, 15:40' },
-  { id: 'RET-002', orderId: '#1083', customer: 'Jean Bernard', reason: 'Changement d\'avis', reasonEn: 'Changed mind', status: 'pending', date: 'Hier, 10:12' },
-  { id: 'RET-003', orderId: '#1080', customer: 'Sandrine K.', reason: 'Article défectueux', reasonEn: 'Defective item', status: 'accepted', date: '29 Juillet, 11:30' }
-];
+const INITIAL_RETURNS: ReturnItem[] = [];
 
 export default function RetoursPage() {
   const systemLocale = useLocale() as 'fr' | 'en';
   const [returns, setReturns] = useState<ReturnItem[]>(INITIAL_RETURNS);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+
+  interface ReturnRaw {
+    id: string;
+    orderNumber: string;
+    customer: string;
+    reason: string;
+    status: 'requested' | 'approved' | 'rejected' | 'received' | 'refunded';
+    createdAt: string;
+  }
+
+  const refreshReturns = () => {
+    fetch('/api/admin/returns')
+      .then(res => res.ok ? res.json() : Promise.reject())
+      .then(data => {
+        const mapped = (data as ReturnRaw[]).map((r) => {
+          let frontendStatus: ReturnItem['status'] = 'pending';
+          if (r.status === 'approved') frontendStatus = 'accepted';
+          if (r.status === 'rejected') frontendStatus = 'refused';
+          if (r.status === 'refunded') frontendStatus = 'refunded';
+          
+          const returnDate = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(r.createdAt));
+          
+          return {
+            id: r.id,
+            orderId: r.orderNumber,
+            customer: r.customer,
+            reason: r.reason,
+            reasonEn: r.reason,
+            status: frontendStatus,
+            date: returnDate,
+          };
+        });
+        setReturns(mapped);
+      })
+      .catch(() => undefined);
+  };
+
+  useEffect(() => {
+    refreshReturns();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filteredReturns = returns.filter((r) => {
     const matchesSearch = 
@@ -46,8 +83,8 @@ export default function RetoursPage() {
     const config = {
       pending: { bg: 'bg-amber-50 text-[#B76A16] border-amber-100', label: systemLocale === 'fr' ? 'À examiner' : 'Pending review' },
       accepted: { bg: 'bg-blue-50 text-blue-700 border-blue-100', label: systemLocale === 'fr' ? 'Accepté' : 'Accepted' },
-      refused: { bg: 'bg-red-50 text-[#B53A35] border-red-100', label: systemLocale === 'fr' ? 'Refusé' : 'Refused' },
-      refunded: { bg: 'bg-green-50 text-[#247A52] border-green-100', label: systemLocale === 'fr' ? 'Remboursé' : 'Refunded' }
+      refused: { bg: 'bg-red-50 text-[#B53A35] border-red-150', label: systemLocale === 'fr' ? 'Refusé' : 'Refused' },
+      refunded: { bg: 'bg-green-50 text-[#247A52] border-green-150', label: systemLocale === 'fr' ? 'Remboursé' : 'Refunded' }
     };
     const active = config[status];
     return (
@@ -57,8 +94,19 @@ export default function RetoursPage() {
     );
   };
 
-  const handleStatusUpdate = (id: string, newStatus: ReturnItem['status']) => {
-    setReturns(returns.map(r => r.id === id ? { ...r, status: newStatus } : r));
+  const handleStatusUpdate = async (id: string, newStatus: ReturnItem['status']) => {
+    try {
+      const response = await fetch('/api/admin/returns', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status: newStatus }),
+      });
+      if (response.ok) {
+        refreshReturns();
+      }
+    } catch {
+      alert('Error');
+    }
   };
 
   return (
@@ -77,7 +125,7 @@ export default function RetoursPage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white border border-admin-border p-4 rounded-2xl shadow-xs flex flex-col md:flex-row gap-4 justify-between items-center">
+      <div className="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
         {/* Search */}
         <div className="relative w-full md:max-w-xs">
           <input
@@ -85,9 +133,9 @@ export default function RetoursPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={systemLocale === 'fr' ? 'Rechercher un retour...' : 'Search return...'}
-            className="w-full h-11 pl-10 pr-4 rounded-xl border border-admin-border text-xs outline-none focus:border-black transition"
+            className="w-full h-11 pl-10 pr-4 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-xs text-black shadow-2xs"
           />
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-admin-muted" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
         </div>
 
         {/* Filters */}
@@ -95,7 +143,7 @@ export default function RetoursPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="h-11 px-4 rounded-xl border border-admin-border bg-white text-xs font-medium outline-none focus:border-black cursor-pointer"
+            className="h-11 px-4 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-xs font-bold cursor-pointer text-slate-700 shadow-2xs"
           >
             <option value="all">{systemLocale === 'fr' ? 'Tous les statuts' : 'All statuses'}</option>
             <option value="pending">{systemLocale === 'fr' ? 'À examiner' : 'Pending review'}</option>

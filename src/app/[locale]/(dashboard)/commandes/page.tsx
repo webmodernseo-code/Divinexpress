@@ -2,7 +2,7 @@
 
 /* eslint-disable react/no-unescaped-entities */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { 
   Search, 
@@ -19,6 +19,7 @@ import Image from 'next/image';
 
 type OrderItem = {
   id: string;
+  dbId?: string;
   customer: string;
   email: string;
   phone: string;
@@ -39,114 +40,169 @@ type OrderItem = {
   returnStatus?: 'none' | 'requested' | 'received';
 };
 
-const INITIAL_ORDERS: OrderItem[] = [
-  { 
-    id: '#RG-2841', 
-    customer: 'Alice Martin', 
-    email: 'alice.martin@email.com', 
-    phone: '+33 6 12 34 56 78',
-    address: '12 rue des Lilas, 75011 Paris, France',
-    shippingMethod: 'Colissimo Domicile (Livraison en 2 à 3 jours)',
-    trackingNumber: '6A1234567890',
-    date: '30 mai 2026 10:42', 
-    paymentStatus: 'paid', 
-    deliveryStatus: 'preparing',
-    itemsCount: 2,
-    total: 136.00,
-    productName: 'Fleece hoodie',
-    productSku: 'RG-FH-BLK-XL',
-    productVariant: 'XL · Noir',
-    productQty: 2,
-    productImage: '/images/products/fleece-hoodie-black.jpg'
-  },
-  { 
-    id: '#RG-2840', 
-    customer: 'Lucas Bernard', 
-    email: 'lucas.b@gmail.com', 
-    phone: '+33 6 98 76 54 32',
-    address: '45 avenue Foch, 69006 Lyon, France',
-    shippingMethod: 'Chronopost Express (Livraison en 24h)',
-    trackingNumber: 'XP987654321FR',
-    date: '30 mai 2026 09:15', 
-    paymentStatus: 'paid', 
-    deliveryStatus: 'shipping',
-    itemsCount: 1,
-    total: 89.00,
-    productName: 'Classic T-Shirt',
-    productSku: 'RG-TS-WHT-M',
-    productVariant: 'M · Blanc',
-    productQty: 1,
-    productImage: '/image/category_femme.png'
-  },
-  { 
-    id: '#RG-2839', 
-    customer: 'Chloé Dubois', 
-    email: 'chloe.dubois@email.com', 
-    phone: '+33 7 45 67 89 01',
-    address: '8 rue de la Paix, 75002 Paris, France',
-    shippingMethod: 'Colissimo Domicile',
-    trackingNumber: '6A9876543210',
-    date: '29 mai 2026 16:30', 
-    paymentStatus: 'refunded', 
-    deliveryStatus: 'delivered',
-    itemsCount: 1,
-    total: 98.00,
-    productName: 'Sweat à capuche Fleece',
-    productSku: 'RG-FH-GRY-L',
-    productVariant: 'L · Gris',
-    productQty: 1,
-    productImage: '/image/category_homme.png',
-    returnReason: 'Taille trop grande',
-    returnStatus: 'received'
-  },
-  { 
-    id: '#RG-2838', 
-    customer: 'Thomas Leroy', 
-    email: 'thomas.l@gmail.com', 
-    phone: '+33 6 32 14 58 79',
-    address: '14 boulevard Haussmann, 75009 Paris, France',
-    shippingMethod: 'Colissimo Domicile',
-    trackingNumber: '6A8541257410',
-    date: '29 mai 2026 11:05', 
-    paymentStatus: 'failed', 
-    deliveryStatus: 'pending',
-    itemsCount: 1,
-    total: 59.00,
-    productName: 'Leather Wallet',
-    productSku: 'RG-LW-BRN',
-    productVariant: 'Unique · Marron',
-    productQty: 1,
-    productImage: '/image/category_accessoires.png'
-  },
-  { 
-    id: '#RG-2837', 
-    customer: 'Emma Petit', 
-    email: 'emma.p@gmail.com', 
-    phone: '+33 6 45 12 78 96',
-    address: '22 rue des Écoles, 75005 Paris, France',
-    shippingMethod: 'Colissimo Domicile',
-    trackingNumber: '6A9512547841',
-    date: '28 mai 2026 18:20', 
-    paymentStatus: 'paid', 
-    deliveryStatus: 'preparing',
-    itemsCount: 3,
-    total: 165.00,
-    productName: 'Classic T-Shirt',
-    productSku: 'RG-TS-BLK-S',
-    productVariant: 'S · Noir',
-    productQty: 3,
-    productImage: '/image/category_femme.png'
-  }
-];
+interface OrderRaw {
+  id: string;
+  number: string;
+  status: string;
+  currency: string;
+  totalMinor: number;
+  createdAt: string;
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+}
+
+interface OrderDetail {
+  id: string;
+  number: string;
+  status: string;
+  currency: string;
+  totalMinor: number;
+  subtotalMinor: number;
+  shippingMinor: number;
+  taxMinor: number;
+  discountMinor: number;
+  createdAt: string;
+  shippingAddress: {
+    recipient?: string;
+    line1?: string;
+    line2?: string;
+    postalCode?: string;
+    city?: string;
+    countryCode?: string;
+    shippingMethod?: string;
+  } | null;
+  customer?: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+  };
+  shipment?: {
+    carrier?: string;
+    trackingNumber?: string;
+  } | null;
+  items: Array<{
+    id: string;
+    productName: string;
+    sku: string;
+    variantLabel: string | null;
+    quantity: number;
+    unitPriceMinor: number;
+    lineTotalMinor: number;
+  }>;
+}
 
 export default function CommandesPage() {
   const systemLocale = useLocale() as 'fr' | 'en';
-  const [orders, setOrders] = useState<OrderItem[]>(INITIAL_ORDERS);
-  const [selectedOrderId, setSelectedOrderId] = useState<string>('#RG-2841');
+  const [ordersList, setOrdersList] = useState<OrderRaw[]>([]);
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [detailedOrder, setDetailedOrder] = useState<OrderDetail | null>(null);
   const [search, setSearch] = useState('');
   const [statusTab, setStatusTab] = useState<'all' | 'todo' | 'preparing' | 'shipping' | 'returns'>('all');
 
-  const activeOrder = orders.find(o => o.id === selectedOrderId) || orders[0];
+  const refreshOrders = () => {
+    fetch('/api/admin/orders')
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => {
+        setOrdersList(data as OrderRaw[]);
+        if (data.length > 0 && !selectedOrderId) {
+          setSelectedOrderId((data as OrderRaw[])[0].number);
+        }
+      })
+      .catch(() => undefined);
+  };
+
+  useEffect(() => {
+    refreshOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!selectedOrderId) return;
+    fetch(`/api/admin/orders/${selectedOrderId}`)
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => setDetailedOrder(data as OrderDetail))
+      .catch(() => undefined);
+  }, [selectedOrderId]);
+
+  // Map ordersList into visual order items
+  const orders: OrderItem[] = ordersList.map((o) => {
+    const customerName = [o.firstName, o.lastName].filter(Boolean).join(' ') || 'Client invité';
+    const dateFormatted = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(o.createdAt));
+    const payStatus = o.status === 'refunded' ? 'refunded' : (o.status === 'cancelled' ? 'failed' : (o.status === 'pending_payment' ? 'pending' : 'paid'));
+    const delStatus = o.status === 'shipped' ? 'shipping' : (o.status === 'delivered' ? 'delivered' : (o.status === 'preparing' ? 'preparing' : (o.status === 'paid' ? 'preparing' : 'pending')));
+    return {
+      id: o.number,
+      dbId: o.id,
+      customer: customerName,
+      email: o.email || '',
+      phone: '',
+      address: '',
+      shippingMethod: '',
+      trackingNumber: '',
+      date: dateFormatted,
+      paymentStatus: payStatus as OrderItem['paymentStatus'],
+      deliveryStatus: delStatus as OrderItem['deliveryStatus'],
+      itemsCount: 1,
+      total: o.totalMinor / 100,
+      productName: 'Article',
+      productSku: '',
+      productVariant: '',
+      productQty: 1,
+      productImage: '/image/category_homme.png',
+    };
+  });
+
+  // Detailed active order
+  const activeOrder: OrderItem = detailedOrder ? {
+    id: detailedOrder.number,
+    dbId: detailedOrder.id,
+    customer: [detailedOrder.customer?.firstName, detailedOrder.customer?.lastName].filter(Boolean).join(' ') || 'Client invité',
+    email: detailedOrder.customer?.email || '',
+    phone: detailedOrder.customer?.phone || '',
+    address: [
+      detailedOrder.shippingAddress?.recipient,
+      detailedOrder.shippingAddress?.line1,
+      detailedOrder.shippingAddress?.line2,
+      detailedOrder.shippingAddress?.postalCode,
+      detailedOrder.shippingAddress?.city,
+      detailedOrder.shippingAddress?.countryCode
+    ].filter(Boolean).join(', ') || 'Adresse non renseignée',
+    shippingMethod: detailedOrder.shippingAddress?.shippingMethod || 'Colissimo Standard',
+    trackingNumber: detailedOrder.shipment?.trackingNumber || 'En attente',
+    date: new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(detailedOrder.createdAt)),
+    paymentStatus: (detailedOrder.status === 'refunded' ? 'refunded' : (detailedOrder.status === 'cancelled' ? 'failed' : (detailedOrder.status === 'pending_payment' ? 'pending' : 'paid'))) as OrderItem['paymentStatus'],
+    deliveryStatus: (detailedOrder.status === 'shipped' ? 'shipping' : (detailedOrder.status === 'delivered' ? 'delivered' : (detailedOrder.status === 'preparing' ? 'preparing' : (detailedOrder.status === 'paid' ? 'preparing' : 'pending')))) as OrderItem['deliveryStatus'],
+    itemsCount: detailedOrder.items?.reduce((acc: number, item) => acc + item.quantity, 0) || 0,
+    total: detailedOrder.totalMinor / 100,
+    productName: detailedOrder.items?.[0]?.productName || 'Article',
+    productSku: detailedOrder.items?.[0]?.sku || '',
+    productVariant: detailedOrder.items?.[0]?.variantLabel || '',
+    productQty: detailedOrder.items?.[0]?.quantity || 1,
+    productImage: detailedOrder.items?.[0]?.productName?.toLowerCase()?.includes('hoodie') ? '/image/reign-admin-hoodie.png' : '/image/category_homme.png',
+    returnReason: undefined,
+    returnStatus: 'none',
+  } : (orders.find(o => o.id === selectedOrderId) || orders[0] || {
+    id: '',
+    dbId: '',
+    customer: '',
+    email: '',
+    phone: '',
+    address: '',
+    shippingMethod: '',
+    trackingNumber: '',
+    date: '',
+    paymentStatus: 'pending',
+    deliveryStatus: 'pending',
+    itemsCount: 0,
+    total: 0,
+    productName: '',
+    productSku: '',
+    productVariant: '',
+    productQty: 0,
+    productImage: '/image/category_homme.png',
+  });
 
   const filteredOrders = orders.filter((o) => {
     const matchesSearch = 
@@ -189,12 +245,49 @@ export default function CommandesPage() {
     );
   };
 
-  const handleCreateShipment = (id: string) => {
-    setOrders(orders.map(o => o.id === id ? { ...o, deliveryStatus: 'shipping' } : o));
+  const handleCreateShipment = async (id: string) => {
+    const tracking = prompt(systemLocale === 'fr' ? 'Numéro de suivi :' : 'Tracking number:');
+    if (!tracking) return;
+    const targetOrderDbId = detailedOrder?.id || id;
+    try {
+      const response = await fetch(`/api/admin/orders/${targetOrderDbId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'shipped', trackingNumber: tracking, carrier: 'Colissimo' }),
+      });
+      if (response.ok) {
+        refreshOrders();
+        // Trigger detailed order reload
+        fetch(`/api/admin/orders/${targetOrderDbId}`)
+          .then((res) => (res.ok ? res.json() : Promise.reject()))
+          .then((data) => setDetailedOrder(data as OrderDetail))
+          .catch(() => undefined);
+      }
+    } catch {
+      alert('Error');
+    }
   };
 
-  const handleRefund = (id: string) => {
-    setOrders(orders.map(o => o.id === id ? { ...o, paymentStatus: 'refunded' } : o));
+  const handleRefund = async (id: string) => {
+    if (confirm(systemLocale === 'fr' ? 'Rembourser cette commande ?' : 'Refund this order?')) {
+      const targetOrderDbId = detailedOrder?.id || id;
+      try {
+        const response = await fetch(`/api/admin/orders/${targetOrderDbId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'refunded' }),
+        });
+        if (response.ok) {
+          refreshOrders();
+          fetch(`/api/admin/orders/${targetOrderDbId}`)
+            .then((res) => (res.ok ? res.json() : Promise.reject()))
+            .then((data) => setDetailedOrder(data))
+            .catch(() => undefined);
+        }
+      } catch {
+        alert('Error');
+      }
+    }
   };
 
   return (
@@ -214,11 +307,11 @@ export default function CommandesPage() {
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="h-10 px-4 rounded-xl border border-admin-border bg-white text-xs font-semibold hover:bg-neutral-50 flex items-center gap-1.5 transition cursor-pointer">
-            <Upload className="size-3.5 rotate-180" />
+          <button className="h-10 px-4 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs">
+            <Upload className="size-3.5 rotate-180 text-slate-400" />
             <span>{systemLocale === 'fr' ? 'Exporter' : 'Export'}</span>
           </button>
-          <button className="h-10 px-4 bg-black text-white hover:bg-neutral-800 transition font-semibold rounded-xl text-xs flex items-center gap-1.5 cursor-pointer">
+          <button className="h-10 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 cursor-pointer shadow-md shadow-indigo-600/10 active:scale-[0.98] transition-all duration-200">
             <Plus className="size-4" />
             <span>{systemLocale === 'fr' ? 'Créer une commande' : 'Create order'}</span>
           </button>
@@ -234,19 +327,26 @@ export default function CommandesPage() {
           { id: 'returns' as const, count: 3, label: systemLocale === 'fr' ? 'Retours ouverts' : 'Open returns', icon: RotateCcw }
         ].map((c) => {
           const Icon = c.icon;
+          const isCardActive = statusTab === c.id;
           return (
             <button
               key={c.id}
               onClick={() => setStatusTab(c.id)}
-              className={`p-4 bg-white border border-admin-border rounded-2xl text-left shadow-2xs hover:border-black transition flex items-center justify-between cursor-pointer ${
-                statusTab === c.id ? 'ring-1 ring-black border-black' : ''
+              className={`p-4 bg-white border rounded-2xl text-left shadow-xs transition-all duration-200 flex items-center justify-between cursor-pointer ${
+                isCardActive 
+                  ? 'border-indigo-500 ring-4 ring-indigo-50/50' 
+                  : 'border-slate-200 hover:border-slate-350'
               }`}
             >
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-admin-muted">{c.label}</p>
-                <h4 className="text-2xl font-bold text-black mt-1">{c.count}</h4>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{c.label}</p>
+                <h4 className="text-2xl font-bold text-slate-900 mt-1">{c.count}</h4>
               </div>
-              <span className="size-8.5 rounded-xl bg-admin-secondary/40 border border-admin-border/50 flex items-center justify-center text-admin-muted">
+              <span className={`size-8.5 rounded-xl border flex items-center justify-center ${
+                isCardActive 
+                  ? 'bg-indigo-50 border-indigo-100/50 text-indigo-600' 
+                  : 'bg-slate-50/60 border-slate-100 text-slate-400'
+              }`}>
                 <Icon className="size-4 shrink-0" />
               </span>
             </button>
@@ -261,9 +361,9 @@ export default function CommandesPage() {
         <div className="flex-1 w-full space-y-4">
           
           {/* Tab buttons & Filters bar */}
-          <div className="bg-white border border-admin-border rounded-2xl shadow-2xs p-4 space-y-4">
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-4 space-y-4">
             {/* Filter Tabs */}
-            <div className="border-b border-admin-border flex gap-6 text-xs font-semibold pb-1 overflow-x-auto">
+            <div className="border-b border-slate-150 flex gap-6 text-xs font-semibold pb-1 overflow-x-auto">
               {[
                 { id: 'all' as const, label: systemLocale === 'fr' ? 'Toutes les commandes' : 'All orders' },
                 { id: 'todo' as const, label: systemLocale === 'fr' ? 'À traiter' : 'To process' },
@@ -276,8 +376,8 @@ export default function CommandesPage() {
                   onClick={() => setStatusTab(tab.id)}
                   className={`pb-3 transition-colors relative cursor-pointer ${
                     statusTab === tab.id 
-                      ? 'text-black font-bold border-b-2 border-black' 
-                      : 'text-admin-muted hover:text-black'
+                      ? 'text-indigo-600 font-bold border-b-2 border-indigo-600' 
+                      : 'text-slate-500 hover:text-slate-800'
                   }`}
                 >
                   {tab.label}
@@ -293,24 +393,24 @@ export default function CommandesPage() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder={systemLocale === 'fr' ? 'N° de commande ou client' : 'Order No. or customer'}
-                  className="w-full h-10 pl-9 pr-4 rounded-xl border border-admin-border text-xs outline-none focus:border-black transition"
+                  className="w-full h-10 pl-9 pr-4 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-xs text-black shadow-2xs"
                 />
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-admin-muted" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
               </div>
 
-              <select className="h-10 px-3 rounded-xl border border-admin-border bg-white text-xs font-medium outline-none cursor-pointer">
+              <select className="h-10 px-3 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-xs font-bold cursor-pointer text-slate-700 shadow-2xs">
                 <option>{systemLocale === 'fr' ? 'Statut' : 'Status'}</option>
               </select>
 
-              <select className="h-10 px-3 rounded-xl border border-admin-border bg-white text-xs font-medium outline-none cursor-pointer">
+              <select className="h-10 px-3 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-xs font-bold cursor-pointer text-slate-700 shadow-2xs">
                 <option>{systemLocale === 'fr' ? 'Paiement' : 'Payment'}</option>
               </select>
 
-              <select className="h-10 px-3 rounded-xl border border-admin-border bg-white text-xs font-medium outline-none cursor-pointer">
+              <select className="h-10 px-3 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-xs font-bold cursor-pointer text-slate-700 shadow-2xs">
                 <option>{systemLocale === 'fr' ? 'Livraison' : 'Delivery'}</option>
               </select>
 
-              <button className="h-10 px-4 rounded-xl border border-admin-border text-xs font-semibold text-admin-text hover:bg-neutral-50 flex items-center gap-1.5 transition cursor-pointer">
+              <button className="h-10 px-4 rounded-xl border border-slate-200 hover:border-indigo-500 bg-white text-xs font-bold text-slate-750 hover:text-indigo-650 hover:bg-indigo-50/30 flex items-center gap-1.5 transition-all duration-200 cursor-pointer shadow-2xs">
                 <SlidersHorizontal className="size-3.5" />
                 <span>{systemLocale === 'fr' ? 'Plus de filtres' : 'More filters'}</span>
               </button>

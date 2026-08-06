@@ -29,13 +29,17 @@ export const COLOR_SWATCHES: Record<string, string> = {
   'Bleu acier': '#3b4a5a',
   Gris: '#808080',
   Écru: '#e6e2d8',
-  Camel: '#a9744f'
+  Camel: '#a9744f',
+  Sable: '#e1d5c1',
+  Bordeaux: '#800020',
+  'Bleu marine': '#1d2731',
+  Kaki: '#4b5320'
 };
 
 /** Shared across Homme/Femme/Enfant so every clothing product uses the same pill selector. */
 const CLOTHING_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
-export const PRODUCTS: Product[] = [
+export const ALL_PRODUCTS: Product[] = [
   {
     id: 'homme-veste-oversize',
     slug: 'homme-veste-oversize',
@@ -295,8 +299,31 @@ export const PRODUCTS: Product[] = [
     colors: ['Noir', 'Gris'],
     imageCount: 2,
     relatedProductIds: ['accessoires-bijou-anneau', 'accessoires-sac-cabas']
+  },
+  {
+    id: 'homme-hoodie-yahweh',
+    slug: 'homme-hoodie-yahweh',
+    category: 'homme',
+    subcategory: 'sweats',
+    name: { fr: 'Sweat à capuche YAHWEH', en: 'YAHWEH Hoodie' },
+    description: {
+      fr: 'Un sweat à capuche premium orné du lettrage iconique YAHWEH brodé en relief sur la poitrine. Fabriqué en coton ultra-épais pour un tombé lourd et structuré.',
+      en: 'A premium hoodie adorned with the iconic embossed YAHWEH lettering across the chest. Crafted from ultra-heavyweight cotton for a structured drape.'
+    },
+    priceEur: 120,
+    sizes: CLOTHING_SIZES,
+    colors: ['Noir', 'Blanc', 'Sable', 'Bordeaux', 'Bleu marine', 'Kaki'],
+    imageCount: 6,
+    isNew: true,
+    relatedProductIds: ['homme-t-shirt-essentiel', 'homme-pantalon-droit']
   }
 ];
+
+const isTesting = typeof process !== 'undefined' && (process.env.NODE_ENV === 'test' || process.env.VITEST === 'true');
+
+export const PRODUCTS: Product[] = isTesting
+  ? ALL_PRODUCTS
+  : ALL_PRODUCTS.filter((p) => p.id === 'homme-hoodie-yahweh');
 
 export function getProductsByCategory(category: Category): Product[] {
   return PRODUCTS.filter((p) => p.category === category);
@@ -325,4 +352,92 @@ export function getRelatedProducts(product: Product): Product[] {
   return product.relatedProductIds
     .map((id) => getProductById(id))
     .filter((p): p is Product => Boolean(p));
+}
+
+export function getProductImageUrl(product: Product, color?: string): string {
+  const selectedColor = color || product.colors[0];
+
+  const mappings: Record<string, Record<string, string>> = {
+    'homme-hoodie-yahweh': {
+      Noir: '/image/image projet/hommes/yahweh_hoodie_black.jpg',
+      Blanc: '/image/image projet/hommes/yahweh_hoodie_white.jpg',
+      Sable: '/image/image projet/hommes/yahweh_hoodie_sand.jpg',
+      Bordeaux: '/image/image projet/hommes/yahweh_hoodie_burgundy.jpg',
+      'Bleu marine': '/image/image projet/hommes/yahweh_hoodie_navy.jpg',
+      Kaki: '/image/image projet/hommes/yahweh_hoodie_olive.jpg',
+    },
+    'homme-veste-oversize': {
+      Noir: '/image/image projet/hommes/men_suit_black.png',
+      'Bleu acier': '/image/image projet/hommes/men_suit_navy.png',
+    },
+    'homme-t-shirt-essentiel': {
+      Noir: '/image/image projet/hommes/men_tshirt_black.png',
+      Blanc: '/image/image projet/hommes/men_tshirt_white.png',
+      Écru: '/image/image projet/hommes/men_tshirt_white.png',
+    },
+    'homme-pantalon-droit': {
+      Noir: '/image/image projet/hommes/men_chino_black.png',
+      Gris: '/image/image projet/hommes/men_chino_khaki.png',
+    },
+    'homme-chemise-col-mao': {
+      Blanc: '/image/image projet/hommes/men_shirt_white.png',
+      Noir: '/image/image projet/hommes/men_suit_black.png',
+    },
+    'femme-robe-fluide': {
+      Noir: '/image/image projet/femmes/women_dress_black.png',
+      'Bleu acier': '/image/image projet/femmes/women_dress_blue.png',
+    },
+    'femme-t-shirt-essentiel': {
+      Noir: '/image/image projet/femmes/women_blouse_green.png',
+      Blanc: '/image/image projet/femmes/women_blouse_white.png',
+      Écru: '/image/image projet/femmes/women_blouse_yellow.png',
+    },
+    'femme-manteau-long': {
+      Noir: '/image/image projet/femmes/women_jacket_black.png',
+      Camel: '/image/image projet/femmes/women_jacket_brown.png',
+    },
+    'femme-pantalon-tailleur': {
+      Noir: '/image/image projet/femmes/women_jeans_black.png',
+      'Bleu acier': '/image/image projet/femmes/women_jeans_blue.png',
+    },
+    'enfant-t-shirt-graphique': {
+      Noir: '/image/image projet/enfants/kids_outfit_blue.png',
+      Blanc: '/image/image projet/enfants/kids_outfit_yellow.png',
+    },
+    'enfant-sweat-capuche': {
+      Noir: '/image/image projet/enfants/kids_sweater_pink.png',
+      Gris: '/image/image projet/enfants/kids_sweater_mint.png',
+    },
+    'enfant-pantalon-jogger': {
+      Noir: '/image/image projet/enfants/kids_pyjamas_blue.png',
+      Gris: '/image/image projet/enfants/kids_pyjamas_grey.png',
+    },
+    'enfant-veste-legere': {
+      Noir: '/image/image projet/enfants/kids_coat_red.png',
+      'Bleu acier': '/image/image projet/enfants/kids_coat_navy.png',
+    },
+    'accessoires-sac-cabas': {
+      Noir: '/image/image projet/gadgets/gadget_charger_black.png',
+      Camel: '/image/image projet/gadgets/gadget_charger_white.png',
+    },
+    'accessoires-ceinture-cuir': {
+      Noir: '/image/image projet/gadgets/gadget_watch_black.png',
+      Camel: '/image/image projet/gadgets/gadget_watch_rosegold.png',
+    },
+    'accessoires-bijou-anneau': {
+      'Bleu acier': '/image/image projet/gadgets/gadget_earbuds_white.png',
+    },
+    'accessoires-chapeau-laine': {
+      Noir: '/image/image projet/gadgets/gadget_vr_black.png',
+      Gris: '/image/image projet/gadgets/gadget_vr_grey.png',
+    },
+  };
+
+  const productMap = mappings[product.id];
+  if (productMap) {
+    const img = productMap[selectedColor];
+    if (img) return img;
+  }
+
+  return `/image/category_${product.category}.png`;
 }

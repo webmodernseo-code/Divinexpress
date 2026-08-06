@@ -57,82 +57,31 @@ const PAYMENT_LOGOS = [
 
 export function Footer() {
   const t = useTranslations('footer');
-  const [email, setEmail] = useState('');
-  const [hasSubscribed, setHasSubscribed] = useState(false);
   const [openGroup, setOpenGroup] = useState<FooterGroup['key'] | null>(null);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    if (!email.trim() || !form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-    setHasSubscribed(true);
-    setEmail('');
-  }
-
   return (
-    <footer className="bg-mist-50 text-ink">
-      <Container className="px-4 pb-8 pt-8 sm:px-6 md:pt-12 lg:px-8 lg:pb-7">
-        <section className="rounded-[24px] border border-mist-200 bg-paper px-6 py-9 text-ink sm:px-8 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.8fr)] lg:items-center lg:gap-14 lg:px-12 lg:py-11">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-mist-600">{t('newsletterKicker')}</p>
-            <h2 className="mt-4 max-w-xl font-serif text-[32px] leading-[1.05] tracking-tight sm:text-4xl lg:text-[42px]">
-              {t('newsletterTitle')}
-            </h2>
-            <p className="mt-4 max-w-md text-sm leading-6 text-mist-600 sm:text-base">{t('newsletterBody')}</p>
-          </div>
+    <footer className="bg-white border-t border-mist-100 text-ink">
+      <Container className="px-4 pb-6 pt-6 sm:px-6 md:pt-8 lg:px-8 lg:pb-5">
 
-          {hasSubscribed ? (
-            <p role="status" className="mt-7 text-sm font-medium text-mist-700 lg:mt-0">
-              {t('newsletterSuccess')}
-            </p>
-          ) : (
-            <form onSubmit={handleSubmit} className="mt-7 flex flex-col gap-3 sm:flex-row sm:gap-0 lg:mt-0">
-              <label htmlFor="footer-email" className="sr-only">
-                {t('newsletterLabel')}
-              </label>
-              <input
-                id="footer-email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder={t('newsletterPlaceholder')}
-                className="h-14 min-w-0 flex-1 rounded-full border border-ink/70 bg-transparent px-6 text-base text-ink outline-none placeholder:text-mist-500 focus:ring-2 focus:ring-ink/20 sm:rounded-r-none"
-              />
-              <button
-                type="submit"
-                className="h-14 flex-shrink-0 rounded-full bg-ink px-8 text-xs font-semibold tracking-[0.16em] text-paper transition-colors hover:bg-mist-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/40 sm:rounded-l-none"
-              >
-                {t('newsletterButton')}
-              </button>
-            </form>
-          )}
-        </section>
-
-        <div className="py-12 lg:grid lg:grid-cols-[1.35fr_0.8fr_0.8fr_0.8fr] lg:gap-16 lg:py-16">
-          <div className="mb-10 flex flex-col items-start gap-6 lg:mb-0">
+        <div className="py-6 lg:grid lg:grid-cols-[1.35fr_0.8fr_0.8fr_0.8fr] lg:gap-12 lg:py-8">
+          <div className="mb-6 flex flex-col items-start gap-4 lg:mb-0">
             <Image
               src="/branding/logo-reign.png"
               alt="Reign"
               width={193}
               height={67}
-              className="h-auto w-[170px] object-contain"
+              className="h-auto w-[110px] object-contain"
             />
-            <p className="max-w-xs text-[15px] leading-7 text-mist-600">{t('tagline')}</p>
-            <div className="flex gap-3">
+            <p className="max-w-xs text-[14px] leading-6 text-mist-600">{t('tagline')}</p>
+            <div className="flex gap-4 items-center">
               {SOCIAL_LINKS.map(({ label, Icon }) => (
                 <a
                   key={label}
                   href="#"
                   aria-label={label}
-                  className="flex h-12 w-12 items-center justify-center rounded-full border border-ink/25 text-ink transition-colors hover:border-ink hover:bg-ink hover:text-paper"
+                  className="text-mist-500 transition-all hover:text-ink hover:scale-110 active:scale-95"
                 >
-                  <Icon className="h-[18px] w-[18px]" />
+                  <Icon className="h-5 w-5" />
                 </a>
               ))}
             </div>
@@ -140,7 +89,7 @@ export function Footer() {
 
           {FOOTER_GROUPS.map((group) => (
             <nav key={group.key} aria-label={t(`groups.${group.key}`)} className="hidden lg:block">
-              <h3 className="border-b border-mist-200 pb-5 text-xs font-semibold tracking-[0.22em] text-mist-500">
+              <h3 className="border-b border-mist-200 pb-5 text-xs font-bold tracking-[0.22em] text-black">
                 {t(`groups.${group.key}`)}
               </h3>
               <ul className="mt-6 space-y-4">
@@ -165,7 +114,7 @@ export function Footer() {
                     aria-expanded={isOpen}
                     aria-controls={`footer-${group.key}-panel`}
                     onClick={() => setOpenGroup((current) => (current === group.key ? null : group.key))}
-                    className="flex w-full items-center justify-between py-5 text-xs font-semibold tracking-[0.22em] text-ink"
+                    className="flex w-full items-center justify-between py-5 text-xs font-bold tracking-[0.22em] text-black"
                   >
                     <span>{t(`groups.${group.key}`)}</span>
                     <span aria-hidden="true" className="text-base">{isOpen ? '−' : '+'}</span>
@@ -187,30 +136,31 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-mist-200 pt-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-8">
+        <div className="border-t border-mist-200 pt-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-8">
           <p className="hidden text-sm text-mist-500 lg:block">
             © {new Date().getFullYear()} Reign — {t('rights')}
           </p>
 
           <div>
-            <p className="mb-5 text-center text-[11px] font-semibold tracking-[0.2em] text-mist-500 lg:text-left">
+            <p className="mb-3 text-center text-[11px] font-semibold tracking-[0.2em] text-mist-500 lg:text-left">
               {t('securePayments')}
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 lg:justify-start">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 lg:justify-start">
               {PAYMENT_LOGOS.map((logo) => (
-                <Image
-                  key={logo.src}
-                  src={logo.src}
-                  alt=""
-                  width={logo.width}
-                  height={logo.height}
-                  className="h-6 w-auto object-contain"
-                />
+                <div key={logo.src} className="flex h-12 w-20 items-center justify-center rounded-xl border border-mist-200 bg-white p-2 shadow-sm">
+                  <Image
+                    src={logo.src}
+                    alt=""
+                    width={logo.width}
+                    height={logo.height}
+                    className="max-h-full max-w-full object-contain"
+                  />
+                </div>
               ))}
             </div>
           </div>
 
-          <div className="mt-8 flex justify-center gap-5 lg:mt-0 lg:justify-self-end">
+          <div className="mt-6 flex justify-center gap-5 lg:mt-0 lg:justify-self-end">
             <LanguageSwitcher variant="footer" />
             <CurrencySwitcher variant="footer" />
           </div>

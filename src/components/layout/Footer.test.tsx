@@ -71,23 +71,7 @@ describe('Footer', () => {
     expect(screen.getByRole('button', { name: /eur/i })).toBeInTheDocument();
   });
 
-  it('shows the approved newsletter copy and confirms a valid local subscription', async () => {
-    const user = userEvent.setup();
-    render(<Footer />);
-    expect(screen.getByText('ACCÈS PRIVÉ')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Gardez une longueur d’avance sur la prochaine sortie.' })).toBeInTheDocument();
-    await user.type(screen.getByLabelText('Adresse email'), 'client@example.com');
-    await user.click(screen.getByRole('button', { name: 'REJOINDRE LA LISTE' }));
-    expect(screen.getByText('Merci, vous êtes inscrit·e à la liste privée.')).toHaveAttribute('role', 'status');
-  });
 
-  it('does not confirm an invalid email', async () => {
-    const user = userEvent.setup();
-    render(<Footer />);
-    await user.type(screen.getByLabelText('Adresse email'), 'incorrect');
-    await user.click(screen.getByRole('button', { name: 'REJOINDRE LA LISTE' }));
-    expect(screen.queryByText('Merci, vous êtes inscrit·e à la liste privée.')).not.toBeInTheDocument();
-  });
 
   it('renders the three desktop navigation groups and their localized links', () => {
     render(<Footer />);

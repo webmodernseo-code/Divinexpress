@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Reign
 
-## Getting Started
+Reign is a bilingual FR/EN premium-commerce application built with Next.js 16 and React 19. It includes a storefront, guest checkout, and an administration dashboard. The server foundation uses a local relational database and credential-free development adapters; real payment and email providers are intentionally required before production.
 
-First, run the development server:
+## Start locally
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```powershell
+npm install
+Copy-Item .env.example .env.local
+npm run db:setup
+npm run dev -- -p 3210
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Set `AUTH_SECRET`, `SEED_ADMIN_EMAIL`, and `SEED_ADMIN_PASSWORD` in `.env.local` before logging into `/fr/connexion`. No default production password exists.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```text
+npm run dev          Start Next.js development mode
+npm run build        Create a production build
+npm run typecheck    Check strict TypeScript
+npm run lint         Lint application source
+npm test             Run Vitest with deterministic worker settings
+npm run check        Run typecheck, lint, and tests
+npm run db:migrate   Apply database migrations
+npm run db:seed      Seed the current storefront catalog
+npm run db:setup     Migrate and seed
+```
 
-## Learn More
+See [local development](docs/development.md), [operations](docs/operations.md), [production readiness](docs/production-readiness.md), and the [full-stack design](docs/superpowers/specs/2026-08-04-reign-fullstack-foundation-design.md).
 
-To learn more about Next.js, take a look at the following resources:
+## Architecture
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+UI code calls server actions or route handlers. Server boundaries validate input and delegate to domain services, which use repository/database adapters. Payment and notification providers implement interfaces so development can be fully exercised without contacting a real account.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+SQLite is the credential-free development database. Production launch requires a managed PostgreSQL adapter, signed payment webhooks, transactional email, media storage, legal data, shipping/tax rules, and the verification gates listed in `docs/production-readiness.md`.

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { 
   Search, 
@@ -23,12 +23,36 @@ type ProductItem = {
   image: string;
 };
 
+const categoryMap: Record<string, { fr: string, en: string }> = {
+  'category:homme': { fr: 'Homme', en: 'Men' },
+  'category:femme': { fr: 'Femme', en: 'Women' },
+  'category:enfant': { fr: 'Enfant', en: 'Kids' },
+  'category:accessoires': { fr: 'Accessoires', en: 'Accessories' }
+};
+
+const getProductImage = (productId: string, category: string) => {
+  if (productId.toLowerCase().includes('hoodie')) return '/image/reign-admin-hoodie.png';
+  if (category.toLowerCase().includes('femme') || category.toLowerCase().includes('women')) return '/image/category_femme.png';
+  if (category.toLowerCase().includes('enfant') || category.toLowerCase().includes('kids')) return '/image/category_enfant.png';
+  if (category.toLowerCase().includes('accessoires') || category.toLowerCase().includes('accessories')) return '/image/category_accessoires.png';
+  return '/image/category_homme.png';
+};
+
 const INITIAL_PRODUCTS: ProductItem[] = [
-  { id: 'fleece-hoodie-black', name: 'Sweat à capuche Fleece', nameEn: 'Fleece hoodie', category: 'Homme', categoryEn: 'Men', price: 68.00, stock: 2, status: 'active', image: '/images/products/fleece-hoodie-black.jpg' },
-  { id: 'classic-tshirt-white', name: 'T-shirt classique blanc', nameEn: 'Classic white t-shirt', category: 'Femme', categoryEn: 'Women', price: 29.00, stock: 45, status: 'active', image: '/image/category_femme.png' },
-  { id: 'kids-jogger-grey', name: 'Jogging enfant gris', nameEn: 'Kids grey jogger', category: 'Enfant', categoryEn: 'Kids', price: 42.00, stock: 18, status: 'draft', image: '/image/category_enfant.png' },
-  { id: 'leather-wallet-brown', name: 'Portefeuille en cuir', nameEn: 'Leather wallet', category: 'Accessoires', categoryEn: 'Accessories', price: 55.00, stock: 0, status: 'archived', image: '/image/category_accessoires.png' }
+  { id: 'fleece-hoodie-black', name: 'Sweat à capuche Fleece', nameEn: 'Fleece hoodie', category: 'Homme', categoryEn: 'Men', price: 68.00, stock: 2, status: 'active', image: '/image/reign-admin-hoodie.png' }
 ];
+
+interface CatalogProductRaw {
+  id: string;
+  categoryId: string;
+  nameFr: string;
+  nameEn: string;
+  status: 'active' | 'draft' | 'archived';
+  variants: Array<{
+    priceMinor: number;
+    stock: number;
+  }>;
+}
 
 export default function ProduitsPage() {
   const systemLocale = useLocale() as 'fr' | 'en';
@@ -37,17 +61,31 @@ export default function ProduitsPage() {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
 
-  const filteredProducts = products.filter((p) => {
-    const matchesSearch = 
-      p.name.toLowerCase().includes(search.toLowerCase()) || 
-      p.nameEn.toLowerCase().includes(search.toLowerCase()) ||
-      p.id.toLowerCase().includes(search.toLowerCase());
-      
-    const matchesCategory = categoryFilter === 'all' || p.category === categoryFilter;
-    const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
-    
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
+  useEffect(() => {
+    fetch('/api/admin/products')
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error('Failed to load products'))))
+      .then((data) => {
+        const mapped = (data as CatalogProductRaw[]).map((p) => {
+          const cat = categoryMap[p.categoryId] || { fr: p.categoryId, en: p.categoryId };
+          const firstVariant = p.variants?.[0];
+          const price = firstVariant ? firstVariant.priceMinor / 100 : 0;
+          const stock = p.variants?.reduce((acc: number, v) => acc + (v.stock || 0), 0) || 0;
+          return {
+            id: p.id,
+            name: p.nameFr,
+            nameEn: p.nameEn,
+            category: cat.fr,
+            categoryEn: cat.en,
+            price,
+            stock,
+            status: p.status,
+            image: getProductImage(p.id, cat.fr),
+          };
+        });
+        setProducts(mapped);
+      })
+      .catch(() => undefined);
+  }, []);
 
   const getStatusBadge = (status: ProductItem['status']) => {
     const config = {
@@ -63,11 +101,32 @@ export default function ProduitsPage() {
     );
   };
 
-  const deleteProduct = (id: string) => {
+  const deleteProduct = async (id: string) => {
     if (confirm(systemLocale === 'fr' ? 'Supprimer ce produit ?' : 'Delete this product?')) {
-      setProducts(products.filter((p) => p.id !== id));
+      try {
+        const response = await fetch(`/api/admin/products/${id}`, { method: 'DELETE' });
+        if (response.ok) {
+          setProducts(products.map((p) => p.id === id ? { ...p, status: 'archived' } : p));
+        } else {
+          alert(systemLocale === 'fr' ? 'Échec de la suppression' : 'Deletion failed');
+        }
+      } catch {
+        alert(systemLocale === 'fr' ? 'Erreur réseau' : 'Network error');
+      }
     }
   };
+
+  const filteredProducts = products.filter((p) => {
+    const matchesSearch = 
+      p.name.toLowerCase().includes(search.toLowerCase()) || 
+      p.nameEn.toLowerCase().includes(search.toLowerCase()) ||
+      p.id.toLowerCase().includes(search.toLowerCase());
+      
+    const matchesCategory = categoryFilter === 'all' || p.category === categoryFilter;
+    const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
+    
+    return matchesSearch && matchesCategory && matchesStatus;
+  });
 
   return (
     <div className="space-y-6 animate-fade-in text-admin-text font-sans">
@@ -91,7 +150,7 @@ export default function ProduitsPage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white border border-admin-border p-4 rounded-2xl shadow-xs flex flex-col md:flex-row gap-4 justify-between items-center">
+      <div className="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
         {/* Search */}
         <div className="relative w-full md:max-w-xs">
           <input
@@ -99,9 +158,9 @@ export default function ProduitsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={systemLocale === 'fr' ? 'Rechercher un produit...' : 'Search product...'}
-            className="w-full h-11 pl-10 pr-4 rounded-xl border border-admin-border text-xs outline-none focus:border-black transition"
+            className="w-full h-11 pl-10 pr-4 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-xs text-black shadow-2xs"
           />
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-admin-muted" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
         </div>
 
         {/* Filters */}
@@ -110,7 +169,7 @@ export default function ProduitsPage() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="h-11 px-4 rounded-xl border border-admin-border bg-white text-xs font-medium outline-none focus:border-black cursor-pointer"
+            className="h-11 px-4 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-xs font-bold cursor-pointer text-slate-700 shadow-2xs"
           >
             <option value="all">{systemLocale === 'fr' ? 'Toutes les catégories' : 'All categories'}</option>
             <option value="Homme">{systemLocale === 'fr' ? 'Homme' : 'Men'}</option>
@@ -123,7 +182,7 @@ export default function ProduitsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="h-11 px-4 rounded-xl border border-admin-border bg-white text-xs font-medium outline-none focus:border-black cursor-pointer"
+            className="h-11 px-4 border border-slate-200 bg-slate-50/40 hover:bg-slate-50/70 focus:bg-white rounded-xl outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all duration-200 text-xs font-bold cursor-pointer text-slate-700 shadow-2xs"
           >
             <option value="all">{systemLocale === 'fr' ? 'Tous les statuts' : 'All statuses'}</option>
             <option value="active">{systemLocale === 'fr' ? 'Actif' : 'Active'}</option>

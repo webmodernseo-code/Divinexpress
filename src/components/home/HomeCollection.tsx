@@ -1,12 +1,19 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
-import { PlaceholderBlock } from '@/components/ui/PlaceholderBlock';
 import { ProductCard } from '@/components/product/ProductCard';
 import { CATEGORIES, PRODUCTS, getProductsByCategory, type Category } from '@/lib/products';
+
+const CATEGORY_IMAGES: Record<Category, string> = {
+  homme: '/image/category_homme.png',
+  femme: '/image/category_femme.png',
+  enfant: '/image/category_enfant.png',
+  accessoires: '/image/category_accessoires.png'
+};
 import {
   filterAndSortProducts,
   getAvailableColors,
@@ -123,12 +130,18 @@ export function HomeCollection({
                 aria-pressed={isActive}
                 className="group flex flex-col items-center"
               >
-                <PlaceholderBlock
-                  aspect="square"
-                  className={`w-16 rounded-full transition-transform duration-200 group-hover:scale-105 md:w-[116px] ${
-                    isActive ? 'ring-[3px] ring-accent' : ''
-                  }`}
-                />
+                <div className={`relative aspect-square w-16 overflow-hidden rounded-full transition-transform duration-200 group-hover:scale-105 md:w-[116px] ${
+                  isActive ? 'ring-[3px] ring-accent' : ''
+                }`}>
+                  <Image
+                    src={CATEGORY_IMAGES[item]}
+                    alt={tNav(item)}
+                    fill
+                    sizes="(max-width: 768px) 64px, 116px"
+                    className="object-cover"
+                    priority
+                  />
+                </div>
                 <p
                   className={`mt-2 text-center text-[11px] font-bold tracking-wide transition-colors md:mt-3 md:text-[13px] ${
                     isActive ? 'text-accent' : 'text-ink'

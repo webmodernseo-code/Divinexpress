@@ -9,20 +9,169 @@ import type { DashboardMetric } from '@/lib/admin/types';
 import { MetricCard } from './ui/MetricCard';
 import { StatusBadge, type StatusTone } from './ui/StatusBadge';
 import { AdminCard } from './ui/AdminCard';
+import { SalesChart } from './SalesChart';
+import { CategoryDistributionChart } from './CategoryDistributionChart';
 
 const metricIcons: Record<DashboardMetric['icon'], typeof TrendingUp> = { revenue: TrendingUp, orders: ShoppingBag, basket: Package, returns: RotateCcw };
 const statusTones: Record<string, StatusTone> = { 'Payée': 'success', 'Expédiée': 'info', 'En préparation': 'warning', 'Annulée': 'danger' };
 
-function SalesChart() {
-  return <div className="mt-5 h-[260px] w-full"><svg aria-label="Évolution des ventes" viewBox="0 0 800 260" className="h-full w-full overflow-visible"><defs><linearGradient id="salesFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#111" stopOpacity=".12"/><stop offset="1" stopColor="#111" stopOpacity="0"/></linearGradient></defs>{[30,90,150,210].map((y) => <line key={y} x1="48" x2="780" y1={y} y2={y} stroke="#e7e4de" />)}<path d="M48 180 C90 80 120 210 175 150 S250 210 310 120 S390 190 445 100 S515 145 565 55 S630 140 680 105 S730 210 780 95 L780 230 L48 230 Z" fill="url(#salesFill)"/><path d="M48 180 C90 80 120 210 175 150 S250 210 310 120 S390 190 445 100 S515 145 565 55 S630 140 680 105 S730 210 780 95" fill="none" stroke="#111" strokeWidth="4" strokeLinecap="round"/></svg></div>;
-}
-
 export function DashboardOverview() {
   const { state, setPeriod } = useAdminDemo();
-  return <div className="mx-auto max-w-[1450px]">
-    <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="text-sm text-admin-muted">Administration&nbsp; / &nbsp;<b className="text-admin-text">Vue d’ensemble</b></p><h1 className="mt-6 text-3xl font-semibold tracking-tight sm:text-4xl">Bonjour Jean</h1><p className="mt-2 text-admin-muted">Voici les performances de votre boutique aujourd’hui.</p></div><div className="flex gap-3"><label className="flex h-11 items-center gap-2 rounded-lg border border-admin-border bg-white px-3 text-sm"><CalendarDays className="size-4" /><span className="sr-only">Période</span><select aria-label="Période" value={state.preferences.period} onChange={(e) => setPeriod(e.target.value as '7d' | '30d' | '90d')} className="bg-transparent outline-none"><option value="7d">7 derniers jours</option><option value="30d">30 derniers jours</option><option value="90d">90 derniers jours</option></select></label><button className="flex h-11 items-center gap-2 rounded-lg border border-admin-border bg-white px-4 text-sm"><Download className="size-4" />Exporter</button></div></div>
-    <section aria-label="Indicateurs" className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{state.metrics.map((metric) => <MetricCard key={metric.id} label={metric.label} value={metric.value} trend={metric.trend} positive={metric.positive} icon={metricIcons[metric.icon]} />)}</section>
-    <div className="mt-4 grid gap-4 xl:grid-cols-[1.8fr_1fr]"><AdminCard className="p-5"><div className="flex items-center justify-between"><h2 className="text-xl font-semibold">Ventes</h2><div className="flex rounded-lg border border-admin-border p-1 text-xs"><button className="rounded px-3 py-1.5">Jour</button><button className="rounded px-3 py-1.5">Semaine</button><button className="rounded bg-black px-3 py-1.5 text-white">Mois</button></div></div><SalesChart /></AdminCard><AdminCard className="p-5"><h2 className="text-xl font-semibold">Répartition des ventes</h2><div className="mt-8 flex items-center justify-center gap-8"><div className="relative size-40 rounded-full" style={{ background: 'conic-gradient(#111 0 62%, #d7d1c4 62% 86%, #e5e5e5 86%)' }}><div className="absolute inset-9 rounded-full bg-white" /></div><div className="space-y-5 text-sm"><p><span className="mr-3 inline-block size-3 rounded-full bg-black" />Vêtements <b className="ml-3">62 %</b></p><p><span className="mr-3 inline-block size-3 rounded-full bg-[#d7d1c4]" />Accessoires <b className="ml-3">24 %</b></p><p><span className="mr-3 inline-block size-3 rounded-full bg-neutral-200" />Autres <b className="ml-3">14 %</b></p></div></div></AdminCard></div>
-    <div className="mt-4 grid gap-4 xl:grid-cols-[1.8fr_1fr]"><AdminCard className="overflow-hidden"><div className="flex items-center justify-between border-b border-admin-border p-5"><h2 className="text-lg font-semibold">Commandes récentes</h2><a href="/fr/commandes" className="text-sm text-blue-600">Voir toutes les commandes</a></div><div className="divide-y divide-admin-border">{state.recentOrders.map((order) => <div key={order.id} className="grid grid-cols-[.7fr_1.3fr_auto] items-center gap-3 p-4 text-sm sm:grid-cols-[.7fr_1.2fr_1fr_.8fr_.7fr]"><b>#{order.id}</b><span><b className="block">{order.customer}</b><small className="text-admin-muted">{order.email}</small></span><span className="hidden sm:block">{order.date}</span><StatusBadge tone={statusTones[order.status]}>{order.status}</StatusBadge><b className="hidden text-right sm:block">{order.total}</b></div>)}</div></AdminCard><div className="grid gap-4"><AdminCard><div className="flex items-center justify-between border-b border-admin-border p-5"><h2 className="font-semibold">Alertes stock</h2><a href="/fr/produits" className="text-sm text-blue-600">Voir tout</a></div><div className="divide-y divide-admin-border">{state.stockAlerts.map((item) => <div key={item.id} className="flex items-center gap-3 p-4"><div className="relative size-14 overflow-hidden rounded bg-admin-soft"><Image src={item.image} alt="" fill className="object-contain" /></div><div className="min-w-0 flex-1"><b className="block truncate text-sm">{item.name}</b><span className="text-xs text-admin-muted">SKU: {item.sku}</span></div><b className="text-sm text-admin-warning">{item.remaining} restants</b></div>)}</div></AdminCard><AdminCard className="p-5"><h2 className="font-semibold">Actions rapides</h2><div className="mt-4 grid gap-2 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3"><a href="/fr/produits" className="flex items-center gap-2 rounded-lg border border-admin-border p-3 text-xs"><Package className="size-4" />Ajouter un produit</a><button className="flex items-center gap-2 rounded-lg border border-admin-border p-3 text-xs"><Percent className="size-4" />Créer une remise</button><a href="/fr/retours" className="flex items-center gap-2 rounded-lg border border-admin-border p-3 text-xs"><RotateCcw className="size-4" />Traiter un retour</a></div></AdminCard></div></div>
-  </div>;
+  return (
+    <div className="mx-auto max-w-[1450px] space-y-6">
+      {/* Upper header segment */}
+      <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-wider text-admin-muted">
+            Administration &nbsp;/&nbsp; <b className="text-indigo-600">Vue d’ensemble</b>
+          </p>
+          <h1 className="mt-4 font-serif text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+            Bonjour Jean
+          </h1>
+          <p className="mt-2 text-sm text-slate-500">
+            Voici les performances de votre boutique aujourd’hui.
+          </p>
+        </div>
+        
+        {/* Modern SaaS Filter bar & actions */}
+        <div className="flex items-center gap-3">
+          <label className="flex h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 text-xs font-semibold text-slate-600 shadow-sm hover:bg-slate-50 transition-all cursor-pointer">
+            <CalendarDays className="size-4 text-slate-400" />
+            <span className="sr-only">Période</span>
+            <select
+              aria-label="Période"
+              value={state.preferences.period}
+              onChange={(e) => setPeriod(e.target.value as '7d' | '30d' | '90d')}
+              className="bg-transparent outline-none cursor-pointer"
+            >
+              <option value="7d">7 derniers jours</option>
+              <option value="30d">30 derniers jours</option>
+              <option value="90d">90 derniers jours</option>
+            </select>
+          </label>
+          <button className="flex h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-xs font-semibold text-slate-600 shadow-sm hover:bg-slate-50 active:scale-[0.98] transition-all">
+            <Download className="size-4 text-slate-400" />
+            Exporter
+          </button>
+        </div>
+      </div>
+
+      {/* Metric Cards Grid */}
+      <section aria-label="Indicateurs" className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        {state.metrics.map((metric) => (
+          <MetricCard
+            key={metric.id}
+            label={metric.label}
+            value={metric.value}
+            trend={metric.trend}
+            positive={metric.positive}
+            icon={metricIcons[metric.icon]}
+          />
+        ))}
+      </section>
+
+      {/* Interactive Charts Segment */}
+      <div className="grid gap-6 xl:grid-cols-[2fr_1fr]">
+        <AdminCard className="p-6 space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="font-serif text-lg font-bold text-slate-800">Ventes</h2>
+            <div className="flex rounded-xl bg-slate-100/80 p-1 text-[11px] font-bold border border-slate-200/40">
+              <button className="rounded-lg px-3 py-1.5 text-slate-500 hover:text-slate-900 transition-colors">Jour</button>
+              <button className="rounded-lg px-3 py-1.5 text-slate-500 hover:text-slate-900 transition-colors">Semaine</button>
+              <button className="rounded-lg bg-white px-3 py-1.5 text-slate-800 shadow-sm border border-slate-200/30">Mois</button>
+            </div>
+          </div>
+          <SalesChart />
+        </AdminCard>
+
+        <AdminCard className="p-6 space-y-6 flex flex-col justify-between">
+          <h2 className="font-serif text-lg font-bold text-slate-800">Répartition des Ventes</h2>
+          <div className="flex-1 flex items-center justify-center">
+            <CategoryDistributionChart />
+          </div>
+        </AdminCard>
+      </div>
+
+      {/* Lists / Tables Segment */}
+      <div className="grid gap-6 xl:grid-cols-[2fr_1fr]">
+        <AdminCard className="overflow-hidden">
+          <div className="flex items-center justify-between border-b border-slate-100 p-5">
+            <h2 className="font-serif text-lg font-bold text-slate-800">Commandes récentes</h2>
+            <a href="/fr/commandes" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
+              Voir toutes les commandes
+            </a>
+          </div>
+          <div className="divide-y divide-slate-100">
+            {state.recentOrders.map((order) => (
+              <div
+                key={order.id}
+                className="grid grid-cols-[0.8fr_1.45fr_auto] items-center gap-3 p-4 text-xs sm:grid-cols-[0.8fr_1.4fr_1.2fr_0.9fr_0.7fr] hover:bg-slate-50/50 transition-colors"
+              >
+                <b className="text-slate-800">#{order.id}</b>
+                <span>
+                  <b className="block text-slate-850 text-[13px]">{order.customer}</b>
+                  <small className="text-slate-500">{order.email}</small>
+                </span>
+                <span className="hidden sm:block text-slate-500 font-medium">{order.date}</span>
+                <StatusBadge tone={statusTones[order.status]}>{order.status}</StatusBadge>
+                <b className="hidden text-right sm:block font-serif text-[13px] text-slate-800">{order.total}</b>
+              </div>
+            ))}
+          </div>
+        </AdminCard>
+
+        {/* Stock alerts & Quick Actions */}
+        <div className="grid gap-6">
+          <AdminCard className="overflow-hidden">
+            <div className="flex items-center justify-between border-b border-slate-100 p-5">
+              <h2 className="font-serif text-base font-bold text-slate-800">Alertes Stock</h2>
+              <a href="/fr/produits" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
+                Voir tout
+              </a>
+            </div>
+            <div className="divide-y divide-slate-100">
+              {state.stockAlerts.map((item) => (
+                <div key={item.id} className="flex items-center gap-3.5 p-4 hover:bg-slate-50/50 transition-colors">
+                  <div className="relative size-12 shrink-0 overflow-hidden rounded-xl border border-slate-100 bg-slate-50">
+                    <Image src={item.image} alt="" fill className="object-contain p-1" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <b className="block truncate text-xs text-slate-800 font-semibold">{item.name}</b>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase">SKU: {item.sku}</span>
+                  </div>
+                  <b className="text-xs text-amber-600 bg-amber-50 border border-amber-100/50 rounded-full px-2 py-0.5 shrink-0">
+                    {item.remaining} restants
+                  </b>
+                </div>
+              ))}
+            </div>
+          </AdminCard>
+
+          <AdminCard className="p-5 space-y-4">
+            <h2 className="font-serif text-base font-bold text-slate-800">Actions rapides</h2>
+            <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
+              <a
+                href="/fr/produits"
+                className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 p-3 text-xs font-semibold text-slate-600 shadow-sm transition-all duration-200"
+              >
+                <Package className="size-4 text-slate-400" />
+                Ajouter un produit
+              </a>
+              <button className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 p-3 text-xs font-semibold text-slate-600 shadow-sm transition-all duration-200 text-left">
+                <Percent className="size-4 text-slate-400" />
+                Créer une remise
+              </button>
+              <a
+                href="/fr/retours"
+                className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 p-3 text-xs font-semibold text-slate-600 shadow-sm transition-all duration-200"
+              >
+                <RotateCcw className="size-4 text-slate-400" />
+                Traiter un retour
+              </a>
+            </div>
+          </AdminCard>
+        </div>
+      </div>
+    </div>
+  );
 }
