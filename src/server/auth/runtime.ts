@@ -16,8 +16,15 @@ export async function getAuthService(): Promise<AuthService> {
   const count = (await database.prepare('SELECT COUNT(*) AS count FROM admin_users').get()) as { count: number };
   const email = process.env.SEED_ADMIN_EMAIL;
   const password = process.env.SEED_ADMIN_PASSWORD;
-  if (count.count === 0 && process.env.NODE_ENV !== 'production' && email && password) {
-    await service.createAdmin({ email, password, role: 'owner' });
+  // Bootstrap the first owner admin from env vars. Runs in any environment,
+  // including production/serverless (no shell available), but ONLY when there
+  // are zero admins — once one exists this never runs again.
+  if (count.count === 0 && email && password) {
+    try {
+      await service.createAdmin({ email, password, role: 'owner' });
+    } catch {
+      // A concurrent instance may have created it first (unique email) — ignore.
+    }
   }
   return service;
 }
