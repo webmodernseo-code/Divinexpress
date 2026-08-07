@@ -13,7 +13,8 @@
     "check": "npm run typecheck && npm run lint && npm run test",
     "db:migrate": "tsx src/server/db/cli.ts migrate",
     "db:seed": "tsx src/server/db/cli.ts seed",
-    "db:setup": "npm run db:migrate && npm run db:seed"
+    "db:setup": "npm run db:migrate && npm run db:seed",
+    "admin:create": "tsx src/server/db/cli.ts admin:create"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",
