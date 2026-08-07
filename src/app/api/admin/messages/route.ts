@@ -1,183 +1,138 @@
-import { randomUUID } from 'node:crypto';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getCurrentAdmin } from '@/server/auth/runtime';
 import { requireRole } from '@/server/auth/authorization';
 import { getCommerceDatabase } from '@/server/db/runtime';
+import {
+  addMessage,
+  getConversationById,
+  getThread,
+  listConversationSummaries,
+  markRead,
+  setAiEnabled,
+  setStatus,
+} from '@/server/messaging/repository';
+import { sendWhatsAppText } from '@/server/messaging/whatsapp';
 
-const postSchema = z.object({
-  email: z.string().email(),
-  text: z.string().min(1),
-});
+function formatTime(ts: string | null): string {
+  if (!ts) return '';
+  // SQLite stores "YYYY-MM-DD HH:MM:SS" in UTC without a zone marker; normalize.
+  const normalized = ts.includes('T') || ts.endsWith('Z') ? ts : `${ts.replace(' ', 'T')}Z`;
+  const date = new Date(normalized);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+}
 
-const patchSchema = z.object({
-  email: z.string().email(),
-  status: z.enum(['new', 'open', 'closed', 'resolved', 'pending']),
-});
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '??';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+}
 
 export async function GET() {
-  if (!await getCurrentAdmin()) return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
-  
+  if (!(await getCurrentAdmin())) return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
+
   const db = await getCommerceDatabase();
-  
-  // Seed demo contact messages if empty
-  const count = (await db.prepare('SELECT COUNT(*) as c FROM contact_messages').get() as { c: number }).c;
-  if (count === 0) {
-    await db.exec('BEGIN IMMEDIATE');
-    try {
-      await db.prepare(`INSERT OR IGNORE INTO contact_messages (id, email, name, subject, body, status, created_at)
-        VALUES (?, 'alice.martin@email.com', 'Alice Martin', 'Storefront contact', 'Bonjour, où en est ma commande ?', 'open', datetime('now', '-20 minutes'))`)
-        .run(randomUUID());
-      await db.prepare(`INSERT OR IGNORE INTO contact_messages (id, email, name, subject, body, status, created_at)
-        VALUES (?, 'alice.martin@email.com', 'Admin', 'Reply from Admin', 'Bonjour Alice, votre commande a été expédiée ce matin.', 'open', datetime('now', '-15 minutes'))`)
-        .run(randomUUID());
-      await db.prepare(`INSERT OR IGNORE INTO contact_messages (id, email, name, subject, body, status, created_at)
-        VALUES (?, 'alice.martin@email.com', 'Alice Martin', 'Storefront contact', 'Merci ! Puis-je avoir le numéro de suivi ?', 'open', datetime('now', '-10 minutes'))`)
-        .run(randomUUID());
-      await db.prepare(`INSERT OR IGNORE INTO contact_messages (id, email, name, subject, body, status, created_at)
-        VALUES (?, 'lucas.bernard@email.com', 'Lucas Bernard', 'Storefront contact', 'Bonjour, je souhaite modifier mon adresse de livraison s''il vous plaît.', 'new', datetime('now', '-1 hour'))`)
-        .run(randomUUID());
-      await db.exec('COMMIT');
-    } catch {
-      await db.exec('ROLLBACK');
-    }
-  }
+  const conversations = await listConversationSummaries(db);
 
-  interface ContactMessageRow {
-    id: string;
-    email: string;
-    name: string;
-    subject: string;
-    body: string;
-    status: string;
-    created_at: string;
-  }
-
-  interface ChatHistoryItem {
-    id: string;
-    sender: 'admin' | 'client';
-    text: string;
-    time: string;
-    isRead: boolean;
-  }
-
-  interface ChatGroup {
-    id: string;
-    customerName: string;
-    phone: string;
-    email: string;
-    avatar: string;
-    unread: number;
-    lastMsg: string;
-    lastTime: string;
-    status: 'pending' | 'resolved';
-    ordersCount: number;
-    totalSpent: string;
-    returnCount: number;
-    history: ChatHistoryItem[];
-  }
-
-  // Fetch all messages
-  const messages = (await db.prepare(`SELECT id, email, name, subject, body, status, created_at
-    FROM contact_messages ORDER BY created_at ASC`).all()) as ContactMessageRow[];
-    
-  // Group by email
-  const chatGroups: Record<string, ChatGroup> = {};
-  
-  for (const msg of messages) {
-    const email = msg.email;
-    if (!chatGroups[email]) {
-      // Find customer info
-      const customer = (await db.prepare(`SELECT first_name, last_name, phone FROM customers WHERE email = ? LIMIT 1`)
-        .get(email)) as { first_name: string; last_name: string; phone: string | null } | undefined;
-      const stats = (await db.prepare(`SELECT COUNT(id) as c, COALESCE(SUM(total_minor), 0) as total FROM orders WHERE customer_id = (SELECT id FROM customers WHERE email = ? LIMIT 1)`)
-        .get(email)) as { c: number; total: number } | undefined;
-      const returnStats = (await db.prepare(`SELECT COUNT(r.id) as c FROM returns r JOIN orders o ON o.id = r.order_id WHERE o.customer_id = (SELECT id FROM customers WHERE email = ? LIMIT 1)`)
-        .get(email)) as { c: number } | undefined;
-      
-      const ordersCount = stats?.c ?? 0;
-      const totalSpent = (stats?.total ?? 0) / 100;
-      
-      chatGroups[email] = {
-        id: email,
-        customerName: customer ? `${customer.first_name} ${customer.last_name}` : msg.name,
-        phone: customer?.phone ?? '',
-        email: email,
-        avatar: (customer ? `${customer.first_name[0]}${customer.last_name[0]}` : msg.name.slice(0, 2)).toUpperCase(),
-        unread: 0,
-        lastMsg: '',
-        lastTime: '',
-        status: msg.status === 'closed' ? 'resolved' : 'pending',
-        ordersCount,
-        totalSpent: `${totalSpent.toFixed(2).replace('.', ',')} €`,
-        returnCount: returnStats?.c ?? 0,
-        history: [],
+  const result = await Promise.all(
+    conversations.map(async (c) => {
+      const thread = await getThread(db, c.id);
+      const displayName = c.display_name || c.customer_email || c.external_id;
+      return {
+        id: c.id,
+        conversationId: c.id,
+        channel: c.channel,
+        customerName: displayName,
+        phone: c.channel === 'whatsapp' ? c.external_id : c.customer_phone ?? '',
+        email: c.channel === 'whatsapp' ? c.customer_email ?? '' : c.external_id,
+        avatar: initials(displayName),
+        unread: c.unread_count,
+        lastMsg: c.last_message_preview,
+        lastTime: formatTime(c.last_message_at),
+        status: c.status === 'resolved' ? 'resolved' : 'pending',
+        aiEnabled: c.ai_enabled === 1,
+        ordersCount: c.orders_count,
+        totalSpent: `${(c.total_spent_minor / 100).toFixed(2).replace('.', ',')} €`,
+        returnCount: c.return_count,
+        history: thread.map((m) => ({
+          id: m.id,
+          sender: m.author === 'customer' ? 'client' : m.author === 'system' ? 'system' : 'admin',
+          author: m.author,
+          text: m.body,
+          time: formatTime(m.created_at),
+          isRead: m.direction === 'outbound',
+        })),
       };
-    }
-    
-    const isReply = msg.subject === 'Reply from Admin';
-    const msgTime = new Date(msg.created_at + 'Z').toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-    
-    chatGroups[email].history.push({
-      id: msg.id,
-      sender: isReply ? 'admin' : 'client',
-      text: msg.body,
-      time: msgTime,
-      isRead: isReply ? true : false,
-    });
-    
-    chatGroups[email].lastMsg = msg.body;
-    chatGroups[email].lastTime = msgTime;
-    
-    if (msg.status === 'new' && !isReply) {
-      chatGroups[email].unread += 1;
-    }
-    if (msg.status === 'closed') {
-      chatGroups[email].status = 'resolved';
-    } else {
-      chatGroups[email].status = 'pending';
-    }
-  }
-  
-  return NextResponse.json(Object.values(chatGroups));
+    }),
+  );
+
+  return NextResponse.json(result);
 }
+
+const postSchema = z.object({
+  conversationId: z.string().min(1),
+  text: z.string().min(1),
+});
 
 export async function POST(request: Request) {
   const admin = await getCurrentAdmin();
   if (!admin) return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
-  
+
   try {
     requireRole(admin.role, ['owner', 'manager', 'support']);
     const body = postSchema.parse(await request.json());
-    
     const db = await getCommerceDatabase();
-    await db.prepare(`INSERT INTO contact_messages (id, email, name, subject, body, status)
-      VALUES (?, ?, ?, 'Reply from Admin', ?, 'open')`)
-      .run(randomUUID(), body.email, admin.email, body.text);
-      
+
+    const conversation = await getConversationById(db, body.conversationId);
+    if (!conversation) return NextResponse.json({ error: 'NOT_FOUND' }, { status: 404 });
+
+    // A human reply pauses the AI on this conversation (human takeover).
+    await setAiEnabled(db, conversation.id, false);
+    await addMessage(db, {
+      conversationId: conversation.id,
+      direction: 'outbound',
+      author: 'admin',
+      adminId: admin.id,
+      body: body.text,
+    });
+
+    if (conversation.channel === 'whatsapp') {
+      await sendWhatsAppText(conversation.external_id, body.text);
+    }
+
     return NextResponse.json({ ok: true }, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: 'REPLY_SEND_FAILED' }, { status: 500 });
+  } catch (error) {
+    if (error instanceof z.ZodError) return NextResponse.json({ error: 'INVALID_INPUT' }, { status: 400 });
+    console.error('[admin-messages] reply error:', error);
+    return NextResponse.json({ error: 'REPLY_FAILED' }, { status: 500 });
   }
 }
+
+const patchSchema = z.object({
+  conversationId: z.string().min(1),
+  status: z.enum(['open', 'pending', 'resolved']).optional(),
+  aiEnabled: z.boolean().optional(),
+  markRead: z.boolean().optional(),
+});
 
 export async function PATCH(request: Request) {
   const admin = await getCurrentAdmin();
   if (!admin) return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
-  
+
   try {
     requireRole(admin.role, ['owner', 'manager', 'support']);
     const body = patchSchema.parse(await request.json());
-    
-    let dbStatus = 'open';
-    if (body.status === 'closed' || body.status === 'resolved') dbStatus = 'closed';
-    if (body.status === 'new') dbStatus = 'new';
-    
     const db = await getCommerceDatabase();
-    await db.prepare(`UPDATE contact_messages SET status = ? WHERE email = ?`).run(dbStatus, body.email);
-    
+
+    if (body.status) await setStatus(db, body.conversationId, body.status);
+    if (typeof body.aiEnabled === 'boolean') await setAiEnabled(db, body.conversationId, body.aiEnabled);
+    if (body.markRead) await markRead(db, body.conversationId);
+
     return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ error: 'CHAT_UPDATE_FAILED' }, { status: 500 });
+  } catch (error) {
+    if (error instanceof z.ZodError) return NextResponse.json({ error: 'INVALID_INPUT' }, { status: 400 });
+    return NextResponse.json({ error: 'UPDATE_FAILED' }, { status: 500 });
   }
 }
