@@ -49,11 +49,20 @@ export function AdminSidebar({ isCollapsed: controlledCollapsed, onToggleCollaps
   
   const toggleCollapse = onToggleCollapse || (() => setLocalCollapsed(!localCollapsed));
 
-  const badges = {
-    orders: 12,
-    returns: 3,
-    messages: 8
-  };
+  const [badges, setBadges] = useState({ orders: 0, returns: 0, messages: 0 });
+
+  React.useEffect(() => {
+    fetch('/api/admin/sidebar-badges')
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => {
+        setBadges({
+          orders: data.orders || 0,
+          returns: data.returns || 0,
+          messages: data.messages || 0,
+        });
+      })
+      .catch(() => undefined);
+  }, []);
 
   return (
     <aside 
@@ -112,7 +121,7 @@ export function AdminSidebar({ isCollapsed: controlledCollapsed, onToggleCollaps
                 )}
 
                 {/* Badge notifications count */}
-                {!isSidebarCollapsed && link.badgeKey && (
+                {!isSidebarCollapsed && link.badgeKey && badges[link.badgeKey] > 0 && (
                   <span className={`ml-auto size-5 rounded-full text-[9px] font-bold flex items-center justify-center shrink-0 ${
                     link.badgeKey === 'messages' 
                       ? 'bg-[#247A52] text-white' 

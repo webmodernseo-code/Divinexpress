@@ -204,6 +204,11 @@ export default function CommandesPage() {
     productImage: '/image/category_homme.png',
   });
 
+  const todoCount = orders.filter(o => o.deliveryStatus === 'pending').length;
+  const preparingCount = orders.filter(o => o.deliveryStatus === 'preparing').length;
+  const shippingCount = orders.filter(o => o.deliveryStatus === 'shipping').length;
+  const returnsCount = orders.filter(o => o.paymentStatus === 'refunded').length;
+
   const filteredOrders = orders.filter((o) => {
     const matchesSearch = 
       o.customer.toLowerCase().includes(search.toLowerCase()) || 
@@ -321,10 +326,10 @@ export default function CommandesPage() {
       {/* 2. Top Metric Cards (Horizontal Small Cards) */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { id: 'todo' as const, count: 12, label: systemLocale === 'fr' ? 'À traiter' : 'To process', icon: FileText },
-          { id: 'preparing' as const, count: 8, label: systemLocale === 'fr' ? 'En préparation' : 'Preparing', icon: Package },
-          { id: 'shipping' as const, count: 47, label: systemLocale === 'fr' ? 'Expédiées' : 'Shipped', icon: Truck },
-          { id: 'returns' as const, count: 3, label: systemLocale === 'fr' ? 'Retours ouverts' : 'Open returns', icon: RotateCcw }
+          { id: 'todo' as const, count: todoCount, label: systemLocale === 'fr' ? 'À traiter' : 'To process', icon: FileText },
+          { id: 'preparing' as const, count: preparingCount, label: systemLocale === 'fr' ? 'En préparation' : 'Preparing', icon: Package },
+          { id: 'shipping' as const, count: shippingCount, label: systemLocale === 'fr' ? 'Expédiées' : 'Shipped', icon: Truck },
+          { id: 'returns' as const, count: returnsCount, label: systemLocale === 'fr' ? 'Retours ouverts' : 'Open returns', icon: RotateCcw }
         ].map((c) => {
           const Icon = c.icon;
           const isCardActive = statusTab === c.id;

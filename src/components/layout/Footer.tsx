@@ -10,7 +10,7 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { CurrencySwitcher } from './CurrencySwitcher';
 
 type FooterLink = {
-  key: 'newArrivals' | 'clothing' | 'accessories' | 'bestSellers' | 'contact' | 'faq' | 'shippingReturns' | 'sizeGuide' | 'legalNotice' | 'terms' | 'privacy';
+  key: 'newArrivals' | 'clothing' | 'accessories' | 'bestSellers' | 'contact' | 'faq' | 'shippingReturns' | 'sizeGuide' | 'legalNotice' | 'terms' | 'privacy' | 'login';
   href: string | { pathname: '/'; query: Record<string, string> };
 };
 
@@ -43,7 +43,8 @@ const FOOTER_GROUPS: FooterGroup[] = [
     links: [
       { key: 'legalNotice', href: '/mentions-legales' },
       { key: 'terms', href: '/cgv' },
-      { key: 'privacy', href: '/confidentialite' }
+      { key: 'privacy', href: '/confidentialite' },
+      { key: 'login', href: '/connexion' }
     ]
   }
 ];

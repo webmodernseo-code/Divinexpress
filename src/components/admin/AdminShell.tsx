@@ -11,9 +11,9 @@ import { useAdminDemo } from '@/context/AdminDemoContext';
 const navigation = [
   { label: "Vue d'ensemble", href: '/fr/dashboard', icon: LayoutDashboard },
   { label: 'Produits', href: '/fr/produits', icon: Package },
-  { label: 'Commandes', href: '/fr/commandes', icon: ShoppingBag, badge: '12' },
-  { label: 'Retours', href: '/fr/retours', icon: RotateCcw, badge: '3' },
-  { label: 'Messages', href: '/fr/messages', icon: MessageSquare, badge: '8' },
+  { label: 'Commandes', href: '/fr/commandes', icon: ShoppingBag, badgeKey: 'orders' as const },
+  { label: 'Retours', href: '/fr/retours', icon: RotateCcw, badgeKey: 'returns' as const },
+  { label: 'Messages', href: '/fr/messages', icon: MessageSquare, badgeKey: 'messages' as const },
   { label: 'Clients', href: '/fr/clients', icon: Users },
   { label: 'Paramètres', href: '/fr/parametres', icon: Settings },
 ];
@@ -21,6 +21,21 @@ const navigation = [
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname() || '';
   const getPathWithoutLocale = (p: string) => p.replace(/^\/(fr|en)/, '') || '/';
+
+  const [badges, setBadges] = useState({ orders: 0, returns: 0, messages: 0 });
+
+  useEffect(() => {
+    fetch('/api/admin/sidebar-badges')
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => {
+        setBadges({
+          orders: data.orders || 0,
+          returns: data.returns || 0,
+          messages: data.messages || 0,
+        });
+      })
+      .catch(() => undefined);
+  }, []);
 
   return (
     <div className="flex h-full flex-col bg-white">
@@ -43,10 +58,11 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
       {/* Navigation items styled like modern SaaS (Stripe/Linear) */}
       <nav aria-label="Navigation principale" className="flex-1 space-y-1.5 px-4 py-6">
-        {navigation.map(({ label, href, icon: Icon, badge }) => {
+        {navigation.map(({ label, href, icon: Icon, badgeKey }) => {
           const cleanPath = getPathWithoutLocale(pathname);
           const cleanHref = getPathWithoutLocale(href);
           const isActive = cleanPath === cleanHref || cleanPath.startsWith(cleanHref + '/');
+          const badgeCount = badgeKey ? badges[badgeKey] : 0;
           return (
             <a
               key={label}
@@ -60,13 +76,13 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
             >
               <Icon aria-hidden className={`size-4.5 stroke-[1.8] ${isActive ? 'text-indigo-600' : 'text-slate-500'}`} />
               <span className="flex-1">{label}</span>
-              {badge && (
+              {badgeCount > 0 && (
                 <span
                   className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
                     label === 'Messages' ? 'bg-indigo-600 text-white' : 'bg-slate-900 text-white'
                   }`}
                 >
-                  {badge}
+                  {badgeCount}
                 </span>
               )}
             </a>
