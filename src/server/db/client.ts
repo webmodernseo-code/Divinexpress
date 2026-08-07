@@ -61,7 +61,9 @@ const openDatabases = new Set<Database>();
 function resolveDatabasePath(input: string): string {
   if (input === ':memory:') return input;
   const withoutScheme = input.startsWith('file:') ? input.slice(5) : input;
-  const absolute = resolve(process.cwd(), withoutScheme);
+  // Dev/SQLite only (never reached in production Postgres). The ignore comment
+  // stops the bundler from tracing the whole project into the server output.
+  const absolute = resolve(/* turbopackIgnore: true */ process.cwd(), withoutScheme);
   mkdirSync(dirname(absolute), { recursive: true });
   return absolute;
 }
