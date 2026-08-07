@@ -1,7 +1,17 @@
 import { mkdirSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
-import { DatabaseSync } from 'node:sqlite';
+import type { DatabaseSync } from 'node:sqlite';
 import { PgDatabase } from './pg-adapter';
+
+// Load node:sqlite lazily and only for file/memory databases. This keeps the app
+// bootable on Node builds that lack the sqlite module (e.g. shared hosting like
+// o2switch), where production runs on managed Postgres via DATABASE_URL. The
+// type-only import above is erased at compile time and triggers no runtime load.
+function loadDatabaseSync(): typeof DatabaseSync {
+  const req = createRequire(import.meta.url);
+  return (req('node:sqlite') as typeof import('node:sqlite')).DatabaseSync;
+}
 
 export interface Statement {
   run(...params: unknown[]): Promise<{ changes: number; lastInsertRowid: number | bigint }>;
@@ -63,7 +73,8 @@ export function createDatabase(url = process.env.DATABASE_URL ?? 'file:./data/re
     return pgDb;
   }
 
-  const sqliteDb = new DatabaseSync(resolveDatabasePath(url), {
+  const DatabaseSyncCtor = loadDatabaseSync();
+  const sqliteDb = new DatabaseSyncCtor(resolveDatabasePath(url), {
     enableForeignKeyConstraints: true,
   });
   sqliteDb.exec('PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000;');

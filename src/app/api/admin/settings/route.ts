@@ -16,8 +16,8 @@ export async function GET() {
   
   // Default values if empty
   settings.shop_name ??= 'Reign';
-  settings.email ??= 'contact@reign-store.com';
-  settings.phone ??= '+33 6 12 34 56 78';
+  settings.email ??= 'contact@reign.webmodernseo.co';
+  settings.phone ??= '+33 7 53 74 10 30';
   settings.address ??= '12 Rue de la Paix, 75002 Paris';
   settings.country ??= 'France';
   settings.currency ??= 'EUR';
@@ -26,6 +26,7 @@ export async function GET() {
   settings.min_shipping_free ??= '150,00';
   settings.return_period ??= '14 jours';
   settings.whatsapp_sync ??= true;
+  settings.whatsapp_number ??= '+33 7 53 74 10 30';
   settings.whatsapp_assignee ??= 'Service client';
   
   return NextResponse.json(settings);
