@@ -24,6 +24,8 @@ export async function loginAction(
   const defaultEmail = process.env.SEED_ADMIN_EMAIL || 'admin@reign.local';
   const defaultPassword = process.env.SEED_ADMIN_PASSWORD || 'adminpassword';
 
+  // In development, empty fields fall back to seed credentials for convenience.
+  // Never log the resolved credentials — they are secrets even in development.
   const email = emailInput || (isDev ? defaultEmail : '');
   const password = passwordInput || (isDev ? defaultPassword : '');
 
