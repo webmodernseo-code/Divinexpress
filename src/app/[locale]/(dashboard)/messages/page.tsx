@@ -15,13 +15,15 @@ import {
   Filter,
   Package,
   Lock,
-  Tag
+  Tag,
+  Bot
 } from 'lucide-react';
 import Image from 'next/image';
 
 type Message = {
   id: string;
   sender: 'admin' | 'client' | 'system';
+  author?: 'customer' | 'ai' | 'admin' | 'system';
   text: string;
   time: string;
   isRead?: boolean;
@@ -29,6 +31,8 @@ type Message = {
 
 type Chat = {
   id: string;
+  conversationId: string;
+  channel: 'whatsapp' | 'email' | 'web';
   customerName: string;
   phone: string;
   email: string;
@@ -37,6 +41,7 @@ type Chat = {
   lastMsg: string;
   lastTime: string;
   status: 'pending' | 'resolved' | 'none';
+  aiEnabled: boolean;
   history: Message[];
   ordersCount: number;
   totalSpent: string;
@@ -63,14 +68,14 @@ export default function MessagesPage() {
   const [search, setSearch] = useState('');
   const [statusTab, setStatusTab] = useState<'all' | 'unread' | 'pending' | 'resolved'>('all');
 
-  const refreshChats = (nextActiveEmail?: string) => {
+  const refreshChats = (nextActiveId?: string) => {
     fetch('/api/admin/messages')
       .then((res) => (res.ok ? res.json() : Promise.reject()))
-      .then((data) => {
+      .then((data: Chat[]) => {
         setChats(data);
         if (data.length > 0) {
-          if (nextActiveEmail) {
-            setActiveChatId(nextActiveEmail);
+          if (nextActiveId) {
+            setActiveChatId(nextActiveId);
           } else if (!activeChatId) {
             setActiveChatId(data[0].id);
           }
@@ -81,11 +86,16 @@ export default function MessagesPage() {
 
   useEffect(() => {
     refreshChats();
+    // Light polling keeps the inbox in sync with incoming WhatsApp messages.
+    const interval = setInterval(() => refreshChats(), 10000);
+    return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const activeChat = chats.find((c) => c.id === activeChatId) || chats[0] || {
+  const activeChat: Chat = chats.find((c) => c.id === activeChatId) || chats[0] || {
     id: '',
+    conversationId: '',
+    channel: 'whatsapp',
     customerName: '',
     phone: '',
     email: '',
@@ -94,66 +104,68 @@ export default function MessagesPage() {
     lastMsg: '',
     lastTime: '',
     status: 'none',
+    aiEnabled: true,
     history: [],
     ordersCount: 0,
     totalSpent: '0,00 €',
     returnCount: 0,
   };
 
-  // Mark active chat messages as read/open
+  // Mark the active conversation as read.
   useEffect(() => {
-    if (!activeChat.email) return;
+    if (!activeChat.conversationId) return;
     fetch('/api/admin/messages', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: activeChat.email, status: 'open' }),
+      body: JSON.stringify({ conversationId: activeChat.conversationId, markRead: true }),
     }).catch(() => undefined);
-  }, [activeChatId, activeChat.email]);
+  }, [activeChatId, activeChat.conversationId]);
 
   const handleSendMessage = async (textToSend = inputText) => {
-    if (!textToSend.trim() || !activeChat.email) return;
+    if (!textToSend.trim() || !activeChat.conversationId) return;
 
     try {
       const response = await fetch('/api/admin/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: activeChat.email, text: textToSend }),
+        body: JSON.stringify({ conversationId: activeChat.conversationId, text: textToSend }),
       });
       if (response.ok) {
         setInputText('');
-        refreshChats(activeChat.email);
-
-        // Response Simulator: send a mock WhatsApp contact response back to SQLite DB after 2 seconds
-        setTimeout(async () => {
-          await fetch('/api/contact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: activeChat.customerName,
-              email: activeChat.email,
-              message: systemLocale === 'fr' ? 'Parfait, merci !' : 'Perfect, thank you!',
-            }),
-          });
-          refreshChats(activeChat.email);
-        }, 2000);
+        refreshChats(activeChat.id);
       }
     } catch {
       alert('Error sending message');
     }
   };
 
-  const handleResolveChat = async (email: string) => {
+  const handleResolveChat = async (conversationId: string) => {
     try {
       const response = await fetch('/api/admin/messages', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, status: 'closed' }),
+        body: JSON.stringify({ conversationId, status: 'resolved' }),
       });
       if (response.ok) {
-        refreshChats(email);
+        refreshChats(conversationId);
       }
     } catch {
       alert('Error resolving chat');
+    }
+  };
+
+  const handleToggleAI = async (conversationId: string, aiEnabled: boolean) => {
+    // Optimistic update for a snappy toggle.
+    setChats((prev) => prev.map((c) => (c.id === conversationId ? { ...c, aiEnabled } : c)));
+    try {
+      await fetch('/api/admin/messages', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ conversationId, aiEnabled }),
+      });
+      refreshChats(conversationId);
+    } catch {
+      refreshChats(conversationId);
     }
   };
 
@@ -223,7 +235,10 @@ export default function MessagesPage() {
                 onClick={() => setStatusTab('unread')} 
                 className={`flex-1 py-1.5 rounded transition ${statusTab === 'unread' ? 'bg-white text-black shadow-2xs' : 'text-admin-muted hover:text-black'}`}
               >
-                {systemLocale === 'fr' ? 'Non lues' : 'Unread'} <span className="text-[#247A52]">8</span>
+                {systemLocale === 'fr' ? 'Non lues' : 'Unread'}{' '}
+                {chats.some((c) => c.unread > 0) && (
+                  <span className="text-[#247A52]">{chats.filter((c) => c.unread > 0).length}</span>
+                )}
               </button>
               <button 
                 onClick={() => setStatusTab('pending')} 
@@ -282,8 +297,9 @@ export default function MessagesPage() {
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-xs text-black block truncate flex items-center gap-1.5">
                         {chat.customerName}
-                        {/* WhatsApp small green icon */}
-                        <span className="text-[10px] text-green-500 font-bold font-sans">w</span>
+                        {chat.channel === 'whatsapp' && (
+                          <span className="text-[10px] text-green-500 font-bold font-sans" title="WhatsApp">w</span>
+                        )}
                       </span>
                       <span className="text-[10px] text-admin-muted shrink-0">{chat.lastTime}</span>
                     </div>
@@ -333,11 +349,24 @@ export default function MessagesPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <select className="h-9 px-2 rounded-xl border border-admin-border bg-white text-[11px] font-semibold outline-none cursor-pointer text-admin-muted hover:text-black">
-                <option>Assigner à Jean</option>
-              </select>
-              <button 
-                onClick={() => handleResolveChat(activeChat.email)}
+              <button
+                onClick={() => handleToggleAI(activeChat.id, !activeChat.aiEnabled)}
+                title={activeChat.aiEnabled
+                  ? (systemLocale === 'fr' ? "L'IA répond automatiquement — cliquez pour reprendre la main" : 'AI replies automatically — click to take over')
+                  : (systemLocale === 'fr' ? "Vous gérez cette conversation — cliquez pour réactiver l'IA" : 'You are handling this chat — click to re-enable AI')}
+                className={`h-9 px-3 rounded-xl border text-[11px] font-bold transition cursor-pointer flex items-center gap-1.5 ${
+                  activeChat.aiEnabled
+                    ? 'border-[#247A52] bg-green-50 text-[#247A52]'
+                    : 'border-admin-border bg-white text-admin-muted hover:text-black'
+                }`}
+              >
+                <Bot className="size-3.5" />
+                {activeChat.aiEnabled
+                  ? (systemLocale === 'fr' ? 'IA active' : 'AI on')
+                  : (systemLocale === 'fr' ? 'IA en pause' : 'AI paused')}
+              </button>
+              <button
+                onClick={() => handleResolveChat(activeChat.conversationId)}
                 className="h-9 px-3 rounded-xl border border-admin-border bg-white text-[11px] font-bold text-admin-text hover:border-black transition cursor-pointer"
               >
                 {systemLocale === 'fr' ? 'Marquer résolu' : 'Mark resolved'}
@@ -401,6 +430,11 @@ export default function MessagesPage() {
                     {msg.text}
                   </div>
                   <span className="text-[9px] text-admin-muted mt-1 px-1.5 flex items-center gap-1">
+                    {msg.author === 'ai' && (
+                      <span className="inline-flex items-center gap-0.5 text-[8px] font-bold text-[#247A52] bg-green-50 border border-green-100 px-1 py-0.5 rounded uppercase tracking-wide">
+                        <Bot className="size-2.5" /> IA
+                      </span>
+                    )}
                     {msg.time}
                     {isAdmin && (
                       <CheckCheck className="size-3.5 text-green-600" />
