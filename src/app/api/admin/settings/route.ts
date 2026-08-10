@@ -2,6 +2,24 @@ import { NextResponse } from 'next/server';
 import { getCurrentAdmin } from '@/server/auth/runtime';
 import { requireRole } from '@/server/auth/authorization';
 import { getCommerceDatabase } from '@/server/db/runtime';
+import { z } from 'zod';
+
+const settingsSchema = z.object({
+  shop_name: z.string().trim().min(1).max(120).optional(),
+  email: z.email().optional(),
+  phone: z.string().trim().max(40).optional(),
+  address: z.string().trim().max(300).optional(),
+  country: z.string().trim().min(2).max(80).optional(),
+  currency: z.enum(['EUR', 'USD', 'CAD']).optional(),
+  timezone: z.enum(['Europe/Paris', 'America/New_York', 'Europe/London']).optional(),
+  accent_color: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
+  min_shipping_free: z.string().regex(/^\d+(?:[.,]\d{1,2})?$/).optional(),
+  return_period: z.enum(['14 jours', '30 jours', '60 jours']).optional(),
+  whatsapp_sync: z.boolean().optional(),
+  whatsapp_number: z.string().trim().max(40).optional(),
+  whatsapp_assignee: z.string().trim().min(1).max(120).optional(),
+}).strict();
+const allowedSettingKeys = new Set<string>(settingsSchema.keyof().options);
 
 export async function GET() {
   if (!await getCurrentAdmin()) return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
@@ -11,7 +29,9 @@ export async function GET() {
   
   const settings: Record<string, unknown> = {};
   for (const row of rows) {
-    settings[row.key] = JSON.parse(row.value_json);
+    if (allowedSettingKeys.has(row.key)) {
+      settings[row.key] = JSON.parse(row.value_json);
+    }
   }
   
   // Default values if empty
@@ -38,7 +58,7 @@ export async function POST(request: Request) {
   
   try {
     requireRole(admin.role, ['owner', 'manager']);
-    const body = await request.json() as Record<string, unknown>;
+    const body = settingsSchema.parse(await request.json());
     
     const db = await getCommerceDatabase();
     await db.exec('BEGIN IMMEDIATE');
@@ -55,7 +75,8 @@ export async function POST(request: Request) {
     }
     
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (error) {
+    if (error instanceof z.ZodError) return NextResponse.json({ error: 'INVALID_SETTINGS' }, { status: 400 });
     return NextResponse.json({ error: 'SETTINGS_SAVE_FAILED' }, { status: 500 });
   }
 }

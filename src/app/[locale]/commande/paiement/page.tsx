@@ -11,6 +11,7 @@ import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
 import { Button } from '@/components/ui/Button';
 import { CheckoutSteps } from '@/components/checkout/CheckoutSteps';
+import { readCheckoutResponse } from '@/lib/checkoutResponse';
 
 const PAYMENT_METHODS = ['stripe', 'genius'] as const;
 
@@ -59,7 +60,7 @@ export default function PaymentPage() {
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ idempotencyKey, method: values.method, shipping, items }),
         });
-        const result = await response.json() as { orderNumber: string; checkoutUrl?: string };
+        const result = await readCheckoutResponse(response);
         window.sessionStorage.removeItem(storageKey);
         clearCart();
         if (result.checkoutUrl) {

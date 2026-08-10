@@ -21,6 +21,7 @@ export interface Product {
   imageCount: number;
   isNew?: boolean;
   relatedProductIds?: string[];
+  availableQuantity?: number;
 }
 
 export const COLOR_SWATCHES: Record<string, string> = {

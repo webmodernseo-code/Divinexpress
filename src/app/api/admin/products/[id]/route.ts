@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getCurrentAdmin } from '@/server/auth/runtime';
@@ -53,22 +52,9 @@ export async function PATCH(
 
       // 2. Update price and stock of the first/main variant
       if (body.priceMinor !== undefined || body.stock !== undefined) {
-        const variant = (await db.prepare('SELECT id FROM product_variants WHERE product_id = ? LIMIT 1').get(id)) as { id: string } | undefined;
-        if (variant) {
-          if (body.priceMinor !== undefined) {
-            await db.prepare('UPDATE product_variants SET price_minor = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
-              .run(body.priceMinor, variant.id);
-          }
-          if (body.stock !== undefined) {
-            const currentStockRow = (await db.prepare('SELECT COALESCE(SUM(quantity_delta), 0) AS stock FROM inventory_movements WHERE variant_id = ?').get(variant.id)) as { stock: number } | undefined;
-            const currentStock = currentStockRow?.stock ?? 0;
-            const delta = body.stock - currentStock;
-            if (delta !== 0) {
-              await db.prepare('INSERT INTO inventory_movements (id, variant_id, quantity_delta, reason, actor_id) VALUES (?, ?, ?, ?, ?)')
-                .run(randomUUID(), variant.id, delta, 'adjustment', admin.id);
-            }
-          }
-        }
+        const catalog = new CatalogRepository(db);
+        if (body.priceMinor !== undefined) await catalog.setBasePrice(id, body.priceMinor);
+        if (body.stock !== undefined) await catalog.setAggregateStock(id, body.stock, admin.id);
       }
 
       await db.exec('COMMIT');

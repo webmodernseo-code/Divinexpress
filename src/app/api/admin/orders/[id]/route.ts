@@ -3,11 +3,17 @@ import { z } from 'zod';
 import { getCurrentAdmin } from '@/server/auth/runtime';
 import { requireRole } from '@/server/auth/authorization';
 import { getCommerceDatabase } from '@/server/db/runtime';
+import { OrderService } from '@/server/orders/service';
+import { DomainError } from '@/server/domain/errors';
 
 const patchSchema = z.object({
   status: z.enum(['pending_payment', 'paid', 'preparing', 'shipped', 'delivered', 'cancelled', 'refunded']),
   trackingNumber: z.string().optional(),
   carrier: z.string().optional(),
+}).superRefine((value, context) => {
+  if (value.status === 'shipped' && (!value.trackingNumber?.trim() || !value.carrier?.trim())) {
+    context.addIssue({ code: 'custom', message: 'Tracking number and carrier are required for shipment' });
+  }
 });
 
 export async function GET(
@@ -114,15 +120,13 @@ export async function PATCH(
     
     await db.exec('BEGIN IMMEDIATE');
     try {
-      await db.prepare(`UPDATE orders SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? OR number = ?`)
-        .run(body.status, id, id);
+      const updatedOrder = await new OrderService(db).transition(id, body.status);
         
       if (body.status === 'shipped' && (body.trackingNumber || body.carrier)) {
-        const order = (await db.prepare(`SELECT id FROM orders WHERE id = ? OR number = ?`).get(id, id)) as { id: string } | undefined;
-        if (order) {
+        if (updatedOrder) {
           await db.prepare(`INSERT OR REPLACE INTO shipments (id, order_id, carrier, tracking_number, status, shipped_at)
             VALUES (?, ?, ?, ?, 'shipped', CURRENT_TIMESTAMP)`)
-            .run(order.id, order.id, body.carrier ?? 'Colissimo', body.trackingNumber ?? '');
+            .run(updatedOrder.id, updatedOrder.id, body.carrier, body.trackingNumber);
         }
       }
       await db.exec('COMMIT');
@@ -134,6 +138,7 @@ export async function PATCH(
     return NextResponse.json({ ok: true });
   } catch (error) {
     if (error instanceof z.ZodError) return NextResponse.json({ error: 'INVALID_INPUT' }, { status: 400 });
+    if (error instanceof DomainError) return NextResponse.json({ error: error.code }, { status: error.status });
     return NextResponse.json({ error: 'ORDER_UPDATE_FAILED' }, { status: 500 });
   }
 }

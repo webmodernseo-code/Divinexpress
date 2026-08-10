@@ -7,6 +7,8 @@ import { HeroCarousel } from '@/components/home/HeroCarousel';
 import { PromoBanner } from '@/components/home/PromoBanner';
 import { HomeFaq } from '@/components/home/HomeFaq';
 import { CATEGORIES, getSubcategoriesForCategory, type Category } from '@/lib/products';
+import { getCommerceDatabase } from '@/server/db/runtime';
+import { StorefrontCatalog } from '@/server/catalog/storefront';
 
 export async function generateMetadata({
   params,
@@ -50,6 +52,7 @@ export default async function HomePage({
   setRequestLocale(locale);
   const sp = await searchParams;
   const t = await getTranslations('home');
+  const products = await new StorefrontCatalog(await getCommerceDatabase()).list();
 
   // URL contract with the Header (Tâche 10): /?categorie=homme&sousCategorie=vestes
   const requestedCategory = typeof sp.categorie === 'string' ? sp.categorie : undefined;
@@ -118,6 +121,7 @@ export default async function HomePage({
         key={`${initialCategory ?? 'all'}-${initialSubcategory ?? 'all'}`}
         initialCategory={initialCategory}
         initialSubcategory={initialSubcategory}
+        products={products}
       />
 
       <PromoBanner />

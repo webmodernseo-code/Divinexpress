@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import {
   addLine,
@@ -68,5 +69,12 @@ describe('getCartSubtotalEur', () => {
   it('sums price × quantity using catalog prices', () => {
     const items: CartItem[] = [{ productId: productA.id, size: 'M', color: 'Noir', quantity: 2 }];
     expect(getCartSubtotalEur(items)).toBe(productA.priceEur * 2);
+  });
+
+  it('uses the displayed price snapshot for a database-backed product', () => {
+    const items: CartItem[] = [{
+      productId: 'dashboard-product', size: 'M', color: 'Noir', quantity: 2, unitPriceEur: 79,
+    }];
+    expect(getCartSubtotalEur(items)).toBe(158);
   });
 });

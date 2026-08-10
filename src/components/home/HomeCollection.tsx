@@ -24,8 +24,6 @@ import {
 } from '@/lib/productFilters';
 
 /** Deterministic mixed order, so the unfiltered grid never looks sorted by category. */
-const MIXED_PRODUCTS = interleaveByCategory(PRODUCTS);
-
 /** 2 rows of 4 on desktop, 3 rows of 2 on mobile, before "load more". */
 const DESKTOP_PAGE_SIZE = 8;
 const MOBILE_PAGE_SIZE = 6;
@@ -73,10 +71,12 @@ function FilterSelect({
 
 export function HomeCollection({
   initialCategory,
-  initialSubcategory
+  initialSubcategory,
+  products: catalogProducts = PRODUCTS,
 }: {
   initialCategory: Category | null;
   initialSubcategory: string | null;
+  products?: typeof PRODUCTS;
 }) {
   const t = useTranslations('home');
   const tNav = useTranslations('nav');
@@ -90,16 +90,18 @@ export function HomeCollection({
   const [isExpanded, setIsExpanded] = useState(false);
 
   const categoryProducts = useMemo(
-    () => (category ? getProductsByCategory(category) : []),
-    [category]
+    () => (category ? catalogProducts.filter((product) => product.category === category) : []),
+    [category, catalogProducts]
   );
+
+  const mixedProducts = useMemo(() => interleaveByCategory(catalogProducts), [catalogProducts]);
 
   const products = useMemo(
     () =>
       category
-        ? filterAndSortProducts(PRODUCTS, { category, subcategory, size, color, sort })
-        : MIXED_PRODUCTS,
-    [category, subcategory, size, color, sort]
+        ? filterAndSortProducts(catalogProducts, { category, subcategory, size, color, sort })
+        : mixedProducts,
+    [category, subcategory, size, color, sort, catalogProducts, mixedProducts]
   );
 
   function selectCategory(next: Category) {

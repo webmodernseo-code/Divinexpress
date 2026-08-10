@@ -1,0 +1,49 @@
+import type { Product, Category } from '@/lib/products';
+import type { Database } from '../db/client';
+import { CatalogRepository, type CatalogProduct } from './repository';
+
+const categories = new Set<Category>(['homme', 'femme', 'enfant', 'accessoires']);
+
+function unique(values: Array<string | null>): string[] {
+  return Array.from(new Set(values.filter((value): value is string => Boolean(value))));
+}
+
+function toStorefrontProduct(product: CatalogProduct): Product | null {
+  const category = product.categoryId.replace(/^category:/, '') as Category;
+  if (product.status !== 'active' || !categories.has(category) || product.variants.length === 0) return null;
+
+  const sizes = unique(product.variants.map((variant) => variant.size));
+  const colors = unique(product.variants.map((variant) => variant.color));
+
+  return {
+    id: product.id,
+    slug: product.slug,
+    category,
+    subcategory: '',
+    name: { fr: product.nameFr, en: product.nameEn },
+    description: { fr: product.descriptionFr, en: product.descriptionEn },
+    priceEur: product.variants[0].priceMinor / 100,
+    sizes: sizes.length > 0 ? sizes : ['UNIQUE'],
+    colors: colors.length > 0 ? colors : ['Noir'],
+    imageCount: Math.max(1, colors.length),
+    availableQuantity: product.variants.reduce((total, variant) => total + Math.max(0, variant.stock), 0),
+  };
+}
+
+export class StorefrontCatalog {
+  private readonly repository: CatalogRepository;
+
+  constructor(database: Database) {
+    this.repository = new CatalogRepository(database);
+  }
+
+  async list(): Promise<Product[]> {
+    const products = await this.repository.listProducts();
+    return products.map(toStorefrontProduct).filter((product): product is Product => product !== null);
+  }
+
+  async findBySlug(slug: string): Promise<Product | null> {
+    const product = await this.repository.findBySlug(slug);
+    return product ? toStorefrontProduct(product) : null;
+  }
+}

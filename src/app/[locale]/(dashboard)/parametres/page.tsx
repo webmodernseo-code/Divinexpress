@@ -31,6 +31,7 @@ interface StoreSettings {
   return_period?: string;
   whatsapp_sync?: boolean;
   whatsapp_assignee?: string;
+  whatsapp_number?: string;
 }
 
 export default function ParametresPage() {
@@ -337,9 +338,9 @@ export default function ParametresPage() {
                 
                 <div className="space-y-3.5 text-xs font-semibold">
                   {[
-                    { name: 'Stripe', status: 'connected', label: systemLocale === 'fr' ? 'Connecté' : 'Connected', btn: systemLocale === 'fr' ? 'Configurer' : 'Configure' },
-                    { name: 'PayPal', status: 'connected', label: systemLocale === 'fr' ? 'Connecté' : 'Connected', btn: systemLocale === 'fr' ? 'Configurer' : 'Configure' },
-                    { name: 'GeniusPay', status: 'config', label: systemLocale === 'fr' ? 'À configurer' : 'To configure', btn: systemLocale === 'fr' ? 'Connecter' : 'Connect' }
+                    { name: 'Stripe', status: 'config', label: systemLocale === 'fr' ? 'À connecter' : 'Not connected', btn: systemLocale === 'fr' ? 'Bientôt disponible' : 'Coming soon' },
+                    { name: 'PayPal', status: 'config', label: systemLocale === 'fr' ? 'À connecter' : 'Not connected', btn: systemLocale === 'fr' ? 'Bientôt disponible' : 'Coming soon' },
+                    { name: 'GeniusPay', status: 'config', label: systemLocale === 'fr' ? 'À connecter' : 'Not connected', btn: systemLocale === 'fr' ? 'Bientôt disponible' : 'Coming soon' }
                   ].map((p) => (
                     <div key={p.name} className="p-4 border border-slate-100 rounded-xl flex items-center justify-between hover:bg-slate-50/50 transition-colors">
                       <div className="flex items-center gap-3">
@@ -352,7 +353,7 @@ export default function ParametresPage() {
                           {p.label}
                         </span>
                       </div>
-                      <button type="button" className="h-8 px-3 rounded-lg border border-slate-200 hover:border-black text-[10px] font-bold text-slate-700 hover:text-black transition cursor-pointer bg-white">
+                      <button type="button" disabled className="h-8 px-3 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-400 bg-slate-50 cursor-not-allowed">
                         {p.btn}
                       </button>
                     </div>
@@ -410,24 +411,24 @@ export default function ParametresPage() {
                 <div className="space-y-4 text-xs font-semibold">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-bold text-xs text-black">Numéro connecté</p>
-                      <p className="text-[10px] text-admin-muted mt-1">+33 6 12 34 56 78</p>
+                      <p className="font-bold text-xs text-black">{systemLocale === 'fr' ? 'Numéro préparé' : 'Configured number'}</p>
+                      <p className="text-[10px] text-admin-muted mt-1">{settings.whatsapp_number || '—'}</p>
                     </div>
-                    <button type="button" className="h-8 px-3 rounded-lg border border-slate-200 hover:border-black text-[10px] font-bold text-slate-700 hover:text-black transition cursor-pointer bg-white">
-                      Gérer la connexion
+                    <button type="button" disabled className="h-8 px-3 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-400 bg-slate-50 cursor-not-allowed">
+                      {systemLocale === 'fr' ? 'Clés requises' : 'Credentials required'}
                     </button>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-[10px] uppercase text-admin-muted tracking-wider">Compte Business</p>
-                      <p className="font-bold text-black mt-1.5">Reign Support</p>
+                      <p className="font-bold text-black mt-1.5">—</p>
                     </div>
                     <div>
                       <p className="text-[10px] uppercase text-admin-muted tracking-wider">Statut du webhook</p>
-                      <p className="font-bold text-[#247A52] flex items-center gap-1.5 mt-1.5">
-                        <span className="size-1.5 bg-[#247A52] rounded-full" />
-                        Actif
+                      <p className="font-bold text-amber-700 flex items-center gap-1.5 mt-1.5">
+                        <span className="size-1.5 bg-amber-500 rounded-full" />
+                        {systemLocale === 'fr' ? 'Non connecté' : 'Not connected'}
                       </p>
                     </div>
                   </div>

@@ -2,9 +2,10 @@ import { randomUUID } from 'node:crypto';
 import type { Database } from '../db/client';
 import { DomainError } from '../domain/errors';
 import { createOrderInputSchema, type CreateOrderInput } from './schemas';
+import { assertOrderTransition, type OrderStatus } from '../domain/order-status';
 
 type Currency = 'EUR' | 'GBP';
-type Status = 'pending_payment' | 'paid' | 'preparing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
+type Status = OrderStatus;
 
 interface VariantRow {
   id: string; sku: string; size: string | null; color: string | null;
@@ -121,6 +122,16 @@ export class OrderService {
     const row = (await this.database.prepare('SELECT id FROM orders WHERE idempotency_key = ?')
       .get(key)) as { id: string } | undefined;
     return row ? this.findById(row.id) : null;
+  }
+
+  async transition(idOrNumber: string, status: OrderStatus): Promise<OrderRecord> {
+    const row = (await this.database.prepare('SELECT id, status FROM orders WHERE id = ? OR number = ?')
+      .get(idOrNumber, idOrNumber)) as { id: string; status: OrderStatus } | undefined;
+    if (!row) throw new DomainError('NOT_FOUND', 'Order not found', 404);
+    assertOrderTransition(row.status, status);
+    await this.database.prepare('UPDATE orders SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+      .run(status, row.id);
+    return (await this.findById(row.id))!;
   }
 
   async findById(id: string): Promise<OrderRecord | null> {

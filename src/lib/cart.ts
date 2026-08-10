@@ -5,6 +5,7 @@ export interface CartItem {
   size: string;
   color: string;
   quantity: number;
+  unitPriceEur?: number;
 }
 
 export function isSameLine(line: CartItem, productId: string, size: string, color: string): boolean {
@@ -18,7 +19,8 @@ export function getCartItemCount(items: CartItem[]): number {
 export function getCartSubtotalEur(items: CartItem[]): number {
   return items.reduce((sum, line) => {
     const product = getProductById(line.productId);
-    return sum + (product ? product.priceEur * line.quantity : 0);
+    const unitPrice = line.unitPriceEur ?? product?.priceEur ?? 0;
+    return sum + unitPrice * line.quantity;
   }, 0);
 }
 

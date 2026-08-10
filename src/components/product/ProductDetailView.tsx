@@ -60,13 +60,13 @@ export function ProductDetailView({
   const favorite = isFavorite(product.id);
 
   function handleAddToCart() {
-    addItem({ productId: product.id, size, color, quantity });
+    addItem({ productId: product.id, size, color, quantity, unitPriceEur: product.priceEur });
     openCartDrawer();
   }
 
   /** Same line added to the cart, but jumps straight to checkout instead of the drawer. */
   function handleBuyNow() {
-    addItem({ productId: product.id, size, color, quantity });
+    addItem({ productId: product.id, size, color, quantity, unitPriceEur: product.priceEur });
     router.push(CHECKOUT_PATH);
   }
 

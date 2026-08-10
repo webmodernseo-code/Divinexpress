@@ -61,4 +61,19 @@ describe('OrderService', () => {
     await expect(service.createOrder({ ...input, idempotencyKey: 'checkout-gbp-1234', currency: 'GBP' }))
       .rejects.toThrowError(new DomainError('CURRENCY_MISMATCH', 'Currencies must match'));
   });
+
+  it('enforces the order state machine for dashboard transitions', async () => {
+    const order = await service.createOrder(input);
+
+    await expect(service.transition(order.id, 'shipped'))
+      .rejects.toThrowError(new DomainError('INVALID_ORDER_TRANSITION', 'Invalid order transition'));
+
+    expect((await service.transition(order.id, 'paid')).status).toBe('paid');
+    expect((await service.transition(order.id, 'preparing')).status).toBe('preparing');
+  });
+
+  it('returns not found when a dashboard transition targets an unknown order', async () => {
+    await expect(service.transition('missing-order', 'cancelled'))
+      .rejects.toThrowError(new DomainError('NOT_FOUND', 'Order not found', 404));
+  });
 });

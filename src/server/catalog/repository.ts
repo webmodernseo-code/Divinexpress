@@ -88,6 +88,35 @@ export class CatalogRepository {
     if (result.changes === 0) throw new DomainError('NOT_FOUND', 'Product not found', 404);
   }
 
+  async setBasePrice(productId: string, priceMinor: number): Promise<void> {
+    if (!Number.isSafeInteger(priceMinor) || priceMinor < 0) {
+      throw new DomainError('CONFLICT', 'Price must be a non-negative integer');
+    }
+    const result = await this.database.prepare(`UPDATE product_variants
+      SET price_minor = ?, updated_at = CURRENT_TIMESTAMP WHERE product_id = ? AND active = 1`)
+      .run(priceMinor, productId);
+    if (result.changes === 0) throw new DomainError('NOT_FOUND', 'Product variants not found', 404);
+  }
+
+  async setAggregateStock(productId: string, targetStock: number, actorId: string): Promise<void> {
+    if (!Number.isSafeInteger(targetStock) || targetStock < 0) {
+      throw new DomainError('CONFLICT', 'Stock must be a non-negative integer');
+    }
+    const variants = (await this.database.prepare(`SELECT v.id,
+      COALESCE(SUM(m.quantity_delta), 0) AS stock
+      FROM product_variants v LEFT JOIN inventory_movements m ON m.variant_id = v.id
+      WHERE v.product_id = ? AND v.active = 1 GROUP BY v.id ORDER BY v.created_at, v.id`)
+      .all(productId)) as unknown as Array<{ id: string; stock: number }>;
+    if (variants.length === 0) throw new DomainError('NOT_FOUND', 'Product variants not found', 404);
+    const currentTotal = variants.reduce((total, variant) => total + variant.stock, 0);
+    const delta = targetStock - currentTotal;
+    if (delta !== 0) {
+      await this.database.prepare(`INSERT INTO inventory_movements
+        (id, variant_id, quantity_delta, reason, actor_id) VALUES (?, ?, ?, 'adjustment', ?)`)
+        .run(randomUUID(), variants[0].id, delta, actorId);
+    }
+  }
+
   async adjustInventory(input: { variantId: string; quantityDelta: number; reason: InventoryReason }): Promise<number> {
     if (!Number.isSafeInteger(input.quantityDelta) || input.quantityDelta === 0) {
       throw new DomainError('CONFLICT', 'Inventory adjustment must be a non-zero integer');

@@ -58,4 +58,26 @@ describe('CatalogRepository', () => {
     expect(await repository.findBySlug('veste-test')).toBeNull();
     expect((await repository.listProducts({ includeArchived: true }))[0].status).toBe('archived');
   });
+
+  it('updates dashboard base price across variants and sets aggregate stock', async () => {
+    await repository.createProduct({
+      id: 'product-1', categoryId: 'category:test', slug: 'veste-test',
+      nameFr: 'Veste test', nameEn: 'Test jacket', descriptionFr: '', descriptionEn: '',
+      variants: [
+        { id: 'variant-1', sku: 'TEST-M', size: 'M', color: 'Noir', priceMinor: 12500, currency: 'EUR' },
+        { id: 'variant-2', sku: 'TEST-L', size: 'L', color: 'Noir', priceMinor: 13500, currency: 'EUR' },
+      ],
+    });
+    await repository.adjustInventory({ variantId: 'variant-1', quantityDelta: 3, reason: 'initial' });
+    await repository.adjustInventory({ variantId: 'variant-2', quantityDelta: 4, reason: 'initial' });
+    await database.prepare(`INSERT INTO admin_users (id, email, password_hash, role)
+      VALUES ('admin-1', 'admin@example.com', 'test-hash', 'owner')`).run();
+
+    await repository.setBasePrice('product-1', 14900);
+    await repository.setAggregateStock('product-1', 10, 'admin-1');
+
+    const product = await repository.findBySlug('veste-test');
+    expect(product?.variants.map((variant) => variant.priceMinor)).toEqual([14900, 14900]);
+    expect(product?.variants.reduce((total, variant) => total + variant.stock, 0)).toBe(10);
+  });
 });

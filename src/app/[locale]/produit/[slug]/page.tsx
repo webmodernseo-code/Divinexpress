@@ -6,6 +6,8 @@ import { PRODUCTS, getProductBySlug, getRelatedProducts } from '@/lib/products';
 import { routing } from '@/i18n/routing';
 import { Container } from '@/components/ui/Container';
 import { ProductDetailView } from '@/components/product/ProductDetailView';
+import { getCommerceDatabase } from '@/server/db/runtime';
+import { StorefrontCatalog } from '@/server/catalog/storefront';
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) => PRODUCTS.map((product) => ({ locale, slug: product.slug })));
@@ -17,7 +19,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await new StorefrontCatalog(await getCommerceDatabase()).findBySlug(slug);
   if (!product) return {};
   const localizedLocale = locale as 'fr' | 'en';
   return buildMetadata({
@@ -39,7 +41,8 @@ export default async function ProductPage({
   const { couleur } = await searchParams;
   setRequestLocale(locale);
 
-  const product = getProductBySlug(slug);
+  const catalog = new StorefrontCatalog(await getCommerceDatabase());
+  const product = await catalog.findBySlug(slug);
   if (!product) {
     notFound();
   }
