@@ -2,16 +2,10 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { buildMetadata, breadcrumbJsonLd, productJsonLd, SITE_URL } from '@/lib/seo';
-import { PRODUCTS, getProductBySlug, getRelatedProducts } from '@/lib/products';
-import { routing } from '@/i18n/routing';
 import { Container } from '@/components/ui/Container';
 import { ProductDetailView } from '@/components/product/ProductDetailView';
 import { getCommerceDatabase } from '@/server/db/runtime';
 import { StorefrontCatalog } from '@/server/catalog/storefront';
-
-export function generateStaticParams() {
-  return routing.locales.flatMap((locale) => PRODUCTS.map((product) => ({ locale, slug: product.slug })));
-}
 
 export async function generateMetadata({
   params
@@ -47,7 +41,9 @@ export default async function ProductPage({
     notFound();
   }
 
-  const relatedProducts = getRelatedProducts(product);
+  const relatedProducts = product.relatedProductIds?.length
+    ? (await catalog.list()).filter((candidate) => product.relatedProductIds?.includes(candidate.id))
+    : [];
   const tNav = await getTranslations('nav');
   const localizedLocale = locale as 'fr' | 'en';
   const productUrl = `${SITE_URL}/${locale}/produit/${product.slug}`;

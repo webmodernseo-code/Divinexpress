@@ -4,7 +4,6 @@ import { CheckoutService } from '@/server/checkout/service';
 import { getCommerceDatabase } from '@/server/db/runtime';
 import { DomainError } from '@/server/domain/errors';
 import { DevelopmentNotificationProvider } from '@/server/notifications/development-provider';
-import { DevelopmentPaymentProvider } from '@/server/payments/development-provider';
 import { GeniusPaymentProvider } from '@/server/payments/genius-provider';
 
 const requestSchema = z.object({
@@ -33,9 +32,6 @@ function countryCode(country: string): string | null {
 }
 
 export async function POST(request: Request) {
-  if (process.env.NODE_ENV === 'production') {
-    return NextResponse.json({ error: 'PAYMENT_PROVIDER_NOT_CONFIGURED' }, { status: 503 });
-  }
   try {
     const input = requestSchema.parse(await request.json());
     const database = await getCommerceDatabase();
@@ -52,12 +48,10 @@ export async function POST(request: Request) {
     const geniusKey = process.env.GENIUS_API_KEY;
     const geniusSecret = process.env.GENIUS_API_SECRET;
 
-    let paymentProvider;
-    if (input.method === 'genius' && geniusKey && geniusSecret) {
-      paymentProvider = new GeniusPaymentProvider(geniusKey, geniusSecret);
-    } else {
-      paymentProvider = new DevelopmentPaymentProvider('succeed');
+    if (input.method !== 'genius' || !geniusKey || !geniusSecret) {
+      throw new DomainError('PAYMENT_PROVIDER_NOT_CONFIGURED', 'Payment provider not configured', 503);
     }
+    const paymentProvider = new GeniusPaymentProvider(geniusKey, geniusSecret);
 
     const checkout = new CheckoutService(
       database,
@@ -97,4 +91,14 @@ export async function POST(request: Request) {
     console.error('Checkout failed', error);
     return NextResponse.json({ error: 'CHECKOUT_FAILED' }, { status: 500 });
   }
+}
+
+export async function GET() {
+  const geniusConfigured = Boolean(process.env.GENIUS_API_KEY && process.env.GENIUS_API_SECRET);
+  return NextResponse.json({
+    methods: {
+      stripe: { status: 'unavailable' },
+      genius: { status: geniusConfigured ? 'configured' : 'unavailable' },
+    },
+  });
 }

@@ -56,7 +56,7 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
       <button
         type="button"
-        onClick={() => toggleFavorite(product.id)}
+        onClick={() => toggleFavorite(product)}
         aria-label={t('toggleFavorite')}
         aria-pressed={favorite}
         className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-paper/85 text-ink transition-colors hover:text-accent"

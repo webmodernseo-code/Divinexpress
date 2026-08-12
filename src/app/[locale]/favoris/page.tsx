@@ -2,17 +2,13 @@
 
 import { useTranslations } from 'next-intl';
 import { useFavorites } from '@/context/FavoritesContext';
-import { getProductById } from '@/lib/products';
 import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
 import { ProductCard } from '@/components/product/ProductCard';
 
 export default function FavoritesPage() {
   const t = useTranslations('favorites');
-  const { favoriteIds } = useFavorites();
-  const products = favoriteIds
-    .map((id) => getProductById(id))
-    .filter((product): product is NonNullable<typeof product> => Boolean(product));
+  const { favorites: products } = useFavorites();
 
   return (
     <Container className="py-10 md:py-14">

@@ -52,4 +52,30 @@ describe('StorefrontCatalog', () => {
     expect(await new StorefrontCatalog(database).list()).toEqual([]);
     expect(await new StorefrontCatalog(database).findBySlug('active-product')).toBeNull();
   });
+
+  it('searches active persisted products in the requested locale', async () => {
+    await repository.createProduct({
+      id: 'linen-shirt', categoryId: 'category:homme', slug: 'linen-shirt',
+      nameFr: 'Chemise en lin', nameEn: 'Linen shirt',
+      descriptionFr: 'Légère pour l’été', descriptionEn: 'Lightweight summer shirt',
+      variants: [{ id: 'linen-shirt-m', sku: 'LINEN-M', size: 'M', color: 'Ecru', priceMinor: 8900, currency: 'EUR' }],
+    });
+    await repository.createProduct({
+      id: 'wool-jacket', categoryId: 'category:homme', slug: 'wool-jacket',
+      nameFr: 'Veste en laine', nameEn: 'Wool jacket',
+      descriptionFr: 'Coupe structurée', descriptionEn: 'Structured fit',
+      variants: [{ id: 'wool-jacket-m', sku: 'WOOL-M', size: 'M', color: 'Noir', priceMinor: 14900, currency: 'EUR' }],
+    });
+    await repository.archiveProduct('wool-jacket');
+
+    const catalog = new StorefrontCatalog(database);
+
+    expect((await catalog.search('LÉGÈRE', 'fr')).map((product) => product.slug)).toEqual(['linen-shirt']);
+    expect((await catalog.search('summer', 'en')).map((product) => product.slug)).toEqual(['linen-shirt']);
+    expect(await catalog.search('laine', 'fr')).toEqual([]);
+  });
+
+  it('returns no search results for a blank query', async () => {
+    expect(await new StorefrontCatalog(database).search('   ', 'fr')).toEqual([]);
+  });
 });

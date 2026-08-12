@@ -7,7 +7,8 @@ import {
   removeLine,
   updateLineQuantity,
   getCartItemCount,
-  getCartSubtotalEur
+  getCartSubtotalEur,
+  parseStoredCart
 } from '@/lib/cart';
 
 const STORAGE_KEY = 'reign-cart';
@@ -31,7 +32,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) setItems(JSON.parse(raw));
+      if (raw) setItems(parseStoredCart(raw));
     } catch {
       // ignore malformed storage
     }

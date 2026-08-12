@@ -7,7 +7,6 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useCart } from '@/context/CartContext';
 import { useCartDrawer } from '@/context/CartDrawerContext';
 import { useCurrency } from '@/context/CurrencyContext';
-import { getProductById } from '@/lib/products';
 import {
   FiLock,
   FiMinus,
@@ -16,13 +15,6 @@ import {
   FiTrash2,
   FiX,
 } from 'react-icons/fi';
-
-const CATEGORY_IMAGES: Record<string, string> = {
-  homme: '/image/category_homme.png',
-  femme: '/image/category_femme.png',
-  enfant: '/image/category_enfant.png',
-  accessoires: '/image/category_accessoires.png'
-};
 
 type CartDrawerProps = {
   open?: boolean;
@@ -190,18 +182,17 @@ export function CartDrawer({
               </div>
             ) : (
               items.map((line) => {
-                const product = getProductById(line.productId);
-                if (!product) return null;
+                if (!line.name || !line.imageUrl) return null;
                 const lineKey = `${line.productId}-${line.size}-${line.color}`;
-                const productImage = CATEGORY_IMAGES[product.category] || '/image/category_homme.png';
-                const itemPrice = product.priceEur * line.quantity;
+                const productImage = line.imageUrl;
+                const itemPrice = (line.unitPriceEur ?? 0) * line.quantity;
 
                 return (
                   <article key={lineKey} className="grid grid-cols-[118px_1fr] gap-5 py-6 sm:grid-cols-[150px_1fr] sm:gap-7 first:pt-4">
                     <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-neutral-100">
                       <Image
                         src={productImage}
-                        alt={product.name[systemLocale]}
+                        alt={line.name[systemLocale]}
                         fill
                         sizes="(max-width: 640px) 118px, 150px"
                         className="object-cover"
@@ -210,7 +201,7 @@ export function CartDrawer({
 
                     <div className="min-w-0 py-1 flex flex-col justify-between">
                       <div>
-                        <h3 className="text-lg font-medium sm:text-xl text-ink leading-tight">{product.name[systemLocale]}</h3>
+                        <h3 className="text-lg font-medium sm:text-xl text-ink leading-tight">{line.name[systemLocale]}</h3>
                         <p className="mt-1 text-sm text-neutral-500 sm:text-base">
                           {line.size} · {line.color}
                         </p>

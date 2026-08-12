@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/navigation';
-import { COLOR_SWATCHES, type Product } from '@/lib/products';
+import { COLOR_SWATCHES, getProductImageUrl, type Product } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
 import { useCartDrawer } from '@/context/CartDrawerContext';
 import { useCurrency } from '@/context/CurrencyContext';
@@ -59,14 +59,28 @@ export function ProductDetailView({
 
   const favorite = isFavorite(product.id);
 
+  function cartSnapshot() {
+    return {
+      productId: product.id,
+      slug: product.slug,
+      name: product.name,
+      category: product.category,
+      imageUrl: getProductImageUrl(product, color),
+      size,
+      color,
+      quantity,
+      unitPriceEur: product.priceEur,
+    };
+  }
+
   function handleAddToCart() {
-    addItem({ productId: product.id, size, color, quantity, unitPriceEur: product.priceEur });
+    addItem(cartSnapshot());
     openCartDrawer();
   }
 
   /** Same line added to the cart, but jumps straight to checkout instead of the drawer. */
   function handleBuyNow() {
-    addItem({ productId: product.id, size, color, quantity, unitPriceEur: product.priceEur });
+    addItem(cartSnapshot());
     router.push(CHECKOUT_PATH);
   }
 
@@ -177,7 +191,7 @@ export function ProductDetailView({
             </button>
             <button
               type="button"
-              onClick={() => toggleFavorite(product.id)}
+              onClick={() => toggleFavorite(product)}
               aria-pressed={favorite}
               aria-label={t('toggleFavorite')}
               className={`order-1 flex h-[54px] w-[54px] flex-shrink-0 items-center justify-center rounded-full border transition-colors md:order-2 ${

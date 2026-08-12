@@ -4,7 +4,6 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useCurrency } from '@/context/CurrencyContext';
 import { useCart } from '@/context/CartContext';
 import { formatPrice } from '@/lib/currency';
-import { getProductById } from '@/lib/products';
 import { PlaceholderBlock } from '@/components/ui/PlaceholderBlock';
 import type { CartItem } from '@/lib/cart';
 
@@ -13,8 +12,7 @@ export function CartLineItem({ line }: { line: CartItem }) {
   const locale = useLocale() as 'fr' | 'en';
   const { currency } = useCurrency();
   const { removeItem, updateQuantity } = useCart();
-  const product = getProductById(line.productId);
-  if (!product) return null;
+  if (!line.name) return null;
 
   const lineKey = `${line.productId}-${line.size}-${line.color}`;
 
@@ -22,7 +20,7 @@ export function CartLineItem({ line }: { line: CartItem }) {
     <li className="flex gap-4">
       <PlaceholderBlock aspect="square" className="w-20 flex-shrink-0" />
       <div className="flex flex-1 flex-col text-sm">
-        <span className="font-medium">{product.name[locale]}</span>
+        <span className="font-medium">{line.name[locale]}</span>
         <span className="text-mist-500">
           {line.size} · {line.color}
         </span>
@@ -48,7 +46,7 @@ export function CartLineItem({ line }: { line: CartItem }) {
             {t('remove')}
           </button>
         </div>
-        <span className="mt-2 text-sm">{formatPrice(product.priceEur * line.quantity, currency, locale)}</span>
+        <span className="mt-2 text-sm">{formatPrice((line.unitPriceEur ?? 0) * line.quantity, currency, locale)}</span>
       </div>
     </li>
   );

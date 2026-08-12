@@ -96,33 +96,40 @@ export default async function HomePage({
       <HeroCarousel
         slides={[
           {
-            image: '/image/hero_1.png',
-            kicker: t('heroKicker'),
-            title: t('heroTitle'),
-            subtitle: t('heroSubtitle')
+            image: '/image/hero-shammah.png',
+            imageAlt: t('heroImageAlt1'),
+            watermark: t('heroSlide1Watermark'),
+            title: t('heroSlide1Title'),
+            subtitle: t('heroSlide1Subtitle'),
+            theme: 'navy'
           },
           {
-            image: '/image/hero_2.png',
-            kicker: t('heroKicker2'),
-            title: t('heroTitle2'),
-            subtitle: t('heroSubtitle2')
-          },
-          {
-            image: '/image/hero_3.png',
-            kicker: t('heroKicker3'),
-            title: t('heroTitle3'),
-            subtitle: t('heroSubtitle3')
+            image: '/image/hero2-shammah.png',
+            imageAlt: t('heroImageAlt2'),
+            watermark: t('heroSlide2Watermark'),
+            title: t('heroSlide2Title'),
+            subtitle: t('heroSlide2Subtitle'),
+            theme: 'black'
           }
+        ]}
+        primaryCta={{ label: t('heroCtaPrimary'), href: '#collection' }}
+        secondaryCta={{ label: t('heroCtaSecondary'), href: '#collection' }}
+        features={[
+          { icon: 'quality', title: t('feature1Title'), subtitle: t('feature1Subtitle') },
+          { icon: 'design', title: t('feature2Title'), subtitle: t('feature2Subtitle') },
+          { icon: 'shipping', title: t('feature3Title'), subtitle: t('feature3Subtitle') }
         ]}
       />
 
       {/* Remounts when the Header navigates to a different category/subcategory. */}
-      <HomeCollection
-        key={`${initialCategory ?? 'all'}-${initialSubcategory ?? 'all'}`}
-        initialCategory={initialCategory}
-        initialSubcategory={initialSubcategory}
-        products={products}
-      />
+      <div id="collection" className="scroll-mt-28">
+        <HomeCollection
+          key={`${initialCategory ?? 'all'}-${initialSubcategory ?? 'all'}`}
+          initialCategory={initialCategory}
+          initialSubcategory={initialSubcategory}
+          products={products}
+        />
+      </div>
 
       <PromoBanner />
 

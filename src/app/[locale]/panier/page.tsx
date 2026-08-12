@@ -1,15 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { Link, useRouter } from '@/i18n/navigation';
-import { useMemo, useState } from 'react';
+import { Link } from '@/i18n/navigation';
+import { useMemo } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
-import { getProductById } from '@/lib/products';
 import {
   FiArrowLeft,
-  FiExternalLink,
   FiLock,
   FiMinus,
   FiPackage,
@@ -19,13 +17,6 @@ import {
   FiTrash2,
   FiTruck,
 } from 'react-icons/fi';
-
-const CATEGORY_IMAGES: Record<string, string> = {
-  homme: '/image/category_homme.png',
-  femme: '/image/category_femme.png',
-  enfant: '/image/category_enfant.png',
-  accessoires: '/image/category_accessoires.png'
-};
 
 const PAYMENT_LOGOS = [
   { name: 'Visa & Mastercard', src: '/payment/visa-mastercard.png', width: 123, height: 50 },
@@ -39,12 +30,8 @@ const FREE_SHIPPING_THRESHOLD = 150;
 export default function CartPage() {
   const t = useTranslations('cart');
   const systemLocale = useLocale() as 'fr' | 'en';
-  const { items, subtotalEur, updateQuantity, removeItem, clearCart } = useCart();
+  const { items, subtotalEur, updateQuantity, removeItem } = useCart();
   const { currency } = useCurrency();
-  const router = useRouter();
-
-  const [paypalLoading, setPaypalLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const activeLocale = systemLocale === 'fr' ? 'fr-FR' : 'en-GB';
 
@@ -60,27 +47,6 @@ export default function CartPage() {
 
   const amountRemaining = Math.max(FREE_SHIPPING_THRESHOLD - subtotalEur, 0);
   const progress = Math.min((subtotalEur / FREE_SHIPPING_THRESHOLD) * 100, 100);
-
-  const startPayPalCheckout = async () => {
-    try {
-      setPaypalLoading(true);
-      setError('');
-
-      // Simulate a small delay for creating session
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // Successfully processed, clear cart and redirect to confirmation
-      clearCart();
-      router.push('/commande/confirmation');
-    } catch {
-      setError(
-        systemLocale === 'fr'
-          ? 'PayPal est temporairement indisponible.'
-          : 'PayPal is temporarily unavailable.'
-      );
-      setPaypalLoading(false);
-    }
-  };
 
   const totalItemsCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -149,18 +115,17 @@ export default function CartPage() {
               {/* Items List */}
               <div className="divide-y divide-neutral-200">
                 {items.map((line) => {
-                  const product = getProductById(line.productId);
-                  if (!product) return null;
+                  if (!line.name || !line.imageUrl) return null;
                   const lineKey = `${line.productId}-${line.size}-${line.color}`;
-                  const productImage = CATEGORY_IMAGES[product.category] || '/image/category_homme.png';
-                  const itemSubtotal = product.priceEur * line.quantity;
+                  const productImage = line.imageUrl;
+                  const itemSubtotal = (line.unitPriceEur ?? 0) * line.quantity;
 
                   return (
                     <article key={lineKey} className="grid grid-cols-[112px_minmax(0,1fr)] gap-5 py-7 sm:grid-cols-[190px_minmax(0,1fr)_auto] sm:gap-8 bg-transparent">
                       <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-neutral-100">
                         <Image
                           src={productImage}
-                          alt={product.name[systemLocale]}
+                          alt={line.name[systemLocale]}
                           fill
                           sizes="(max-width: 640px) 112px, 190px"
                           className="object-cover"
@@ -169,7 +134,7 @@ export default function CartPage() {
 
                       <div className="min-w-0 py-1 flex flex-col justify-between">
                         <div>
-                          <h2 className="text-lg font-medium sm:text-xl text-black leading-tight">{product.name[systemLocale]}</h2>
+                          <h2 className="text-lg font-medium sm:text-xl text-black leading-tight">{line.name[systemLocale]}</h2>
                           <p className="mt-1 text-sm text-neutral-500 sm:text-base">
                             {line.size} · {line.color}
                           </p>
@@ -262,35 +227,6 @@ export default function CartPage() {
               >
                 {t('checkout').toUpperCase()}
               </Link>
-
-              <div className="my-4 flex items-center gap-3 text-[11px] font-medium tracking-[0.12em] text-neutral-500">
-                <span className="h-px flex-1 bg-neutral-200" />
-                {systemLocale === 'fr' ? 'OU PAYER RAPIDEMENT AVEC' : 'OR PAY INSTANTLY WITH'}
-                <span className="h-px flex-1 bg-neutral-200" />
-              </div>
-
-              <button
-                type="button"
-                onClick={startPayPalCheckout}
-                disabled={paypalLoading}
-                className="relative flex h-14 w-full items-center justify-center rounded-lg bg-[#FFC439] transition hover:bg-[#F4B92E] disabled:cursor-wait disabled:opacity-70"
-              >
-                <Image
-                  src="/payment/paypal.png"
-                  alt="PayPal"
-                  width={60}
-                  height={40}
-                  className="h-7 w-auto object-contain"
-                />
-                <FiExternalLink className="absolute right-5 size-4 text-[#003087]" aria-hidden="true" />
-                <span className="sr-only">Pay instantly with PayPal</span>
-              </button>
-
-              {error && (
-                <p role="alert" className="mt-3 text-sm text-red-700">
-                  {error}
-                </p>
-              )}
 
               <p className="mt-5 flex items-center justify-center gap-2 text-xs text-neutral-500">
                 <FiLock className="size-4" aria-hidden="true" />

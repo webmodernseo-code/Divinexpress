@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/navigation';
@@ -27,7 +27,9 @@ const PAYMENT_LOGOS: Record<(typeof PAYMENT_METHODS)[number], { src: string; wid
   ]
 };
 
-const DEFAULT_VALUES: PaymentFormValues = { method: 'stripe' };
+const DEFAULT_VALUES: PaymentFormValues = { method: '' };
+
+type PaymentCapabilities = Record<(typeof PAYMENT_METHODS)[number], { status: 'configured' | 'unavailable' }>;
 
 export default function PaymentPage() {
   const t = useTranslations('checkout');
@@ -39,6 +41,18 @@ export default function PaymentPage() {
   const [errors, setErrors] = useState<PaymentFormErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
+  const [capabilities, setCapabilities] = useState<PaymentCapabilities | null>(null);
+
+  useEffect(() => {
+    fetch('/api/checkout')
+      .then((response) => response.ok ? response.json() : Promise.reject())
+      .then((result: { methods: PaymentCapabilities }) => {
+        setCapabilities(result.methods);
+        const available = PAYMENT_METHODS.find((method) => result.methods[method].status === 'configured');
+        setValues({ method: available ?? '' });
+      })
+      .catch(() => setCapabilities({ stripe: { status: 'unavailable' }, genius: { status: 'unavailable' } }));
+  }, []);
 
   function handleSelect(method: PaymentFormValues['method']) {
     setValues({ method });
@@ -100,19 +114,23 @@ export default function PaymentPage() {
       <Heading level={1} className="text-center">
         {t('paymentTitle')}
       </Heading>
-      <p className="mt-2 text-center text-sm text-mist-600">{t('mockNotice')}</p>
+      <p className="mt-2 text-center text-sm text-mist-600">
+        {locale === 'fr' ? 'Seuls les moyens de paiement configurés peuvent être sélectionnés.' : 'Only configured payment methods can be selected.'}
+      </p>
 
       <form onSubmit={handleSubmit} noValidate className="mt-9 space-y-5">
         <div className="space-y-3">
           {PAYMENT_METHODS.map((method) => {
             const isActive = values.method === method;
+            const isAvailable = capabilities?.[method].status === 'configured';
             return (
               <button
                 key={method}
                 type="button"
                 onClick={() => handleSelect(method)}
+                disabled={!isAvailable}
                 aria-pressed={isActive}
-                className={`flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-left transition-colors ${
+                className={`flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                   isActive ? 'border-ink bg-mist-50' : 'border-mist-100 bg-paper hover:border-accent'
                 }`}
               >
@@ -121,6 +139,11 @@ export default function PaymentPage() {
                   <span className="mt-1 block text-xs text-mist-600">
                     {t(`paymentMethods.${method}.description`)}
                   </span>
+                  {!isAvailable && (
+                    <span className="mt-1 block text-xs font-medium text-accent">
+                      {locale === 'fr' ? 'Indisponible tant que le prestataire n’est pas configuré' : 'Unavailable until the provider is configured'}
+                    </span>
+                  )}
                   <span className="mt-2 flex items-center gap-2">
                     {PAYMENT_LOGOS[method].map((logo) => (
                       <Image
@@ -149,7 +172,7 @@ export default function PaymentPage() {
         {errors.method && <p className="text-xs text-accent">{t(`errors.${errors.method}`)}</p>}
         {serverError && <p role="alert" className="text-sm text-accent">{serverError}</p>}
 
-        <Button type="submit" disabled={submitting || items.length === 0} className="w-full rounded-2xl">
+        <Button type="submit" disabled={submitting || items.length === 0 || !values.method} className="w-full rounded-2xl">
           {submitting ? (locale === 'fr' ? 'TRAITEMENT…' : 'PROCESSING…') : t('confirmPayment')}
         </Button>
       </form>

@@ -1,4 +1,4 @@
-import { getProductById } from '@/lib/products';
+import type { Category, LocalizedText } from '@/lib/products';
 
 export interface CartItem {
   productId: string;
@@ -6,6 +6,30 @@ export interface CartItem {
   color: string;
   quantity: number;
   unitPriceEur?: number;
+  slug?: string;
+  name?: LocalizedText;
+  imageUrl?: string;
+  category?: Category;
+}
+
+function isStoredCartItem(value: unknown): value is CartItem {
+  if (!value || typeof value !== 'object') return false;
+  const item = value as Partial<CartItem>;
+  return typeof item.productId === 'string' && typeof item.slug === 'string'
+    && typeof item.name?.fr === 'string' && typeof item.name?.en === 'string'
+    && typeof item.imageUrl === 'string' && typeof item.category === 'string'
+    && typeof item.size === 'string' && typeof item.color === 'string'
+    && Number.isInteger(item.quantity) && Number(item.quantity) > 0
+    && typeof item.unitPriceEur === 'number' && Number.isFinite(item.unitPriceEur) && item.unitPriceEur >= 0;
+}
+
+export function parseStoredCart(raw: string): CartItem[] {
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter(isStoredCartItem) : [];
+  } catch {
+    return [];
+  }
 }
 
 export function isSameLine(line: CartItem, productId: string, size: string, color: string): boolean {
@@ -17,11 +41,7 @@ export function getCartItemCount(items: CartItem[]): number {
 }
 
 export function getCartSubtotalEur(items: CartItem[]): number {
-  return items.reduce((sum, line) => {
-    const product = getProductById(line.productId);
-    const unitPrice = line.unitPriceEur ?? product?.priceEur ?? 0;
-    return sum + unitPrice * line.quantity;
-  }, 0);
+  return items.reduce((sum, line) => sum + (line.unitPriceEur ?? 0) * line.quantity, 0);
 }
 
 export function addLine(items: CartItem[], item: CartItem): CartItem[] {

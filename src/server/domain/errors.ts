@@ -7,7 +7,8 @@ export type DomainErrorCode =
   | 'CONFLICT'
   | 'UNAUTHORIZED'
   | 'FORBIDDEN'
-  | 'RATE_LIMITED';
+  | 'RATE_LIMITED'
+  | 'PAYMENT_PROVIDER_NOT_CONFIGURED';
 
 export class DomainError extends Error {
   constructor(

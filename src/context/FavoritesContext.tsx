@@ -1,26 +1,28 @@
 'use client';
 
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { toggleFavoriteId } from '@/lib/favorites';
+import type { Product } from '@/lib/products';
+import { parseStoredFavorites, toggleFavoriteProduct } from '@/lib/favorites';
 
-const STORAGE_KEY = 'reign-favorites';
+const STORAGE_KEY = 'reign-favorites-v2';
 
 export interface FavoritesContextValue {
   favoriteIds: string[];
-  toggleFavorite: (productId: string) => void;
+  favorites: Product[];
+  toggleFavorite: (product: Product) => void;
   isFavorite: (productId: string) => boolean;
 }
 
 const FavoritesContext = createContext<FavoritesContextValue | null>(null);
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
-  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<Product[]>([]);
   const isFirstRender = useRef(true);
 
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) setFavoriteIds(JSON.parse(raw));
+      if (raw) setFavorites(parseStoredFavorites(raw));
     } catch {
       // ignore malformed storage
     }
@@ -31,12 +33,15 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
       isFirstRender.current = false;
       return;
     }
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(favoriteIds));
-  }, [favoriteIds]);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
+  }, [favorites]);
+
+  const favoriteIds = favorites.map((product) => product.id);
 
   const value: FavoritesContextValue = {
     favoriteIds,
-    toggleFavorite: (productId) => setFavoriteIds((prev) => toggleFavoriteId(prev, productId)),
+    favorites,
+    toggleFavorite: (product) => setFavorites((current) => toggleFavoriteProduct(current, product)),
     isFavorite: (productId) => favoriteIds.includes(productId)
   };
 

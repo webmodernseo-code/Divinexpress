@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
 import { ProductCard } from '@/components/product/ProductCard';
-import { CATEGORIES, PRODUCTS, getProductsByCategory, type Category } from '@/lib/products';
+import { CATEGORIES, type Category, type Product } from '@/lib/products';
 
 const CATEGORY_IMAGES: Record<Category, string> = {
   homme: '/image/category_homme.png',
@@ -72,11 +72,11 @@ function FilterSelect({
 export function HomeCollection({
   initialCategory,
   initialSubcategory,
-  products: catalogProducts = PRODUCTS,
+  products: catalogProducts,
 }: {
   initialCategory: Category | null;
   initialSubcategory: string | null;
-  products?: typeof PRODUCTS;
+  products: Product[];
 }) {
   const t = useTranslations('home');
   const tNav = useTranslations('nav');
