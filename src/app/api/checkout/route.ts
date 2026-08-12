@@ -11,7 +11,9 @@ const requestSchema = z.object({
   method: z.enum(['stripe', 'genius']),
   shipping: z.object({
     fullName: z.string().trim().min(1), email: z.email(), address: z.string().trim().min(1),
-    city: z.string().trim().min(1), postalCode: z.string().trim().min(1), country: z.string().trim().min(1),
+    city: z.string().optional(), postalCode: z.string().optional(), country: z.string().trim().min(1),
+    countryCode: z.string().trim().length(2), phone: z.string().optional(),
+    region: z.enum(['europe', 'africa']).optional(),
   }),
   items: z.array(z.object({
     productId: z.string().min(1), size: z.string().min(1), color: z.string().min(1),
@@ -43,7 +45,10 @@ export async function POST(request: Request) {
       return { variantId: variant.id, quantity: item.quantity };
     }));
     const names = input.shipping.fullName.trim().split(/\s+/);
-    const destinationCountryCode = countryCode(input.shipping.country);
+    // The client provides the ISO alpha-2 code (from Photon or the country select);
+    // fall back to the legacy name map only if it is somehow missing.
+    const destinationCountryCode =
+      input.shipping.countryCode?.trim().toUpperCase() || countryCode(input.shipping.country);
     if (!destinationCountryCode) throw new DomainError('CONFLICT', 'Unsupported shipping country');
     const geniusKey = process.env.GENIUS_API_KEY;
     const geniusSecret = process.env.GENIUS_API_SECRET;
@@ -65,12 +70,12 @@ export async function POST(request: Request) {
         email: input.shipping.email,
         firstName: names[0],
         lastName: names.slice(1).join(' ') || names[0],
-        phone: null,
+        phone: input.shipping.phone?.trim() || null,
       },
       shippingAddress: {
         recipient: input.shipping.fullName, line1: input.shipping.address, line2: null,
-        postalCode: input.shipping.postalCode, city: input.shipping.city, region: null,
-        countryCode: destinationCountryCode,
+        postalCode: input.shipping.postalCode?.trim() || null, city: input.shipping.city?.trim() || null,
+        region: null, countryCode: destinationCountryCode,
       },
       lines, shippingMinor: 0, taxMinor: 0, discountMinor: 0,
     });

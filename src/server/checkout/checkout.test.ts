@@ -62,4 +62,38 @@ describe('CheckoutService with development providers', () => {
     expect(result.payment.status).toBe('failed');
     expect(result.order.status).toBe('pending_payment');
   });
+
+  it('accepts an Africa order with null city/postalCode and persists the phone', async () => {
+    const checkout = new CheckoutService(
+      database,
+      new DevelopmentPaymentProvider('succeed'),
+      new DevelopmentNotificationProvider(database),
+    );
+    const africaRequest = {
+      ...request,
+      idempotencyKey: 'checkout-africa-1',
+      customer: { email: 'dakar@example.com', firstName: 'Awa', lastName: 'Diop', phone: '+221770000000' },
+      shippingAddress: {
+        recipient: 'Awa Diop', line1: 'Sicap Liberté 6, villa 1234', line2: null,
+        postalCode: null, city: null, region: null, countryCode: 'SN',
+      },
+    };
+    const result = await checkout.start(africaRequest);
+    expect(result.order.status).toBe('paid');
+
+    const customer = (await database.prepare('SELECT id, phone FROM customers WHERE email = ?')
+      .get('dakar@example.com')) as { id: string; phone: string | null };
+    expect(customer.phone).toBe('+221770000000');
+
+    const order = (await database.prepare('SELECT shipping_address_json FROM orders WHERE id = ?')
+      .get(result.order.id)) as { shipping_address_json: string };
+    const shipping = JSON.parse(order.shipping_address_json);
+    expect(shipping.city).toBeNull();
+    expect(shipping.postalCode).toBeNull();
+
+    const addr = (await database.prepare('SELECT city, postal_code FROM customer_addresses WHERE customer_id = ?')
+      .get(customer.id)) as { city: string; postal_code: string };
+    expect(addr.city).toBe('');
+    expect(addr.postal_code).toBe('');
+  });
 });

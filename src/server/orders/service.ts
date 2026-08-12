@@ -83,7 +83,7 @@ export class OrderService {
         (id, customer_id, recipient, line1, line2, postal_code, city, region, country_code)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
         .run(randomUUID(), customer.id, input.shippingAddress.recipient, input.shippingAddress.line1,
-          input.shippingAddress.line2, input.shippingAddress.postalCode, input.shippingAddress.city,
+          input.shippingAddress.line2, input.shippingAddress.postalCode ?? '', input.shippingAddress.city ?? '',
           input.shippingAddress.region, input.shippingAddress.countryCode);
 
       const orderId = randomUUID();
