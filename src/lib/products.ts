@@ -22,6 +22,10 @@ export interface Product {
   isNew?: boolean;
   relatedProductIds?: string[];
   availableQuantity?: number;
+  /** Uploaded media URLs (empty/undefined = fall back to getProductImageUrl). */
+  images?: string[];
+  /** Original ("compare-at") price in euros, shown struck-through when > priceEur. */
+  compareAtEur?: number;
 }
 
 export const COLOR_SWATCHES: Record<string, string> = {

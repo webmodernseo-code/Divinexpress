@@ -41,6 +41,20 @@ describe('StorefrontCatalog', () => {
     });
   });
 
+  it('exposes uploaded media images and compare-at price on the storefront product', async () => {
+    await repository.createProduct({
+      id: 'promo-1', categoryId: 'category:homme', slug: 'promo-hoodie',
+      nameFr: 'Promo', nameEn: 'Promo', descriptionFr: '', descriptionEn: '',
+      images: ['https://res.cloudinary.com/x/a.jpg'],
+      compareAtPriceMinor: 9900,
+      variants: [{ id: 'promo-v', sku: 'PROMO-M', size: 'M', color: 'Noir', priceMinor: 7900, currency: 'EUR' }],
+    });
+    const product = await new StorefrontCatalog(database).findBySlug('promo-hoodie');
+    expect(product?.images).toEqual(['https://res.cloudinary.com/x/a.jpg']);
+    expect(product?.compareAtEur).toBe(99);
+    expect(product?.priceEur).toBe(79);
+  });
+
   it('exposes only active products and returns null for archived products', async () => {
     await repository.createProduct({
       id: 'product-1', categoryId: 'category:homme', slug: 'active-product',
