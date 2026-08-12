@@ -23,7 +23,6 @@ export function ProductCard({ product }: { product: Product }) {
       <Link href={`/produit/${product.slug}?couleur=${encodeURIComponent(selectedColor)}`} className="block">
         <PlaceholderBlock
           aspect="portrait"
-          className="overflow-hidden rounded-3xl"
           imageUrl={getProductImageUrl(product, selectedColor)}
           label={product.name[locale]}
         />

@@ -6,6 +6,13 @@ const ASPECT_CLASSES: Record<Aspect, string> = {
   wide: 'aspect-[16/9]'
 };
 
+/**
+ * Shared image tile: light-grey rounded frame with a hairline ring. The ring
+ * keeps white/light products from blending into the white page background, and
+ * the grey shows through for cut-out images or while loading.
+ */
+const FRAME = 'relative overflow-hidden rounded-2xl bg-mist-100 ring-1 ring-black/[0.06]';
+
 export function PlaceholderBlock({
   aspect = 'portrait',
   label,
@@ -19,7 +26,7 @@ export function PlaceholderBlock({
 }) {
   if (imageUrl) {
     return (
-      <div className={`${ASPECT_CLASSES[aspect]} relative overflow-hidden bg-mist-900 ${className}`}>
+      <div className={`${ASPECT_CLASSES[aspect]} ${FRAME} ${className}`}>
         <img
           src={imageUrl}
           alt={label ?? ''}
@@ -31,12 +38,12 @@ export function PlaceholderBlock({
   }
   return (
     <div
-      className={`${ASPECT_CLASSES[aspect]} flex items-center justify-center bg-mist-900 ${className}`}
+      className={`${ASPECT_CLASSES[aspect]} ${FRAME} flex items-center justify-center ${className}`}
       role="img"
       aria-label={label ?? 'Visuel à venir'}
     >
       {label && (
-        <span className="px-4 text-center text-xs uppercase tracking-widest text-mist-400">{label}</span>
+        <span className="px-4 text-center text-xs uppercase tracking-widest text-mist-500">{label}</span>
       )}
     </div>
   );

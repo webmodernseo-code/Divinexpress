@@ -51,7 +51,7 @@ export function ProductGallery({
         aspect="portrait"
         label={`${productName} — ${activeIndex + 1}/${images.length}`}
         imageUrl={activeImageUrl}
-        className="order-1 w-full max-w-[260px] rounded-[22px] md:order-2 md:max-w-[340px]"
+        className="order-1 w-full max-w-[260px] md:order-2 md:max-w-[340px]"
       />
       <div className="order-2 flex flex-shrink-0 justify-center gap-2.5 md:order-1 md:flex-col">
         {images.map((index) => {
