@@ -62,18 +62,18 @@ export function Footer() {
 
   return (
     <footer className="bg-white border-t border-mist-100 text-ink">
-      <Container className="px-4 pb-6 pt-6 sm:px-6 md:pt-8 lg:px-8 lg:pb-5">
+      <Container className="px-4 pb-4 pt-4 sm:px-6 md:pt-8 lg:px-8 lg:pb-5">
 
-        <div className="py-6 lg:grid lg:grid-cols-[1.35fr_0.8fr_0.8fr_0.8fr] lg:gap-12 lg:py-8">
-          <div className="mb-6 flex flex-col items-start gap-4 lg:mb-0">
+        <div className="py-2 lg:grid lg:grid-cols-[1.35fr_0.8fr_0.8fr_0.8fr] lg:gap-12 lg:py-8">
+          <div className="mb-2 flex flex-row items-center justify-between gap-4 lg:mb-0 lg:flex-col lg:items-start">
             <Image
               src="/branding/logo-reign.png"
               alt="Reign"
               width={193}
               height={67}
-              className="h-auto w-[110px] object-contain"
+              className="h-auto w-[92px] object-contain lg:w-[110px]"
             />
-            <p className="max-w-xs text-[14px] leading-6 text-mist-600">{t('tagline')}</p>
+            <p className="hidden max-w-xs text-[14px] leading-6 text-mist-600 lg:block">{t('tagline')}</p>
             <div className="flex gap-4 items-center">
               {SOCIAL_LINKS.map(({ label, Icon }) => (
                 <a
@@ -105,7 +105,7 @@ export function Footer() {
             </nav>
           ))}
 
-          <div className="border-t border-mist-200 lg:hidden">
+          <div className="mt-2 border-t border-mist-200 lg:hidden">
             {FOOTER_GROUPS.map((group) => {
               const isOpen = openGroup === group.key;
               return (
@@ -115,13 +115,13 @@ export function Footer() {
                     aria-expanded={isOpen}
                     aria-controls={`footer-${group.key}-panel`}
                     onClick={() => setOpenGroup((current) => (current === group.key ? null : group.key))}
-                    className="flex w-full items-center justify-between py-5 text-xs font-bold tracking-[0.22em] text-black"
+                    className="flex w-full items-center justify-between py-3 text-xs font-bold tracking-[0.22em] text-black"
                   >
                     <span>{t(`groups.${group.key}`)}</span>
                     <span aria-hidden="true" className="text-base">{isOpen ? '−' : '+'}</span>
                   </button>
                   <div id={`footer-${group.key}-panel`} hidden={!isOpen}>
-                    <ul className="space-y-4 pb-6">
+                    <ul className="space-y-3 pb-4">
                       {group.links.map((link) => (
                         <li key={link.key}>
                           <Link href={link.href} className="text-sm text-mist-600 transition-colors hover:text-ink">
@@ -137,18 +137,18 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-mist-200 pt-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-8">
+        <div className="border-t border-mist-200 pt-4 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-8">
           <p className="hidden text-sm text-mist-500 lg:block">
             © {new Date().getFullYear()} Reign — {t('rights')}
           </p>
 
           <div>
-            <p className="mb-3 text-center text-[11px] font-semibold tracking-[0.2em] text-mist-500 lg:text-left">
+            <p className="mb-2 text-center text-[11px] font-semibold tracking-[0.2em] text-mist-500 lg:text-left">
               {t('securePayments')}
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 lg:justify-start">
+            <div className="flex flex-nowrap items-center justify-center gap-x-2.5 gap-y-3 lg:flex-wrap lg:gap-x-4 lg:justify-start">
               {PAYMENT_LOGOS.map((logo) => (
-                <div key={logo.src} className="flex h-12 w-20 items-center justify-center rounded-xl border border-mist-200 bg-white p-2 shadow-sm">
+                <div key={logo.src} className="flex h-9 w-14 items-center justify-center rounded-lg border border-mist-200 bg-white p-1.5 shadow-sm lg:h-12 lg:w-20 lg:rounded-xl lg:p-2">
                   <Image
                     src={logo.src}
                     alt=""
@@ -161,12 +161,12 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="mt-6 flex justify-center gap-5 lg:mt-0 lg:justify-self-end">
+          <div className="mt-4 flex justify-center gap-5 lg:mt-0 lg:justify-self-end">
             <LanguageSwitcher variant="footer" />
             <CurrencySwitcher variant="footer" />
           </div>
 
-          <p className="pt-7 text-center text-sm text-mist-500 lg:hidden">
+          <p className="pt-4 text-center text-sm text-mist-500 lg:hidden">
             © {new Date().getFullYear()} Reign — {t('rights')}
           </p>
         </div>
