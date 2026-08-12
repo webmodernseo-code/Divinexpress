@@ -11,6 +11,7 @@ import {
   X
 } from 'lucide-react';
 import Image from 'next/image';
+import { ImageUploader } from '@/components/admin/ImageUploader';
 
 type ProductItem = {
   id: string;
@@ -51,6 +52,7 @@ interface CatalogProductRaw {
   descriptionFr: string;
   descriptionEn: string;
   status: 'active' | 'draft' | 'archived';
+  images?: string[];
   variants: Array<{
     priceMinor: number;
     stock: number;
@@ -78,6 +80,8 @@ export default function ProduitsPage() {
   const [formStock, setFormStock] = useState('');
   const [formStatus, setFormStatus] = useState<'active' | 'draft'>('active');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formCompareAt, setFormCompareAt] = useState('');
+  const [formImages, setFormImages] = useState<string[]>([]);
 
   const refreshProducts = () => {
     fetch('/api/admin/products')
@@ -97,7 +101,7 @@ export default function ProduitsPage() {
             price,
             stock,
             status: p.status,
-            image: getProductImage(p.id, cat.fr),
+            image: p.images?.[0] ?? getProductImage(p.id, cat.fr),
             categoryId: p.categoryId,
             descriptionFr: p.descriptionFr || '',
             descriptionEn: p.descriptionEn || '',
@@ -152,6 +156,8 @@ export default function ProduitsPage() {
     setFormPrice('');
     setFormStock('');
     setFormStatus('active');
+    setFormCompareAt('');
+    setFormImages([]);
     setShowModal(true);
   };
 
@@ -165,6 +171,8 @@ export default function ProduitsPage() {
     setFormPrice(String(product.price));
     setFormStock(String(product.stock));
     setFormStatus(product.status === 'archived' ? 'draft' : product.status);
+    setFormCompareAt('');
+    setFormImages([]);
     setShowModal(true);
   };
 
@@ -217,6 +225,8 @@ export default function ProduitsPage() {
           nameEn: formNameEn || formName,
           descriptionFr: formDescriptionFr,
           descriptionEn: formDescriptionEn || formDescriptionFr,
+          images: formImages,
+          compareAtPriceMinor: formCompareAt ? Math.round(parseFloat(formCompareAt) * 100) : undefined,
           variants: [
             {
               id: `var-${uniqueId}-m-black`,
@@ -563,6 +573,39 @@ export default function ProduitsPage() {
                   />
                 </label>
               </div>
+
+              {!editingProduct && (
+                <label className="block sm:w-1/2 sm:pr-2">
+                  <span className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                    {systemLocale === 'fr' ? 'Prix initial barré (EUR)' : 'Original struck-through price (EUR)'}
+                  </span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={formCompareAt}
+                    onChange={(e) => setFormCompareAt(e.target.value)}
+                    placeholder={systemLocale === 'fr' ? 'Optionnel (promo)' : 'Optional (sale)'}
+                    className="w-full h-11 px-3.5 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 rounded-xl outline-none transition text-xs font-semibold text-slate-800"
+                  />
+                </label>
+              )}
+
+              {!editingProduct && (
+                <div className="block">
+                  <span className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                    {systemLocale === 'fr' ? 'Images (jusqu’à 6)' : 'Images (up to 6)'}
+                  </span>
+                  <ImageUploader
+                    value={formImages}
+                    onChange={setFormImages}
+                    labels={{
+                      add: systemLocale === 'fr' ? 'Ajouter' : 'Add',
+                      uploading: systemLocale === 'fr' ? 'Envoi…' : 'Uploading…',
+                      remove: systemLocale === 'fr' ? 'Supprimer' : 'Remove'
+                    }}
+                  />
+                </div>
+              )}
 
               {/* Modal Actions Footer */}
               <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-5 mt-4">
