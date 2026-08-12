@@ -7,12 +7,14 @@ import {
 } from './checkoutValidation';
 
 const validValues: ShippingFormValues = {
+  region: 'europe',
   fullName: 'Alex Martin',
   email: 'alex@example.com',
   address: '12 rue de la Paix',
   city: 'Paris',
   postalCode: '75002',
-  country: 'France'
+  country: 'France',
+  countryCode: 'FR'
 };
 
 describe('validateShippingForm', () => {
@@ -37,6 +39,39 @@ describe('validateShippingForm', () => {
     expect(validateShippingForm({ ...validValues, city: '' }).city).toBe('required');
     expect(validateShippingForm({ ...validValues, postalCode: '' }).postalCode).toBe('required');
     expect(validateShippingForm({ ...validValues, country: '' }).country).toBe('required');
+    expect(validateShippingForm({ ...validValues, countryCode: '' }).country).toBe('required');
+  });
+
+  it('europe requires city and postalCode', () => {
+    expect(validateShippingForm({ ...validValues, city: '', postalCode: '' })).toEqual({
+      city: 'required',
+      postalCode: 'required'
+    });
+  });
+
+  it('africa requires phone but not city/postalCode', () => {
+    const africa: ShippingFormValues = {
+      ...validValues,
+      region: 'africa',
+      country: 'Sénégal',
+      countryCode: 'SN',
+      city: '',
+      postalCode: '',
+      phone: ''
+    };
+    expect(validateShippingForm(africa)).toEqual({ phone: 'required' });
+  });
+
+  it('africa passes with phone set', () => {
+    const africa: ShippingFormValues = {
+      ...validValues,
+      region: 'africa',
+      countryCode: 'SN',
+      city: '',
+      postalCode: '',
+      phone: '+221770000000'
+    };
+    expect(validateShippingForm(africa)).toEqual({});
   });
 });
 

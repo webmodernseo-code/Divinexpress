@@ -1,10 +1,13 @@
 export interface ShippingFormValues {
+  region: 'europe' | 'africa';
   fullName: string;
   email: string;
+  phone?: string;
   address: string;
-  city: string;
-  postalCode: string;
+  city?: string;
+  postalCode?: string;
   country: string;
+  countryCode: string;
 }
 
 export type ShippingFormErrors = Partial<Record<keyof ShippingFormValues, string>>;
@@ -23,9 +26,16 @@ export function validateShippingForm(values: ShippingFormValues): ShippingFormEr
   }
 
   if (!values.address.trim()) errors.address = 'required';
-  if (!values.city.trim()) errors.city = 'required';
-  if (!values.postalCode.trim()) errors.postalCode = 'required';
-  if (!values.country.trim()) errors.country = 'required';
+  if (!values.country.trim() || !values.countryCode.trim()) errors.country = 'required';
+
+  if (values.region === 'africa') {
+    // Africa: a precise free-text address + phone; no city/postal code.
+    if (!values.phone?.trim()) errors.phone = 'required';
+  } else {
+    // Europe: structured address with city and postal code.
+    if (!values.city?.trim()) errors.city = 'required';
+    if (!values.postalCode?.trim()) errors.postalCode = 'required';
+  }
 
   return errors;
 }
