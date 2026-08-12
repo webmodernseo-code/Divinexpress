@@ -11,7 +11,7 @@ export const createOrderInputSchema = z.object({
   }),
   shippingAddress: z.object({
     recipient: z.string().trim().min(1), line1: z.string().trim().min(1), line2: nullableText,
-    postalCode: z.string().trim().min(1), city: z.string().trim().min(1), region: nullableText,
+    postalCode: nullableText, city: nullableText, region: nullableText,
     countryCode: z.string().length(2).transform((value) => value.toUpperCase()),
   }),
   lines: z.array(z.object({ variantId: z.string().min(1), quantity: z.number().int().positive() })).min(1),
