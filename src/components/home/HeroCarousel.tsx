@@ -27,7 +27,8 @@ interface HeroFeature {
   subtitle: string;
 }
 
-/** Background tint (rgb triplet) used for the left-to-right readability gradient. */
+/** Background tint (rgb triplet) used for the readability gradient and the
+ *  solid backdrop behind the contained image on mobile. */
 const THEME_TINT: Record<HeroTheme, string> = {
   navy: '11, 26, 46',
   black: '8, 8, 8'
@@ -101,7 +102,7 @@ export function HeroCarousel({
   return (
     <section className="w-full md:px-6 md:pt-6 lg:px-8">
       <div
-        className="relative mx-auto min-h-[600px] w-full max-w-7xl overflow-hidden rounded-none md:min-h-[560px] md:rounded-3xl lg:min-h-[640px]"
+        className="relative mx-auto h-[50vh] min-h-[340px] w-full max-w-7xl overflow-hidden rounded-none md:h-auto md:min-h-[560px] md:rounded-3xl lg:min-h-[640px]"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -113,62 +114,62 @@ export function HeroCarousel({
               className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
                 isActive ? 'z-10 opacity-100' : 'z-0 opacity-0 pointer-events-none'
               }`}
+              style={{ backgroundColor: `rgb(${THEME_TINT[slide.theme]})` }}
               aria-hidden={!isActive}
             >
-              {/* Product image */}
+              {/* Product image — contained (dezoomed) on mobile, cover on desktop */}
               <Image
                 src={slide.image}
                 alt={slide.imageAlt}
                 fill
                 priority={index === 0}
                 sizes="100vw"
-                className="object-cover object-center md:object-right"
+                className="object-contain object-center md:object-cover md:object-right"
               />
 
-              {/* Readability gradient (desktop-oriented) + extra mobile darkening */}
+              {/* Readability gradient (dark on the text side, transparent on the product side) */}
               <div className="absolute inset-0" style={overlayStyle(slide.theme)} />
-              <div className="absolute inset-0 bg-black/40 md:hidden" />
 
               {/* Giant watermark */}
-              <span className="pointer-events-none absolute left-1/2 top-1/2 z-[15] w-full -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap text-center text-[24vw] font-black uppercase leading-none tracking-tighter text-white/[0.05] md:text-[16vw]">
+              <span className="pointer-events-none absolute left-1/2 top-1/2 z-[15] w-full -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap text-center text-[26vw] font-black uppercase leading-none tracking-tighter text-white/[0.05] md:text-[16vw]">
                 {slide.watermark}
               </span>
 
               {/* Content */}
-              <div className="relative z-20 flex h-full min-h-[inherit] flex-col justify-center px-6 py-12 text-paper sm:px-10 lg:px-16">
+              <div className="relative z-20 flex h-full flex-col justify-center px-5 py-6 text-paper sm:px-10 sm:py-10 lg:px-16">
                 <div className="max-w-xl">
-                  <h1 className="font-sans text-4xl font-extrabold uppercase leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+                  <h1 className="font-sans text-2xl font-extrabold uppercase leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
                     {slide.title.split(' ').map((word) => (
                       <span key={word} className="block">
                         {word}
                       </span>
                     ))}
                   </h1>
-                  <p className="mt-6 max-w-md text-sm leading-relaxed text-paper/80 md:text-base">
+                  <p className="mt-3 max-w-md text-xs leading-relaxed text-paper/80 sm:mt-6 sm:text-sm md:text-base">
                     {slide.subtitle}
                   </p>
-                  <div className="mt-8 flex flex-wrap gap-3">
+                  <div className="mt-5 flex flex-wrap gap-2.5 sm:mt-8 sm:gap-3">
                     <a
                       href={primaryCta.href}
-                      className="inline-flex items-center justify-center rounded-full bg-paper px-6 py-3 text-xs font-semibold uppercase tracking-wide text-ink transition-colors hover:bg-paper/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper"
+                      className="inline-flex items-center justify-center rounded-full bg-paper px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-ink transition-colors hover:bg-paper/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper sm:px-6 sm:py-3 sm:text-xs"
                     >
                       {primaryCta.label}
                     </a>
                     <a
                       href={secondaryCta.href}
-                      className="inline-flex items-center justify-center rounded-full border border-paper/60 px-6 py-3 text-xs font-semibold uppercase tracking-wide text-paper transition-colors hover:border-paper hover:bg-paper/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper"
+                      className="inline-flex items-center justify-center rounded-full border border-paper/60 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-paper transition-colors hover:border-paper hover:bg-paper/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper sm:px-6 sm:py-3 sm:text-xs"
                     >
                       {secondaryCta.label}
                     </a>
                   </div>
 
-                  <ul className="mt-10 flex flex-col gap-4 sm:flex-row sm:gap-8">
+                  <ul className="mt-5 flex flex-row flex-wrap gap-x-4 gap-y-2 sm:mt-10 sm:gap-x-8">
                     {features.map((feature) => (
-                      <li key={feature.title} className="flex items-center gap-3">
-                        <FeatureIcon icon={feature.icon} className="size-6 shrink-0 text-paper/80" />
+                      <li key={feature.title} className="flex items-center gap-2 sm:gap-3">
+                        <FeatureIcon icon={feature.icon} className="size-4 shrink-0 text-paper/80 sm:size-6" />
                         <span className="leading-tight">
-                          <span className="block text-sm font-semibold text-paper">{feature.title}</span>
-                          <span className="block text-xs text-paper/65">{feature.subtitle}</span>
+                          <span className="block text-[11px] font-semibold text-paper sm:text-sm">{feature.title}</span>
+                          <span className="hidden text-xs text-paper/65 sm:block">{feature.subtitle}</span>
                         </span>
                       </li>
                     ))}
@@ -208,7 +209,7 @@ export function HeroCarousel({
             </div>
 
             {/* Slide indicators */}
-            <div className="absolute bottom-6 left-1/2 z-30 flex -translate-x-1/2 gap-3">
+            <div className="absolute bottom-4 left-1/2 z-30 flex -translate-x-1/2 gap-3 sm:bottom-6">
               {slides.map((slide, index) => {
                 const isActive = index === currentIndex;
                 return (
