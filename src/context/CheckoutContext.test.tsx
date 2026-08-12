@@ -6,12 +6,14 @@ import type { ShippingFormValues } from '@/lib/checkoutValidation';
 const STORAGE_KEY = 'reign-checkout-shipping';
 
 const sampleShipping: ShippingFormValues = {
+  region: 'europe',
   fullName: 'Alex Martin',
   email: 'alex@example.com',
   address: '12 rue de la Paix',
   city: 'Paris',
   postalCode: '75002',
-  country: 'France'
+  country: 'France',
+  countryCode: 'FR'
 };
 
 function wrapper({ children }: { children: React.ReactNode }) {
