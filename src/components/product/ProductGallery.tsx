@@ -41,9 +41,13 @@ export function ProductGallery({
     }
   };
 
-  const imagesCount = isYahweh ? product.colors.length : imageCount;
+  const mediaImages = product?.images ?? [];
+  const useMedia = mediaImages.length > 0;
+  const imagesCount = useMedia ? mediaImages.length : isYahweh ? product.colors.length : imageCount;
   const images = Array.from({ length: imagesCount }, (_, index) => index);
-  const activeImageUrl = product ? getProductImageUrl(product, isYahweh ? product.colors[activeIndex] : product.colors[0]) : undefined;
+  const activeImageUrl = useMedia
+    ? mediaImages[activeIndex]
+    : product ? getProductImageUrl(product, isYahweh ? product.colors[activeIndex] : product.colors[0]) : undefined;
 
   return (
     <div className="flex flex-col items-center gap-3 md:flex-row md:items-start md:gap-3.5">
@@ -55,7 +59,9 @@ export function ProductGallery({
       />
       <div className="order-2 flex flex-shrink-0 justify-center gap-2.5 md:order-1 md:flex-col">
         {images.map((index) => {
-          const imageUrl = product ? getProductImageUrl(product, isYahweh ? product.colors[index] : product.colors[0]) : undefined;
+          const imageUrl = useMedia
+            ? mediaImages[index]
+            : product ? getProductImageUrl(product, isYahweh ? product.colors[index] : product.colors[0]) : undefined;
           return (
             <button
               key={index}

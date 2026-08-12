@@ -23,12 +23,17 @@ export function ProductCard({ product }: { product: Product }) {
       <Link href={`/produit/${product.slug}?couleur=${encodeURIComponent(selectedColor)}`} className="block">
         <PlaceholderBlock
           aspect="portrait"
-          imageUrl={getProductImageUrl(product, selectedColor)}
+          imageUrl={product.images?.[0] ?? getProductImageUrl(product, selectedColor)}
           label={product.name[locale]}
         />
         <div className="mt-3.5">
           <h3 className="text-sm font-semibold">{product.name[locale]}</h3>
-          <p className="mt-1 text-sm text-mist-600">{formatPrice(product.priceEur, currency, locale)}</p>
+          <p className="mt-1 text-sm">
+            {product.compareAtEur && product.compareAtEur > product.priceEur && (
+              <span className="mr-2 text-mist-400 line-through">{formatPrice(product.compareAtEur, currency, locale)}</span>
+            )}
+            <span className="text-mist-600">{formatPrice(product.priceEur, currency, locale)}</span>
+          </p>
         </div>
       </Link>
       <div className="mt-3 flex items-center gap-2">

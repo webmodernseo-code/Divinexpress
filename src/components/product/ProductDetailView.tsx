@@ -97,7 +97,12 @@ export function ProductDetailView({
 
         <div>
           <h1 className="font-serif text-2xl md:text-[32px]">{product.name[locale]}</h1>
-          <p className="mt-2.5 text-lg font-bold">{formatPrice(product.priceEur, currency, locale)}</p>
+          <p className="mt-2.5 text-lg font-bold">
+            {product.compareAtEur && product.compareAtEur > product.priceEur && (
+              <span className="mr-2.5 font-normal text-mist-400 line-through">{formatPrice(product.compareAtEur, currency, locale)}</span>
+            )}
+            {formatPrice(product.priceEur, currency, locale)}
+          </p>
 
           <div className="mt-7">
             <FieldLabel
