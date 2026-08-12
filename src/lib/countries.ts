@@ -1,0 +1,120 @@
+export interface Country {
+  /** ISO 3166-1 alpha-2 code (uppercase). */
+  code: string;
+  fr: string;
+  en: string;
+}
+
+/** Countries of Europe (broad definition), sorted by French name. */
+export const EUROPE: Country[] = [
+  { code: 'AL', fr: 'Albanie', en: 'Albania' },
+  { code: 'DE', fr: 'Allemagne', en: 'Germany' },
+  { code: 'AD', fr: 'Andorre', en: 'Andorra' },
+  { code: 'AT', fr: 'Autriche', en: 'Austria' },
+  { code: 'BE', fr: 'Belgique', en: 'Belgium' },
+  { code: 'BY', fr: 'Biélorussie', en: 'Belarus' },
+  { code: 'BA', fr: 'Bosnie-Herzégovine', en: 'Bosnia and Herzegovina' },
+  { code: 'BG', fr: 'Bulgarie', en: 'Bulgaria' },
+  { code: 'CY', fr: 'Chypre', en: 'Cyprus' },
+  { code: 'HR', fr: 'Croatie', en: 'Croatia' },
+  { code: 'DK', fr: 'Danemark', en: 'Denmark' },
+  { code: 'ES', fr: 'Espagne', en: 'Spain' },
+  { code: 'EE', fr: 'Estonie', en: 'Estonia' },
+  { code: 'FI', fr: 'Finlande', en: 'Finland' },
+  { code: 'FR', fr: 'France', en: 'France' },
+  { code: 'GR', fr: 'Grèce', en: 'Greece' },
+  { code: 'HU', fr: 'Hongrie', en: 'Hungary' },
+  { code: 'IE', fr: 'Irlande', en: 'Ireland' },
+  { code: 'IS', fr: 'Islande', en: 'Iceland' },
+  { code: 'IT', fr: 'Italie', en: 'Italy' },
+  { code: 'LV', fr: 'Lettonie', en: 'Latvia' },
+  { code: 'LI', fr: 'Liechtenstein', en: 'Liechtenstein' },
+  { code: 'LT', fr: 'Lituanie', en: 'Lithuania' },
+  { code: 'LU', fr: 'Luxembourg', en: 'Luxembourg' },
+  { code: 'MK', fr: 'Macédoine du Nord', en: 'North Macedonia' },
+  { code: 'MT', fr: 'Malte', en: 'Malta' },
+  { code: 'MD', fr: 'Moldavie', en: 'Moldova' },
+  { code: 'MC', fr: 'Monaco', en: 'Monaco' },
+  { code: 'ME', fr: 'Monténégro', en: 'Montenegro' },
+  { code: 'NO', fr: 'Norvège', en: 'Norway' },
+  { code: 'NL', fr: 'Pays-Bas', en: 'Netherlands' },
+  { code: 'PL', fr: 'Pologne', en: 'Poland' },
+  { code: 'PT', fr: 'Portugal', en: 'Portugal' },
+  { code: 'CZ', fr: 'République tchèque', en: 'Czech Republic' },
+  { code: 'RO', fr: 'Roumanie', en: 'Romania' },
+  { code: 'GB', fr: 'Royaume-Uni', en: 'United Kingdom' },
+  { code: 'RU', fr: 'Russie', en: 'Russia' },
+  { code: 'SM', fr: 'Saint-Marin', en: 'San Marino' },
+  { code: 'RS', fr: 'Serbie', en: 'Serbia' },
+  { code: 'SK', fr: 'Slovaquie', en: 'Slovakia' },
+  { code: 'SI', fr: 'Slovénie', en: 'Slovenia' },
+  { code: 'SE', fr: 'Suède', en: 'Sweden' },
+  { code: 'CH', fr: 'Suisse', en: 'Switzerland' },
+  { code: 'UA', fr: 'Ukraine', en: 'Ukraine' },
+  { code: 'VA', fr: 'Vatican', en: 'Vatican City' }
+];
+
+/** Countries of Africa (all 54), sorted by French name. */
+export const AFRICA: Country[] = [
+  { code: 'ZA', fr: 'Afrique du Sud', en: 'South Africa' },
+  { code: 'DZ', fr: 'Algérie', en: 'Algeria' },
+  { code: 'AO', fr: 'Angola', en: 'Angola' },
+  { code: 'BJ', fr: 'Bénin', en: 'Benin' },
+  { code: 'BW', fr: 'Botswana', en: 'Botswana' },
+  { code: 'BF', fr: 'Burkina Faso', en: 'Burkina Faso' },
+  { code: 'BI', fr: 'Burundi', en: 'Burundi' },
+  { code: 'CM', fr: 'Cameroun', en: 'Cameroon' },
+  { code: 'CV', fr: 'Cap-Vert', en: 'Cape Verde' },
+  { code: 'KM', fr: 'Comores', en: 'Comoros' },
+  { code: 'CG', fr: 'Congo', en: 'Republic of the Congo' },
+  { code: 'CD', fr: 'Congo (RDC)', en: 'DR Congo' },
+  { code: 'CI', fr: "Côte d'Ivoire", en: "Côte d'Ivoire" },
+  { code: 'DJ', fr: 'Djibouti', en: 'Djibouti' },
+  { code: 'EG', fr: 'Égypte', en: 'Egypt' },
+  { code: 'ER', fr: 'Érythrée', en: 'Eritrea' },
+  { code: 'SZ', fr: 'Eswatini', en: 'Eswatini' },
+  { code: 'ET', fr: 'Éthiopie', en: 'Ethiopia' },
+  { code: 'GA', fr: 'Gabon', en: 'Gabon' },
+  { code: 'GM', fr: 'Gambie', en: 'Gambia' },
+  { code: 'GH', fr: 'Ghana', en: 'Ghana' },
+  { code: 'GN', fr: 'Guinée', en: 'Guinea' },
+  { code: 'GW', fr: 'Guinée-Bissau', en: 'Guinea-Bissau' },
+  { code: 'GQ', fr: 'Guinée équatoriale', en: 'Equatorial Guinea' },
+  { code: 'KE', fr: 'Kenya', en: 'Kenya' },
+  { code: 'LS', fr: 'Lesotho', en: 'Lesotho' },
+  { code: 'LR', fr: 'Libéria', en: 'Liberia' },
+  { code: 'LY', fr: 'Libye', en: 'Libya' },
+  { code: 'MG', fr: 'Madagascar', en: 'Madagascar' },
+  { code: 'MW', fr: 'Malawi', en: 'Malawi' },
+  { code: 'ML', fr: 'Mali', en: 'Mali' },
+  { code: 'MA', fr: 'Maroc', en: 'Morocco' },
+  { code: 'MU', fr: 'Maurice', en: 'Mauritius' },
+  { code: 'MR', fr: 'Mauritanie', en: 'Mauritania' },
+  { code: 'MZ', fr: 'Mozambique', en: 'Mozambique' },
+  { code: 'NA', fr: 'Namibie', en: 'Namibia' },
+  { code: 'NE', fr: 'Niger', en: 'Niger' },
+  { code: 'NG', fr: 'Nigeria', en: 'Nigeria' },
+  { code: 'UG', fr: 'Ouganda', en: 'Uganda' },
+  { code: 'RW', fr: 'Rwanda', en: 'Rwanda' },
+  { code: 'ST', fr: 'Sao Tomé-et-Principe', en: 'São Tomé and Príncipe' },
+  { code: 'SN', fr: 'Sénégal', en: 'Senegal' },
+  { code: 'SC', fr: 'Seychelles', en: 'Seychelles' },
+  { code: 'SL', fr: 'Sierra Leone', en: 'Sierra Leone' },
+  { code: 'SO', fr: 'Somalie', en: 'Somalia' },
+  { code: 'SD', fr: 'Soudan', en: 'Sudan' },
+  { code: 'SS', fr: 'Soudan du Sud', en: 'South Sudan' },
+  { code: 'TZ', fr: 'Tanzanie', en: 'Tanzania' },
+  { code: 'TD', fr: 'Tchad', en: 'Chad' },
+  { code: 'TG', fr: 'Togo', en: 'Togo' },
+  { code: 'TN', fr: 'Tunisie', en: 'Tunisia' },
+  { code: 'CF', fr: 'République centrafricaine', en: 'Central African Republic' },
+  { code: 'ZM', fr: 'Zambie', en: 'Zambia' },
+  { code: 'ZW', fr: 'Zimbabwe', en: 'Zimbabwe' }
+];
+
+const BY_CODE = new Map<string, Country>([...EUROPE, ...AFRICA].map((c) => [c.code, c]));
+
+/** Localized country name for an ISO alpha-2 code; falls back to the code itself. */
+export function countryName(code: string, locale: 'fr' | 'en'): string {
+  return BY_CODE.get(code)?.[locale] ?? code;
+}
