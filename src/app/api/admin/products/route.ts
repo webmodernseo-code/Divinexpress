@@ -10,6 +10,8 @@ import { DomainError } from '@/server/domain/errors';
 const inputSchema = z.object({
   categoryId: z.string().min(1), slug: z.string().min(1), nameFr: z.string().min(1),
   nameEn: z.string().min(1), descriptionFr: z.string(), descriptionEn: z.string(),
+  images: z.array(z.string().url()).max(6).optional(),
+  compareAtPriceMinor: z.number().int().nonnegative().optional(),
   variants: z.array(z.object({
     sku: z.string().min(1), size: z.string().nullable(), color: z.string().nullable(),
     priceMinor: z.number().int().nonnegative(), currency: z.enum(['EUR', 'GBP']),
