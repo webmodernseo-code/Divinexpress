@@ -5,6 +5,8 @@ import { getCommerceDatabase } from '@/server/db/runtime';
 import { DomainError } from '@/server/domain/errors';
 import { DevelopmentNotificationProvider } from '@/server/notifications/development-provider';
 import { GeniusPaymentProvider } from '@/server/payments/genius-provider';
+import { StripePaymentProvider } from '@/server/payments/stripe-provider';
+import type { PaymentProvider } from '@/server/payments/provider';
 
 const requestSchema = z.object({
   idempotencyKey: z.string().min(8).max(120),
@@ -52,11 +54,16 @@ export async function POST(request: Request) {
     if (!destinationCountryCode) throw new DomainError('CONFLICT', 'Unsupported shipping country');
     const geniusKey = process.env.GENIUS_API_KEY;
     const geniusSecret = process.env.GENIUS_API_SECRET;
+    const stripeSecret = process.env.STRIPE_SECRET_KEY;
 
-    if (input.method !== 'genius' || !geniusKey || !geniusSecret) {
+    let paymentProvider: PaymentProvider;
+    if (input.method === 'genius' && geniusKey && geniusSecret) {
+      paymentProvider = new GeniusPaymentProvider(geniusKey, geniusSecret);
+    } else if (input.method === 'stripe' && stripeSecret) {
+      paymentProvider = new StripePaymentProvider(stripeSecret);
+    } else {
       throw new DomainError('PAYMENT_PROVIDER_NOT_CONFIGURED', 'Payment provider not configured', 503);
     }
-    const paymentProvider = new GeniusPaymentProvider(geniusKey, geniusSecret);
 
     const checkout = new CheckoutService(
       database,
@@ -100,9 +107,10 @@ export async function POST(request: Request) {
 
 export async function GET() {
   const geniusConfigured = Boolean(process.env.GENIUS_API_KEY && process.env.GENIUS_API_SECRET);
+  const stripeConfigured = Boolean(process.env.STRIPE_SECRET_KEY);
   return NextResponse.json({
     methods: {
-      stripe: { status: 'unavailable' },
+      stripe: { status: stripeConfigured ? 'configured' : 'unavailable' },
       genius: { status: geniusConfigured ? 'configured' : 'unavailable' },
     },
   });

@@ -23,7 +23,7 @@ describe('StripePaymentProvider', () => {
     expect(result.payload.checkoutUrl).toBe('https://checkout.stripe.com/c/pay/cs_test_123');
     expect(result.status).toBe('pending');
 
-    const [url, options] = fetchMock.mock.calls[0] as [string, RequestInit];
+    const [url, options] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
     expect(url).toBe('https://api.stripe.com/v1/checkout/sessions');
     expect((options.headers as Record<string, string>).Authorization).toBe('Bearer sk_test_x');
   });
