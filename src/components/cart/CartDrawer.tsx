@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useCart } from '@/context/CartContext';
 import { useCartDrawer } from '@/context/CartDrawerContext';
 import { useCurrency } from '@/context/CurrencyContext';
+import { FreeShippingProgress } from './FreeShippingProgress';
 import {
   FiLock,
   FiMinus,
@@ -85,7 +86,6 @@ export function CartDrawer({
   );
 
   const amountRemaining = Math.max(freeShippingThreshold - subtotalEur, 0);
-  const shippingProgress = Math.min((subtotalEur / freeShippingThreshold) * 100, 100);
 
   return (
     <div
@@ -154,19 +154,11 @@ export function CartDrawer({
               </p>
             </div>
 
-            <div
-              className="mt-5 h-2.5 overflow-hidden rounded-full bg-neutral-200 shadow-inner"
-              role="progressbar"
-              aria-label="Free delivery progress"
-              aria-valuemin={0}
-              aria-valuemax={freeShippingThreshold}
-              aria-valuenow={Math.min(subtotalEur, freeShippingThreshold)}
-            >
-              <div
-                className={`h-full rounded-full transition-[width] duration-500 ${amountRemaining <= 0 ? 'shimmer-progress-unlocked' : 'shimmer-progress'}`}
-                style={{ width: `${shippingProgress}%` }}
-              />
-            </div>
+            <FreeShippingProgress
+              subtotalEur={subtotalEur}
+              threshold={freeShippingThreshold}
+              className="mt-5"
+            />
 
             <p className="mt-3 flex items-center justify-between text-xs text-neutral-500 font-medium">
               <span>{formatter.format(subtotalEur)}</span>

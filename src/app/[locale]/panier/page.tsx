@@ -6,6 +6,7 @@ import { useMemo } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
+import { FreeShippingProgress } from '@/components/cart/FreeShippingProgress';
 import {
   FiArrowLeft,
   FiLock,
@@ -46,7 +47,6 @@ export default function CartPage() {
   );
 
   const amountRemaining = Math.max(FREE_SHIPPING_THRESHOLD - subtotalEur, 0);
-  const progress = Math.min((subtotalEur / FREE_SHIPPING_THRESHOLD) * 100, 100);
 
   const totalItemsCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -93,19 +93,11 @@ export default function CartPage() {
                   </p>
                 </div>
 
-                <div
-                  className="mt-5 h-2.5 overflow-hidden rounded-full bg-neutral-200 shadow-inner"
-                  role="progressbar"
-                  aria-label="Free delivery progress"
-                  aria-valuemin={0}
-                  aria-valuemax={FREE_SHIPPING_THRESHOLD}
-                  aria-valuenow={Math.min(subtotalEur, FREE_SHIPPING_THRESHOLD)}
-                >
-                  <div
-                    className={`h-full rounded-full transition-[width] duration-500 ${amountRemaining <= 0 ? 'shimmer-progress-unlocked' : 'shimmer-progress'}`}
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
+                <FreeShippingProgress
+                  subtotalEur={subtotalEur}
+                  threshold={FREE_SHIPPING_THRESHOLD}
+                  className="mt-5"
+                />
                 <p className="mt-3 flex items-center justify-between text-xs text-neutral-500 font-medium">
                   <span>{formatter.format(subtotalEur)}</span>
                   <span>{formatter.format(FREE_SHIPPING_THRESHOLD)}</span>

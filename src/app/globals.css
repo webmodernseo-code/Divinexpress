@@ -91,8 +91,36 @@ textarea {
   animation: shimmer 3s infinite linear;
 }
 
-.shimmer-progress-unlocked {
+.shimmer-progress-mid {
   background: linear-gradient(90deg, #d97706 0%, #fbbf24 50%, #d97706 100%);
   background-size: 200% 100%;
+  animation: shimmer 2.4s infinite linear;
+}
+
+.shimmer-progress-unlocked {
+  background: linear-gradient(90deg, #15803d 0%, #4ade80 50%, #15803d 100%);
+  background-size: 200% 100%;
   animation: shimmer 2s infinite linear;
+}
+
+.firework-particle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  opacity: 0;
+  animation: firework-particle 1100ms ease-out forwards;
+}
+
+@keyframes firework-particle {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx, 0), var(--ty, 0)) scale(0.2);
+    opacity: 0;
+  }
 }
