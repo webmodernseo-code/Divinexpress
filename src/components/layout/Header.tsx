@@ -51,9 +51,9 @@ export function TopBarSocials() {
 import { CurrencySwitcher } from './CurrencySwitcher';
 
 const ICON_CIRCLE_CLASS =
-  'relative grid size-11 place-items-center rounded-full border border-neutral-200 text-black transition-colors hover:bg-neutral-100';
-const ICON_SVG_CLASS = 'size-5';
-const ICON_BADGE_CLASS = 'absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-black text-[10px] font-semibold text-white';
+  'relative grid size-9 place-items-center rounded-full border border-neutral-200 text-black transition-colors hover:bg-neutral-100 md:size-11';
+const ICON_SVG_CLASS = 'size-[18px] md:size-5';
+const ICON_BADGE_CLASS = 'absolute -right-1 -top-1 grid size-4 place-items-center rounded-full bg-black text-[9px] font-semibold text-white md:size-5 md:text-[10px]';
 
 function HeartIcon({ className = '' }: { className?: string }) {
   return (
@@ -285,17 +285,17 @@ export function Header() {
           </div>
 
           {/* Mobile row */}
-          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 md:hidden">
+          <div className="relative flex items-center justify-between md:hidden">
             <button
               type="button"
               onClick={openMobileMenu}
               aria-label={t('menu')}
               aria-expanded={isMenuOpen}
-              className="inline-flex h-[38px] w-[38px] items-center justify-center rounded-2xl border-[1.5px] border-ink bg-paper text-ink"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-2xl border-[1.5px] border-ink bg-paper text-ink"
             >
               <MenuIcon className="h-[18px] w-[18px]" />
             </button>
-            <div className="flex justify-center">
+            <div className="absolute left-1/2 -translate-x-1/2">
               <Logo />
             </div>
             <HeaderIcons
