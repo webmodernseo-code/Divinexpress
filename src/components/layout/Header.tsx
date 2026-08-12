@@ -51,9 +51,9 @@ export function TopBarSocials() {
 import { CurrencySwitcher } from './CurrencySwitcher';
 
 const ICON_CIRCLE_CLASS =
-  'relative grid size-9 place-items-center rounded-full border border-neutral-200 text-black transition-colors hover:bg-neutral-100 md:size-11';
-const ICON_SVG_CLASS = 'size-[18px] md:size-5';
-const ICON_BADGE_CLASS = 'absolute -right-1 -top-1 grid size-4 place-items-center rounded-full bg-black text-[9px] font-semibold text-white md:size-5 md:text-[10px]';
+  'relative grid size-8 place-items-center rounded-full border border-neutral-200 text-black transition-colors hover:bg-neutral-100 md:size-11';
+const ICON_SVG_CLASS = 'size-4 md:size-5';
+const ICON_BADGE_CLASS = 'absolute -right-1 -top-1 grid size-3.5 place-items-center rounded-full bg-black text-[8px] font-semibold text-white md:size-5 md:text-[10px]';
 
 function HeartIcon({ className = '' }: { className?: string }) {
   return (
@@ -291,9 +291,9 @@ export function Header() {
               onClick={openMobileMenu}
               aria-label={t('menu')}
               aria-expanded={isMenuOpen}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-2xl border-[1.5px] border-ink bg-paper text-ink"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-2xl border-[1.5px] border-ink bg-paper text-ink"
             >
-              <MenuIcon className="h-[18px] w-[18px]" />
+              <MenuIcon className="h-4 w-4" />
             </button>
             <div className="absolute left-1/2 -translate-x-1/2">
               <Logo />
