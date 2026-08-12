@@ -17,6 +17,8 @@ export const createProductInputSchema = z.object({
   nameEn: z.string().trim().min(1),
   descriptionFr: z.string(),
   descriptionEn: z.string(),
+  images: z.array(z.string().url()).max(6).optional(),
+  compareAtPriceMinor: z.number().int().nonnegative().optional(),
   variants: z.array(productVariantInputSchema).min(1),
 });
 

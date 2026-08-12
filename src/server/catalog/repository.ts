@@ -14,6 +14,7 @@ export interface CatalogVariant {
 export interface CatalogProduct {
   id: string; categoryId: string; slug: string; nameFr: string; nameEn: string;
   descriptionFr: string; descriptionEn: string; status: ProductStatus;
+  images: string[]; compareAtMinor: number | null;
   variants: CatalogVariant[];
 }
 
@@ -24,7 +25,7 @@ interface ProductRow {
 
 interface VariantRow {
   id: string; product_id: string; sku: string; size: string | null; color: string | null;
-  price_minor: number; currency: 'EUR' | 'GBP'; stock: number;
+  price_minor: number; currency: 'EUR' | 'GBP'; stock: number; compare_at_price_minor: number | null;
 }
 
 export class CatalogRepository {
@@ -39,10 +40,17 @@ export class CatalogRepository {
         VALUES (?, ?, ?, ?, ?, ?, ?, 'active')`)
         .run(input.id, input.categoryId, input.slug, input.nameFr, input.nameEn, input.descriptionFr, input.descriptionEn);
       const insertVariant = this.database.prepare(`INSERT INTO product_variants
-        (id, product_id, sku, size, color, price_minor, currency)
-        VALUES (?, ?, ?, ?, ?, ?, ?)`);
+        (id, product_id, sku, size, color, price_minor, currency, compare_at_price_minor)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
       for (const variant of input.variants) {
-        await insertVariant.run(variant.id, input.id, variant.sku, variant.size, variant.color, variant.priceMinor, variant.currency);
+        await insertVariant.run(variant.id, input.id, variant.sku, variant.size, variant.color,
+          variant.priceMinor, variant.currency, input.compareAtPriceMinor ?? null);
+      }
+      const insertMedia = this.database.prepare(`INSERT INTO product_media
+        (id, product_id, url, position) VALUES (?, ?, ?, ?)`);
+      const images = input.images ?? [];
+      for (let index = 0; index < images.length; index += 1) {
+        await insertMedia.run(randomUUID(), input.id, images[index], index);
       }
       await this.database.exec('COMMIT');
     } catch {
@@ -59,23 +67,31 @@ export class CatalogRepository {
       .all()) as unknown as ProductRow[];
     if (products.length === 0) return [];
     const variants = (await this.database.prepare(`SELECT v.id, v.product_id, v.sku, v.size, v.color,
-      v.price_minor, v.currency, COALESCE(SUM(m.quantity_delta), 0) AS stock
+      v.price_minor, v.currency, v.compare_at_price_minor, COALESCE(SUM(m.quantity_delta), 0) AS stock
       FROM product_variants v LEFT JOIN inventory_movements m ON m.variant_id = v.id
       GROUP BY v.id ORDER BY v.created_at, v.id`).all()) as unknown as VariantRow[];
-    return products.map((product) => ({
-      id: product.id,
-      categoryId: product.category_id,
-      slug: product.slug,
-      nameFr: product.name_fr,
-      nameEn: product.name_en,
-      descriptionFr: product.description_fr,
-      descriptionEn: product.description_en,
-      status: product.status,
-      variants: variants.filter((variant) => variant.product_id === product.id).map((variant) => ({
-        id: variant.id, sku: variant.sku, size: variant.size, color: variant.color,
-        priceMinor: variant.price_minor, currency: variant.currency, stock: variant.stock,
-      })),
-    }));
+    const media = (await this.database.prepare(
+      `SELECT product_id, url FROM product_media ORDER BY product_id, position`
+    ).all()) as unknown as Array<{ product_id: string; url: string }>;
+    return products.map((product) => {
+      const productVariants = variants.filter((variant) => variant.product_id === product.id);
+      return {
+        id: product.id,
+        categoryId: product.category_id,
+        slug: product.slug,
+        nameFr: product.name_fr,
+        nameEn: product.name_en,
+        descriptionFr: product.description_fr,
+        descriptionEn: product.description_en,
+        status: product.status,
+        images: media.filter((m) => m.product_id === product.id).map((m) => m.url),
+        compareAtMinor: productVariants[0]?.compare_at_price_minor ?? null,
+        variants: productVariants.map((variant) => ({
+          id: variant.id, sku: variant.sku, size: variant.size, color: variant.color,
+          priceMinor: variant.price_minor, currency: variant.currency, stock: variant.stock,
+        })),
+      };
+    });
   }
 
   async findBySlug(slug: string, includeArchived = false): Promise<CatalogProduct | null> {

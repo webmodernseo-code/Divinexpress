@@ -35,6 +35,30 @@ describe('CatalogRepository', () => {
     });
   });
 
+  it('persists images (product_media) and compare-at price on create', async () => {
+    await repository.createProduct({
+      id: 'p-img', categoryId: 'category:test', slug: 'produit-img',
+      nameFr: 'Img', nameEn: 'Img', descriptionFr: '', descriptionEn: '',
+      images: ['https://res.cloudinary.com/x/a.jpg', 'https://res.cloudinary.com/x/b.jpg'],
+      compareAtPriceMinor: 9900,
+      variants: [{ id: 'v-img', sku: 'SKU-IMG', size: 'M', color: 'Noir', priceMinor: 7900, currency: 'EUR' }],
+    });
+    const product = (await repository.findBySlug('produit-img', true))!;
+    expect(product.images).toEqual(['https://res.cloudinary.com/x/a.jpg', 'https://res.cloudinary.com/x/b.jpg']);
+    expect(product.compareAtMinor).toBe(9900);
+  });
+
+  it('leaves images empty and compareAtMinor null when not provided', async () => {
+    await repository.createProduct({
+      id: 'p-plain', categoryId: 'category:test', slug: 'produit-plain',
+      nameFr: 'Plain', nameEn: 'Plain', descriptionFr: '', descriptionEn: '',
+      variants: [{ id: 'v-plain', sku: 'SKU-PLAIN', size: 'M', color: 'Noir', priceMinor: 5000, currency: 'EUR' }],
+    });
+    const product = (await repository.findBySlug('produit-plain', true))!;
+    expect(product.images).toEqual([]);
+    expect(product.compareAtMinor).toBeNull();
+  });
+
   it('rejects duplicate SKUs and stock below zero', async () => {
     const input = {
       id: 'product-1', categoryId: 'category:test', slug: 'veste-test',
