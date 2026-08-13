@@ -180,7 +180,7 @@ export const ALL_PRODUCTS: Product[] = [
     slug: 'enfant-t-shirt-graphique',
     category: 'enfant',
     subcategory: 't-shirts',
-    name: { fr: 'T-shirt graphique Reign', en: 'Reign graphic t-shirt' },
+    name: { fr: 'T-shirt graphique DivinExpress', en: 'DivinExpress graphic t-shirt' },
     description: {
       fr: 'Jersey doux, imprimé graphique discret, coupe confortable.',
       en: 'Soft jersey, subtle graphic print, comfortable fit.'
@@ -264,8 +264,8 @@ export const ALL_PRODUCTS: Product[] = [
     subcategory: 'ceintures',
     name: { fr: 'Ceinture cuir boucle signature', en: 'Signature buckle leather belt' },
     description: {
-      fr: 'Cuir pleine fleur, boucle métal brossé gravée Reign.',
-      en: 'Full-grain leather, brushed metal buckle engraved Reign.'
+      fr: 'Cuir pleine fleur, boucle métal brossé gravée DivinExpress.',
+      en: 'Full-grain leather, brushed metal buckle engraved DivinExpress.'
     },
     priceEur: 95,
     sizes: ['S/M', 'L/XL'],
@@ -280,8 +280,8 @@ export const ALL_PRODUCTS: Product[] = [
     subcategory: 'bijoux',
     name: { fr: 'Anneau signature acier', en: 'Signature steel ring' },
     description: {
-      fr: 'Acier brossé massif, gravure minimaliste Reign.',
-      en: 'Solid brushed steel, minimalist Reign engraving.'
+      fr: 'Acier brossé massif, gravure minimaliste DivinExpress.',
+      en: 'Solid brushed steel, minimalist DivinExpress engraving.'
     },
     priceEur: 85,
     sizes: ['UNIQUE'],
@@ -296,8 +296,8 @@ export const ALL_PRODUCTS: Product[] = [
     subcategory: 'chapeaux',
     name: { fr: 'Bonnet laine mérinos', en: 'Merino wool beanie' },
     description: {
-      fr: 'Laine mérinos douce, revers côtelé, patch Reign discret.',
-      en: 'Soft merino wool, ribbed cuff, discreet Reign patch.'
+      fr: 'Laine mérinos douce, revers côtelé, patch DivinExpress discret.',
+      en: 'Soft merino wool, ribbed cuff, discreet DivinExpress patch.'
     },
     priceEur: 55,
     sizes: ['UNIQUE'],
