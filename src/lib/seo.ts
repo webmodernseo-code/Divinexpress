@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { routing } from '@/i18n/routing';
 
-export const SITE_URL = 'https://www.reign-example.com';
+export const SITE_URL = 'https://divinexpress.fr';
 
 export function buildAlternateLanguages(pathname: string): Record<string, string> {
   const languages: Record<string, string> = {};
@@ -37,7 +37,7 @@ export function organizationJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Reign',
+    name: 'DivinExpress',
     url: SITE_URL,
     logo: `${SITE_URL}/branding/logo-reign.png`
   };

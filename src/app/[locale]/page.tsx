@@ -27,7 +27,7 @@ export async function generateMetadata({
     return buildMetadata({
       locale,
       pathname: `?categorie=${requestedCategory}`,
-      title: `${categoryName} — Reign`,
+      title: `${categoryName} — DivinExpress`,
       description: categoryName
     });
   }
@@ -36,7 +36,7 @@ export async function generateMetadata({
   return buildMetadata({
     locale,
     pathname: '',
-    title: `Reign — ${tHome('heroTitle')}`,
+    title: `DivinExpress — ${tHome('heroTitle')}`,
     description: tHome('heroSubtitle')
   });
 }
@@ -79,7 +79,7 @@ export default async function HomePage({
             __html: JSON.stringify(
               breadcrumbJsonLd(
                 [
-                  { name: 'Reign', url: `${SITE_URL}/${locale}` },
+                  { name: 'DivinExpress', url: `${SITE_URL}/${locale}` },
                   { name: tNav(initialCategory), url: `${SITE_URL}/${locale}?categorie=${initialCategory}` },
                   initialSubcategory
                     ? {

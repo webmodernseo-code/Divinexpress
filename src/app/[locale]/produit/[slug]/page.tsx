@@ -19,7 +19,7 @@ export async function generateMetadata({
   return buildMetadata({
     locale,
     pathname: `/produit/${slug}`,
-    title: `${product.name[localizedLocale]} — Reign`,
+    title: `${product.name[localizedLocale]} — DivinExpress`,
     description: product.description[localizedLocale]
   });
 }
@@ -55,7 +55,7 @@ export default async function ProductPage({
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             breadcrumbJsonLd([
-              { name: 'Reign', url: `${SITE_URL}/${locale}` },
+              { name: 'DivinExpress', url: `${SITE_URL}/${locale}` },
               { name: tNav(product.category), url: `${SITE_URL}/${locale}?categorie=${product.category}` },
               { name: product.name[localizedLocale], url: productUrl }
             ])

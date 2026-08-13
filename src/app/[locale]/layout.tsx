@@ -18,8 +18,8 @@ export function generateStaticParams() {
 }
 
 export const metadata: Metadata = {
-  title: 'Reign',
-  description: 'Reign — vêtements et accessoires premium.'
+  title: 'DivinExpress',
+  description: 'DivinExpress — vêtements et accessoires premium.'
 };
 
 export default async function LocaleLayout({
