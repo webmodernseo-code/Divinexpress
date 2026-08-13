@@ -65,15 +65,24 @@ body {
 }
 
 button,
-a,
-input,
-select,
-textarea {
+a {
   outline-offset: 3px;
 }
 
+/* Keyboard focus indicator (accessibility) — brand indigo, not harsh black. */
 :focus-visible {
-  outline: 2px solid #111111;
+  outline: 2px solid #6366f1;
+}
+
+/* Form fields already show their own focus ring/border, so no extra outline box. */
+input:focus,
+select:focus,
+textarea:focus,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  outline-offset: 0;
 }
 
 @keyframes admin-spin {
