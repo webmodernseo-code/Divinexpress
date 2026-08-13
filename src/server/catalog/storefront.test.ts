@@ -92,4 +92,24 @@ describe('StorefrontCatalog', () => {
   it('returns no search results for a blank query', async () => {
     expect(await new StorefrontCatalog(database).search('   ', 'fr')).toEqual([]);
   });
+
+  it('sums per-variant initial stock and excludes deactivated variants', async () => {
+    await repository.createProduct({
+      id: 'sp', categoryId: 'category:homme', slug: 'sp', nameFr: 'A', nameEn: 'A',
+      descriptionFr: '', descriptionEn: '', status: 'active',
+      variants: [
+        { id: 'a', sku: 'SA', size: 'S', color: 'Noir', priceMinor: 5000, currency: 'EUR', stock: 2 },
+        { id: 'b', sku: 'SB', size: 'M', color: 'Blanc', priceMinor: 5000, currency: 'EUR', stock: 3 },
+      ],
+    });
+    let p = (await new StorefrontCatalog(database).list())[0];
+    expect([...p.sizes].sort()).toEqual(['M', 'S']);
+    expect([...p.colors].sort()).toEqual(['Blanc', 'Noir']);
+    expect(p.availableQuantity).toBe(5);
+
+    await repository.deactivateVariant('b');
+    p = (await new StorefrontCatalog(database).list())[0];
+    expect(p.sizes).toEqual(['S']);
+    expect(p.availableQuantity).toBe(2);
+  });
 });

@@ -147,11 +147,11 @@ export default function ProduitsPage() {
   const addVariantApi = async (pid: string) => {
     const size = prompt(systemLocale === 'fr' ? 'Taille (XS..XXL ou Unique)' : 'Size (XS..XXL or Unique)') ?? '';
     if (!size) return;
-    const color = prompt(systemLocale === 'fr' ? 'Couleur' : 'Color') ?? 'Noir';
+    const color = (prompt(systemLocale === 'fr' ? 'Couleur' : 'Color') || 'Noir').trim() || 'Noir';
     const stock = parseInt(prompt(systemLocale === 'fr' ? 'Stock' : 'Stock') ?? '0') || 0;
     const r = await fetch(`/api/admin/products/${pid}/variants`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ size: size === 'Unique' ? null : size, color, stock }),
+      body: JSON.stringify({ size: size || 'Unique', color, stock }),
     });
     if (!r.ok) alert(systemLocale === 'fr' ? 'Échec ajout variante' : 'Add failed'); else refreshProducts();
   };
@@ -262,11 +262,13 @@ export default function ProduitsPage() {
         // Create new product with its variants (size / color / stock)
         const uniqueId = `prod-${slug}-${Math.floor(1000 + Math.random() * 9000)}`;
         const sku = `DIVINEXPRESS-${slug.toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
+        // Store size/color as non-null strings so checkout can resolve the variant
+        // by exact (size, color) match (SQL `col = ?` never matches NULL).
         const variants = formVariants.map((v, idx) => ({
           id: `var-${uniqueId}-${idx}`,
           sku: `${sku}-${(v.size || 'U')}-${idx}`,
-          size: v.size === 'Unique' ? null : v.size,
-          color: v.color || null,
+          size: v.size || 'Unique',
+          color: v.color.trim() || 'Noir',
           priceMinor: priceMinorValue,
           currency: 'EUR' as const,
           stock: parseInt(v.stock) || 0,
