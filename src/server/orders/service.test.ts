@@ -33,7 +33,7 @@ describe('OrderService', () => {
   const input = {
     idempotencyKey: 'checkout-12345678', currency: 'EUR' as const,
     customer: { email: 'client@example.com', firstName: 'Ada', lastName: 'Lovelace', phone: null },
-    shippingAddress: { recipient: 'Ada Lovelace', line1: '1 rue Reign', line2: null, postalCode: '75001', city: 'Paris', region: null, countryCode: 'FR' },
+    shippingAddress: { recipient: 'Ada Lovelace', line1: '1 rue DivinExpress', line2: null, postalCode: '75001', city: 'Paris', region: null, countryCode: 'FR' },
     lines: [{ variantId: 'variant-1', quantity: 2 }],
     shippingMinor: 500, taxMinor: 0, discountMinor: 1000,
   };

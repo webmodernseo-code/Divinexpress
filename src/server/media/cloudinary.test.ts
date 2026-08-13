@@ -4,16 +4,16 @@ import { signUpload } from './cloudinary';
 
 describe('signUpload', () => {
   it('sorts params and hashes with the secret (Cloudinary scheme)', () => {
-    const sig = signUpload({ timestamp: '1700000000', folder: 'reign/products' }, 'SECRET');
+    const sig = signUpload({ timestamp: '1700000000', folder: 'divinexpress/products' }, 'SECRET');
     const expected = createHash('sha1')
-      .update('folder=reign/products&timestamp=1700000000SECRET')
+      .update('folder=divinexpress/products&timestamp=1700000000SECRET')
       .digest('hex');
     expect(sig).toBe(expected);
   });
 
   it('is stable regardless of input key order', () => {
-    const a = signUpload({ folder: 'reign/products', timestamp: '1' }, 'S');
-    const b = signUpload({ timestamp: '1', folder: 'reign/products' }, 'S');
+    const a = signUpload({ folder: 'divinexpress/products', timestamp: '1' }, 'S');
+    const b = signUpload({ timestamp: '1', folder: 'divinexpress/products' }, 'S');
     expect(a).toBe(b);
   });
 });

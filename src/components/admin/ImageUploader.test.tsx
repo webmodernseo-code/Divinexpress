@@ -11,7 +11,7 @@ beforeEach(() => {
       .fn()
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ cloudName: 'c', apiKey: 'k', timestamp: '1', folder: 'reign/products', signature: 's' })
+        json: async () => ({ cloudName: 'c', apiKey: 'k', timestamp: '1', folder: 'divinexpress/products', signature: 's' })
       })
       .mockResolvedValueOnce({ ok: true, json: async () => ({ secure_url: 'https://res.cloudinary.com/c/up.jpg' }) })
   );

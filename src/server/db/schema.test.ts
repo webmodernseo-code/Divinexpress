@@ -22,11 +22,11 @@ describe('database migrations', () => {
     await db.prepare(`INSERT INTO product_variants
       (id, product_id, sku, price_minor, currency)
       VALUES (?, ?, ?, ?, ?)`)
-      .run('variant-1', 'product-1', 'REIGN-SHIRT-M', 9900, 'EUR');
+      .run('variant-1', 'product-1', 'DIVINEXPRESS-SHIRT-M', 9900, 'EUR');
 
     const variant = (await db.prepare('SELECT sku, price_minor FROM product_variants WHERE id = ?')
       .get('variant-1')) as { sku: string; price_minor: number };
-    expect(variant).toEqual({ sku: 'REIGN-SHIRT-M', price_minor: 9900 });
+    expect(variant).toEqual({ sku: 'DIVINEXPRESS-SHIRT-M', price_minor: 9900 });
 
     await expect(db.prepare(`INSERT INTO product_variants
       (id, product_id, sku, price_minor, currency)
