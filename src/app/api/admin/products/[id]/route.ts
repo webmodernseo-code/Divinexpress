@@ -15,6 +15,8 @@ const patchSchema = z.object({
   status: z.enum(['draft', 'active', 'archived']).optional(),
   priceMinor: z.number().int().nonnegative().optional(),
   stock: z.number().int().optional(),
+  images: z.array(z.string().url()).max(6).optional(),
+  compareAtPriceMinor: z.number().int().nonnegative().nullable().optional(),
 });
 
 export async function PATCH(
@@ -55,6 +57,13 @@ export async function PATCH(
         const catalog = new CatalogRepository(db);
         if (body.priceMinor !== undefined) await catalog.setBasePrice(id, body.priceMinor);
         if (body.stock !== undefined) await catalog.setAggregateStock(id, body.stock, admin.id);
+      }
+
+      // 3. Media gallery + compare-at price
+      if (body.images !== undefined || body.compareAtPriceMinor !== undefined) {
+        const catalog = new CatalogRepository(db);
+        if (body.images !== undefined) await catalog.replaceImages(id, body.images);
+        if (body.compareAtPriceMinor !== undefined) await catalog.setCompareAt(id, body.compareAtPriceMinor);
       }
 
       await db.exec('COMMIT');
