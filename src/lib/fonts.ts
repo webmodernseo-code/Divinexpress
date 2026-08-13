@@ -5,12 +5,12 @@ import { Fraunces, Inter } from 'next/font/google';
 // the same name on both sides would create an invalid circular CSS variable.
 export const fraunces = Fraunces({
   subsets: ['latin'],
-  variable: '--reign-font-serif',
+  variable: '--divinexpress-font-serif',
   display: 'swap'
 });
 
 export const inter = Inter({
   subsets: ['latin'],
-  variable: '--reign-font-sans',
+  variable: '--divinexpress-font-sans',
   display: 'swap'
 });

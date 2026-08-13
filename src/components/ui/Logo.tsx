@@ -3,10 +3,10 @@ import { Link } from '@/i18n/navigation';
 
 export function Logo({ className = '' }: { className?: string }) {
   return (
-    <Link href="/" aria-label="Reign — accueil" className={`inline-flex items-center ${className}`}>
+    <Link href="/" aria-label="DivinExpress — accueil" className={`inline-flex items-center ${className}`}>
       <Image
         src="/branding/logo-reign.png"
-        alt="Reign"
+        alt="DivinExpress"
         width={193}
         height={67}
         priority

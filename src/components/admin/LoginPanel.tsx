@@ -19,17 +19,17 @@ export function LoginPanel({ locale, action }: {
     <div className="flex min-h-screen bg-slate-50">
       {/* Editorial left panel */}
       <section className="relative hidden w-1/2 overflow-hidden bg-slate-950 text-white lg:block">
-        <img src="/image/reign-admin-hoodie.png" alt="Hoodie noir Reign suspendu" className="absolute inset-0 h-full w-full object-cover object-center opacity-70" />
+        <img src="/image/reign-admin-hoodie.png" alt="Hoodie noir DivinExpress suspendu" className="absolute inset-0 h-full w-full object-cover object-center opacity-70" />
         <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/80 via-slate-900/30 to-transparent" />
         <div className="relative flex h-full flex-col justify-between p-14">
           <div className="flex items-center gap-2.5">
-            <p className="font-serif text-[44px] tracking-[.16em]">REIGN</p>
+            <p className="font-serif text-[44px] tracking-[.16em]">DIVINEXPRESS</p>
             <span className="rounded-md bg-white/10 border border-white/20 px-2 py-0.5 text-[10px] font-extrabold tracking-wider text-white uppercase">
               Admin
             </span>
           </div>
           <div className="max-w-xl pb-14">
-            <p className="text-xs font-bold tracking-[.3em] text-indigo-400">REIGN BACK OFFICE</p>
+            <p className="text-xs font-bold tracking-[.3em] text-indigo-400">DIVINEXPRESS BACK OFFICE</p>
             <h1 className="mt-6 font-serif text-6xl leading-[1.08]">
               Pilotez votre boutique<br />avec précision.
             </h1>
@@ -55,7 +55,7 @@ export function LoginPanel({ locale, action }: {
             <div className="flex justify-center mb-6">
               <Image
                 src="/branding/logo-reign.png"
-                alt="Reign"
+                alt="DivinExpress"
                 width={120}
                 height={42}
                 priority
@@ -142,7 +142,7 @@ export function LoginPanel({ locale, action }: {
           <div className="mt-8 border-t border-slate-200 pt-6">
             <p className="text-xs font-semibold text-slate-600">
               <b>{fr ? "Besoin d’aide ?" : 'Need help?'}</b>
-              <a href="mailto:support@reign.com" className="ml-4 text-indigo-600 hover:text-indigo-700 transition-colors">
+              <a href="mailto:support@divinexpress.fr" className="ml-4 text-indigo-600 hover:text-indigo-700 transition-colors">
                 {fr ? "Contacter l’administrateur" : 'Contact administrator'}
               </a>
             </p>
@@ -153,7 +153,7 @@ export function LoginPanel({ locale, action }: {
           </div>
 
           <footer className="mt-10 flex justify-between text-[11px] text-slate-400 font-bold">
-            <span>© 2026 Reign</span>
+            <span>© 2026 DivinExpress</span>
             <span className="flex gap-4">
               <a href={`/${locale}/confidentialite`} className="hover:text-slate-600 transition-colors">Confidentialité</a>
               <a href={`/${locale}/mentions-legales`} className="hover:text-slate-600 transition-colors">Sécurité</a>

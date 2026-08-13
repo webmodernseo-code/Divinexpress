@@ -40,8 +40,8 @@ export default function ParametresPage() {
   const [isSaved, setIsSaved] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [settings, setSettings] = useState<StoreSettings>({
-    shop_name: 'Reign',
-    email: 'contact@reign-store.com',
+    shop_name: 'DivinExpress',
+    email: 'contact@divinexpress.fr',
     phone: '+33 6 12 34 56 78',
     address: '12 Rue de la Paix, 75002 Paris',
     country: 'France',
@@ -283,7 +283,7 @@ export default function ParametresPage() {
                   <div>
                     <label className="block text-[10px] uppercase tracking-wider text-admin-muted mb-2">Logo de la boutique</label>
                     <div className="p-4 border border-admin-border rounded-xl flex items-center justify-between">
-                      <span className="font-serif text-xl font-bold tracking-widest text-black">{settings.shop_name || 'Reign'}</span>
+                      <span className="font-serif text-xl font-bold tracking-widest text-black">{settings.shop_name || 'DivinExpress'}</span>
                       <div className="flex gap-2">
                         <button type="button" className="h-8 px-3 rounded-lg border border-admin-border hover:border-black text-[10px] font-bold text-admin-text transition cursor-pointer bg-white">
                           Changer le logo

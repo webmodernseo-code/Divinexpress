@@ -71,8 +71,8 @@ export default function ClientsPage() {
         </h1>
         <p className="text-sm text-admin-muted mt-1.5">
           {systemLocale === 'fr' 
-            ? 'Consultez la liste des clients de votre boutique Reign.' 
-            : 'View the list of customers of your Reign boutique.'}
+            ? 'Consultez la liste des clients de votre boutique DivinExpress.' 
+            : 'View the list of customers of your DivinExpress boutique.'}
         </p>
       </div>
 

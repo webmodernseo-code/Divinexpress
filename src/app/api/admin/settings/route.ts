@@ -35,8 +35,8 @@ export async function GET() {
   }
   
   // Default values if empty
-  settings.shop_name ??= 'Reign';
-  settings.email ??= 'contact@reign.webmodernseo.co';
+  settings.shop_name ??= 'DivinExpress';
+  settings.email ??= 'contact@divinexpress.fr';
   settings.phone ??= '+33 7 53 74 10 30';
   settings.address ??= '12 Rue de la Paix, 75002 Paris';
   settings.country ??= 'France';

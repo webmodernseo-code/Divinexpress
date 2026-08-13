@@ -215,7 +215,7 @@ export default function ProduitsPage() {
       } else {
         // Create new product
         const uniqueId = `prod-${slug}-${Math.floor(1000 + Math.random() * 9000)}`;
-        const sku = `REIGN-${slug.toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
+        const sku = `DIVINEXPRESS-${slug.toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
         
         const createPayload = {
           id: uniqueId,

@@ -6,7 +6,7 @@
   --color-accent: #3b4a5a;
   --color-success: #3f7355;
 
-  /* Reign Administration SaaS Theme Colors */
+  /* DivinExpress Administration SaaS Theme Colors */
   --color-admin-ivory: #f8fafc;
   --color-admin-surface: #ffffff;
   --color-admin-text: #0f172a;
@@ -34,8 +34,8 @@
   --color-mist-800: #333333;
   --color-mist-900: #1a1a1a;
 
-  --font-sans: var(--reign-font-sans);
-  --font-serif: var(--reign-font-serif);
+  --font-sans: var(--divinexpress-font-sans);
+  --font-serif: var(--divinexpress-font-serif);
 
   --animate-fade-in: fade-in 0.25s ease-out;
   --animate-slide-in-right: slide-in-right 0.35s cubic-bezier(0.16, 1, 0.3, 1);

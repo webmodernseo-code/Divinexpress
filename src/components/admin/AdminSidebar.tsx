@@ -86,7 +86,7 @@ export function AdminSidebar({ isCollapsed: controlledCollapsed, onToggleCollaps
             <div className="font-serif text-xl font-bold tracking-tight text-black">R.</div>
           ) : (
             <div className="animate-fade-in">
-              <span className="font-serif text-2xl font-bold tracking-widest text-black block leading-none">REIGN</span>
+              <span className="font-serif text-2xl font-bold tracking-widest text-black block leading-none">DIVINEXPRESS</span>
               <span className="text-[9px] font-bold tracking-[0.2em] text-admin-muted uppercase block mt-1.5 leading-none">
                 ADMIN
               </span>

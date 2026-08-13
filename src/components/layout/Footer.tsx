@@ -68,7 +68,7 @@ export function Footer() {
           <div className="mb-2 flex flex-row items-center justify-between gap-4 lg:mb-0 lg:flex-col lg:items-start">
             <Image
               src="/branding/logo-reign.png"
-              alt="Reign"
+              alt="DivinExpress"
               width={193}
               height={67}
               className="h-auto w-[92px] object-contain lg:w-[110px]"
@@ -139,7 +139,7 @@ export function Footer() {
 
         <div className="border-t border-mist-200 pt-4 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-8">
           <p className="hidden text-sm text-mist-500 lg:block">
-            © {new Date().getFullYear()} Reign — {t('rights')}
+            © {new Date().getFullYear()} DivinExpress — {t('rights')}
           </p>
 
           <div>
@@ -167,7 +167,7 @@ export function Footer() {
           </div>
 
           <p className="pt-4 text-center text-sm text-mist-500 lg:hidden">
-            © {new Date().getFullYear()} Reign — {t('rights')}
+            © {new Date().getFullYear()} DivinExpress — {t('rights')}
           </p>
         </div>
       </Container>
