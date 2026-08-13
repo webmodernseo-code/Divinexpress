@@ -24,7 +24,7 @@ export class GeniusPaymentProvider implements PaymentProvider {
         body: JSON.stringify({
           amount: request.amountMinor / 100, // GeniusPay expects major units
           currency: request.currency,
-          description: `Reign Order #${request.orderNumber}`,
+          description: `DivinExpress Order #${request.orderNumber}`,
           success_url: successUrl,
           error_url: errorUrl,
           metadata: {

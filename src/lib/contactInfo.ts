@@ -4,12 +4,12 @@
 export const CONTACT = {
   whatsappDisplay: '+33 7 53 74 10 30',
   whatsappDigits: '33753741030',
-  email: 'contact@reign.webmodernseo.co',
+  email: 'contact@divinexpress.fr',
 } as const;
 
 const DEFAULT_WA_MESSAGE: Record<'fr' | 'en', string> = {
-  fr: 'Bonjour Reign, j’aimerais avoir des informations.',
-  en: 'Hello Reign, I would like some information.',
+  fr: 'Bonjour DivinExpress, j’aimerais avoir des informations.',
+  en: 'Hello DivinExpress, I would like some information.',
 };
 
 /** Builds a wa.me deep link that opens a WhatsApp conversation with a prefilled message. */

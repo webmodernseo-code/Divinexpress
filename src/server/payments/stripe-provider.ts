@@ -24,7 +24,7 @@ export class StripePaymentProvider implements PaymentProvider {
     body.set('line_items[0][quantity]', '1');
     body.set('line_items[0][price_data][currency]', request.currency.toLowerCase());
     body.set('line_items[0][price_data][unit_amount]', String(request.amountMinor));
-    body.set('line_items[0][price_data][product_data][name]', `Reign Order #${request.orderNumber}`);
+    body.set('line_items[0][price_data][product_data][name]', `DivinExpress Order #${request.orderNumber}`);
     body.set('metadata[orderId]', request.orderId);
     body.set('metadata[orderNumber]', request.orderNumber);
     body.set('metadata[idempotencyKey]', request.idempotencyKey);

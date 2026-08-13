@@ -85,6 +85,6 @@ export function ruleBasedReply(ctx: RuleContext): string {
   }
 
   return fr
-    ? `Bonjour ${name}, je suis l'assistant Reign. J'ai bien reçu votre message. Comment puis-je vous aider aujourd'hui ? Un conseiller peut aussi prendre le relais si besoin.`
-    : `Hello ${name}, I'm the Reign assistant. I've received your message. How can I help you today? A human advisor can also step in if needed.`;
+    ? `Bonjour ${name}, je suis l'assistant DivinExpress. J'ai bien reçu votre message. Comment puis-je vous aider aujourd'hui ? Un conseiller peut aussi prendre le relais si besoin.`
+    : `Hello ${name}, I'm the DivinExpress assistant. I've received your message. How can I help you today? A human advisor can also step in if needed.`;
 }
