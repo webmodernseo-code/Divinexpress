@@ -120,4 +120,35 @@ describe('CatalogRepository', () => {
     expect(byId['v-s']).toBe(3);
     expect(byId['v-m']).toBe(0);
   });
+
+  it('adds, adjusts stock, and deactivates a variant', async () => {
+    await database.prepare(`INSERT INTO admin_users (id, email, password_hash, role)
+      VALUES ('admin-1', 'a@example.com', 'h', 'owner')`).run();
+    await repository.createProduct({
+      id: 'p1', categoryId: 'category:test', slug: 'p1', nameFr: 'a', nameEn: 'a',
+      descriptionFr: '', descriptionEn: '', status: 'active',
+      variants: [{ id: 'v1', sku: 'S1', size: 'M', color: 'Noir', priceMinor: 5000, currency: 'EUR', stock: 2 }],
+    });
+    const vid = await repository.addVariant('p1', { sku: 'S2', size: 'L', color: 'Noir', priceMinor: 5000, currency: 'EUR', stock: 5 });
+    await repository.adjustVariantStock(vid, 8, 'admin-1');
+    let p = await repository.findBySlug('p1', true);
+    expect(p!.variants.find((variant) => variant.id === vid)!.stock).toBe(8);
+    await repository.deactivateVariant(vid);
+    p = await repository.findBySlug('p1', true);
+    expect(p!.variants.some((variant) => variant.id === vid)).toBe(false);
+  });
+
+  it('replaces images and sets compare-at price', async () => {
+    await repository.createProduct({
+      id: 'p2', categoryId: 'category:test', slug: 'p2', nameFr: 'a', nameEn: 'a',
+      descriptionFr: '', descriptionEn: '', status: 'active',
+      images: ['https://res.cloudinary.com/x/1.png'],
+      variants: [{ id: 'vp2', sku: 'SP2', size: 'M', color: 'Noir', priceMinor: 5000, currency: 'EUR', stock: 1 }],
+    });
+    await repository.replaceImages('p2', ['https://res.cloudinary.com/x/a.png', 'https://res.cloudinary.com/x/b.png']);
+    await repository.setCompareAt('p2', 6000);
+    const p = (await repository.findBySlug('p2', true))!;
+    expect(p.images).toEqual(['https://res.cloudinary.com/x/a.png', 'https://res.cloudinary.com/x/b.png']);
+    expect(p.compareAtMinor).toBe(6000);
+  });
 });

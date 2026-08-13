@@ -75,7 +75,7 @@ export class CatalogRepository {
     const variants = (await this.database.prepare(`SELECT v.id, v.product_id, v.sku, v.size, v.color,
       v.price_minor, v.currency, v.compare_at_price_minor, COALESCE(SUM(m.quantity_delta), 0) AS stock
       FROM product_variants v LEFT JOIN inventory_movements m ON m.variant_id = v.id
-      GROUP BY v.id ORDER BY v.created_at, v.id`).all()) as unknown as VariantRow[];
+      WHERE v.active = 1 GROUP BY v.id ORDER BY v.created_at, v.id`).all()) as unknown as VariantRow[];
     const media = (await this.database.prepare(
       `SELECT product_id, url FROM product_media ORDER BY product_id, position`
     ).all()) as unknown as Array<{ product_id: string; url: string }>;
@@ -139,6 +139,51 @@ export class CatalogRepository {
     }
   }
 
+  async addVariant(productId: string, input: { sku: string; size: string | null; color: string | null; priceMinor: number; currency: 'EUR' | 'GBP'; stock: number }): Promise<string> {
+    const id = randomUUID();
+    await this.database.exec('BEGIN IMMEDIATE');
+    try {
+      await this.database.prepare(`INSERT INTO product_variants
+        (id, product_id, sku, size, color, price_minor, currency)
+        VALUES (?, ?, ?, ?, ?, ?, ?)`)
+        .run(id, productId, input.sku, input.size, input.color, input.priceMinor, input.currency);
+      if (input.stock > 0) {
+        await this.database.prepare(`INSERT INTO inventory_movements
+          (id, variant_id, quantity_delta, reason) VALUES (?, ?, ?, 'initial')`)
+          .run(randomUUID(), id, input.stock);
+      }
+      await this.database.exec('COMMIT');
+    } catch {
+      await this.database.exec('ROLLBACK');
+      throw new DomainError('CONFLICT', 'Variant SKU already exists');
+    }
+    return id;
+  }
+
+  async deactivateVariant(variantId: string): Promise<void> {
+    const result = await this.database.prepare(
+      `UPDATE product_variants SET active = 0, updated_at = CURRENT_TIMESTAMP WHERE id = ?`
+    ).run(variantId);
+    if (result.changes === 0) throw new DomainError('NOT_FOUND', 'Variant not found', 404);
+  }
+
+  async adjustVariantStock(variantId: string, targetStock: number, actorId: string): Promise<void> {
+    if (!Number.isSafeInteger(targetStock) || targetStock < 0) {
+      throw new DomainError('CONFLICT', 'Stock must be a non-negative integer');
+    }
+    const exists = await this.database.prepare(`SELECT id FROM product_variants WHERE id = ?`).get(variantId);
+    if (!exists) throw new DomainError('NOT_FOUND', 'Variant not found', 404);
+    const row = (await this.database.prepare(
+      `SELECT COALESCE(SUM(quantity_delta), 0) AS stock FROM inventory_movements WHERE variant_id = ?`
+    ).get(variantId)) as { stock: number } | undefined;
+    const delta = targetStock - (row?.stock ?? 0);
+    if (delta !== 0) {
+      await this.database.prepare(`INSERT INTO inventory_movements
+        (id, variant_id, quantity_delta, reason, actor_id) VALUES (?, ?, ?, 'adjustment', ?)`)
+        .run(randomUUID(), variantId, delta, actorId);
+    }
+  }
+
   async adjustInventory(input: { variantId: string; quantityDelta: number; reason: InventoryReason }): Promise<number> {
     if (!Number.isSafeInteger(input.quantityDelta) || input.quantityDelta === 0) {
       throw new DomainError('CONFLICT', 'Inventory adjustment must be a non-zero integer');
@@ -160,5 +205,28 @@ export class CatalogRepository {
       if (error instanceof DomainError) throw error;
       throw new DomainError('NOT_FOUND', 'Variant not found', 404);
     }
+  }
+
+  async replaceImages(productId: string, urls: string[]): Promise<void> {
+    await this.database.exec('BEGIN IMMEDIATE');
+    try {
+      await this.database.prepare(`DELETE FROM product_media WHERE product_id = ?`).run(productId);
+      const insert = this.database.prepare(`INSERT INTO product_media
+        (id, product_id, url, position) VALUES (?, ?, ?, ?)`);
+      for (let index = 0; index < urls.length; index += 1) {
+        await insert.run(randomUUID(), productId, urls[index], index);
+      }
+      await this.database.exec('COMMIT');
+    } catch (error) {
+      await this.database.exec('ROLLBACK');
+      throw error;
+    }
+  }
+
+  async setCompareAt(productId: string, compareAtMinor: number | null): Promise<void> {
+    await this.database.prepare(
+      `UPDATE product_variants SET compare_at_price_minor = ?, updated_at = CURRENT_TIMESTAMP
+       WHERE product_id = ? AND active = 1`
+    ).run(compareAtMinor, productId);
   }
 }
