@@ -8,6 +8,14 @@ const nextConfig: NextConfig = {
   // On Vercel, leave output undefined — Vercel manages its own output, and
   // 'standalone' + Turbopack breaks Vercel file tracing (.nft.json ENOENT).
   output: process.env.VERCEL ? undefined : 'standalone',
+  images: {
+    // Product images uploaded from the dashboard are served from Cloudinary.
+    // Without this, next/image throws "hostname not configured" and the page
+    // that renders such an image fails to load.
+    remotePatterns: [
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
+    ],
+  },
 };
 
 export default withNextIntl(nextConfig);
