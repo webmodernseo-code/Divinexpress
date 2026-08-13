@@ -13,7 +13,9 @@ import {
   Truck,
   RotateCcw,
   FileText,
-  Package
+  Package,
+  CheckCircle,
+  X
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -250,49 +252,51 @@ export default function CommandesPage() {
     );
   };
 
-  const handleCreateShipment = async (id: string) => {
-    const tracking = prompt(systemLocale === 'fr' ? 'Numéro de suivi :' : 'Tracking number:');
-    if (!tracking) return;
-    const targetOrderDbId = detailedOrder?.id || id;
+  const CARRIERS = ['Colissimo', 'Chronopost', 'Mondial Relay', 'UPS', 'DHL', 'FedEx'];
+
+  // Shared: PATCH an order status transition, surface errors, then refresh list + detail.
+  const patchOrder = async (targetId: string, body: Record<string, unknown>) => {
     try {
-      const response = await fetch(`/api/admin/orders/${targetOrderDbId}`, {
+      const response = await fetch(`/api/admin/orders/${targetId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'shipped', trackingNumber: tracking, carrier: 'Colissimo' }),
+        body: JSON.stringify(body),
       });
-      if (response.ok) {
-        refreshOrders();
-        // Trigger detailed order reload
-        fetch(`/api/admin/orders/${targetOrderDbId}`)
-          .then((res) => (res.ok ? res.json() : Promise.reject()))
-          .then((data) => setDetailedOrder(data as OrderDetail))
-          .catch(() => undefined);
+      if (!response.ok) {
+        const err = (await response.json().catch(() => ({}))) as { error?: string };
+        alert(systemLocale === 'fr' ? `Échec: ${err.error || 'inconnu'}` : `Failed: ${err.error || 'unknown'}`);
+        return;
       }
+      refreshOrders();
+      fetch(`/api/admin/orders/${targetId}`)
+        .then((res) => (res.ok ? res.json() : Promise.reject()))
+        .then((data) => setDetailedOrder(data as OrderDetail))
+        .catch(() => undefined);
     } catch {
-      alert('Error');
+      alert(systemLocale === 'fr' ? 'Erreur réseau' : 'Network error');
     }
   };
 
+  const handleCreateShipment = async (id: string) => {
+    const tracking = prompt(systemLocale === 'fr' ? 'Numéro de suivi :' : 'Tracking number:');
+    if (!tracking) return;
+    const carrierInput = prompt(
+      (systemLocale === 'fr' ? 'Transporteur : ' : 'Carrier: ') + CARRIERS.join(', '),
+      'Colissimo',
+    );
+    if (!carrierInput) return;
+    const carrier = CARRIERS.find((c) => c.toLowerCase() === carrierInput.trim().toLowerCase()) || carrierInput.trim();
+    await patchOrder(detailedOrder?.id || id, { status: 'shipped', trackingNumber: tracking, carrier });
+  };
+
   const handleRefund = async (id: string) => {
-    if (confirm(systemLocale === 'fr' ? 'Rembourser cette commande ?' : 'Refund this order?')) {
-      const targetOrderDbId = detailedOrder?.id || id;
-      try {
-        const response = await fetch(`/api/admin/orders/${targetOrderDbId}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'refunded' }),
-        });
-        if (response.ok) {
-          refreshOrders();
-          fetch(`/api/admin/orders/${targetOrderDbId}`)
-            .then((res) => (res.ok ? res.json() : Promise.reject()))
-            .then((data) => setDetailedOrder(data))
-            .catch(() => undefined);
-        }
-      } catch {
-        alert('Error');
-      }
-    }
+    if (!confirm(systemLocale === 'fr' ? 'Rembourser cette commande ?' : 'Refund this order?')) return;
+    await patchOrder(detailedOrder?.id || id, { status: 'refunded' });
+  };
+
+  const handleTransition = async (id: string, status: 'preparing' | 'delivered' | 'cancelled') => {
+    if (status === 'cancelled' && !confirm(systemLocale === 'fr' ? 'Annuler cette commande ?' : 'Cancel this order?')) return;
+    await patchOrder(detailedOrder?.id || id, { status });
   };
 
   return (
@@ -585,24 +589,51 @@ export default function CommandesPage() {
             </div>
           </div>
 
-          {/* Delivery Process Actions */}
-          <div className="pt-4 border-t border-admin-border/60 flex items-center gap-3">
-            {activeOrder.deliveryStatus === 'preparing' && (
+          {/* Delivery Process Actions — driven by the real order status (state machine) */}
+          <div className="pt-4 border-t border-admin-border/60 flex flex-wrap items-center gap-3">
+            {detailedOrder?.status === 'paid' && (
               <button
-                onClick={() => handleCreateShipment(activeOrder.id)}
-                className="flex-1 h-10 bg-black text-white hover:bg-neutral-800 transition font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                onClick={() => handleTransition(activeOrder.id, 'preparing')}
+                className="flex-1 min-w-[150px] h-10 bg-black text-white hover:bg-neutral-800 transition font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <Truck className="size-4" />
-                <span>Créer l'expédition</span>
+                <Package className="size-4" />
+                <span>{systemLocale === 'fr' ? 'Marquer en préparation' : 'Mark preparing'}</span>
               </button>
             )}
-            {activeOrder.paymentStatus === 'paid' && (
+            {detailedOrder?.status === 'preparing' && (
+              <button
+                onClick={() => handleCreateShipment(activeOrder.id)}
+                className="flex-1 min-w-[150px] h-10 bg-black text-white hover:bg-neutral-800 transition font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Truck className="size-4" />
+                <span>{systemLocale === 'fr' ? "Créer l'expédition" : 'Create shipment'}</span>
+              </button>
+            )}
+            {detailedOrder?.status === 'shipped' && (
+              <button
+                onClick={() => handleTransition(activeOrder.id, 'delivered')}
+                className="flex-1 min-w-[150px] h-10 bg-black text-white hover:bg-neutral-800 transition font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <CheckCircle className="size-4" />
+                <span>{systemLocale === 'fr' ? 'Marquer livré' : 'Mark delivered'}</span>
+              </button>
+            )}
+            {(detailedOrder?.status === 'paid' || detailedOrder?.status === 'preparing' || detailedOrder?.status === 'pending_payment') && (
+              <button
+                onClick={() => handleTransition(activeOrder.id, 'cancelled')}
+                className="h-10 px-4 border border-admin-border bg-white text-admin-text hover:bg-neutral-50 transition font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <X className="size-4 text-admin-muted" />
+                <span>{systemLocale === 'fr' ? 'Annuler' : 'Cancel'}</span>
+              </button>
+            )}
+            {detailedOrder != null && ['paid', 'preparing', 'shipped', 'delivered'].includes(detailedOrder.status) && (
               <button
                 onClick={() => handleRefund(activeOrder.id)}
-                className="flex-1 h-10 border border-admin-border bg-white text-admin-text hover:bg-neutral-50 transition font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                className="h-10 px-4 border border-admin-border bg-white text-admin-text hover:bg-neutral-50 transition font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <RotateCcw className="size-4 text-admin-muted" />
-                <span>Rembourser</span>
+                <span>{systemLocale === 'fr' ? 'Rembourser' : 'Refund'}</span>
               </button>
             )}
           </div>
