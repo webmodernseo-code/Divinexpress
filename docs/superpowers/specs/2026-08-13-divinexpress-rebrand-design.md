@@ -79,6 +79,28 @@ identifiants internes non visibles. Renommés :
 réinitialise les paniers/favoris de dev et invalide les sessions admin ouvertes
 (re-login une fois). Les tests qui asservissent ces clés sont mis à jour en lockstep.
 
+### Identifiants couplés (renommer les deux côtés ensemble)
+
+| Identifiant | Définition | Consommateur(s) | Après |
+|---|---|---|---|
+| Cookie session admin | `auth/runtime.ts` | `api/auth/logout/route.ts` (regex) | divinexpress_admin_session |
+| Variables CSS polices | `lib/fonts.ts` | `app/globals.css` | --divinexpress-font-sans/serif |
+| Email seed par défaut | `.env.example` | `connexion/actions.ts` (fallback) | admin@divinexpress.local |
+
+### Chaînes visibles côté client (paiement)
+
+| Emplacement | Avant | Après |
+|---|---|---|
+| Libellé de commande Stripe (`stripe-provider.ts`) | Reign Order #… | DivinExpress Order #… |
+| Description Genius Pay (`genius-provider.ts`) | Reign Order #… | DivinExpress Order #… |
+
+### Résidus attendus après rebrand (chemins d'images, conservés)
+
+`grep -ri reign src messages` doit ne laisser QUE : `/branding/logo-reign.png`,
+`/branding/logo-reign-white.png`, `/image/reign-admin-hoodie.png` (dans `Logo.tsx`,
+`Footer.tsx`, `AdminShell.tsx`, `LoginPanel.tsx`, `seo.ts`, `dashboard/queries.ts`,
+`produits/page.tsx`, `commandes/page.tsx`, et le test `Footer.test.tsx`).
+
 ## Périmètre
 
 ### Dans le périmètre (à modifier)
