@@ -299,6 +299,26 @@ export default function CommandesPage() {
     await patchOrder(detailedOrder?.id || id, { status });
   };
 
+  const handleCreateReturn = async (id: string) => {
+    const reason = prompt(systemLocale === 'fr' ? 'Motif du retour :' : 'Return reason:');
+    if (!reason || !reason.trim()) return;
+    try {
+      const response = await fetch('/api/admin/returns', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: detailedOrder?.id || id, reason: reason.trim() }),
+      });
+      if (!response.ok) {
+        const err = (await response.json().catch(() => ({}))) as { error?: string };
+        alert(systemLocale === 'fr' ? `Échec: ${err.error || 'inconnu'}` : `Failed: ${err.error || 'unknown'}`);
+        return;
+      }
+      alert(systemLocale === 'fr' ? 'Retour créé (visible dans la page Retours).' : 'Return created (see the Returns page).');
+    } catch {
+      alert(systemLocale === 'fr' ? 'Erreur réseau' : 'Network error');
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-in text-admin-text font-sans">
       
@@ -634,6 +654,15 @@ export default function CommandesPage() {
               >
                 <RotateCcw className="size-4 text-admin-muted" />
                 <span>{systemLocale === 'fr' ? 'Rembourser' : 'Refund'}</span>
+              </button>
+            )}
+            {detailedOrder != null && ['paid', 'preparing', 'shipped', 'delivered'].includes(detailedOrder.status) && (
+              <button
+                onClick={() => handleCreateReturn(activeOrder.id)}
+                className="h-10 px-4 border border-admin-border bg-white text-admin-text hover:bg-neutral-50 transition font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <FileText className="size-4 text-admin-muted" />
+                <span>{systemLocale === 'fr' ? 'Créer un retour' : 'Create return'}</span>
               </button>
             )}
           </div>

@@ -1,8 +1,34 @@
+import { randomUUID } from 'node:crypto';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getCurrentAdmin } from '@/server/auth/runtime';
 import { requireRole } from '@/server/auth/authorization';
 import { getCommerceDatabase } from '@/server/db/runtime';
+
+const createSchema = z.object({
+  orderId: z.string().min(1),
+  reason: z.string().trim().min(1),
+});
+
+export async function POST(request: Request) {
+  const admin = await getCurrentAdmin();
+  if (!admin) return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
+  try {
+    requireRole(admin.role, ['owner', 'manager', 'support']);
+    const body = createSchema.parse(await request.json());
+    const db = await getCommerceDatabase();
+    const order = (await db.prepare(`SELECT id FROM orders WHERE id = ? OR number = ?`)
+      .get(body.orderId, body.orderId)) as { id: string } | undefined;
+    if (!order) return NextResponse.json({ error: 'ORDER_NOT_FOUND' }, { status: 404 });
+    const id = randomUUID();
+    await db.prepare(`INSERT INTO returns (id, order_id, status, reason) VALUES (?, ?, 'requested', ?)`)
+      .run(id, order.id, body.reason);
+    return NextResponse.json({ id }, { status: 201 });
+  } catch (error) {
+    if (error instanceof z.ZodError) return NextResponse.json({ error: 'INVALID_INPUT' }, { status: 400 });
+    return NextResponse.json({ error: 'RETURN_CREATE_FAILED' }, { status: 500 });
+  }
+}
 
 const patchSchema = z.object({
   id: z.string().min(1),
