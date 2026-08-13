@@ -37,14 +37,20 @@ export class CatalogRepository {
     try {
       await this.database.prepare(`INSERT INTO products
         (id, category_id, slug, name_fr, name_en, description_fr, description_en, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'active')`)
-        .run(input.id, input.categoryId, input.slug, input.nameFr, input.nameEn, input.descriptionFr, input.descriptionEn);
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
+        .run(input.id, input.categoryId, input.slug, input.nameFr, input.nameEn,
+          input.descriptionFr, input.descriptionEn, input.status ?? 'active');
       const insertVariant = this.database.prepare(`INSERT INTO product_variants
         (id, product_id, sku, size, color, price_minor, currency, compare_at_price_minor)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
+      const insertMovement = this.database.prepare(`INSERT INTO inventory_movements
+        (id, variant_id, quantity_delta, reason) VALUES (?, ?, ?, 'initial')`);
       for (const variant of input.variants) {
         await insertVariant.run(variant.id, input.id, variant.sku, variant.size, variant.color,
           variant.priceMinor, variant.currency, input.compareAtPriceMinor ?? null);
+        if ((variant.stock ?? 0) > 0) {
+          await insertMovement.run(randomUUID(), variant.id, variant.stock);
+        }
       }
       const insertMedia = this.database.prepare(`INSERT INTO product_media
         (id, product_id, url, position) VALUES (?, ?, ?, ?)`);

@@ -104,4 +104,20 @@ describe('CatalogRepository', () => {
     expect(product?.variants.map((variant) => variant.priceMinor)).toEqual([14900, 14900]);
     expect(product?.variants.reduce((total, variant) => total + variant.stock, 0)).toBe(10);
   });
+
+  it('creates a product with per-variant initial stock and honors status', async () => {
+    const product = await repository.createProduct({
+      id: 'p-multi', categoryId: 'category:test', slug: 'multi-tee',
+      nameFr: 'T', nameEn: 'T', descriptionFr: 'd', descriptionEn: 'd',
+      status: 'draft',
+      variants: [
+        { id: 'v-s', sku: 'SKU-S', size: 'S', color: 'Noir', priceMinor: 5000, currency: 'EUR', stock: 3 },
+        { id: 'v-m', sku: 'SKU-M', size: 'M', color: 'Noir', priceMinor: 5000, currency: 'EUR', stock: 0 },
+      ],
+    });
+    expect(product.status).toBe('draft');
+    const byId = Object.fromEntries(product.variants.map((variant) => [variant.id, variant.stock]));
+    expect(byId['v-s']).toBe(3);
+    expect(byId['v-m']).toBe(0);
+  });
 });

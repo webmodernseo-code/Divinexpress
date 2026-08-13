@@ -7,6 +7,7 @@ export const productVariantInputSchema = z.object({
   color: z.string().trim().min(1).nullable(),
   priceMinor: z.number().int().nonnegative(),
   currency: z.enum(['EUR', 'GBP']),
+  stock: z.number().int().nonnegative().optional(),
 });
 
 export const createProductInputSchema = z.object({
@@ -19,6 +20,7 @@ export const createProductInputSchema = z.object({
   descriptionEn: z.string(),
   images: z.array(z.string().url()).max(6).optional(),
   compareAtPriceMinor: z.number().int().nonnegative().optional(),
+  status: z.enum(['draft', 'active']).optional(),
   variants: z.array(productVariantInputSchema).min(1),
 });
 
