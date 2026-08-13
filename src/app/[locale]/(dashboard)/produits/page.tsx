@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
-import { 
-  Search, 
-  Plus, 
-  Eye, 
-  Trash2, 
+import {
+  Search,
+  Plus,
+  Pencil,
+  Trash2,
   AlertTriangle,
   X
 } from 'lucide-react';
@@ -26,7 +26,12 @@ type ProductItem = {
   categoryId: string;
   descriptionFr: string;
   descriptionEn: string;
+  images: string[];
+  variants: Array<{ id: string; size: string | null; color: string | null; stock: number }>;
 };
+
+type VariantRow = { size: string; color: string; stock: string };
+const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Unique'];
 
 const categoryMap: Record<string, { fr: string, en: string }> = {
   'category:homme': { fr: 'Homme', en: 'Men' },
@@ -54,6 +59,9 @@ interface CatalogProductRaw {
   status: 'active' | 'draft' | 'archived';
   images?: string[];
   variants: Array<{
+    id: string;
+    size: string | null;
+    color: string | null;
     priceMinor: number;
     stock: number;
   }>;
@@ -82,6 +90,8 @@ export default function ProduitsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formCompareAt, setFormCompareAt] = useState('');
   const [formImages, setFormImages] = useState<string[]>([]);
+  const [formVariants, setFormVariants] = useState<VariantRow[]>([{ size: 'M', color: 'Noir', stock: '' }]);
+  const [loadError, setLoadError] = useState(false);
 
   const refreshProducts = () => {
     fetch('/api/admin/products')
@@ -105,11 +115,45 @@ export default function ProduitsPage() {
             categoryId: p.categoryId,
             descriptionFr: p.descriptionFr || '',
             descriptionEn: p.descriptionEn || '',
+            images: p.images ?? [],
+            variants: (p.variants ?? []).map((v) => ({ id: v.id, size: v.size, color: v.color, stock: v.stock ?? 0 })),
           };
         });
         setProducts(mapped);
+        setLoadError(false);
       })
-      .catch(() => undefined);
+      .catch(() => setLoadError(true));
+  };
+
+  const addVariantRow = () => setFormVariants((rows) => [...rows, { size: 'M', color: 'Noir', stock: '' }]);
+  const removeVariantRow = (i: number) => setFormVariants((rows) => rows.filter((_, idx) => idx !== i));
+  const updateVariantRow = (i: number, patch: Partial<VariantRow>) =>
+    setFormVariants((rows) => rows.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
+
+  const adjustVariantStockApi = async (pid: string, vid: string, stock: number) => {
+    const r = await fetch(`/api/admin/products/${pid}/variants/${vid}`, {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ stock }),
+    });
+    if (!r.ok) alert(systemLocale === 'fr' ? 'Échec ajustement stock' : 'Stock update failed');
+    else refreshProducts();
+  };
+  const deactivateVariantApi = async (pid: string, vid: string) => {
+    if (!confirm(systemLocale === 'fr' ? 'Désactiver cette variante ?' : 'Deactivate this variant?')) return;
+    const r = await fetch(`/api/admin/products/${pid}/variants/${vid}`, {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ active: false }),
+    });
+    if (!r.ok) alert(systemLocale === 'fr' ? 'Échec' : 'Failed'); else refreshProducts();
+  };
+  const addVariantApi = async (pid: string) => {
+    const size = prompt(systemLocale === 'fr' ? 'Taille (XS..XXL ou Unique)' : 'Size (XS..XXL or Unique)') ?? '';
+    if (!size) return;
+    const color = prompt(systemLocale === 'fr' ? 'Couleur' : 'Color') ?? 'Noir';
+    const stock = parseInt(prompt(systemLocale === 'fr' ? 'Stock' : 'Stock') ?? '0') || 0;
+    const r = await fetch(`/api/admin/products/${pid}/variants`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ size: size === 'Unique' ? null : size, color, stock }),
+    });
+    if (!r.ok) alert(systemLocale === 'fr' ? 'Échec ajout variante' : 'Add failed'); else refreshProducts();
   };
 
   useEffect(() => {
@@ -158,6 +202,7 @@ export default function ProduitsPage() {
     setFormStatus('active');
     setFormCompareAt('');
     setFormImages([]);
+    setFormVariants([{ size: 'M', color: 'Noir', stock: '' }]);
     setShowModal(true);
   };
 
@@ -172,7 +217,7 @@ export default function ProduitsPage() {
     setFormStock(String(product.stock));
     setFormStatus(product.status === 'archived' ? 'draft' : product.status);
     setFormCompareAt('');
-    setFormImages([]);
+    setFormImages(product.images);
     setShowModal(true);
   };
 
@@ -193,7 +238,6 @@ export default function ProduitsPage() {
 
     const payload = {
       categoryId: formCategoryId,
-      slug,
       nameFr: formName,
       nameEn: formNameEn || formName,
       descriptionFr: formDescriptionFr,
@@ -201,6 +245,8 @@ export default function ProduitsPage() {
       status: formStatus,
       priceMinor: priceMinorValue,
       stock: stockNum,
+      images: formImages,
+      ...(formCompareAt ? { compareAtPriceMinor: Math.round(parseFloat(formCompareAt) * 100) } : {}),
     };
 
     try {
@@ -213,10 +259,19 @@ export default function ProduitsPage() {
           body: JSON.stringify(payload),
         });
       } else {
-        // Create new product
+        // Create new product with its variants (size / color / stock)
         const uniqueId = `prod-${slug}-${Math.floor(1000 + Math.random() * 9000)}`;
         const sku = `DIVINEXPRESS-${slug.toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
-        
+        const variants = formVariants.map((v, idx) => ({
+          id: `var-${uniqueId}-${idx}`,
+          sku: `${sku}-${(v.size || 'U')}-${idx}`,
+          size: v.size === 'Unique' ? null : v.size,
+          color: v.color || null,
+          priceMinor: priceMinorValue,
+          currency: 'EUR' as const,
+          stock: parseInt(v.stock) || 0,
+        }));
+
         const createPayload = {
           id: uniqueId,
           categoryId: formCategoryId,
@@ -227,16 +282,8 @@ export default function ProduitsPage() {
           descriptionEn: formDescriptionEn || formDescriptionFr,
           images: formImages,
           compareAtPriceMinor: formCompareAt ? Math.round(parseFloat(formCompareAt) * 100) : undefined,
-          variants: [
-            {
-              id: `var-${uniqueId}-m-black`,
-              sku,
-              size: 'M',
-              color: 'Noir',
-              priceMinor: priceMinorValue,
-              currency: 'EUR' as const,
-            }
-          ]
+          status: formStatus,
+          variants,
         };
 
         res = await fetch('/api/admin/products', {
@@ -244,15 +291,6 @@ export default function ProduitsPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(createPayload),
         });
-
-        if (res.ok && stockNum > 0) {
-          const createdProduct = await res.json() as { id: string };
-          await fetch(`/api/admin/products/${createdProduct.id}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ stock: stockNum }),
-          });
-        }
       }
 
       if (res.ok) {
@@ -304,6 +342,15 @@ export default function ProduitsPage() {
           <span>{systemLocale === 'fr' ? 'Nouveau produit' : 'New product'}</span>
         </button>
       </div>
+
+      {loadError && (
+        <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">
+          <AlertTriangle className="size-4" />
+          {systemLocale === 'fr'
+            ? 'Impossible de charger les produits. Vérifiez votre connexion et réessayez.'
+            : 'Failed to load products. Check your connection and retry.'}
+        </div>
+      )}
 
       {/* Filter and Search Bar */}
       <div className="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
@@ -405,7 +452,7 @@ export default function ProduitsPage() {
                           className="p-2 text-admin-muted hover:text-black transition cursor-pointer" 
                           aria-label="Edit product"
                         >
-                          <Eye className="size-4" />
+                          <Pencil className="size-4" />
                         </button>
                         <button 
                           onClick={() => deleteProduct(product.id)} 
@@ -559,51 +606,101 @@ export default function ProduitsPage() {
                   />
                 </label>
 
-                {/* Stock */}
-                <label className="block">
-                  <span className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
-                    {systemLocale === 'fr' ? 'Stock de départ' : 'Initial Stock'}
-                  </span>
-                  <input
-                    type="number"
-                    required
-                    value={formStock}
-                    onChange={(e) => setFormStock(e.target.value)}
-                    className="w-full h-11 px-3.5 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 rounded-xl outline-none transition text-xs font-semibold text-slate-800"
-                  />
-                </label>
+                {/* Stock global — édition seulement (la création gère le stock par variante) */}
+                {editingProduct && (
+                  <label className="block">
+                    <span className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                      {systemLocale === 'fr' ? 'Stock (global)' : 'Stock (global)'}
+                    </span>
+                    <input
+                      type="number"
+                      value={formStock}
+                      onChange={(e) => setFormStock(e.target.value)}
+                      className="w-full h-11 px-3.5 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 rounded-xl outline-none transition text-xs font-semibold text-slate-800"
+                    />
+                  </label>
+                )}
               </div>
 
+              {/* Variantes (taille / couleur / stock) — création */}
               {!editingProduct && (
-                <label className="block sm:w-1/2 sm:pr-2">
-                  <span className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
-                    {systemLocale === 'fr' ? 'Prix initial barré (EUR)' : 'Original struck-through price (EUR)'}
+                <div className="space-y-2">
+                  <span className="block text-xs font-bold text-slate-600 uppercase tracking-wider">
+                    {systemLocale === 'fr' ? 'Variantes (taille / couleur / stock)' : 'Variants (size / color / stock)'}
                   </span>
-                  <input
-                    type="number"
-                    step="0.01"
-                    value={formCompareAt}
-                    onChange={(e) => setFormCompareAt(e.target.value)}
-                    placeholder={systemLocale === 'fr' ? 'Optionnel (promo)' : 'Optional (sale)'}
-                    className="w-full h-11 px-3.5 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 rounded-xl outline-none transition text-xs font-semibold text-slate-800"
-                  />
-                </label>
+                  {formVariants.map((v, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <select value={v.size} onChange={(e) => updateVariantRow(i, { size: e.target.value })} className="h-10 px-2 border border-slate-200 rounded-lg text-xs">
+                        {SIZES.map((s) => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                      <input value={v.color} onChange={(e) => updateVariantRow(i, { color: e.target.value })} placeholder={systemLocale === 'fr' ? 'Couleur' : 'Color'} className="h-10 px-2 border border-slate-200 rounded-lg text-xs flex-1" />
+                      <input type="number" min="0" value={v.stock} onChange={(e) => updateVariantRow(i, { stock: e.target.value })} placeholder="Stock" className="h-10 px-2 border border-slate-200 rounded-lg text-xs w-24" />
+                      {formVariants.length > 1 && (
+                        <button type="button" onClick={() => removeVariantRow(i)} aria-label="remove" className="p-2 text-admin-muted hover:text-admin-error"><X className="size-4" /></button>
+                      )}
+                    </div>
+                  ))}
+                  <button type="button" onClick={addVariantRow} className="text-xs font-bold text-indigo-600 hover:text-indigo-700">
+                    + {systemLocale === 'fr' ? 'Ajouter une variante' : 'Add a variant'}
+                  </button>
+                </div>
               )}
 
-              {!editingProduct && (
-                <div className="block">
-                  <span className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
-                    {systemLocale === 'fr' ? 'Images (jusqu’à 6)' : 'Images (up to 6)'}
+              <label className="block sm:w-1/2 sm:pr-2">
+                <span className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                  {systemLocale === 'fr' ? 'Prix initial barré (EUR)' : 'Original struck-through price (EUR)'}
+                </span>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={formCompareAt}
+                  onChange={(e) => setFormCompareAt(e.target.value)}
+                  placeholder={editingProduct
+                    ? (systemLocale === 'fr' ? 'Laisser vide = inchangé' : 'Leave empty = unchanged')
+                    : (systemLocale === 'fr' ? 'Optionnel (promo)' : 'Optional (sale)')}
+                  className="w-full h-11 px-3.5 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 rounded-xl outline-none transition text-xs font-semibold text-slate-800"
+                />
+              </label>
+
+              <div className="block">
+                <span className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                  {systemLocale === 'fr' ? 'Images (jusqu’à 6)' : 'Images (up to 6)'}
+                </span>
+                <ImageUploader
+                  value={formImages}
+                  onChange={setFormImages}
+                  labels={{
+                    add: systemLocale === 'fr' ? 'Ajouter' : 'Add',
+                    uploading: systemLocale === 'fr' ? 'Envoi…' : 'Uploading…',
+                    remove: systemLocale === 'fr' ? 'Supprimer' : 'Remove'
+                  }}
+                />
+              </div>
+
+              {/* Gestion des variantes — édition */}
+              {editingProduct && (
+                <div className="space-y-2 border-t border-slate-100 pt-4">
+                  <span className="block text-xs font-bold text-slate-600 uppercase tracking-wider">
+                    {systemLocale === 'fr' ? 'Variantes' : 'Variants'}
                   </span>
-                  <ImageUploader
-                    value={formImages}
-                    onChange={setFormImages}
-                    labels={{
-                      add: systemLocale === 'fr' ? 'Ajouter' : 'Add',
-                      uploading: systemLocale === 'fr' ? 'Envoi…' : 'Uploading…',
-                      remove: systemLocale === 'fr' ? 'Supprimer' : 'Remove'
-                    }}
-                  />
+                  {editingProduct.variants.map((v) => (
+                    <div key={v.id} className="flex items-center gap-2">
+                      <span className="text-xs flex-1 text-slate-700 font-semibold">{v.size ?? 'Unique'} / {v.color ?? '—'}</span>
+                      <input
+                        type="number"
+                        min="0"
+                        defaultValue={v.stock}
+                        onBlur={(e) => adjustVariantStockApi(editingProduct.id, v.id, parseInt(e.target.value) || 0)}
+                        className="h-9 px-2 border border-slate-200 rounded-lg text-xs w-24"
+                      />
+                      <button type="button" onClick={() => deactivateVariantApi(editingProduct.id, v.id)} aria-label="deactivate variant" className="p-2 text-admin-muted hover:text-admin-error">
+                        <Trash2 className="size-4" />
+                      </button>
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => addVariantApi(editingProduct.id)} className="text-xs font-bold text-indigo-600 hover:text-indigo-700">
+                    + {systemLocale === 'fr' ? 'Ajouter une variante' : 'Add a variant'}
+                  </button>
                 </div>
               )}
 
