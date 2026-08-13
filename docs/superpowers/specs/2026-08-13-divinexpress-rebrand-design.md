@@ -52,6 +52,32 @@ et mélangerait les trois casses.
 | Admin seed (`.env.example`) | admin@reign.local | admin@divinexpress.local |
 | Persona IA (`agent.ts`, `rules.ts`) | assistant/équipe Reign | assistant/équipe DivinExpress |
 | Produits (nom, gravure, patch — `products.ts`) | Reign | DivinExpress |
+| Metadata `<title>`/description (`layout.tsx`) | Reign | DivinExpress |
+| Fil d'Ariane JSON-LD (`page.tsx`, `produit/[slug]`) | Reign | DivinExpress |
+| Email support admin (`LoginPanel.tsx`) | support@reign.com | support@divinexpress.fr |
+| Email boutique (`parametres`, `settings` route) | contact@reign-store.com · contact@reign.webmodernseo.co | contact@divinexpress.fr |
+| Préfixe SKU généré (`produits/page.tsx`) | REIGN- | DIVINEXPRESS- |
+| Dossier Cloudinary (fixtures de test) | reign/products | divinexpress/products |
+
+### Identifiants fonctionnels (clés de stockage / cookie)
+
+Ta consigne « remplacer **tout** ce qui est pseudo reign » couvre aussi les
+identifiants internes non visibles. Renommés :
+
+| Identifiant | Avant | Après |
+|---|---|---|
+| localStorage panier (`CartContext`) | reign-cart | divinexpress-cart |
+| localStorage favoris (`FavoritesContext`) | reign-favorites-v2 | divinexpress-favorites-v2 |
+| localStorage devise (`CurrencyContext`) | reign-currency | divinexpress-currency |
+| localStorage livraison (`CheckoutContext`) | reign-checkout-shipping | divinexpress-checkout-shipping |
+| localStorage idempotence (`paiement/page.tsx`) | reign-checkout-idempotency | divinexpress-checkout-idempotency |
+| localStorage cookies (`CookieBanner`) | reign-cookie-consent | divinexpress-cookie-consent |
+| localStorage admin démo (`admin/repository.ts`) | reign:admin-demo:v1 | divinexpress:admin-demo:v1 |
+| Cookie session admin (`auth/runtime.ts`) | reign_admin_session | divinexpress_admin_session |
+
+**Effet de bord (nul en prod, site pas encore live) :** renommer ces clés
+réinitialise les paniers/favoris de dev et invalide les sessions admin ouvertes
+(re-login une fois). Les tests qui asservissent ces clés sont mis à jour en lockstep.
 
 ## Périmètre
 
@@ -68,10 +94,15 @@ et mélangerait les trois casses.
 - `.env.example` — `NEXT_PUBLIC_SITE_URL` (commentaire), `DATABASE_URL` par défaut,
   `SEED_ADMIN_EMAIL`.
 - `package.json` — champ `name`.
+- `src/app/[locale]/layout.tsx` — `title`/`description` metadata.
+- `src/app/[locale]/page.tsx`, `src/app/[locale]/produit/[slug]/page.tsx` — fil d'Ariane JSON-LD.
 - Composants d'affichage restants signalés par la recherche : `Footer`, `CookieBanner`,
   `LoginPanel`, `AdminSidebar`, `AdminShell`, pages dashboard
   (`produits`, `clients`, `commandes`, `parametres`), route `api/admin/settings`,
   `server/auth/runtime.ts`, `server/dashboard/queries.ts`, etc.
+- Contexts et clés de stockage : `CartContext`, `FavoritesContext`, `CurrencyContext`,
+  `CheckoutContext`, `app/[locale]/commande/paiement/page.tsx`, `lib/admin/repository.ts`
+  (voir table « Identifiants fonctionnels »).
 - **Les fichiers de test associés** (`*.test.ts(x)`) qui vérifient des chaînes « Reign »,
   mis à jour en lockstep.
 
