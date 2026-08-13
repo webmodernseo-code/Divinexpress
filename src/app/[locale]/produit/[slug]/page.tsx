@@ -71,7 +71,7 @@ export default async function ProductPage({
               description: product.description[localizedLocale],
               url: productUrl,
               priceEur: product.priceEur,
-              imageUrl: `${SITE_URL}/branding/logo-reign.png`
+              imageUrl: `${SITE_URL}/branding/logo-divinexpress.png`
             })
           )
         }}

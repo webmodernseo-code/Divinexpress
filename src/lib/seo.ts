@@ -39,7 +39,7 @@ export function organizationJsonLd() {
     '@type': 'Organization',
     name: 'DivinExpress',
     url: SITE_URL,
-    logo: `${SITE_URL}/branding/logo-reign.png`
+    logo: `${SITE_URL}/branding/logo-divinexpress.png`
   };
 }
 

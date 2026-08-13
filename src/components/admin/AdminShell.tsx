@@ -43,9 +43,9 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       <div className="flex h-[70px] items-center gap-2 border-b border-admin-border px-6">
         <div className="flex items-center gap-2">
           <Image
-            src="/branding/logo-reign.png"
+            src="/branding/logo-divinexpress.png"
             alt="DivinExpress"
-            width={85}
+            width={90}
             height={30}
             priority
             className="h-6 w-auto"

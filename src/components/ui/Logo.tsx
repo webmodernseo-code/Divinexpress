@@ -5,9 +5,9 @@ export function Logo({ className = '' }: { className?: string }) {
   return (
     <Link href="/" aria-label="DivinExpress — accueil" className={`inline-flex items-center ${className}`}>
       <Image
-        src="/branding/logo-reign.png"
+        src="/branding/logo-divinexpress.png"
         alt="DivinExpress"
-        width={193}
+        width={201}
         height={67}
         priority
         className="h-8 w-auto md:h-10"

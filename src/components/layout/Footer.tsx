@@ -67,9 +67,9 @@ export function Footer() {
         <div className="py-2 lg:grid lg:grid-cols-[1.35fr_0.8fr_0.8fr_0.8fr] lg:gap-12 lg:py-8">
           <div className="mb-2 flex flex-row items-center justify-between gap-4 lg:mb-0 lg:flex-col lg:items-start">
             <Image
-              src="/branding/logo-reign.png"
+              src="/branding/logo-divinexpress.png"
               alt="DivinExpress"
-              width={193}
+              width={201}
               height={67}
               className="h-auto w-[92px] object-contain lg:w-[110px]"
             />

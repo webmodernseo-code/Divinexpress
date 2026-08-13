@@ -54,9 +54,9 @@ export function LoginPanel({ locale, action }: {
             {/* Real Logo in login panel */}
             <div className="flex justify-center mb-6">
               <Image
-                src="/branding/logo-reign.png"
+                src="/branding/logo-divinexpress.png"
                 alt="DivinExpress"
-                width={120}
+                width={126}
                 height={42}
                 priority
                 className="h-9 w-auto"
