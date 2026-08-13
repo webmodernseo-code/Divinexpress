@@ -21,7 +21,7 @@ export async function loginAction(
   const fr = locale !== 'en';
 
   const isDev = process.env.NODE_ENV !== 'production';
-  const defaultEmail = process.env.SEED_ADMIN_EMAIL || 'admin@reign.local';
+  const defaultEmail = process.env.SEED_ADMIN_EMAIL || 'admin@divinexpress.local';
   const defaultPassword = process.env.SEED_ADMIN_PASSWORD || 'adminpassword';
 
   // In development, empty fields fall back to seed credentials for convenience.

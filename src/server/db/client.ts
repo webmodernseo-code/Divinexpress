@@ -68,7 +68,7 @@ function resolveDatabasePath(input: string): string {
   return absolute;
 }
 
-export function createDatabase(url = process.env.DATABASE_URL ?? 'file:./data/reign.db'): Database {
+export function createDatabase(url = process.env.DATABASE_URL ?? 'file:./data/divinexpress.db'): Database {
   if (url.startsWith('postgres://') || url.startsWith('postgresql://')) {
     const pgDb = new PgDatabase(url);
     openDatabases.add(pgDb);
