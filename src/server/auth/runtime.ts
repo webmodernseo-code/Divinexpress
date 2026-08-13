@@ -3,7 +3,7 @@ import { getCommerceDatabase } from '../db/runtime';
 import { SlidingWindowRateLimiter } from './rate-limit';
 import { AuthService } from './session';
 
-export const ADMIN_SESSION_COOKIE = 'reign_admin_session';
+export const ADMIN_SESSION_COOKIE = 'divinexpress_admin_session';
 export const loginRateLimiter = new SlidingWindowRateLimiter(5, 15 * 60 * 1_000);
 
 let service: AuthService | undefined;

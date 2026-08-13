@@ -26,7 +26,7 @@ describe('CartContext', () => {
     });
     expect(result.current.itemCount).toBe(1);
     await waitFor(() => {
-      const stored = JSON.parse(window.localStorage.getItem('reign-cart') ?? '[]');
+      const stored = JSON.parse(window.localStorage.getItem('divinexpress-cart') ?? '[]');
       expect(stored).toHaveLength(1);
     });
   });
@@ -43,11 +43,11 @@ describe('CartContext', () => {
   it('does not clobber existing localStorage data during the initial hydration effects', () => {
     const product = PRODUCTS[0];
     const seeded = [{ productId: product.id, size: 'M', color: 'Noir', quantity: 1 }];
-    window.localStorage.setItem('reign-cart', JSON.stringify(seeded));
+    window.localStorage.setItem('divinexpress-cart', JSON.stringify(seeded));
     const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
     renderHook(() => useCart(), { wrapper });
     const clobberedWithEmpty = setItemSpy.mock.calls.some(
-      ([key, value]) => key === 'reign-cart' && value === '[]'
+      ([key, value]) => key === 'divinexpress-cart' && value === '[]'
     );
     expect(clobberedWithEmpty).toBe(false);
     setItemSpy.mockRestore();

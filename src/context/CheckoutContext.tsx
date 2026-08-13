@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import type { ShippingFormValues } from '@/lib/checkoutValidation';
 
-const STORAGE_KEY = 'reign-checkout-shipping';
+const STORAGE_KEY = 'divinexpress-checkout-shipping';
 
 export interface CheckoutContextValue {
   shipping: ShippingFormValues | null;

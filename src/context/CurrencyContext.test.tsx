@@ -23,7 +23,7 @@ describe('CurrencyContext', () => {
     });
     expect(result.current.currency).toBe('GBP');
     await waitFor(() => {
-      expect(window.localStorage.getItem('reign-currency')).toBe('GBP');
+      expect(window.localStorage.getItem('divinexpress-currency')).toBe('GBP');
     });
   });
 
@@ -32,11 +32,11 @@ describe('CurrencyContext', () => {
   });
 
   it('does not clobber existing localStorage data during the initial hydration effects', () => {
-    window.localStorage.setItem('reign-currency', 'GBP');
+    window.localStorage.setItem('divinexpress-currency', 'GBP');
     const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
     renderHook(() => useCurrency(), { wrapper });
     const clobberedWithDefault = setItemSpy.mock.calls.some(
-      ([key, value]) => key === 'reign-currency' && value === 'EUR'
+      ([key, value]) => key === 'divinexpress-currency' && value === 'EUR'
     );
     expect(clobberedWithDefault).toBe(false);
     setItemSpy.mockRestore();

@@ -30,7 +30,7 @@ describe('FavoritesContext', () => {
     });
     expect(result.current.isFavorite('p1')).toBe(true);
     await waitFor(() => {
-      const stored = JSON.parse(window.localStorage.getItem('reign-favorites-v2') ?? '[]');
+      const stored = JSON.parse(window.localStorage.getItem('divinexpress-favorites-v2') ?? '[]');
       expect(stored).toEqual([product]);
     });
   });
@@ -47,11 +47,11 @@ describe('FavoritesContext', () => {
   });
 
   it('does not clobber existing localStorage data during the initial hydration effects', () => {
-    window.localStorage.setItem('reign-favorites-v2', JSON.stringify([product]));
+    window.localStorage.setItem('divinexpress-favorites-v2', JSON.stringify([product]));
     const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
     renderHook(() => useFavorites(), { wrapper });
     const clobberedWithEmpty = setItemSpy.mock.calls.some(
-      ([key, value]) => key === 'reign-favorites-v2' && value === '[]'
+      ([key, value]) => key === 'divinexpress-favorites-v2' && value === '[]'
     );
     expect(clobberedWithEmpty).toBe(false);
     setItemSpy.mockRestore();

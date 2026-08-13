@@ -66,7 +66,7 @@ export default function PaymentPage() {
       setSubmitting(true);
       setServerError('');
       try {
-        const storageKey = 'reign-checkout-idempotency';
+        const storageKey = 'divinexpress-checkout-idempotency';
         const idempotencyKey = window.sessionStorage.getItem(storageKey) ?? crypto.randomUUID();
         window.sessionStorage.setItem(storageKey, idempotencyKey);
         const response = await fetch('/api/checkout', {

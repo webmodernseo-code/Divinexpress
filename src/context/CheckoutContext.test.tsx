@@ -3,7 +3,7 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { CheckoutProvider, useCheckout } from './CheckoutContext';
 import type { ShippingFormValues } from '@/lib/checkoutValidation';
 
-const STORAGE_KEY = 'reign-checkout-shipping';
+const STORAGE_KEY = 'divinexpress-checkout-shipping';
 
 const sampleShipping: ShippingFormValues = {
   region: 'europe',

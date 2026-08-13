@@ -11,7 +11,7 @@ import {
   parseStoredCart
 } from '@/lib/cart';
 
-const STORAGE_KEY = 'reign-cart';
+const STORAGE_KEY = 'divinexpress-cart';
 
 export interface CartContextValue {
   items: CartItem[];

@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import type { Product } from '@/lib/products';
 import { parseStoredFavorites, toggleFavoriteProduct } from '@/lib/favorites';
 
-const STORAGE_KEY = 'reign-favorites-v2';
+const STORAGE_KEY = 'divinexpress-favorites-v2';
 
 export interface FavoritesContextValue {
   favoriteIds: string[];

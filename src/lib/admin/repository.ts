@@ -1,7 +1,7 @@
 import { createAdminDemoSeed } from './demoData';
 import type { AdminDemoState } from './types';
 
-export const ADMIN_STORAGE_KEY = 'reign:admin-demo:v1';
+export const ADMIN_STORAGE_KEY = 'divinexpress:admin-demo:v1';
 
 export function loadAdminDemoState(): AdminDemoState {
   if (typeof window === 'undefined') return createAdminDemoSeed();

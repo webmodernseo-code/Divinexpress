@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { CurrencyCode, defaultCurrencyForLocale } from '@/lib/currency';
 
-const STORAGE_KEY = 'reign-currency';
+const STORAGE_KEY = 'divinexpress-currency';
 
 export interface CurrencyContextValue {
   currency: CurrencyCode;

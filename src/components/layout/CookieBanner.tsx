@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 
-const STORAGE_KEY = 'reign-cookie-consent';
+const STORAGE_KEY = 'divinexpress-cookie-consent';
 
 export function CookieBanner() {
   const t = useTranslations('cookies');
