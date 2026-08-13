@@ -13,7 +13,7 @@
     "closeSearch": "Close search"
   },
   "common": {
-    "brand": "Reign"
+    "brand": "DivinExpress"
   },
   "header": {
     "freeShippingBanner": "Free shipping over €150"
@@ -96,7 +96,7 @@
     "promoKicker": "Limited offer",
     "promoTitle": "-10% on the whole collection",
     "promoBody": "Use this code at checkout. Valid until the end of the month.",
-    "promoCode": "REIGN10",
+    "promoCode": "DIVINEXPRESS10",
     "promoCopyButton": "Copy",
     "promoCopiedConfirmation": "Copied!",
     "promoDays": "Days",
@@ -105,7 +105,7 @@
     "promoSeconds": "Sec",
     "faqTitle": "Frequently asked questions",
     "editorialTitle": "Precision as a signature",
-    "editorialBody": "Every Reign piece starts with a choice: the fabric, the cut, the detail you don't see but always feel."
+    "editorialBody": "Every DivinExpress piece starts with a choice: the fabric, the cut, the detail you don't see but always feel."
   },
   "product": {
     "toggleFavorite": "Add to favorites",
@@ -240,8 +240,8 @@
     "backHome": "Back to home"
   },
   "about": {
-    "title": "About Reign",
-    "paragraph1": "Reign was built on a simple conviction: clothing should hold its shape, literally and figuratively. Every collection starts from a silhouette, not a trend.",
+    "title": "About DivinExpress",
+    "paragraph1": "DivinExpress was built on a simple conviction: clothing should hold its shape, literally and figuratively. Every collection starts from a silhouette, not a trend.",
     "paragraph2": "We work with a deliberately small number of materials and suppliers, to keep full control over the cut, construction, and finish of every piece.",
     "paragraph3": "Men, women, kids, accessories: one standard runs through every category — every piece is built to last, and built to command attention."
   },
@@ -280,10 +280,10 @@
       {
         "heading": "Site editor",
         "body": [
-          "The Reign website (hereinafter \"the Site\") is published by Reign SAS, a simplified joint-stock company (SAS) with share capital of €10,000, registered with the Paris Trade and Companies Register (RCS) under SIREN number [SIRET/SIREN NUMBER TO BE COMPLETED], and whose registered office is located at [REGISTERED OFFICE ADDRESS TO BE COMPLETED].",
+          "The DivinExpress website (hereinafter \"the Site\") is published by DivinExpress SAS, a simplified joint-stock company (SAS) with share capital of €10,000, registered with the Paris Trade and Companies Register (RCS) under SIREN number [SIRET/SIREN NUMBER TO BE COMPLETED], and whose registered office is located at [REGISTERED OFFICE ADDRESS TO BE COMPLETED].",
           "Intra-community VAT number: [VAT NUMBER TO BE COMPLETED]",
           "Publication director: [PUBLICATION DIRECTOR NAME TO BE COMPLETED]",
-          "Customer contact: contact@reign.example — Phone: [PHONE NUMBER TO BE COMPLETED] (Monday to Friday from 9 am to 6 pm)."
+          "Customer contact: contact@divinexpress.fr — Phone: [PHONE NUMBER TO BE COMPLETED] (Monday to Friday from 9 am to 6 pm)."
         ]
       },
       {
@@ -296,20 +296,20 @@
         "heading": "Intellectual property",
         "body": [
           "All elements present and published on the Site (including without limitation text, campaign photographs, category images, logos, trademarks, graphic designs, illustrations, animations, databases, and source code) are protected by the provisions of intellectual property law.",
-          "These contents are the exclusive property of Reign SAS or its licensors. Any reproduction, representation, modification, publication, or adaptation of all or part of the elements of the Site, by any means or process whatsoever, is strictly prohibited without the prior written authorization of Reign SAS. Any unauthorized use will be considered as constituting an infringement and prosecuted in accordance with international intellectual property laws."
+          "These contents are the exclusive property of DivinExpress SAS or its licensors. Any reproduction, representation, modification, publication, or adaptation of all or part of the elements of the Site, by any means or process whatsoever, is strictly prohibited without the prior written authorization of DivinExpress SAS. Any unauthorized use will be considered as constituting an infringement and prosecuted in accordance with international intellectual property laws."
         ]
       },
       {
         "heading": "Personal data and cookies",
         "body": [
-          "Reign SAS attaches great importance to the confidentiality and security of your personal information. The conditions for collecting and processing data collected on the Site are detailed in our Privacy Policy, available at the bottom of the page.",
+          "DivinExpress SAS attaches great importance to the confidentiality and security of your personal information. The conditions for collecting and processing data collected on the Site are detailed in our Privacy Policy, available at the bottom of the page.",
           "The Site only uses technical cookies strictly necessary for the operation of the online store (remembering navigation language, currency, and the content of your shopping basket)."
         ]
       },
       {
         "heading": "Applicable law and jurisdiction",
         "body": [
-          "These legal notices are governed by French law. In the event of a dispute regarding their interpretation or execution, and in the absence of an amicable resolution or recourse to an approved mediator, the competent French courts under the jurisdiction of the registered office of Reign SAS shall have sole authority to resolve the dispute."
+          "These legal notices are governed by French law. In the event of a dispute regarding their interpretation or execution, and in the absence of an amicable resolution or recourse to an approved mediator, the competent French courts under the jurisdiction of the registered office of DivinExpress SAS shall have sole authority to resolve the dispute."
         ]
       }
     ]
@@ -321,7 +321,7 @@
       {
         "heading": "Purpose and scope",
         "body": [
-          "These Terms of Sale define the contractual rights and obligations within the framework of sales of clothing and accessories concluded remotely via the Reign website (\"the Site\") between Reign SAS (\"the Seller\") and any individual acting as a consumer (\"the Customer\").",
+          "These Terms of Sale define the contractual rights and obligations within the framework of sales of clothing and accessories concluded remotely via the DivinExpress website (\"the Site\") between DivinExpress SAS (\"the Seller\") and any individual acting as a consumer (\"the Customer\").",
           "Any order confirmed on the Site implies full, prior, and unreserved acceptance by the Customer of these Terms of Sale. The Seller reserves the right to modify these Terms of Sale at any time. The applicable Terms are those in force and accepted by the Customer at the time of final validation of the order."
         ]
       },
@@ -370,7 +370,7 @@
       {
         "heading": "Returns and refunds policy",
         "body": [
-          "For commercial flexibility, Reign extends the return period to 30 days from receipt of the items. Products must be returned in their original condition, unworn, unwashed, with their original labels, and in their complete original packaging.",
+          "For commercial flexibility, DivinExpress extends the return period to 30 days from receipt of the items. Products must be returned in their original condition, unworn, unwashed, with their original labels, and in their complete original packaging.",
           "After receipt and validation by our workshops of the conformity of the returned items, the refund will be processed within a maximum period of 14 days using the same payment method used for the initial purchase."
         ]
       },
@@ -397,7 +397,7 @@
         "heading": "Applicable law and dispute resolution",
         "body": [
           "These Terms of Sale are governed by French law. In the event of a dispute, the Customer is invited to contact customer service first to find an amicable solution.",
-          "In the absence of an amicable agreement, the Customer has the option to submit the dispute to an approved consumer mediator. If no amicable solution is found, French courts under the jurisdiction of Reign SAS's registered office shall have sole authority."
+          "In the absence of an amicable agreement, the Customer has the option to submit the dispute to an approved consumer mediator. If no amicable solution is found, French courts under the jurisdiction of DivinExpress SAS's registered office shall have sole authority."
         ]
       }
     ]
@@ -409,8 +409,8 @@
       {
         "heading": "Data controller",
         "body": [
-          "Reign SAS, registered with the Paris Trade and Companies Register, is the data controller of personal data collected from users on the Reign website.",
-          "For any questions regarding your personal data or to exercise your rights, you can write to us at the following address: [POSTAL ADDRESS OF CONTROLLER TO BE COMPLETED], or by email at contact@reign.example."
+          "DivinExpress SAS, registered with the Paris Trade and Companies Register, is the data controller of personal data collected from users on the DivinExpress website.",
+          "For any questions regarding your personal data or to exercise your rights, you can write to us at the following address: [POSTAL ADDRESS OF CONTROLLER TO BE COMPLETED], or by email at contact@divinexpress.fr."
         ]
       },
       {
@@ -429,14 +429,14 @@
       {
         "heading": "Legal bases for processing",
         "body": [
-          "The collection of your data is based on the following legal bases: the execution of obligations arising from the sales contract (processing and delivery of your order), compliance with our legal obligations (accounting and tax archiving), and the legitimate interest of Reign (responding to your requests sent via the contact form)."
+          "The collection of your data is based on the following legal bases: the execution of obligations arising from the sales contract (processing and delivery of your order), compliance with our legal obligations (accounting and tax archiving), and the legitimate interest of DivinExpress (responding to your requests sent via the contact form)."
         ]
       },
       {
         "heading": "Data sharing and recipients",
         "body": [
-          "Your personal information is strictly confidential and is only transmitted to Reign SAS's trusted technical service providers in order to ensure the service: our shipping and delivery subcontractors (carriers), and our secure payment solution providers (Stripe, PayPal, GeniusPay).",
-          "Reign commits to never selling, renting, or transferring your personal data to third parties for marketing or advertising purposes."
+          "Your personal information is strictly confidential and is only transmitted to DivinExpress SAS's trusted technical service providers in order to ensure the service: our shipping and delivery subcontractors (carriers), and our secure payment solution providers (Stripe, PayPal, GeniusPay).",
+          "DivinExpress commits to never selling, renting, or transferring your personal data to third parties for marketing or advertising purposes."
         ]
       },
       {
@@ -449,14 +449,14 @@
       {
         "heading": "Security and data protection",
         "body": [
-          "Reign implements rigorous physical, technical, and organizational security measures to protect your data against unauthorized access, alteration, disclosure, or accidental destruction."
+          "DivinExpress implements rigorous physical, technical, and organizational security measures to protect your data against unauthorized access, alteration, disclosure, or accidental destruction."
         ]
       },
       {
         "heading": "Your rights and data access",
         "body": [
           "In accordance with the General Data Protection Regulation (GDPR) and national regulations, you have the right to access, rectify, delete, restrict, and object to the processing of your data.",
-          "You can exercise these rights at any time by sending your request by email to contact@reign.example or by post. For security reasons, we may ask you for proof of identity if there is any reasonable doubt."
+          "You can exercise these rights at any time by sending your request by email to contact@divinexpress.fr or by post. For security reasons, we may ask you for proof of identity if there is any reasonable doubt."
         ]
       },
       {

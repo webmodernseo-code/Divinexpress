@@ -3,8 +3,8 @@ import { parseLegalText } from '@/lib/legalText';
 
 describe('parseLegalText', () => {
   it('returns a single plain segment when there is no placeholder', () => {
-    expect(parseLegalText('Le Site est édité par Reign SAS.')).toEqual([
-      { text: 'Le Site est édité par Reign SAS.', isPlaceholder: false }
+    expect(parseLegalText('Le Site est édité par DivinExpress SAS.')).toEqual([
+      { text: 'Le Site est édité par DivinExpress SAS.', isPlaceholder: false }
     ]);
   });
 

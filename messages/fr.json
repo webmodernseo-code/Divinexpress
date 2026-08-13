@@ -13,7 +13,7 @@
     "closeSearch": "Fermer la recherche"
   },
   "common": {
-    "brand": "Reign"
+    "brand": "DivinExpress"
   },
   "header": {
     "freeShippingBanner": "Livraison offerte dès 150€ d'achat"
@@ -96,7 +96,7 @@
     "promoKicker": "Offre limitée",
     "promoTitle": "-10% sur toute la collection",
     "promoBody": "Utilisez ce code au moment de passer commande. Offre valable jusqu'à la fin du mois.",
-    "promoCode": "REIGN10",
+    "promoCode": "DIVINEXPRESS10",
     "promoCopyButton": "Copier",
     "promoCopiedConfirmation": "Copié !",
     "promoDays": "Jours",
@@ -105,7 +105,7 @@
     "promoSeconds": "Sec",
     "faqTitle": "Questions fréquentes",
     "editorialTitle": "L'exigence comme signature",
-    "editorialBody": "Chaque pièce Reign naît d'un choix : celui de la matière, de la coupe, du détail qui ne se voit pas mais se ressent."
+    "editorialBody": "Chaque pièce DivinExpress naît d'un choix : celui de la matière, de la coupe, du détail qui ne se voit pas mais se ressent."
   },
   "product": {
     "toggleFavorite": "Ajouter aux favoris",
@@ -240,8 +240,8 @@
     "backHome": "Retour à l'accueil"
   },
   "about": {
-    "title": "À propos de Reign",
-    "paragraph1": "Reign est née d'une conviction simple : le vêtement doit avoir de la tenue, littéralement et au figuré. Chaque collection part d'une silhouette, pas d'une tendance.",
+    "title": "À propos de DivinExpress",
+    "paragraph1": "DivinExpress est née d'une conviction simple : le vêtement doit avoir de la tenue, littéralement et au figuré. Chaque collection part d'une silhouette, pas d'une tendance.",
     "paragraph2": "Nous travaillons avec un nombre volontairement restreint de matières et de fournisseurs, pour garder un contrôle total sur la coupe, la construction et la finition de chaque pièce.",
     "paragraph3": "Homme, femme, enfant, accessoires : une seule exigence traverse toutes nos catégories — que chaque pièce dure, et qu'elle s'impose."
   },
@@ -280,10 +280,10 @@
       {
         "heading": "Éditeur du site",
         "body": [
-          "Le site Reign (ci-après « le Site ») est édité par la société Reign SAS, société par actions simplifiée au capital social de 10 000 €, immatriculée au Registre du Commerce et des Sociétés (RCS) de Paris sous le numéro SIREN [NUMÉRO SIRET/SIREN À COMPLÉTER], et dont le siège social est situé au [ADRESSE DU SIÈGE SOCIAL À COMPLÉTER].",
+          "Le site DivinExpress (ci-après « le Site ») est édité par la société DivinExpress SAS, société par actions simplifiée au capital social de 10 000 €, immatriculée au Registre du Commerce et des Sociétés (RCS) de Paris sous le numéro SIREN [NUMÉRO SIRET/SIREN À COMPLÉTER], et dont le siège social est situé au [ADRESSE DU SIÈGE SOCIAL À COMPLÉTER].",
           "Numéro de TVA intracommunautaire : [NUMÉRO DE TVA À COMPLÉTER]",
           "Directeur de la publication : [NOM DU DIRECTEUR DE LA PUBLICATION À COMPLÉTER]",
-          "Contact client : contact@reign.example — Téléphone : [NUMÉRO DE TÉLÉPHONE À COMPLÉTER] (du lundi au vendredi de 9h à 18h)."
+          "Contact client : contact@divinexpress.fr — Téléphone : [NUMÉRO DE TÉLÉPHONE À COMPLÉTER] (du lundi au vendredi de 9h à 18h)."
         ]
       },
       {
@@ -296,20 +296,20 @@
         "heading": "Propriété intellectuelle",
         "body": [
           "L'ensemble des éléments présents et publiés sur le Site (incluant sans limitation les textes, photographies de campagnes, images de catégories, logos, marques, chartes graphiques, illustrations, animations, bases de données et code source) est protégé par les dispositions du Code de la propriété intellectuelle.",
-          "Ces contenus sont la propriété exclusive de Reign SAS ou de ses donneurs de licences. Toute reproduction, représentation, modification, publication ou adaptation de tout ou partie des éléments du Site, quel que soit le moyen ou le procédé utilisé, est strictement interdite sans l'autorisation écrite préalable de Reign SAS. Toute exploitation non autorisée sera considérée comme constitutive d'une contrefaçon et poursuivie conformément aux dispositions des articles L.335-2 et suivants du Code de la propriété intellectuelle."
+          "Ces contenus sont la propriété exclusive de DivinExpress SAS ou de ses donneurs de licences. Toute reproduction, représentation, modification, publication ou adaptation de tout ou partie des éléments du Site, quel que soit le moyen ou le procédé utilisé, est strictement interdite sans l'autorisation écrite préalable de DivinExpress SAS. Toute exploitation non autorisée sera considérée comme constitutive d'une contrefaçon et poursuivie conformément aux dispositions des articles L.335-2 et suivants du Code de la propriété intellectuelle."
         ]
       },
       {
         "heading": "Données personnelles et cookies",
         "body": [
-          "Reign SAS accorde une grande importance à la confidentialité et à la sécurité de vos informations personnelles. Les conditions de collecte et de traitement des données recueillies sur le Site sont détaillées dans notre Politique de confidentialité, disponible en bas de page.",
+          "DivinExpress SAS accorde une grande importance à la confidentialité et à la sécurité de vos informations personnelles. Les conditions de collecte et de traitement des données recueillies sur le Site sont détaillées dans notre Politique de confidentialité, disponible en bas de page.",
           "Le Site utilise uniquement des cookies techniques strictement indispensables au fonctionnement de la boutique en ligne (mémorisation de la langue de navigation, de la devise et du contenu de votre panier d'achat)."
         ]
       },
       {
         "heading": "Droit applicable et juridiction compétente",
         "body": [
-          "Les présentes mentions légales sont soumises aux lois françaises. En cas de contestation sur l'interprétation ou l'exécution des présentes, et à défaut de résolution amiable ou de recours à un médiateur agréé, les tribunaux français compétents du ressort du siège social de Reign SAS seront seuls qualifiés pour régler le litige."
+          "Les présentes mentions légales sont soumises aux lois françaises. En cas de contestation sur l'interprétation ou l'exécution des présentes, et à défaut de résolution amiable ou de recours à un médiateur agréé, les tribunaux français compétents du ressort du siège social de DivinExpress SAS seront seuls qualifiés pour régler le litige."
         ]
       }
     ]
@@ -321,7 +321,7 @@
       {
         "heading": "Objet et champ d'application",
         "body": [
-          "Les présentes Conditions Générales de Vente (CGV) définissent les droits et obligations contractuels dans le cadre des ventes de vêtements et d'accessoires conclues à distance via le site internet Reign (« le Site ») entre la société Reign SAS (« le Vendeur ») et toute personne physique ayant la qualité de consommateur (« le Client »).",
+          "Les présentes Conditions Générales de Vente (CGV) définissent les droits et obligations contractuels dans le cadre des ventes de vêtements et d'accessoires conclues à distance via le site internet DivinExpress (« le Site ») entre la société DivinExpress SAS (« le Vendeur ») et toute personne physique ayant la qualité de consommateur (« le Client »).",
           "Toute commande validée sur le Site implique l'adhésion entière, préalable et sans réserve du Client aux présentes CGV. Le Vendeur se réserve le droit de modifier ses CGV à tout moment. Les CGV applicables sont celles en vigueur et acceptées par le Client lors de la validation finale de sa commande."
         ]
       },
@@ -370,7 +370,7 @@
       {
         "heading": "Politique de retours et remboursements",
         "body": [
-          "Par souplesse commerciale, Reign étend le délai de retour à 30 jours à compter de la réception des articles. Les produits doivent impérativement être renvoyés dans leur état d'origine, non portés, non lavés, avec leurs étiquettes d'origine et dans leur emballage d'origine complet.",
+          "Par souplesse commerciale, DivinExpress étend le délai de retour à 30 jours à compter de la réception des articles. Les produits doivent impérativement être renvoyés dans leur état d'origine, non portés, non lavés, avec leurs étiquettes d'origine et dans leur emballage d'origine complet.",
           "Après réception et validation par nos ateliers de la conformité des articles retournés, le remboursement sera effectué sous un délai maximal de 14 jours via le même moyen de paiement que celui utilisé lors de l'achat initial."
         ]
       },
@@ -397,7 +397,7 @@
         "heading": "Droit applicable et résolution des litiges",
         "body": [
           "Les présentes conditions générales de vente sont régies par le droit français. En cas de litige, le Client is invité à contacter en priorité le service client afin de trouver une solution amiable.",
-          "À défaut d'accord amiable, le Client a la possibilité de soumettre le différend à un médiateur de la consommation agréé. Si aucune solution amiable n'est trouvée, les tribunaux français du siège de Reign SAS seront seuls compétents."
+          "À défaut d'accord amiable, le Client a la possibilité de soumettre le différend à un médiateur de la consommation agréé. Si aucune solution amiable n'est trouvée, les tribunaux français du siège de DivinExpress SAS seront seuls compétents."
         ]
       }
     ]
@@ -409,8 +409,8 @@
       {
         "heading": "Responsable du traitement des données",
         "body": [
-          "La société Reign SAS, immatriculée au RCS de Paris, est le responsable légal du traitement des données personnelles collectées auprès des utilisateurs sur le site internet Reign.",
-          "Pour toute question relative à vos données personnelles ou pour exercer vos droits, vous pouvez nous écrire à l'adresse suivante : [ADRESSE POSTALE DU RESPONSABLE À COMPLÉTER], ou par e-mail à contact@reign.example."
+          "La société DivinExpress SAS, immatriculée au RCS de Paris, est le responsable légal du traitement des données personnelles collectées auprès des utilisateurs sur le site internet DivinExpress.",
+          "Pour toute question relative à vos données personnelles ou pour exercer vos droits, vous pouvez nous écrire à l'adresse suivante : [ADRESSE POSTALE DU RESPONSABLE À COMPLÉTER], ou par e-mail à contact@divinexpress.fr."
         ]
       },
       {
@@ -429,14 +429,14 @@
       {
         "heading": "Bases légales du traitement",
         "body": [
-          "La collecte de vos données repose sur les bases légales suivantes : l'exécution des obligations découlant du contrat de vente (traitement et acheminement de votre commande), le respect de nos obligations légales (archivage comptable et fiscal), et l'intérêt légitime de Reign (répondre à vos demandes envoyées via le formulaire de contact)."
+          "La collecte de vos données repose sur les bases légales suivantes : l'exécution des obligations découlant du contrat de vente (traitement et acheminement de votre commande), le respect de nos obligations légales (archivage comptable et fiscal), et l'intérêt légitime de DivinExpress (répondre à vos demandes envoyées via le formulaire de contact)."
         ]
       },
       {
         "heading": "Partage et destinataires des données",
         "body": [
-          "Vos informations personnelles sont strictement confidentielles et ne sont transmises qu'aux prestataires techniques de confiance de Reign SAS dans le but d'assurer le service : nos sous-traitants d'expédition et de livraison (transporteurs), et nos prestataires de solutions de paiement sécurisé (Stripe, PayPal, GeniusPay).",
-          "Reign s'engage à ne jamais vendre, louer ou céder vos données personnelles à des tiers à des fins de marketing ou de publicité."
+          "Vos informations personnelles sont strictement confidentielles et ne sont transmises qu'aux prestataires techniques de confiance de DivinExpress SAS dans le but d'assurer le service : nos sous-traitants d'expédition et de livraison (transporteurs), et nos prestataires de solutions de paiement sécurisé (Stripe, PayPal, GeniusPay).",
+          "DivinExpress s'engage à ne jamais vendre, louer ou céder vos données personnelles à des tiers à des fins de marketing ou de publicité."
         ]
       },
       {
@@ -449,14 +449,14 @@
       {
         "heading": "Sécurité et protection des données",
         "body": [
-          "Reign met en œuvre des mesures de sécurité physiques, techniques et organisationnelles rigoureuses pour protéger vos données contre tout accès non autorisé, altération, divulgation ou destruction involontaire."
+          "DivinExpress met en œuvre des mesures de sécurité physiques, techniques et organisationnelles rigoureuses pour protéger vos données contre tout accès non autorisé, altération, divulgation ou destruction involontaire."
         ]
       },
       {
         "heading": "Vos droits et accès aux données",
         "body": [
           "Conformément au Règlement Général sur la Protection des Données (RGPD) et à la réglementation française, vous disposez d'un droit d'accès, de rectification, de suppression, de limitation et d'opposition au traitement de vos données.",
-          "Vous pouvez exercer ces droits à tout moment en nous envoyant votre demande par e-mail à contact@reign.example ou par courrier postal. Pour des raisons de sécurité, nous pourrons vous demander un justificatif d'identité si nous avons un doute raisonnable."
+          "Vous pouvez exercer ces droits à tout moment en nous envoyant votre demande par e-mail à contact@divinexpress.fr ou par courrier postal. Pour des raisons de sécurité, nous pourrons vous demander un justificatif d'identité si nous avons un doute raisonnable."
         ]
       },
       {
