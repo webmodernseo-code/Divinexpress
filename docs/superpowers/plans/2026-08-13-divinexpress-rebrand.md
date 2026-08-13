@@ -16,6 +16,8 @@
 - **Politique de test** : si une valeur « reign » est asservie par un test → MAJ du test d'abord (il échoue), puis du code (il repasse). Si la chaîne est purement d'affichage et non testée → édition + `typecheck`/`grep`, sans fabriquer de test trivial.
 - Commits fréquents, un par tâche.
 - Nettoyage `.next/dev` avant `typecheck` (un serveur dev laisse un artefact qui corrompt le typecheck). Bash : `rm -rf .next/dev`. PowerShell : `Remove-Item -Recurse -Force .next\dev -ErrorAction SilentlyContinue`.
+- **Baseline typecheck préexistante : 19 erreurs `TS7016`**, toutes sur `lucide-react` et `react-icons` (déclarations de types manquantes, sans rapport avec le rebrand). Quand une étape dit « typecheck → 0 », lire **« 0 NOUVELLE erreur au-delà de ces 19 »** (le total doit rester à 19). Ne PAS chercher à corriger ces 19 ici — c'est hors périmètre (voir note propriétaire).
+- **Prérequis d'environnement (déjà appliqué) :** le lockfile a été restauré à l'état commité et `npm install` relancé pour réinstaller `@testing-library/dom` (une modif lockfile héritée l'avait retiré, cassant les exports `screen`/`waitFor`/… des tests). Si les tests réclament à nouveau ces exports, relancer `npm install`.
 - Vérification finale (Task 8) : `npm run test` vert · `typecheck` → 0 · `grep -ri reign src messages` ne laisse QUE les 3 chemins d'images ci-dessus.
 
 ## Pré-vol (état de l'arbre de travail)
