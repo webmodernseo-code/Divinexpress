@@ -19,11 +19,24 @@ export function LoginPanel({ locale, action }: {
     <div className="flex min-h-screen bg-slate-50">
       {/* Editorial left panel */}
       <section className="relative hidden w-1/2 overflow-hidden bg-slate-950 text-white lg:block">
-        <img src="/image/reign-admin-hoodie.png" alt="Hoodie noir DivinExpress suspendu" className="absolute inset-0 h-full w-full object-cover object-center opacity-70" />
+        <img src="/image/login-editorial.png" alt="" className="absolute inset-0 h-full w-full object-cover object-[center_25%] opacity-80" />
         <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/80 via-slate-900/30 to-transparent" />
         <div className="relative flex h-full flex-col justify-between p-14">
-          <div className="flex items-center gap-2.5">
-            <p className="font-serif text-[44px] tracking-[.16em]">DIVINEXPRESS</p>
+          <div className="flex items-center gap-4">
+            <Image
+              src="/branding/logo-divinexpress-mark.png"
+              alt=""
+              width={44}
+              height={44}
+              className="size-11 shrink-0"
+            />
+            <Image
+              src="/branding/logo-divinexpress.png"
+              alt="DivinExpress"
+              width={201}
+              height={67}
+              className="h-9 w-auto invert"
+            />
             <span className="rounded-md bg-white/10 border border-white/20 px-2 py-0.5 text-[10px] font-extrabold tracking-wider text-white uppercase">
               Admin
             </span>
@@ -52,14 +65,14 @@ export function LoginPanel({ locale, action }: {
         <div className="w-full max-w-[500px]">
           <div className="text-center">
             {/* Real Logo in login panel */}
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-7">
               <Image
                 src="/branding/logo-divinexpress.png"
                 alt="DivinExpress"
-                width={126}
-                height={42}
+                width={201}
+                height={67}
                 priority
-                className="h-9 w-auto"
+                className="h-12 w-auto"
               />
             </div>
             <h2 className="font-serif text-3xl font-bold tracking-tight text-slate-900">
