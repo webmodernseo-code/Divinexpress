@@ -80,7 +80,66 @@ export const COLOR_SWATCHES: Record<string, string> = {
   Chocolat: '#4a2c17',
   Cognac: '#9a4b28',
   Doré: '#d4af37',
-  Argenté: '#c0c0c0'
+  Argenté: '#c0c0c0',
+  // Primaires
+  Bleu: '#1d4ed8',
+  // Secondaires (Rouge, Jaune, Orange, Violet déjà listés ci-dessus)
+  Vert: '#15803d',
+  // Tertiaires
+  'Rouge-orangé': '#ff4500',
+  'Jaune-orangé': '#ffb100',
+  'Jaune-vert': '#9acd32',
+  'Bleu-vert': '#0f8b8d',
+  'Bleu-violet': '#6f42c1',
+  'Rouge-violet': '#b3184e',
+  // Neutres / gris / blancs / noirs
+  'Blanc cassé': '#f8f4ec', Perle: '#e8e6e1', Charbon: '#36454f', Ardoise: '#708090', 'Gris souris': '#9a9a9a',
+  'Gris perle': '#d3d3d3', 'Noir profond': '#000000', 'Gris acier': '#71797e', 'Gris ciment': '#95a5a6',
+  'Gris tourterelle': '#b8b3ac', Craie: '#f0ead6', 'Coquille d’œuf': '#f0ead2', Zinc: '#84898c',
+  // Bruns / camaïeux terre
+  Noisette: '#8b5a2b', Café: '#4b3621', Moka: '#6f4e37', 'Terre de Sienne': '#a0522d', Acajou: '#5d2e18',
+  Cuir: '#967117', Havane: '#8a6642', Fauve: '#b8611e', Brun: '#5b3a29', Chamois: '#d2b48c',
+  Châtaigne: '#7b3f00', Caramel: '#af6e4d', Tabac: '#7a5230', Sépia: '#704214', Bistre: '#3d2b1f',
+  Miel: '#e8b923', Noyer: '#5c4033', Rouille: '#b7410e',
+  // Rouges
+  'Rouge cerise': '#d2042d', 'Rouge tomate': '#e0301e', 'Rouge grenat': '#7c0a02', 'Rouge écarlate': '#ff2400',
+  'Rouge carmin': '#960018', Vermillon: '#e34234', 'Rouge coquelicot': '#ed2939', 'Rouge rubis': '#9b111e',
+  Cramoisi: '#dc143c', Amarante: '#9f2b68', 'Rouge sang': '#660000', 'Rouge feu': '#ce2029',
+  'Rouge groseille': '#b02c3f', 'Rouge cardinal': '#c41e3a', 'Rouge indien': '#cd5c5c', 'Rouge terracotta': '#e2725b',
+  // Roses
+  'Rose pâle': '#fadadd', 'Rose bonbon': '#f9a1bc', Magenta: '#ff00ff', 'Rose saumon': '#ff91a4',
+  'Rose dragée': '#f4c2c2', 'Rose thé': '#f88379', 'Vieux rose': '#c08081', 'Rose fuchsia': '#ff77ff',
+  'Rose layette': '#ffd1dc', 'Rose vif': '#ff66b2', 'Rose antique': '#e5c6c0', 'Rose pêche': '#ffdab9',
+  // Oranges
+  'Orange brûlé': '#cc5500', Mandarine: '#f28500', Citrouille: '#ff7518', Cuivre: '#b87333', Safran: '#f4c430',
+  'Orange vif': '#ff8200', Pêche: '#ffcba4', 'Orange sanguine': '#e2571e', Chatoyant: '#ff6b35', Papaye: '#ffefd5',
+  // Jaunes
+  'Jaune citron': '#fff44f', 'Jaune paille': '#f0e68c', 'Jaune canari': '#ffff8f', 'Jaune miel': '#e2a739',
+  'Jaune poussin': '#fce883', Champagne: '#f7e7ce', Or: '#ffd700', Blé: '#f5deb3', Maïs: '#fbec5d',
+  'Jaune soleil': '#ffd300', Banane: '#ffe135',
+  // Verts
+  'Vert pomme': '#8db600', 'Vert prairie': '#4f7942', 'Vert forêt': '#228b22', 'Vert pin': '#01796f',
+  'Vert jade': '#00a86b', 'Vert anis': '#9dc183', 'Vert d’eau': '#c1e1c1', 'Vert céladon': '#ace1af',
+  'Vert kaki': '#78866b', 'Vert mousse': '#8a9a5b', 'Vert bronze': '#6b8e23', 'Vert tilleul': '#c9dc87',
+  'Vert absinthe': '#7fdd4c', 'Vert amande': '#82c46c', 'Vert gazon': '#7cfc00', 'Vert épinard': '#2e4d2e',
+  'Vert cèdre': '#4a5d23', 'Vert glacier': '#a8d5ba',
+  // Bleus
+  'Bleu nuit': '#0a1a3f', 'Bleu cobalt': '#0047ab', 'Bleu canard': '#075985', 'Bleu poudré': '#b0e0e6',
+  'Bleu glacier': '#cfe8f3', 'Bleu paon': '#005f6a', 'Bleu azur': '#007fff', 'Bleu horizon': '#8ab6d6',
+  'Bleu givré': '#e0f7fa', Cyan: '#00ffff', 'Bleu lagon': '#1ca9c9', 'Bleu saphir': '#0f52ba',
+  'Bleu klein': '#002fa7', 'Bleu denim': '#1560bd', 'Bleu layette': '#c6e2ff', 'Bleu paris': '#0055a4',
+  'Bleu ardoise': '#4a6274', 'Bleu tempête': '#4682b4',
+  // Violets
+  'Violet foncé': '#301934', Lilas: '#c8a2c8', Parme: '#cfa0e9', Améthyste: '#9966cc',
+  'Violet pastel': '#dcd0ff', Pourpre: '#800080', Byzantium: '#702963', Orchidée: '#da70d6',
+  Glycine: '#c9a0dc',
+  // Métalliques / spéciales
+  Bronze: '#8c6239', Cuivré: '#b87333', Platine: '#e5e4e2', 'Champagne doré': '#e8c39e', Nacré: '#f2f0e6',
+  Graphite: '#383838',
+  // Compléments divers
+  Sarcelle: '#008080', Grège: '#beb6a9', 'Bleu majorelle': '#6050dc', 'Vert malachite': '#0bda51',
+  Curry: '#cc7722', 'Gris bleuté': '#7d8ca3', 'Rose fumé': '#d8a7b1', 'Bleu opale': '#a7d8de',
+  'Vert olive clair': '#a9a473', 'Rouge cuivré': '#b5651d', 'Blanc neige': '#fffafa'
 };
 
 /** Shared across Homme/Femme/Enfant so every clothing product uses the same pill selector. */

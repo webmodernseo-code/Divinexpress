@@ -16,6 +16,25 @@ const CLOTHING_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Unique'];
 const SHOE_SIZES = ['36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46'];
 const COLOR_NAMES = Object.keys(COLOR_SWATCHES);
 
+function hexToRgb(hex: string): [number, number, number] {
+  const clean = hex.replace('#', '');
+  const value = parseInt(clean.length === 3 ? clean.split('').map((c) => c + c).join('') : clean, 16);
+  return [(value >> 16) & 255, (value >> 8) & 255, value & 255];
+}
+
+/** Finds the closest named swatch to an arbitrary picked hex (simple RGB distance). */
+function nearestColorName(hex: string): string {
+  const [r, g, b] = hexToRgb(hex);
+  let best = COLOR_NAMES[0];
+  let bestDistance = Infinity;
+  for (const name of COLOR_NAMES) {
+    const [nr, ng, nb] = hexToRgb(COLOR_SWATCHES[name]);
+    const distance = (r - nr) ** 2 + (g - ng) ** 2 + (b - nb) ** 2;
+    if (distance < bestDistance) { bestDistance = distance; best = name; }
+  }
+  return best;
+}
+
 const inputClass =
   'w-full h-11 px-3.5 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 rounded-xl outline-none transition text-xs font-semibold text-slate-800';
 const selectClass =
@@ -23,15 +42,21 @@ const selectClass =
 const labelClass = 'block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5';
 const cardClass = 'bg-white border border-admin-border rounded-2xl shadow-xs p-6 space-y-5';
 
-/** Free-text color entry with autocomplete suggestions and a live round swatch preview. */
+/**
+ * Free-text color entry with autocomplete suggestions and a live round swatch preview.
+ * Also offers a native color-wheel picker for when the admin can see the color (e.g. in a
+ * product photo) but doesn't know its name — picking a hue fills in the closest named color.
+ */
 function ColorComboInput({
   value,
   onChange,
   placeholder,
+  pickerLabel,
 }: {
   value: string;
   onChange: (color: string) => void;
   placeholder: string;
+  pickerLabel: string;
 }) {
   const [open, setOpen] = useState(false);
   const swatch = COLOR_SWATCHES[value] ?? '#d4d4d4';
@@ -41,7 +66,16 @@ function ColorComboInput({
     : COLOR_NAMES;
 
   return (
-    <div className="relative flex-1">
+    <div className="relative flex flex-1 items-center gap-1.5">
+      <input
+        type="color"
+        value={swatch}
+        onChange={(e) => onChange(nearestColorName(e.target.value))}
+        aria-label={pickerLabel}
+        title={pickerLabel}
+        className="h-10 w-9 shrink-0 cursor-pointer rounded-lg border border-slate-200 p-1"
+      />
+      <div className="relative flex-1">
       <span
         className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 rounded-full border border-black/10"
         style={{ backgroundColor: swatch }}
@@ -69,6 +103,7 @@ function ColorComboInput({
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }
@@ -432,6 +467,7 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
                             value={v.color}
                             onChange={(color) => updateVariantRow(i, { color })}
                             placeholder={fr ? 'Couleur' : 'Color'}
+                            pickerLabel={fr ? 'Choisir la couleur sur la photo' : 'Pick the color from the photo'}
                           />
                           <input
                             type="number" min="0" value={v.stock} onChange={(e) => updateVariantRow(i, { stock: e.target.value })}
