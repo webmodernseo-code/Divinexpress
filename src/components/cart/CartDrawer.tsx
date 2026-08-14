@@ -109,7 +109,7 @@ export function CartDrawer({
         role="dialog"
         aria-modal="true"
         aria-labelledby="cart-drawer-title"
-        className={`absolute inset-y-0 right-0 flex h-dvh w-full flex-col bg-white text-black shadow-[-20px_0_60px_rgba(0,0,0,0.14)] transition-transform duration-300 ease-out sm:max-w-[580px] ${
+        className={`absolute right-0 top-0 flex max-h-[50vh] w-full flex-col overflow-hidden rounded-bl-3xl bg-white text-black shadow-[-10px_20px_50px_rgba(0,0,0,0.18)] transition-transform duration-300 ease-out sm:max-w-[580px] ${
           activeOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

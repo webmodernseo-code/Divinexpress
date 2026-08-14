@@ -30,10 +30,10 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="mt-3.5">
           <h3 className="text-sm font-semibold">{product.name[locale]}</h3>
           <p className="mt-1 text-sm">
-            {product.compareAtEur && product.compareAtEur > product.priceEur && (
-              <span className="mr-2 text-red-400 line-through">{formatPrice(product.compareAtEur, currency, locale)}</span>
-            )}
             <span className="font-bold text-ink">{formatPrice(product.priceEur, currency, locale)}</span>
+            {product.compareAtEur && product.compareAtEur > product.priceEur && (
+              <span className="ml-2 text-red-400 line-through">{formatPrice(product.compareAtEur, currency, locale)}</span>
+            )}
           </p>
         </div>
       </Link>

@@ -102,7 +102,7 @@ export function HeroCarousel({
   return (
     <section className="w-full md:px-6 md:pt-6 lg:px-8">
       <div
-        className="relative mx-auto h-[50vh] min-h-[340px] w-full max-w-7xl overflow-hidden rounded-2xl md:h-auto md:min-h-[560px] md:rounded-3xl lg:min-h-[640px]"
+        className="relative mx-auto h-[50vh] min-h-[340px] w-full max-w-7xl overflow-hidden rounded-none md:h-auto md:min-h-[560px] md:rounded-3xl lg:min-h-[640px]"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -117,14 +117,14 @@ export function HeroCarousel({
               style={{ backgroundColor: `rgb(${THEME_TINT[slide.theme]})` }}
               aria-hidden={!isActive}
             >
-              {/* Product image — contained (dezoomed) on mobile, cover on desktop */}
+              {/* Product image — fills the frame edge-to-edge on every breakpoint (no letterbox bands). */}
               <Image
                 src={slide.image}
                 alt={slide.imageAlt}
                 fill
                 priority={index === 0}
                 sizes="100vw"
-                className="object-contain object-center md:object-cover md:object-right"
+                className="object-cover object-center md:object-right"
               />
 
               {/* Readability gradient (dark on the text side, transparent on the product side) */}

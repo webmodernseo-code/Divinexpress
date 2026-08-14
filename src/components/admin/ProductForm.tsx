@@ -574,12 +574,12 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
               <div className="p-3.5 space-y-1.5">
                 <p className="text-sm font-bold text-slate-800 truncate">{previewName}</p>
                 <div className="flex items-center gap-2">
-                  {previewCompareAt > previewPrice && (
-                    <span className="text-xs text-red-400 line-through">{previewCompareAt.toFixed(2)} €</span>
-                  )}
                   <span className="text-sm font-extrabold text-slate-900">
                     {previewPrice.toFixed(2)} €
                   </span>
+                  {previewCompareAt > previewPrice && (
+                    <span className="text-xs text-red-400 line-through">{previewCompareAt.toFixed(2)} €</span>
+                  )}
                 </div>
                 {showVariantLine && (
                   <div className="flex flex-wrap items-center gap-1.5">
