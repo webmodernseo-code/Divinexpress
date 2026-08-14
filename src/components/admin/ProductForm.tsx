@@ -7,9 +7,14 @@ import { ChevronRight, Trash2, X, AlertTriangle } from 'lucide-react';
 import { useRouter, Link } from '@/i18n/navigation';
 import { ImageUploader } from './ImageUploader';
 import { categoryMap, getProductImage, type ProductItem, type ProductVariantItem } from './product-shared';
+import { COLOR_SWATCHES } from '@/lib/products';
 
 type VariantRow = { size: string; color: string; stock: string };
-const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Unique'];
+type VariantType = 'clothing' | 'shoe' | 'simple';
+
+const CLOTHING_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Unique'];
+const SHOE_SIZES = ['36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46'];
+const COLOR_NAMES = Object.keys(COLOR_SWATCHES);
 
 const inputClass =
   'w-full h-11 px-3.5 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 rounded-xl outline-none transition text-xs font-semibold text-slate-800';
@@ -27,9 +32,8 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
   const [formName, setFormName] = useState(product?.name ?? '');
   const [formNameEn, setFormNameEn] = useState(product?.nameEn ?? '');
   const [formCategoryId, setFormCategoryId] = useState(product?.categoryId ?? 'category:homme');
-  const [formBrand, setFormBrand] = useState(product?.brand ?? '');
-  const [formDescriptionFr, setFormDescriptionFr] = useState(product?.descriptionFr ?? '');
-  const [formDescriptionEn, setFormDescriptionEn] = useState(product?.descriptionEn ?? '');
+  const [formDescription, setFormDescription] = useState(product?.descriptionFr ?? '');
+  const [formDescriptionLocale, setFormDescriptionLocale] = useState<'fr' | 'en'>('fr');
   const [formPrice, setFormPrice] = useState(product ? String(product.price) : '');
   const [formStock, setFormStock] = useState(product ? String(product.stock) : '');
   const [formStatus, setFormStatus] = useState<'active' | 'draft'>(
@@ -37,11 +41,29 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
   );
   const [formCompareAt, setFormCompareAt] = useState(product?.compareAtEur ? String(product.compareAtEur) : '');
   const [formImages, setFormImages] = useState<string[]>(product?.images ?? []);
+  const [formVariantType, setFormVariantType] = useState<VariantType>('clothing');
   const [formVariants, setFormVariants] = useState<VariantRow[]>([{ size: 'M', color: 'Noir', stock: '' }]);
+  const [formSimpleStock, setFormSimpleStock] = useState('');
   const [variants, setVariants] = useState<ProductVariantItem[]>(product?.variants ?? []);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const addVariantRow = () => setFormVariants((rows) => [...rows, { size: 'M', color: 'Noir', stock: '' }]);
+  const activeSizes = formVariantType === 'shoe' ? SHOE_SIZES : CLOTHING_SIZES;
+
+  const handleDescriptionLocaleChange = (locale: 'fr' | 'en') => {
+    if (isEdit && product) {
+      setFormDescription(locale === 'fr' ? product.descriptionFr : product.descriptionEn);
+    }
+    setFormDescriptionLocale(locale);
+  };
+
+  const handleVariantTypeChange = (type: VariantType) => {
+    setFormVariantType(type);
+    const defaultSize = type === 'shoe' ? SHOE_SIZES[4] : 'M';
+    setFormVariants([{ size: defaultSize, color: 'Noir', stock: '' }]);
+  };
+
+  const addVariantRow = () =>
+    setFormVariants((rows) => [...rows, { size: activeSizes[0], color: 'Noir', stock: '' }]);
   const removeVariantRow = (i: number) => setFormVariants((rows) => rows.filter((_, idx) => idx !== i));
   const updateVariantRow = (i: number, patch: Partial<VariantRow>) =>
     setFormVariants((rows) => rows.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
@@ -62,7 +84,7 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
     setVariants((vs) => vs.filter((v) => v.id !== variantId));
   };
   const addVariantApi = async () => {
-    const size = prompt(fr ? 'Taille (XS..XXL ou Unique)' : 'Size (XS..XXL or Unique)') ?? '';
+    const size = prompt(fr ? 'Taille (ou pointure)' : 'Size (or shoe size)') ?? '';
     if (!size) return;
     const color = (prompt(fr ? 'Couleur' : 'Color') || 'Noir').trim() || 'Noir';
     const stock = parseInt(prompt(fr ? 'Stock' : 'Stock') ?? '0') || 0;
@@ -97,10 +119,9 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
           categoryId: formCategoryId,
           nameFr: formName,
           nameEn: formNameEn || formName,
-          descriptionFr: formDescriptionFr,
-          descriptionEn: formDescriptionEn || formDescriptionFr,
+          description: formDescription,
+          descriptionLocale: formDescriptionLocale,
           status: formStatus,
-          brand: formBrand.trim() || null,
           priceMinor: priceMinorValue,
           stock: stockNum,
           images: formImages,
@@ -114,15 +135,25 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
       } else {
         const uniqueId = `prod-${slug}-${Math.floor(1000 + Math.random() * 9000)}`;
         const sku = `DIVINEXPRESS-${slug.toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
-        const createVariants = formVariants.map((v, idx) => ({
-          id: `var-${uniqueId}-${idx}`,
-          sku: `${sku}-${(v.size || 'U')}-${idx}`,
-          size: v.size || 'Unique',
-          color: v.color.trim() || 'Noir',
-          priceMinor: priceMinorValue,
-          currency: 'EUR' as const,
-          stock: parseInt(v.stock) || 0,
-        }));
+        const createVariants = formVariantType === 'simple'
+          ? [{
+              id: `var-${uniqueId}-0`,
+              sku: `${sku}-UNIQUE-0`,
+              size: 'Unique',
+              color: 'Noir',
+              priceMinor: priceMinorValue,
+              currency: 'EUR' as const,
+              stock: parseInt(formSimpleStock) || 0,
+            }]
+          : formVariants.map((v, idx) => ({
+              id: `var-${uniqueId}-${idx}`,
+              sku: `${sku}-${(v.size || 'U')}-${idx}`,
+              size: v.size || 'Unique',
+              color: v.color.trim() || 'Noir',
+              priceMinor: priceMinorValue,
+              currency: 'EUR' as const,
+              stock: parseInt(v.stock) || 0,
+            }));
 
         const createPayload = {
           id: uniqueId,
@@ -130,9 +161,8 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
           slug,
           nameFr: formName,
           nameEn: formNameEn || formName,
-          descriptionFr: formDescriptionFr,
-          descriptionEn: formDescriptionEn || formDescriptionFr,
-          brand: formBrand.trim() || null,
+          description: formDescription,
+          descriptionLocale: formDescriptionLocale,
           images: formImages,
           compareAtPriceMinor: formCompareAt ? Math.round(parseFloat(formCompareAt) * 100) : undefined,
           status: formStatus,
@@ -169,11 +199,14 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
     : Array.from(new Set(formVariants.map((v) => v.color.trim()).filter(Boolean)));
   const previewStock = isEdit
     ? variants.reduce((total, v) => total + (v.stock || 0), 0)
-    : formVariants.reduce((total, v) => total + (parseInt(v.stock) || 0), 0);
+    : formVariantType === 'simple'
+      ? parseInt(formSimpleStock) || 0
+      : formVariants.reduce((total, v) => total + (parseInt(v.stock) || 0), 0);
   const previewPrice = parseFloat(formPrice.replace(',', '.')) || 0;
   const previewCompareAt = parseFloat(formCompareAt.replace(',', '.')) || 0;
   const previewName = (fr ? formName : formNameEn) || (fr ? 'Nom du produit' : 'Product name');
   const previewImage = formImages[0] ?? getProductImage(product?.id ?? '', previewCategory.fr);
+  const showVariantLine = isEdit || formVariantType !== 'simple';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in text-admin-text font-sans pb-8">
@@ -249,26 +282,41 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
               </label>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <label className="block">
-                <span className={labelClass}>{fr ? 'Description (Français)' : 'Description (French)'}</span>
-                <textarea
-                  required rows={4} value={formDescriptionFr} onChange={(e) => setFormDescriptionFr(e.target.value)}
-                  placeholder={fr ? 'Décrivez votre produit en détail...' : 'Describe your product in detail...'}
-                  className="w-full p-3.5 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 rounded-xl outline-none transition text-xs font-semibold text-slate-800 resize-none"
-                />
-              </label>
-              <label className="block">
-                <span className={labelClass}>{fr ? 'Description (Anglais)' : 'Description (English)'}</span>
-                <textarea
-                  required rows={4} value={formDescriptionEn} onChange={(e) => setFormDescriptionEn(e.target.value)}
-                  placeholder="Describe your product in detail..."
-                  className="w-full p-3.5 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 rounded-xl outline-none transition text-xs font-semibold text-slate-800 resize-none"
-                />
-              </label>
+            <div>
+              <div className="mb-1.5 flex items-center justify-between">
+                <span className={`${labelClass} mb-0`}>{fr ? 'Description' : 'Description'}</span>
+                <div className="flex items-center gap-1 rounded-lg border border-slate-200 p-0.5">
+                  {(['fr', 'en'] as const).map((locale) => (
+                    <button
+                      key={locale}
+                      type="button"
+                      onClick={() => handleDescriptionLocaleChange(locale)}
+                      className={`rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide transition cursor-pointer ${
+                        formDescriptionLocale === locale ? 'bg-black text-white' : 'text-slate-500 hover:text-slate-800'
+                      }`}
+                    >
+                      {locale === 'fr' ? 'FR' : 'EN'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <textarea
+                required rows={5} value={formDescription} onChange={(e) => setFormDescription(e.target.value)}
+                placeholder={
+                  formDescriptionLocale === 'fr'
+                    ? 'Décrivez votre produit en détail...'
+                    : 'Describe your product in detail...'
+                }
+                className="w-full p-3.5 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 rounded-xl outline-none transition text-xs font-semibold text-slate-800 resize-none"
+              />
+              <p className="mt-1.5 text-[11px] text-admin-muted">
+                {fr
+                  ? "Écrivez dans la langue de votre choix — l'autre langue du site est traduite automatiquement."
+                  : 'Write in whichever language you prefer — the site’s other language is translated automatically.'}
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <label className="block">
                 <span className={labelClass}>{fr ? 'Catégorie' : 'Category'}</span>
                 <select value={formCategoryId} onChange={(e) => setFormCategoryId(e.target.value)} className={selectClass}>
@@ -277,13 +325,6 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
                   <option value="category:enfant">{fr ? 'Enfant' : 'Kids'}</option>
                   <option value="category:accessoires">{fr ? 'Accessoires' : 'Accessories'}</option>
                 </select>
-              </label>
-              <label className="block">
-                <span className={labelClass}>{fr ? 'Marque' : 'Brand'}</span>
-                <input
-                  type="text" value={formBrand} onChange={(e) => setFormBrand(e.target.value)}
-                  placeholder="Ex : DivinExpress" className={inputClass}
-                />
               </label>
               <label className="block">
                 <span className={labelClass}>{fr ? 'Statut' : 'Status'}</span>
@@ -295,34 +336,67 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
             </div>
 
             {/* Sizes / colors / stock */}
-            <div className="space-y-2 border-t border-slate-100 pt-4">
+            <div className="space-y-3 border-t border-slate-100 pt-4">
               <span className={labelClass}>{fr ? 'Tailles, couleurs et stock' : 'Sizes, colors and stock'}</span>
 
               {!isEdit && (
-                <div className="space-y-2">
-                  {formVariants.map((v, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <select value={v.size} onChange={(e) => updateVariantRow(i, { size: e.target.value })} className="h-10 px-2 border border-slate-200 rounded-lg text-xs">
-                        {SIZES.map((s) => <option key={s} value={s}>{s}</option>)}
-                      </select>
+                <div className="space-y-3">
+                  <div className="flex flex-wrap gap-2">
+                    {([
+                      ['clothing', fr ? 'Vêtement (tailles)' : 'Clothing (sizes)'],
+                      ['shoe', fr ? 'Chaussure (pointure)' : 'Shoes (size)'],
+                      ['simple', fr ? 'Simple (sans taille ni couleur)' : 'Simple (no size or color)'],
+                    ] as const).map(([type, label]) => (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => handleVariantTypeChange(type)}
+                        className={`rounded-full border px-3.5 py-1.5 text-xs font-bold transition cursor-pointer ${
+                          formVariantType === type
+                            ? 'border-black bg-black text-white'
+                            : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {formVariantType === 'simple' ? (
+                    <label className="block sm:w-1/2">
+                      <span className={labelClass}>{fr ? 'Quantité en stock' : 'Stock quantity'}</span>
                       <input
-                        value={v.color} onChange={(e) => updateVariantRow(i, { color: e.target.value })}
-                        placeholder={fr ? 'Couleur' : 'Color'} className="h-10 px-2 border border-slate-200 rounded-lg text-xs flex-1"
+                        type="number" min="0" value={formSimpleStock}
+                        onChange={(e) => setFormSimpleStock(e.target.value)}
+                        placeholder="0" className={inputClass}
                       />
-                      <input
-                        type="number" min="0" value={v.stock} onChange={(e) => updateVariantRow(i, { stock: e.target.value })}
-                        placeholder="Stock" className="h-10 px-2 border border-slate-200 rounded-lg text-xs w-24"
-                      />
-                      {formVariants.length > 1 && (
-                        <button type="button" onClick={() => removeVariantRow(i)} aria-label="remove" className="p-2 text-admin-muted hover:text-admin-error">
-                          <X className="size-4" />
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                  <button type="button" onClick={addVariantRow} className="text-xs font-bold text-indigo-600 hover:text-indigo-700">
-                    + {fr ? 'Ajouter une variante' : 'Add a variant'}
-                  </button>
+                    </label>
+                  ) : (
+                    <>
+                      {formVariants.map((v, i) => (
+                        <div key={i} className="flex items-center gap-2">
+                          <select value={v.size} onChange={(e) => updateVariantRow(i, { size: e.target.value })} className="h-10 px-2 border border-slate-200 rounded-lg text-xs">
+                            {activeSizes.map((s) => <option key={s} value={s}>{s}</option>)}
+                          </select>
+                          <select value={v.color} onChange={(e) => updateVariantRow(i, { color: e.target.value })} className="h-10 px-2 border border-slate-200 rounded-lg text-xs flex-1">
+                            {COLOR_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
+                          </select>
+                          <input
+                            type="number" min="0" value={v.stock} onChange={(e) => updateVariantRow(i, { stock: e.target.value })}
+                            placeholder="Stock" className="h-10 px-2 border border-slate-200 rounded-lg text-xs w-24"
+                          />
+                          {formVariants.length > 1 && (
+                            <button type="button" onClick={() => removeVariantRow(i)} aria-label="remove" className="p-2 text-admin-muted hover:text-admin-error">
+                              <X className="size-4" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                      <button type="button" onClick={addVariantRow} className="text-xs font-bold text-indigo-600 hover:text-indigo-700">
+                        + {fr ? 'Ajouter une variante' : 'Add a variant'}
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
 
@@ -407,23 +481,25 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
             <h2 className="font-serif text-lg font-bold text-slate-800">{fr ? 'Aperçu' : 'Preview'}</h2>
             <div className="rounded-xl border border-admin-border overflow-hidden">
               <div className="relative aspect-square bg-neutral-100">
-                <Image src={previewImage} alt={previewName} fill className="object-cover" />
+                <Image src={previewImage} alt={previewName} fill className="rounded-t-xl object-cover" />
               </div>
               <div className="p-3.5 space-y-1.5">
                 <p className="text-sm font-bold text-slate-800 truncate">{previewName}</p>
                 <div className="flex items-center gap-2">
                   {previewCompareAt > previewPrice && (
-                    <span className="text-xs text-slate-400 line-through">{previewCompareAt.toFixed(2)} €</span>
+                    <span className="text-xs text-red-400 line-through">{previewCompareAt.toFixed(2)} €</span>
                   )}
-                  <span className={`text-sm font-bold ${previewCompareAt > previewPrice ? 'text-amber-600' : 'text-slate-800'}`}>
+                  <span className="text-sm font-extrabold text-slate-900">
                     {previewPrice.toFixed(2)} €
                   </span>
                 </div>
-                <p className="text-xs text-admin-muted truncate">
-                  {previewColors.length > 0 ? previewColors.join(', ') : (fr ? 'Couleur' : 'Color')}
-                  {' • '}
-                  {previewSizes.length > 0 ? previewSizes.join(', ') : (fr ? 'Taille' : 'Size')}
-                </p>
+                {showVariantLine && (
+                  <p className="text-xs text-admin-muted truncate">
+                    {previewColors.length > 0 ? previewColors.join(', ') : (fr ? 'Couleur' : 'Color')}
+                    {' • '}
+                    {previewSizes.length > 0 ? previewSizes.join(', ') : (fr ? 'Taille' : 'Size')}
+                  </p>
+                )}
                 {previewStock === 0 ? (
                   <p className="flex items-center gap-1.5 text-xs font-semibold text-admin-error">
                     <AlertTriangle className="size-3.5" /> {fr ? 'Rupture de stock' : 'Out of stock'}

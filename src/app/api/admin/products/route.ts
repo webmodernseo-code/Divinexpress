@@ -6,10 +6,12 @@ import { requireRole } from '@/server/auth/authorization';
 import { CatalogRepository } from '@/server/catalog/repository';
 import { getCommerceDatabase } from '@/server/db/runtime';
 import { DomainError } from '@/server/domain/errors';
+import { translateProductText } from '@/server/ai/translate';
 
 const inputSchema = z.object({
   categoryId: z.string().min(1), slug: z.string().min(1), nameFr: z.string().min(1),
-  nameEn: z.string().min(1), descriptionFr: z.string(), descriptionEn: z.string(),
+  nameEn: z.string().min(1),
+  description: z.string().min(1), descriptionLocale: z.enum(['fr', 'en']),
   images: z.array(z.string().url()).max(6).optional(),
   compareAtPriceMinor: z.number().int().nonnegative().optional(),
   status: z.enum(['draft', 'active']).optional(),
@@ -32,10 +34,13 @@ export async function POST(request: Request) {
   if (!admin) return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
   try {
     requireRole(admin.role, ['owner', 'manager']);
-    const input = inputSchema.parse(await request.json());
+    const { description, descriptionLocale, ...input } = inputSchema.parse(await request.json());
+    const translated = await translateProductText(description, descriptionLocale === 'fr' ? 'en' : 'fr');
+    const descriptionFr = descriptionLocale === 'fr' ? description : translated;
+    const descriptionEn = descriptionLocale === 'en' ? description : translated;
     const db = await getCommerceDatabase();
     const product = await new CatalogRepository(db).createProduct({
-      id: randomUUID(), ...input,
+      id: randomUUID(), ...input, descriptionFr, descriptionEn,
       variants: input.variants.map((variant) => ({ id: randomUUID(), ...variant })),
     });
     return NextResponse.json(product, { status: 201 });

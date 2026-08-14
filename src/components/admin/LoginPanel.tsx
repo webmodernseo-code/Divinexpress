@@ -42,7 +42,7 @@ export function LoginPanel({ locale, action }: {
             </span>
           </div>
           <div className="max-w-xl pb-14">
-            <p className="text-xs font-bold tracking-[.3em] text-indigo-400">DIVINEXPRESS BACK OFFICE</p>
+            <p className="text-xs font-bold tracking-[.3em] text-white/60">DIVINEXPRESS BACK OFFICE</p>
             <h1 className="mt-6 font-serif text-6xl leading-[1.08]">
               Pilotez votre boutique<br />avec précision.
             </h1>
@@ -50,7 +50,7 @@ export function LoginPanel({ locale, action }: {
               Produits, commandes, retours et conversations clients réunis dans un seul espace sécurisé.
             </p>
             <p className="mt-10 flex items-center gap-4 text-sm font-semibold text-slate-200">
-              <ShieldCheck className="size-7 text-indigo-400" />
+              <ShieldCheck className="size-7 text-white/70" />
               Accès réservé aux membres autorisés.
             </p>
           </div>
@@ -94,7 +94,7 @@ export function LoginPanel({ locale, action }: {
               <span className="mb-2 block text-xs font-bold text-slate-700 uppercase tracking-wider">
                 {fr ? 'Identifiant' : 'Username'}
               </span>
-              <span className="flex h-14 items-center gap-3.5 rounded-xl border border-slate-200 bg-white px-4.5 focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-100/30 transition-all duration-200 shadow-sm">
+              <span className="flex h-14 items-center gap-3.5 rounded-xl border border-slate-200 bg-white px-4.5 focus-within:border-slate-900 focus-within:ring-4 focus-within:ring-slate-900/10 transition-all duration-200 shadow-sm">
                 <UserRound className="size-5 text-slate-400 stroke-[1.8]" />
                 <input
                   name="email"
@@ -111,7 +111,7 @@ export function LoginPanel({ locale, action }: {
               <span className="mb-2 block text-xs font-bold text-slate-700 uppercase tracking-wider">
                 {fr ? 'Mot de passe' : 'Password'}
               </span>
-              <span className="flex h-14 items-center gap-3.5 rounded-xl border border-slate-200 bg-white px-4.5 focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-100/30 transition-all duration-200 shadow-sm">
+              <span className="flex h-14 items-center gap-3.5 rounded-xl border border-slate-200 bg-white px-4.5 focus-within:border-slate-900 focus-within:ring-4 focus-within:ring-slate-900/10 transition-all duration-200 shadow-sm">
                 <LockKeyhole className="size-5 text-slate-400 stroke-[1.8]" />
                 <input
                   aria-label={fr ? 'Mot de passe' : 'Password'}
@@ -130,17 +130,17 @@ export function LoginPanel({ locale, action }: {
 
             <div className="flex items-center justify-between text-xs font-semibold text-slate-600">
               <label className="flex items-center gap-2 cursor-pointer select-none">
-                <input name="remember" type="checkbox" className="size-4 rounded border-slate-300 accent-indigo-600 focus:ring-indigo-500/20" />
+                <input name="remember" type="checkbox" className="size-4 rounded border-slate-300 accent-black focus:ring-black/20" />
                 {fr ? 'Se souvenir de moi' : 'Remember me'}
               </label>
-              <a href="#forgot" className="hover:text-indigo-600 transition-colors">
+              <a href="#forgot" className="hover:text-black transition-colors">
                 {fr ? 'Mot de passe oublié ?' : 'Forgot password?'}
               </a>
             </div>
 
             <button
               disabled={pending}
-              className="flex h-14 w-full items-center justify-center gap-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-600/10 active:scale-[0.98] font-bold text-white transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+              className="flex h-14 w-full items-center justify-center gap-3 rounded-xl bg-black hover:bg-neutral-800 shadow-md shadow-black/10 active:scale-[0.98] font-bold text-white transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
             >
               {pending ? (fr ? 'CONNEXION...' : 'SIGNING IN...') : (fr ? 'SE CONNECTER' : 'SIGN IN')}
               <ArrowRight className="size-4" />
@@ -155,12 +155,12 @@ export function LoginPanel({ locale, action }: {
           <div className="mt-8 border-t border-slate-200 pt-6">
             <p className="text-xs font-semibold text-slate-600">
               <b>{fr ? "Besoin d’aide ?" : 'Need help?'}</b>
-              <a href="mailto:support@divinexpress.fr" className="ml-4 text-indigo-600 hover:text-indigo-700 transition-colors">
+              <a href="mailto:support@divinexpress.fr" className="ml-4 text-black hover:text-neutral-700 transition-colors">
                 {fr ? "Contacter l’administrateur" : 'Contact administrator'}
               </a>
             </p>
-            <div className="mt-4 flex gap-3.5 rounded-2xl border border-indigo-150/40 bg-indigo-50/30 p-4 text-[12px] text-indigo-800 leading-relaxed font-semibold">
-              <ShieldCheck className="size-5 shrink-0 text-indigo-600 mt-0.5" />
+            <div className="mt-4 flex gap-3.5 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-[12px] text-slate-700 leading-relaxed font-semibold">
+              <ShieldCheck className="size-5 shrink-0 text-slate-700 mt-0.5" />
               <p>{fr ? "L’authentification à deux facteurs (2FA) peut être requise après la saisie de vos identifiants." : 'Two-factor authentication (2FA) may be required after sign in.'}</p>
             </div>
           </div>

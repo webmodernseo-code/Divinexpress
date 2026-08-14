@@ -5,13 +5,14 @@ import { requireRole } from '@/server/auth/authorization';
 import { CatalogRepository } from '@/server/catalog/repository';
 import { getCommerceDatabase } from '@/server/db/runtime';
 import { DomainError } from '@/server/domain/errors';
+import { translateProductText } from '@/server/ai/translate';
 
 const patchSchema = z.object({
   categoryId: z.string().min(1).optional(),
   nameFr: z.string().trim().min(1).optional(),
   nameEn: z.string().trim().min(1).optional(),
-  descriptionFr: z.string().optional(),
-  descriptionEn: z.string().optional(),
+  description: z.string().min(1).optional(),
+  descriptionLocale: z.enum(['fr', 'en']).optional(),
   status: z.enum(['draft', 'active', 'archived']).optional(),
   priceMinor: z.number().int().nonnegative().optional(),
   stock: z.number().int().optional(),
@@ -43,8 +44,16 @@ export async function PATCH(
       if (body.categoryId) { updates.push('category_id = ?'); values.push(body.categoryId); }
       if (body.nameFr) { updates.push('name_fr = ?'); values.push(body.nameFr); }
       if (body.nameEn) { updates.push('name_en = ?'); values.push(body.nameEn); }
-      if (body.descriptionFr !== undefined) { updates.push('description_fr = ?'); values.push(body.descriptionFr); }
-      if (body.descriptionEn !== undefined) { updates.push('description_en = ?'); values.push(body.descriptionEn); }
+      if (body.description !== undefined && body.descriptionLocale) {
+        const translated = await translateProductText(
+          body.description,
+          body.descriptionLocale === 'fr' ? 'en' : 'fr'
+        );
+        updates.push('description_fr = ?');
+        values.push(body.descriptionLocale === 'fr' ? body.description : translated);
+        updates.push('description_en = ?');
+        values.push(body.descriptionLocale === 'en' ? body.description : translated);
+      }
       if (body.status) { updates.push('status = ?'); values.push(body.status); }
       if (body.brand !== undefined) { updates.push('brand = ?'); values.push(body.brand); }
 
