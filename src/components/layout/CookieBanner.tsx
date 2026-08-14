@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Button } from '@/components/ui/Button';
+import { Link } from '@/i18n/navigation';
 
 const STORAGE_KEY = 'divinexpress-cookie-consent';
 
@@ -20,23 +20,38 @@ export function CookieBanner() {
     setIsVisible(false);
   }
 
+  function reject() {
+    window.localStorage.setItem(STORAGE_KEY, 'rejected');
+    setIsVisible(false);
+  }
+
   if (!isVisible) return null;
 
   return (
-    <>
-      <div className="fixed inset-x-0 bottom-0 z-40 flex flex-col items-center justify-between gap-4 bg-ink px-4 py-4 text-sm text-paper sm:flex-row sm:px-8">
-        <p className="max-w-2xl">{t('message')}</p>
-        <Button
-          variant="secondary"
+    <div className="fixed bottom-24 right-4 z-50 w-[calc(100%-2rem)] max-w-sm rounded-3xl border border-mist-100 bg-paper p-6 text-ink shadow-2xl shadow-black/10 sm:right-6">
+      <h2 className="font-serif text-xl font-semibold">{t('title')}</h2>
+      <p className="mt-3 text-sm text-mist-600">
+        {t('message')}{' '}
+        <Link href="/confidentialite" className="underline underline-offset-2 hover:text-accent">
+          {t('manage')}
+        </Link>
+      </p>
+      <div className="mt-5 flex flex-col gap-2.5">
+        <button
+          type="button"
           onClick={accept}
-          className="border-paper text-paper hover:border-accent hover:text-accent"
+          className="w-full rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-accent"
         >
           {t('accept')}
-        </Button>
+        </button>
+        <button
+          type="button"
+          onClick={reject}
+          className="w-full rounded-full border border-mist-200 bg-mist-50 px-6 py-3 text-sm font-medium text-ink transition-colors hover:border-ink"
+        >
+          {t('reject')}
+        </button>
       </div>
-      {/* Reserves the fixed banner's height in normal flow so it can never trap content
-          (e.g. a form's submit button) underneath it — see Task 30 QA audit. */}
-      <div aria-hidden="true" className="h-36 sm:h-20" />
-    </>
+    </div>
   );
 }

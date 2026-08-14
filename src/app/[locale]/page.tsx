@@ -27,8 +27,9 @@ export async function generateMetadata({
     return buildMetadata({
       locale,
       pathname: `?categorie=${requestedCategory}`,
-      title: `${categoryName} — DivinExpress`,
-      description: categoryName
+      title: `Vêtements et accessoires ${categoryName} — DivinExpress`,
+      description: `Découvrez la collection ${categoryName} de DivinExpress : vêtements et accessoires en ligne.`,
+      keywords: [categoryName, `vêtements ${categoryName}`, `mode ${categoryName}`]
     });
   }
 
@@ -96,7 +97,7 @@ export default async function HomePage({
       <HeroCarousel
         slides={[
           {
-            image: '/image/hero-shammah.png',
+            image: '/image/hero1.png',
             imageAlt: t('heroImageAlt1'),
             watermark: t('heroSlide1Watermark'),
             title: t('heroSlide1Title'),
@@ -104,11 +105,19 @@ export default async function HomePage({
             theme: 'navy'
           },
           {
-            image: '/image/hero2-shammah.png',
+            image: '/image/hero2.png',
             imageAlt: t('heroImageAlt2'),
             watermark: t('heroSlide2Watermark'),
             title: t('heroSlide2Title'),
             subtitle: t('heroSlide2Subtitle'),
+            theme: 'black'
+          },
+          {
+            image: '/image/hero3.png',
+            imageAlt: t('heroImageAlt3'),
+            watermark: t('heroSlide3Watermark'),
+            title: t('heroSlide3Title'),
+            subtitle: t('heroSlide3Subtitle'),
             theme: 'black'
           }
         ]}

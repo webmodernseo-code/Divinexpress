@@ -12,23 +12,55 @@ export function buildAlternateLanguages(pathname: string): Record<string, string
   return languages;
 }
 
+const DEFAULT_KEYWORDS = [
+  'vêtements homme femme enfant',
+  'boutique en ligne vêtements',
+  'accessoires mode',
+  'mode femme',
+  'mode homme',
+  'mode enfant',
+  'DivinExpress'
+];
+
 export function buildMetadata({
   locale,
   pathname,
   title,
-  description
+  description,
+  keywords,
+  imageUrl
 }: {
   locale: string;
   pathname: string;
   title: string;
   description: string;
+  keywords?: string[];
+  imageUrl?: string;
 }): Metadata {
+  const url = `${SITE_URL}/${locale}${pathname}`;
+  const image = imageUrl ?? `${SITE_URL}/branding/logo-divinexpress.png`;
   return {
     title,
     description,
+    keywords: [...(keywords ?? []), ...DEFAULT_KEYWORDS],
     alternates: {
-      canonical: `${SITE_URL}/${locale}${pathname}`,
+      canonical: url,
       languages: buildAlternateLanguages(pathname)
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: 'DivinExpress',
+      images: [{ url: image }],
+      locale,
+      type: 'website'
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image]
     }
   };
 }
@@ -39,7 +71,9 @@ export function organizationJsonLd() {
     '@type': 'Organization',
     name: 'DivinExpress',
     url: SITE_URL,
-    logo: `${SITE_URL}/branding/logo-divinexpress.png`
+    logo: `${SITE_URL}/branding/logo-divinexpress.png`,
+    description:
+      'DivinExpress est une plateforme de shopping en ligne de vêtements et accessoires pour femme, homme et enfant.'
   };
 }
 
@@ -61,13 +95,19 @@ export function productJsonLd({
   description,
   url,
   priceEur,
-  imageUrl
+  imageUrl,
+  brand,
+  category,
+  inStock = true
 }: {
   name: string;
   description: string;
   url: string;
   priceEur: number;
   imageUrl: string;
+  brand?: string;
+  category?: string;
+  inStock?: boolean;
 }) {
   return {
     '@context': 'https://schema.org',
@@ -75,12 +115,17 @@ export function productJsonLd({
     name,
     description,
     image: [imageUrl],
+    ...(category ? { category } : {}),
+    brand: {
+      '@type': 'Brand',
+      name: brand && brand.trim().length > 0 ? brand : 'DivinExpress'
+    },
     offers: {
       '@type': 'Offer',
       url,
       priceCurrency: 'EUR',
       price: priceEur.toFixed(2),
-      availability: 'https://schema.org/InStock'
+      availability: inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
     }
   };
 }

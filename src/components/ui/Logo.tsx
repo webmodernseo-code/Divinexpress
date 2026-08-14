@@ -10,7 +10,7 @@ export function Logo({ className = '' }: { className?: string }) {
         width={201}
         height={67}
         priority
-        className="h-8 w-auto md:h-10"
+        className="h-10 w-auto md:h-14"
       />
     </Link>
   );

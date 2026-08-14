@@ -17,20 +17,25 @@ export function PlaceholderBlock({
   aspect = 'portrait',
   label,
   className = '',
-  imageUrl
+  imageUrl,
+  fit = 'cover'
 }: {
   aspect?: Aspect;
   label?: string;
   className?: string;
   imageUrl?: string;
+  /** 'contain' insets the photo so the light-grey frame shows around it (catalogue cards). */
+  fit?: 'cover' | 'contain';
 }) {
   if (imageUrl) {
     return (
-      <div className={`${ASPECT_CLASSES[aspect]} ${FRAME} ${className}`}>
+      <div className={`${ASPECT_CLASSES[aspect]} ${FRAME} ${fit === 'contain' ? 'p-4' : ''} ${className}`}>
         <img
           src={imageUrl}
           alt={label ?? ''}
-          className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+          className={`h-full w-full object-center transition-transform duration-500 group-hover:scale-105 ${
+            fit === 'contain' ? 'object-contain' : 'object-cover'
+          }`}
         />
         {label && label.includes('/') && <span className="sr-only">{label}</span>}
       </div>

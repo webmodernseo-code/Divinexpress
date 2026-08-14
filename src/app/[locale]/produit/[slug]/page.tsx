@@ -20,7 +20,9 @@ export async function generateMetadata({
     locale,
     pathname: `/produit/${slug}`,
     title: `${product.name[localizedLocale]} — DivinExpress`,
-    description: product.description[localizedLocale]
+    description: product.description[localizedLocale],
+    keywords: [product.name[localizedLocale], product.category, product.brand].filter((v): v is string => Boolean(v)),
+    imageUrl: product.images?.[0]
   });
 }
 
@@ -71,7 +73,10 @@ export default async function ProductPage({
               description: product.description[localizedLocale],
               url: productUrl,
               priceEur: product.priceEur,
-              imageUrl: `${SITE_URL}/branding/logo-divinexpress.png`
+              imageUrl: product.images?.[0] ?? `${SITE_URL}/branding/logo-divinexpress.png`,
+              brand: product.brand,
+              category: `Vêtements et accessoires — ${tNav(product.category)}`,
+              inStock: (product.availableQuantity ?? 0) > 0
             })
           )
         }}
