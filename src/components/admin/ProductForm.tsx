@@ -23,6 +23,56 @@ const selectClass =
 const labelClass = 'block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5';
 const cardClass = 'bg-white border border-admin-border rounded-2xl shadow-xs p-6 space-y-5';
 
+/** Free-text color entry with autocomplete suggestions and a live round swatch preview. */
+function ColorComboInput({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: string;
+  onChange: (color: string) => void;
+  placeholder: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const swatch = COLOR_SWATCHES[value] ?? '#d4d4d4';
+  const query = value.trim().toLowerCase();
+  const suggestions = query
+    ? COLOR_NAMES.filter((name) => name.toLowerCase().includes(query))
+    : COLOR_NAMES;
+
+  return (
+    <div className="relative flex-1">
+      <span
+        className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 rounded-full border border-black/10"
+        style={{ backgroundColor: swatch }}
+      />
+      <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setTimeout(() => setOpen(false), 120)}
+        placeholder={placeholder}
+        className="h-10 w-full rounded-lg border border-slate-200 pl-8 pr-2 text-xs outline-none focus:border-indigo-500"
+      />
+      {open && suggestions.length > 0 && (
+        <div className="absolute z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
+          {suggestions.map((name) => (
+            <button
+              key={name}
+              type="button"
+              onMouseDown={(e) => { e.preventDefault(); onChange(name); setOpen(false); }}
+              className="flex w-full items-center gap-2 px-2.5 py-1.5 text-left text-xs hover:bg-slate-50 cursor-pointer"
+            >
+              <span className="size-3 rounded-full border border-black/10" style={{ backgroundColor: COLOR_SWATCHES[name] }} />
+              {name}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; product?: ProductItem }) {
   const systemLocale = useLocale() as 'fr' | 'en';
   const fr = systemLocale === 'fr';
@@ -378,9 +428,11 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
                           <select value={v.size} onChange={(e) => updateVariantRow(i, { size: e.target.value })} className="h-10 px-2 border border-slate-200 rounded-lg text-xs">
                             {activeSizes.map((s) => <option key={s} value={s}>{s}</option>)}
                           </select>
-                          <select value={v.color} onChange={(e) => updateVariantRow(i, { color: e.target.value })} className="h-10 px-2 border border-slate-200 rounded-lg text-xs flex-1">
-                            {COLOR_NAMES.map((c) => <option key={c} value={c}>{c}</option>)}
-                          </select>
+                          <ColorComboInput
+                            value={v.color}
+                            onChange={(color) => updateVariantRow(i, { color })}
+                            placeholder={fr ? 'Couleur' : 'Color'}
+                          />
                           <input
                             type="number" min="0" value={v.stock} onChange={(e) => updateVariantRow(i, { stock: e.target.value })}
                             placeholder="Stock" className="h-10 px-2 border border-slate-200 rounded-lg text-xs w-24"
@@ -494,11 +546,19 @@ export function ProductForm({ mode, product }: { mode: 'create' | 'edit'; produc
                   </span>
                 </div>
                 {showVariantLine && (
-                  <p className="text-xs text-admin-muted truncate">
-                    {previewColors.length > 0 ? previewColors.join(', ') : (fr ? 'Couleur' : 'Color')}
-                    {' • '}
-                    {previewSizes.length > 0 ? previewSizes.join(', ') : (fr ? 'Taille' : 'Size')}
-                  </p>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {previewColors.length > 0 && previewColors.map((c) => (
+                      <span
+                        key={c}
+                        title={c}
+                        className="size-3 shrink-0 rounded-full border border-black/10"
+                        style={{ backgroundColor: COLOR_SWATCHES[c] ?? '#d4d4d4' }}
+                      />
+                    ))}
+                    <span className="text-xs text-admin-muted truncate">
+                      {previewSizes.length > 0 ? previewSizes.join(', ') : (fr ? 'Taille' : 'Size')}
+                    </span>
+                  </div>
                 )}
                 {previewStock === 0 ? (
                   <p className="flex items-center gap-1.5 text-xs font-semibold text-admin-error">

@@ -17,17 +17,26 @@ import {
   ChevronDown
 } from 'lucide-react';
 
+type SidebarSubLink = { name: string; nameEn: string; href: string };
+
 type SidebarLink = {
   name: string;
   nameEn: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   badgeKey?: 'orders' | 'returns' | 'messages';
+  children?: SidebarSubLink[];
 };
 
 const SIDEBAR_LINKS: SidebarLink[] = [
   { name: 'Vue d\'ensemble', nameEn: 'Overview', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Produits', nameEn: 'Products', href: '/produits', icon: ShoppingBag },
+  {
+    name: 'Produits', nameEn: 'Products', href: '/produits', icon: ShoppingBag,
+    children: [
+      { name: 'Liste de produits', nameEn: 'Product list', href: '/produits' },
+      { name: 'Ajouter un produit', nameEn: 'Add a product', href: '/produits/nouveau' },
+    ],
+  },
   { name: 'Commandes', nameEn: 'Orders', href: '/commandes', icon: Receipt, badgeKey: 'orders' },
   { name: 'Retours', nameEn: 'Returns', href: '/retours', icon: RotateCcw, badgeKey: 'returns' },
   { name: 'Messages', nameEn: 'Messages', href: '/messages', icon: MessageSquare, badgeKey: 'messages' },
@@ -50,6 +59,15 @@ export function AdminSidebar({ isCollapsed: controlledCollapsed, onToggleCollaps
   const toggleCollapse = onToggleCollapse || (() => setLocalCollapsed(!localCollapsed));
 
   const [badges, setBadges] = useState({ orders: 0, returns: 0, messages: 0 });
+  const [expanded, setExpanded] = useState<Set<string>>(
+    () => new Set(SIDEBAR_LINKS.filter((link) => link.children?.some((child) => pathname.startsWith(child.href))).map((link) => link.href))
+  );
+  const toggleExpanded = (href: string) =>
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(href)) next.delete(href); else next.add(href);
+      return next;
+    });
 
   React.useEffect(() => {
     fetch('/api/admin/sidebar-badges')
@@ -83,7 +101,7 @@ export function AdminSidebar({ isCollapsed: controlledCollapsed, onToggleCollaps
         {/* Brand Header */}
         <div className="h-20 border-b border-admin-border flex items-center px-6 gap-3">
           {isSidebarCollapsed ? (
-            <div className="font-serif text-xl font-bold tracking-tight text-black">R.</div>
+            <div className="font-serif text-xl font-bold tracking-tight text-black">D.</div>
           ) : (
             <div className="animate-fade-in">
               <span className="font-serif text-2xl font-bold tracking-widest text-black block leading-none">DIVINEXPRESS</span>
@@ -99,21 +117,21 @@ export function AdminSidebar({ isCollapsed: controlledCollapsed, onToggleCollaps
           {SIDEBAR_LINKS.map((link) => {
             const Icon = link.icon;
             const isActive = pathname.startsWith(link.href) || (link.href === '/dashboard' && pathname === '/dashboard');
-            
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-xs font-semibold transition group relative ${
-                  isActive 
-                    ? 'bg-admin-secondary text-black' 
-                    : 'text-admin-muted hover:text-black hover:bg-neutral-50/70'
-                }`}
-              >
+            const hasChildren = !!link.children && !isSidebarCollapsed;
+            const isOpen = hasChildren && expanded.has(link.href);
+
+            const rowClassName = `flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-xs font-semibold transition group relative w-full ${
+              isActive
+                ? 'bg-admin-secondary text-black'
+                : 'text-admin-muted hover:text-black hover:bg-neutral-50/70'
+            }`;
+
+            const rowContent = (
+              <>
                 <Icon className={`size-4.5 shrink-0 transition-colors ${
                   isActive ? 'text-black' : 'text-admin-muted group-hover:text-black'
                 }`} />
-                
+
                 {!isSidebarCollapsed && (
                   <span className="animate-fade-in">
                     {systemLocale === 'fr' ? link.name : link.nameEn}
@@ -123,12 +141,16 @@ export function AdminSidebar({ isCollapsed: controlledCollapsed, onToggleCollaps
                 {/* Badge notifications count */}
                 {!isSidebarCollapsed && link.badgeKey && badges[link.badgeKey] > 0 && (
                   <span className={`ml-auto size-5 rounded-full text-[9px] font-bold flex items-center justify-center shrink-0 ${
-                    link.badgeKey === 'messages' 
-                      ? 'bg-[#247A52] text-white' 
+                    link.badgeKey === 'messages'
+                      ? 'bg-[#247A52] text-white'
                       : 'bg-black text-white'
                   }`}>
                     {badges[link.badgeKey]}
                   </span>
+                )}
+
+                {hasChildren && (
+                  <ChevronDown className={`ml-auto size-3.5 shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                 )}
 
                 {/* Collapsed Tooltip or collapsed badge count */}
@@ -137,7 +159,41 @@ export function AdminSidebar({ isCollapsed: controlledCollapsed, onToggleCollaps
                     {systemLocale === 'fr' ? link.name : link.nameEn}
                   </div>
                 )}
-              </Link>
+              </>
+            );
+
+            return (
+              <div key={link.href}>
+                {hasChildren ? (
+                  <button type="button" onClick={() => toggleExpanded(link.href)} className={rowClassName}>
+                    {rowContent}
+                  </button>
+                ) : (
+                  <Link href={link.href} className={rowClassName}>
+                    {rowContent}
+                  </Link>
+                )}
+
+                {hasChildren && isOpen && (
+                  <div className="ml-[34px] mt-1 space-y-0.5 border-l border-admin-border pl-3.5 animate-fade-in">
+                    {link.children!.map((child) => {
+                      const childActive = pathname === child.href
+                        || (child.href !== '/produits' && pathname.startsWith(child.href));
+                      return (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className={`block rounded-lg px-3 py-2 text-xs font-semibold transition ${
+                            childActive ? 'text-black bg-admin-secondary' : 'text-admin-muted hover:text-black hover:bg-neutral-50/70'
+                          }`}
+                        >
+                          {systemLocale === 'fr' ? child.name : child.nameEn}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             );
           })}
         </nav>
