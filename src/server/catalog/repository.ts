@@ -13,14 +13,14 @@ export interface CatalogVariant {
 
 export interface CatalogProduct {
   id: string; categoryId: string; slug: string; nameFr: string; nameEn: string;
-  descriptionFr: string; descriptionEn: string; status: ProductStatus;
+  descriptionFr: string; descriptionEn: string; status: ProductStatus; brand: string | null;
   images: string[]; compareAtMinor: number | null;
   variants: CatalogVariant[];
 }
 
 interface ProductRow {
   id: string; category_id: string; slug: string; name_fr: string; name_en: string;
-  description_fr: string; description_en: string; status: ProductStatus;
+  description_fr: string; description_en: string; status: ProductStatus; brand: string | null;
 }
 
 interface VariantRow {
@@ -36,10 +36,10 @@ export class CatalogRepository {
     await this.database.exec('BEGIN IMMEDIATE');
     try {
       await this.database.prepare(`INSERT INTO products
-        (id, category_id, slug, name_fr, name_en, description_fr, description_en, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
+        (id, category_id, slug, name_fr, name_en, description_fr, description_en, status, brand)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
         .run(input.id, input.categoryId, input.slug, input.nameFr, input.nameEn,
-          input.descriptionFr, input.descriptionEn, input.status ?? 'active');
+          input.descriptionFr, input.descriptionEn, input.status ?? 'active', input.brand ?? null);
       const insertVariant = this.database.prepare(`INSERT INTO product_variants
         (id, product_id, sku, size, color, price_minor, currency, compare_at_price_minor)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
@@ -68,7 +68,7 @@ export class CatalogRepository {
 
   async listProducts(options: { includeArchived?: boolean } = {}): Promise<CatalogProduct[]> {
     const products = (await this.database.prepare(`SELECT id, category_id, slug, name_fr, name_en,
-      description_fr, description_en, status FROM products
+      description_fr, description_en, status, brand FROM products
       ${options.includeArchived ? '' : "WHERE status <> 'archived'"} ORDER BY created_at, id`)
       .all()) as unknown as ProductRow[];
     if (products.length === 0) return [];
@@ -90,6 +90,7 @@ export class CatalogRepository {
         descriptionFr: product.description_fr,
         descriptionEn: product.description_en,
         status: product.status,
+        brand: product.brand,
         images: media.filter((m) => m.product_id === product.id).map((m) => m.url),
         compareAtMinor: productVariants[0]?.compare_at_price_minor ?? null,
         variants: productVariants.map((variant) => ({

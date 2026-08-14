@@ -26,6 +26,8 @@ export interface Product {
   images?: string[];
   /** Original ("compare-at") price in euros, shown struck-through when > priceEur. */
   compareAtEur?: number;
+  /** Brand/label of the product, shown on the product page and in structured data. */
+  brand?: string;
 }
 
 export const COLOR_SWATCHES: Record<string, string> = {

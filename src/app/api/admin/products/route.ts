@@ -13,6 +13,7 @@ const inputSchema = z.object({
   images: z.array(z.string().url()).max(6).optional(),
   compareAtPriceMinor: z.number().int().nonnegative().optional(),
   status: z.enum(['draft', 'active']).optional(),
+  brand: z.string().trim().min(1).max(120).nullable().optional(),
   variants: z.array(z.object({
     sku: z.string().min(1), size: z.string().nullable(), color: z.string().nullable(),
     priceMinor: z.number().int().nonnegative(), currency: z.enum(['EUR', 'GBP']),

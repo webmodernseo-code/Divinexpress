@@ -17,6 +17,7 @@ const patchSchema = z.object({
   stock: z.number().int().optional(),
   images: z.array(z.string().url()).max(6).optional(),
   compareAtPriceMinor: z.number().int().nonnegative().nullable().optional(),
+  brand: z.string().trim().min(1).max(120).nullable().optional(),
 });
 
 export async function PATCH(
@@ -45,6 +46,7 @@ export async function PATCH(
       if (body.descriptionFr !== undefined) { updates.push('description_fr = ?'); values.push(body.descriptionFr); }
       if (body.descriptionEn !== undefined) { updates.push('description_en = ?'); values.push(body.descriptionEn); }
       if (body.status) { updates.push('status = ?'); values.push(body.status); }
+      if (body.brand !== undefined) { updates.push('brand = ?'); values.push(body.brand); }
 
       if (updates.length > 0) {
         updates.push('updated_at = CURRENT_TIMESTAMP');

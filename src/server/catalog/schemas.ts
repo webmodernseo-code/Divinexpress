@@ -21,6 +21,7 @@ export const createProductInputSchema = z.object({
   images: z.array(z.string().url()).max(6).optional(),
   compareAtPriceMinor: z.number().int().nonnegative().optional(),
   status: z.enum(['draft', 'active']).optional(),
+  brand: z.string().trim().min(1).max(120).nullable().optional(),
   variants: z.array(productVariantInputSchema).min(1),
 });
 

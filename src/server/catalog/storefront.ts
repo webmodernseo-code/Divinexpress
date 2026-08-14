@@ -36,6 +36,7 @@ function toStorefrontProduct(product: CatalogProduct): Product | null {
     availableQuantity: product.variants.reduce((total, variant) => total + Math.max(0, variant.stock), 0),
     images: product.images,
     compareAtEur: product.compareAtMinor != null ? product.compareAtMinor / 100 : undefined,
+    brand: product.brand ?? undefined,
   };
 }
 
