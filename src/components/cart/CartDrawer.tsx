@@ -109,7 +109,7 @@ export function CartDrawer({
         role="dialog"
         aria-modal="true"
         aria-labelledby="cart-drawer-title"
-        className={`absolute inset-y-0 right-0 flex h-dvh w-full flex-col bg-white text-black shadow-[-20px_0_60px_rgba(0,0,0,0.14)] transition-transform duration-300 ease-out sm:w-1/2 ${
+        className={`absolute inset-y-0 right-0 flex h-dvh w-1/2 flex-col bg-white text-black shadow-[-20px_0_60px_rgba(0,0,0,0.14)] transition-transform duration-300 ease-out ${
           activeOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
