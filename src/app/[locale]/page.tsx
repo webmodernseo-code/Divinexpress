@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { buildMetadata, breadcrumbJsonLd, SITE_URL } from '@/lib/seo';
 import { HomeCollection } from '@/components/home/HomeCollection';
 import { HeroCarousel } from '@/components/home/HeroCarousel';
 import { PromoBanner } from '@/components/home/PromoBanner';
 import { HomeFaq } from '@/components/home/HomeFaq';
+import { NewArrivalsCarousel } from '@/components/home/NewArrivalsCarousel';
 import { CATEGORIES, getSubcategoriesForCategory, type Category } from '@/lib/products';
 import { getCommerceDatabase } from '@/server/db/runtime';
 import { StorefrontCatalog } from '@/server/catalog/storefront';
@@ -144,20 +144,12 @@ export default async function HomePage({
 
       <HomeFaq />
 
-      <section className="relative aspect-[16/9] w-full overflow-hidden">
-        <Image
-          src="/image/hero_3.png"
-          alt={t('editorialTitle')}
-          fill
-          className="object-cover"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-ink/50" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center text-paper">
-          <h2 className="max-w-2xl font-serif text-3xl md:text-4xl">{t('editorialTitle')}</h2>
-          <p className="mt-4 max-w-xl text-sm md:text-base">{t('editorialBody')}</p>
-        </div>
-      </section>
+      {/* Catalog is ordered oldest → newest by created_at, so the tail is the newest stock. */}
+      <NewArrivalsCarousel
+        title={t('newArrivalsTitle')}
+        subtitle={t('newArrivalsSubtitle')}
+        products={products.slice(-8).reverse()}
+      />
     </>
   );
 }

@@ -41,7 +41,7 @@ export function CartDrawer({
   freeShippingThreshold = 150,
   currency: propCurrency,
   locale: propLocale,
-  cartHref = '/panier',
+  cartHref = '/commande/livraison',
   onQuantityChange,
   onRemove
 }: CartDrawerProps) {
@@ -109,7 +109,7 @@ export function CartDrawer({
         role="dialog"
         aria-modal="true"
         aria-labelledby="cart-drawer-title"
-        className={`absolute inset-y-0 right-0 flex h-dvh w-1/2 flex-col bg-white text-black shadow-[-20px_0_60px_rgba(0,0,0,0.14)] transition-transform duration-300 ease-out ${
+        className={`absolute inset-y-0 right-0 flex h-dvh w-full flex-col bg-white text-black shadow-[-20px_0_60px_rgba(0,0,0,0.14)] transition-transform duration-300 ease-out sm:w-[420px] ${
           activeOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -279,7 +279,7 @@ export function CartDrawer({
               onClick={activeOnClose}
               className="mt-5 flex h-14 w-full items-center justify-center rounded-lg bg-black text-sm font-semibold tracking-[0.14em] text-white transition hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/35 focus-visible:ring-offset-2"
             >
-              {t('viewCart').toUpperCase()}
+              {t('checkout').toUpperCase()}
             </Link>
 
             <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
