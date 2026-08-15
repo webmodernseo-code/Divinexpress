@@ -180,30 +180,30 @@ export function CartDrawer({
                 const itemPrice = (line.unitPriceEur ?? 0) * line.quantity;
 
                 return (
-                  <article key={lineKey} className="grid grid-cols-[118px_1fr] gap-5 py-6 sm:grid-cols-[150px_1fr] sm:gap-7 first:pt-4">
+                  <article key={lineKey} className="grid grid-cols-[84px_1fr] gap-4 py-4 sm:grid-cols-[96px_1fr] sm:gap-5 first:pt-4">
                     <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-neutral-100">
                       <Image
                         src={productImage}
                         alt={line.name[systemLocale]}
                         fill
-                        sizes="(max-width: 640px) 118px, 150px"
+                        sizes="(max-width: 640px) 84px, 96px"
                         className="object-cover"
                       />
                     </div>
 
-                    <div className="min-w-0 py-1 flex flex-col justify-between">
+                    <div className="min-w-0 flex flex-col justify-between">
                       <div>
-                        <h3 className="text-lg font-medium sm:text-xl text-ink leading-tight">{line.name[systemLocale]}</h3>
-                        <p className="mt-1 text-sm text-neutral-500 sm:text-base">
+                        <h3 className="text-sm font-medium sm:text-base text-ink leading-tight">{line.name[systemLocale]}</h3>
+                        <p className="mt-1 text-xs text-neutral-500 sm:text-sm">
                           {line.size} · {line.color}
                         </p>
-                        <p className="mt-3 text-lg font-medium text-ink">
+                        <p className="mt-2 text-sm font-medium text-ink sm:text-base">
                           {formatter.format(itemPrice)}
                         </p>
                       </div>
 
-                      <div className="mt-4 flex flex-wrap items-center gap-4">
-                        <div className="inline-flex h-11 items-center rounded-full border border-neutral-300">
+                      <div className="mt-3 flex flex-wrap items-center gap-3">
+                        <div className="inline-flex h-9 items-center rounded-full border border-neutral-300">
                           <button
                             type="button"
                             onClick={() => {
@@ -213,13 +213,13 @@ export function CartDrawer({
                             }}
                             disabled={line.quantity <= 1}
                             aria-label="Decrease quantity"
-                            className="grid h-full w-11 place-items-center rounded-l-full transition hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-35"
+                            className="grid h-full w-9 place-items-center rounded-l-full transition hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-35"
                           >
-                            <FiMinus className="size-4" aria-hidden="true" />
+                            <FiMinus className="size-3.5" aria-hidden="true" />
                           </button>
                           <output
                             aria-label="Quantity"
-                            className="min-w-8 text-center text-sm font-medium"
+                            className="min-w-7 text-center text-xs font-medium"
                           >
                             {line.quantity}
                           </output>
@@ -231,9 +231,9 @@ export function CartDrawer({
                               onQuantityChange?.(nextQty, line.productId, line.size, line.color);
                             }}
                             aria-label="Increase quantity"
-                            className="grid h-full w-11 place-items-center rounded-r-full transition hover:bg-neutral-100"
+                            className="grid h-full w-9 place-items-center rounded-r-full transition hover:bg-neutral-100"
                           >
-                            <FiPlus className="size-4" aria-hidden="true" />
+                            <FiPlus className="size-3.5" aria-hidden="true" />
                           </button>
                         </div>
 
@@ -243,9 +243,9 @@ export function CartDrawer({
                             removeItem(line.productId, line.size, line.color);
                             onRemove?.(line.productId, line.size, line.color);
                           }}
-                          className="flex items-center gap-2 text-sm text-neutral-500 underline decoration-neutral-400 underline-offset-4 transition hover:text-black"
+                          className="flex items-center gap-1.5 text-xs text-neutral-500 underline decoration-neutral-400 underline-offset-4 transition hover:text-black"
                         >
-                          <FiTrash2 className="size-4" aria-hidden="true" />
+                          <FiTrash2 className="size-3.5" aria-hidden="true" />
                           {systemLocale === 'fr' ? 'Retirer' : 'Remove'}
                         </button>
                       </div>

@@ -52,7 +52,7 @@ export function NewArrivalsCarousel({
       </div>
 
       <div
-        className="relative mx-auto mt-10 flex h-[300px] w-full max-w-6xl items-center justify-center sm:h-[380px] md:mt-14 md:h-[460px]"
+        className="relative mx-auto mt-10 flex h-[360px] w-full max-w-6xl items-center justify-center sm:h-[440px] md:mt-14 md:h-[520px]"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -73,7 +73,7 @@ export function NewArrivalsCarousel({
                 aria-label={product.name[locale]}
                 aria-hidden={!isActive}
                 tabIndex={isActive ? 0 : -1}
-                className="absolute h-56 w-36 transition-all duration-500 ease-in-out sm:h-72 sm:w-48 md:h-[420px] md:w-64 lg:h-[460px] lg:w-72"
+                className="absolute h-72 w-48 transition-all duration-500 ease-in-out sm:h-[340px] sm:w-56 md:h-[480px] md:w-72 lg:h-[520px] lg:w-80"
                 style={{
                   transform: `translateX(${pos * 45}%) scale(${isActive ? 1 : isAdjacent ? 0.85 : 0.7}) rotateY(${pos * -10}deg)`,
                   zIndex: isActive ? 10 : isAdjacent ? 5 : 1,

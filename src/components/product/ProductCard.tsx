@@ -54,7 +54,7 @@ export function ProductCard({ product }: { product: Product }) {
               event.stopPropagation();
               handleAddToCart();
             }}
-            className="absolute inset-x-3 bottom-3 flex h-10 items-center justify-center rounded-full bg-ink text-xs font-semibold uppercase tracking-wide text-paper transition-all hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:translate-y-2 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100"
+            className="absolute bottom-2.5 left-1/2 flex h-8 -translate-x-1/2 items-center justify-center whitespace-nowrap rounded-full bg-ink px-4 text-[10px] font-semibold uppercase tracking-wide text-paper transition-all hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:translate-y-2 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100"
           >
             {t('addToCart')}
           </button>
