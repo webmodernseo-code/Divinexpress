@@ -5,7 +5,13 @@ import type { Database } from './client';
 // Ordered list of migrations. Add new entries at the end; each id must be unique
 // and match a `<id>.sql` file in ./migrations. Applied migrations are tracked in
 // the schema_migrations table so re-running is idempotent.
-const MIGRATIONS = ['0001_initial', '0002_conversations', '0003_compare_at_price', '0004_product_brand'] as const;
+const MIGRATIONS = [
+  '0001_initial',
+  '0002_conversations',
+  '0003_compare_at_price',
+  '0004_product_brand',
+  '0005_promotion_slides',
+] as const;
 
 export async function migrateDatabase(database: Database): Promise<void> {
   await database.exec(`

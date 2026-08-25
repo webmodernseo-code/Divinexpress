@@ -8,6 +8,24 @@ const categoryNames = {
   accessoires: { fr: 'Accessoires', en: 'Accessories' },
 } as const;
 
+const promotionImageNames = [
+  'carroussel1.png',
+  'carroussel2.png',
+  'carrousel3.png',
+  'carrousel4.png',
+  'carroussel5.png',
+  'carroussel6.png',
+  'carroussel7.png',
+  'carroussel8.png',
+  'carroussel9.png',
+  'carroussel10.png',
+] as const;
+
+const promotionCategories: Array<keyof typeof categoryNames> = [
+  'homme', 'femme', 'enfant', 'accessoires', 'homme',
+  'femme', 'enfant', 'accessoires', 'homme', 'femme',
+];
+
 function identifierPart(value: string): string {
   return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase();
 }
@@ -24,6 +42,8 @@ export async function seedDevelopmentDatabase(database: Database): Promise<void>
   const insertStock = database.prepare(`INSERT OR IGNORE INTO inventory_movements
     (id, variant_id, quantity_delta, reason, reference_type, reference_id)
     VALUES (?, ?, 25, 'initial', 'seed', 'storefront-v1')`);
+  const insertPromotionSlide = database.prepare(`INSERT OR IGNORE INTO promotion_slides
+    (id, image_url, product_id, position, active) VALUES (?, ?, ?, ?, 1)`);
 
   await database.exec('BEGIN IMMEDIATE');
   try {
@@ -32,7 +52,7 @@ export async function seedDevelopmentDatabase(database: Database): Promise<void>
       await insertCategory.run(`category:${category}`, category, names.fr, names.en);
     }
 
-    for (const product of ALL_PRODUCTS.filter((p) => p.id === 'homme-hoodie-yahweh')) {
+    for (const product of ALL_PRODUCTS) {
       await insertProduct.run(
         product.id,
         `category:${product.category}`,
@@ -51,6 +71,18 @@ export async function seedDevelopmentDatabase(database: Database): Promise<void>
           await insertStock.run(`stock:${variantId}`, variantId);
         }
       }
+    }
+
+    for (let position = 0; position < promotionImageNames.length; position += 1) {
+      const category = promotionCategories[position];
+      const product = ALL_PRODUCTS.find((candidate) => candidate.category === category);
+      if (!product) throw new Error(`No seeded product found for promotion category ${category}`);
+      await insertPromotionSlide.run(
+        `promotion-slide-${position + 1}`,
+        `/image/promotions/${promotionImageNames[position]}`,
+        product.id,
+        position,
+      );
     }
 
     // --- Demo data (development only) ---
