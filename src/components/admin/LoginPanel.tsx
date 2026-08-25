@@ -6,6 +6,7 @@ import { useActionState, useState } from 'react';
 import Image from 'next/image';
 import { ArrowRight, Eye, EyeOff, LockKeyhole, ShieldCheck, UserRound } from 'lucide-react';
 import type { LoginState } from '@/app/[locale]/(auth)/connexion/actions';
+import { Logo } from '@/components/ui/Logo';
 
 export function LoginPanel({ locale, action }: {
   locale: 'fr' | 'en';
@@ -66,13 +67,10 @@ export function LoginPanel({ locale, action }: {
           <div className="text-center">
             {/* Real Logo in login panel */}
             <div className="flex justify-center mb-7">
-              <Image
-                src="/branding/logo-divinexpress.png"
-                alt="DivinExpress"
-                width={201}
-                height={67}
-                priority
-                className="h-12 w-auto"
+              <Logo
+                className="gap-3"
+                markClassName="size-10 md:size-11"
+                wordmarkClassName="h-10 md:h-12"
               />
             </div>
             <h2 className="font-serif text-3xl font-bold tracking-tight text-slate-900">
