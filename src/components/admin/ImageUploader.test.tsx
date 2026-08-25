@@ -32,6 +32,21 @@ describe('ImageUploader', () => {
     );
   });
 
+  it('requests a promotion-specific signature when used for a promotion image', async () => {
+    const onChange = vi.fn();
+    render(<ImageUploader value={[]} onChange={onChange} purpose="promotions" labels={labels} />);
+
+    const file = new File(['x'], 'banner.jpg', { type: 'image/jpeg' });
+    fireEvent.change(screen.getByTestId('image-uploader-input'), { target: { files: [file] } });
+
+    await waitFor(() => expect(onChange).toHaveBeenCalled());
+    expect(fetch).toHaveBeenNthCalledWith(1, '/api/admin/upload-signature', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ purpose: 'promotions' }),
+    });
+  });
+
   it('removes an image when its remove button is clicked', () => {
     const onChange = vi.fn();
     render(<ImageUploader value={['https://a.jpg', 'https://b.jpg']} onChange={onChange} labels={labels} />);

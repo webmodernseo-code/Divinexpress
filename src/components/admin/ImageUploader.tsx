@@ -22,12 +22,14 @@ export function ImageUploader({
   value,
   max = 6,
   onChange,
-  labels
+  labels,
+  purpose = 'products',
 }: {
   value: string[];
   max?: number;
   onChange: (urls: string[]) => void;
   labels: { add: string; uploading: string; remove: string; hint?: string; sizeHint?: string; more?: string; error?: string };
+  purpose?: 'products' | 'promotions';
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -35,7 +37,11 @@ export function ImageUploader({
   const [dragOver, setDragOver] = useState(false);
 
   async function uploadOne(file: File): Promise<string> {
-    const sigRes = await fetch('/api/admin/upload-signature', { method: 'POST' });
+    const sigRes = await fetch('/api/admin/upload-signature', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ purpose }),
+    });
     if (!sigRes.ok) throw new Error('signature failed');
     const sig = (await sigRes.json()) as SignatureResponse;
 
