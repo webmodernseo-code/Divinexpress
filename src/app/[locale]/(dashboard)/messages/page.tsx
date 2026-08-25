@@ -135,7 +135,7 @@ export default function MessagesPage() {
         refreshChats(activeChat.id);
       }
     } catch {
-      alert('Error sending message');
+      alert(systemLocale === 'fr' ? "Échec de l'envoi du message" : 'Failed to send message');
     }
   };
 
@@ -150,7 +150,7 @@ export default function MessagesPage() {
         refreshChats(conversationId);
       }
     } catch {
-      alert('Error resolving chat');
+      alert(systemLocale === 'fr' ? 'Échec de la résolution' : 'Failed to resolve chat');
     }
   };
 
@@ -173,11 +173,17 @@ export default function MessagesPage() {
     handleSendMessage(suggestion);
   };
 
+  // Load the saved private note for the active conversation (persisted locally in the browser).
+  useEffect(() => {
+    if (!activeChatId) { setNoteText(''); return; }
+    setNoteText(localStorage.getItem(`divinexpress-note-${activeChatId}`) ?? '');
+  }, [activeChatId]);
+
   const handleSaveNote = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!noteText.trim()) return;
-    alert(systemLocale === 'fr' ? 'Note privée sauvegardée !' : 'Private note saved!');
-    setNoteText('');
+    if (!activeChatId) return;
+    localStorage.setItem(`divinexpress-note-${activeChatId}`, noteText.trim());
+    alert(systemLocale === 'fr' ? 'Note privée enregistrée.' : 'Private note saved.');
   };
 
   const filteredChats = chats.filter((c) => {

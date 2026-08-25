@@ -1,16 +1,16 @@
 'use client';
 
-/* eslint-disable @next/next/no-html-link-for-pages */
-
 import Image from 'next/image';
-import { CalendarDays, Download, Package, Percent, RotateCcw, ShoppingBag, TrendingUp } from 'lucide-react';
+import { CalendarDays, Package, RotateCcw, ShoppingBag, TrendingUp } from 'lucide-react';
 import { useAdminDemo } from '@/context/AdminDemoContext';
+import { Link } from '@/i18n/navigation';
 import type { DashboardMetric } from '@/lib/admin/types';
 import { MetricCard } from './ui/MetricCard';
 import { StatusBadge, type StatusTone } from './ui/StatusBadge';
 import { AdminCard } from './ui/AdminCard';
 import { SalesChart } from './SalesChart';
 import { CategoryDistributionChart } from './CategoryDistributionChart';
+import { PromotionCarouselManager } from './PromotionCarouselManager';
 
 const metricIcons: Record<DashboardMetric['icon'], typeof TrendingUp> = { revenue: TrendingUp, orders: ShoppingBag, basket: Package, returns: RotateCcw };
 const statusTones: Record<string, StatusTone> = { 'Payée': 'success', 'Expédiée': 'info', 'En préparation': 'warning', 'Annulée': 'danger' };
@@ -26,7 +26,7 @@ export function DashboardOverview() {
             Administration &nbsp;/&nbsp; <b className="text-indigo-600">Vue d’ensemble</b>
           </p>
           <h1 className="mt-4 font-serif text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-            Bonjour Jean
+            Bonjour&nbsp;👋
           </h1>
           <p className="mt-2 text-sm text-slate-500">
             Voici les performances de votre boutique aujourd’hui.
@@ -49,10 +49,6 @@ export function DashboardOverview() {
               <option value="90d">90 derniers jours</option>
             </select>
           </label>
-          <button className="flex h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-xs font-semibold text-slate-600 shadow-sm hover:bg-slate-50 active:scale-[0.98] transition-all">
-            <Download className="size-4 text-slate-400" />
-            Exporter
-          </button>
         </div>
       </div>
 
@@ -69,6 +65,8 @@ export function DashboardOverview() {
           />
         ))}
       </section>
+
+      <PromotionCarouselManager />
 
       {/* Interactive Charts Segment */}
       <div className="grid gap-6 xl:grid-cols-[2fr_1fr]">
@@ -97,9 +95,9 @@ export function DashboardOverview() {
         <AdminCard className="overflow-hidden">
           <div className="flex items-center justify-between border-b border-slate-100 p-5">
             <h2 className="font-serif text-lg font-bold text-slate-800">Commandes récentes</h2>
-            <a href="/fr/commandes" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
+            <Link href="/commandes" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
               Voir toutes les commandes
-            </a>
+            </Link>
           </div>
           <div className="divide-y divide-slate-100">
             {state.recentOrders.map((order) => (
@@ -125,9 +123,9 @@ export function DashboardOverview() {
           <AdminCard className="overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-100 p-5">
               <h2 className="font-serif text-base font-bold text-slate-800">Alertes Stock</h2>
-              <a href="/fr/produits" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
+              <Link href="/produits" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
                 Voir tout
-              </a>
+              </Link>
             </div>
             <div className="divide-y divide-slate-100">
               {state.stockAlerts.map((item) => (
@@ -150,24 +148,20 @@ export function DashboardOverview() {
           <AdminCard className="p-5 space-y-4">
             <h2 className="font-serif text-base font-bold text-slate-800">Actions rapides</h2>
             <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
-              <a
-                href="/fr/produits"
+              <Link
+                href="/produits"
                 className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 p-3 text-xs font-semibold text-slate-600 shadow-sm transition-all duration-200"
               >
                 <Package className="size-4 text-slate-400" />
                 Ajouter un produit
-              </a>
-              <button className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 p-3 text-xs font-semibold text-slate-600 shadow-sm transition-all duration-200 text-left">
-                <Percent className="size-4 text-slate-400" />
-                Créer une remise
-              </button>
-              <a
-                href="/fr/retours"
+              </Link>
+              <Link
+                href="/retours"
                 className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 p-3 text-xs font-semibold text-slate-600 shadow-sm transition-all duration-200"
               >
                 <RotateCcw className="size-4 text-slate-400" />
                 Traiter un retour
-              </a>
+              </Link>
             </div>
           </AdminCard>
         </div>

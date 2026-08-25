@@ -5,10 +5,12 @@ import { HomeCollection } from '@/components/home/HomeCollection';
 import { HeroCarousel } from '@/components/home/HeroCarousel';
 import { PromoBanner } from '@/components/home/PromoBanner';
 import { HomeFaq } from '@/components/home/HomeFaq';
-import { NewArrivalsCarousel } from '@/components/home/NewArrivalsCarousel';
+import { CustomerTestimonials } from '@/components/home/CustomerTestimonials';
+import { PromotionCarousel } from '@/components/home/PromotionCarousel';
 import { CATEGORIES, getSubcategoriesForCategory, type Category } from '@/lib/products';
 import { getCommerceDatabase } from '@/server/db/runtime';
 import { StorefrontCatalog } from '@/server/catalog/storefront';
+import { PromotionRepository } from '@/server/promotions/repository';
 
 export async function generateMetadata({
   params,
@@ -53,7 +55,11 @@ export default async function HomePage({
   setRequestLocale(locale);
   const sp = await searchParams;
   const t = await getTranslations('home');
-  const products = await new StorefrontCatalog(await getCommerceDatabase()).list();
+  const database = await getCommerceDatabase();
+  const [products, promotionSlides] = await Promise.all([
+    new StorefrontCatalog(database).list(),
+    new PromotionRepository(database).listPublished()
+  ]);
 
   // URL contract with the Header (Tâche 10): /?categorie=homme&sousCategorie=vestes
   const requestedCategory = typeof sp.categorie === 'string' ? sp.categorie : undefined;
@@ -130,6 +136,8 @@ export default async function HomePage({
         ]}
       />
 
+      <PromoBanner />
+
       {/* Remounts when the Header navigates to a different category/subcategory. */}
       <div id="collection" className="scroll-mt-28">
         <HomeCollection
@@ -140,16 +148,12 @@ export default async function HomePage({
         />
       </div>
 
-      <PromoBanner />
-
       <HomeFaq />
 
+      <CustomerTestimonials />
+
       {/* Catalog is ordered oldest → newest by created_at, so the tail is the newest stock. */}
-      <NewArrivalsCarousel
-        title={t('newArrivalsTitle')}
-        subtitle={t('newArrivalsSubtitle')}
-        products={products.slice(-8).reverse()}
-      />
+      <PromotionCarousel slides={promotionSlides} />
     </>
   );
 }

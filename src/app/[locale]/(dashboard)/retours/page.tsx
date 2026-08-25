@@ -103,9 +103,11 @@ export default function RetoursPage() {
       });
       if (response.ok) {
         refreshReturns();
+      } else {
+        alert(systemLocale === 'fr' ? 'Échec de la mise à jour' : 'Update failed');
       }
     } catch {
-      alert('Error');
+      alert(systemLocale === 'fr' ? 'Erreur réseau' : 'Network error');
     }
   };
 

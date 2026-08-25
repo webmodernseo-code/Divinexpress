@@ -78,9 +78,12 @@ export default function ParametresPage() {
         setTimeout(() => {
           setIsSaved(false);
         }, 4000);
+      } else {
+        const err = (await res.json().catch(() => ({}))) as { error?: string };
+        alert(systemLocale === 'fr' ? `Échec de l'enregistrement (${err.error ?? 'erreur'})` : `Save failed (${err.error ?? 'error'})`);
       }
     } catch {
-      alert('Error saving settings');
+      alert(systemLocale === 'fr' ? 'Erreur réseau' : 'Network error');
     }
   };
 

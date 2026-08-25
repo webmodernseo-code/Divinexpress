@@ -39,26 +39,24 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <div className="group relative">
-      <Link href={`/produit/${product.slug}?couleur=${encodeURIComponent(selectedColor)}`} className="block">
-        <div className="relative">
+      <div className="relative">
+        <Link href={`/produit/${product.slug}?couleur=${encodeURIComponent(selectedColor)}`} className="block">
           <PlaceholderBlock
             aspect="portrait"
             fit="contain"
             imageUrl={product.images?.[0] ?? getProductImageUrl(product, selectedColor)}
             label={product.name[locale]}
           />
-          <button
-            type="button"
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              handleAddToCart();
-            }}
-            className="absolute bottom-2.5 left-1/2 flex h-8 -translate-x-1/2 items-center justify-center whitespace-nowrap rounded-full bg-ink px-4 text-[10px] font-semibold uppercase tracking-wide text-paper transition-all hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:translate-y-2 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100"
-          >
-            {t('addToCart')}
-          </button>
-        </div>
+        </Link>
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          className="mt-2.5 flex h-9 w-full items-center justify-center whitespace-nowrap rounded-full bg-ink px-3 text-[10px] font-semibold uppercase tracking-wide text-paper transition-all hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:absolute sm:bottom-2.5 sm:left-1/2 sm:mt-0 sm:h-8 sm:w-auto sm:-translate-x-1/2 sm:translate-y-2 sm:px-4 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100"
+        >
+          {t('addToCart')}
+        </button>
+      </div>
+      <Link href={`/produit/${product.slug}?couleur=${encodeURIComponent(selectedColor)}`} className="block">
         <div className="mt-3.5">
           <h3 className="text-sm font-semibold">{product.name[locale]}</h3>
           <p className="mt-1 text-sm">
