@@ -13,6 +13,7 @@ import { Heading } from '@/components/ui/Heading';
 import { Button } from '@/components/ui/Button';
 import { CheckoutSteps } from '@/components/checkout/CheckoutSteps';
 import { OrderSummary } from '@/components/checkout/OrderSummary';
+import { DeliveryRegionSelector, type DeliveryRegion } from '@/components/checkout/DeliveryRegionSelector';
 
 const EMPTY_VALUES: ShippingFormValues = {
   region: 'europe',
@@ -45,7 +46,7 @@ export default function ShippingPage() {
     setValues((current) => ({ ...current, [key]: value }));
   }
 
-  function switchRegion(region: 'europe' | 'africa') {
+  function switchRegion(region: DeliveryRegion) {
     setValues((current) => {
       if (current.region === region) return current;
       if (region === 'africa') {
@@ -144,21 +145,13 @@ export default function ShippingPage() {
           <form onSubmit={handleSubmit} noValidate className="mt-9 space-y-6">
         <div>
           <span className="mb-2 block text-sm font-medium">{t('regionLabel')}</span>
-          <div className="inline-flex rounded-full border border-mist-200 p-1">
-            {(['europe', 'africa'] as const).map((region) => (
-              <button
-                key={region}
-                type="button"
-                onClick={() => switchRegion(region)}
-                aria-pressed={values.region === region}
-                className={`rounded-full px-6 py-2 text-sm font-semibold transition-colors ${
-                  values.region === region ? 'bg-ink text-paper' : 'text-ink hover:text-accent'
-                }`}
-              >
-                {t(region === 'europe' ? 'regionEurope' : 'regionAfrica')}
-              </button>
-            ))}
-          </div>
+          <DeliveryRegionSelector
+            value={values.region}
+            onChange={switchRegion}
+            groupLabel={t('regionLabel')}
+            europeLabel={t('regionEurope')}
+            africaLabel={t('regionAfrica')}
+          />
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
