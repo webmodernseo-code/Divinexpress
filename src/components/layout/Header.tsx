@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/navigation';
-import { CATEGORIES, getSubcategoriesForCategory, type Category } from '@/lib/products';
+import { CATEGORIES } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
 import { useCartDrawer } from '@/context/CartDrawerContext';
 import { useFavorites } from '@/context/FavoritesContext';
@@ -89,14 +89,6 @@ function MenuIcon({ className = '' }: { className?: string }) {
   );
 }
 
-function ChevronIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-      <path d="M6 9l6 6 6-6" />
-    </svg>
-  );
-}
-
 function HeaderIcons({
   favoritesLabel,
   cartLabel,
@@ -155,27 +147,11 @@ export function Header() {
 
   const [query, setQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [openCategory, setOpenCategory] = useState<Category | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [openMobileCategory, setOpenMobileCategory] = useState<Category | null>(null);
-
-  const navRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    if (openCategory === null) return;
-    function handleClickOutside(event: MouseEvent) {
-      if (navRef.current && !navRef.current.contains(event.target as Node)) {
-        setOpenCategory(null);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [openCategory]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
-        setOpenCategory(null);
         setIsSearchOpen(false);
         setIsMenuOpen(false);
       }
@@ -205,13 +181,11 @@ export function Header() {
 
   function openMobileMenu() {
     setIsSearchOpen(false);
-    setOpenCategory(null);
     setIsMenuOpen(true);
   }
 
   function closeMobileMenu() {
     setIsMenuOpen(false);
-    setOpenMobileCategory(null);
   }
 
   return (
@@ -232,46 +206,16 @@ export function Header() {
           {/* Desktop row */}
           <div className="hidden items-center justify-between gap-6 md:flex">
             <Logo />
-            <nav ref={navRef} className="flex items-center gap-1 text-sm font-bold tracking-wide">
-              {CATEGORIES.map((category) => {
-                const isOpen = openCategory === category;
-                const subcategories = getSubcategoriesForCategory(category);
-                return (
-                  <div key={category} className="relative">
-                    <button
-                      type="button"
-                      onClick={() => setOpenCategory(isOpen ? null : category)}
-                      aria-expanded={isOpen}
-                      aria-haspopup="true"
-                      className={`flex items-center gap-1.5 px-3 py-2 transition-colors hover:text-accent ${isOpen ? 'text-accent' : 'text-ink'}`}
-                    >
-                      {t(category)}
-                      <ChevronIcon className={`h-[11px] w-[11px] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                    </button>
-                    {isOpen && (
-                      <div className="absolute left-1/2 top-full z-20 flex min-w-[180px] -translate-x-1/2 flex-col rounded-3xl border border-mist-100 bg-paper py-3.5 shadow-lg">
-                        <Link
-                          href={{ pathname: '/', query: { categorie: category } }}
-                          onClick={() => setOpenCategory(null)}
-                          className="mb-1.5 border-b border-mist-100 px-5 pb-2.5 text-sm font-bold text-ink hover:text-accent"
-                        >
-                          {t('viewAll')}
-                        </Link>
-                        {subcategories.map((sub) => (
-                          <Link
-                            key={sub}
-                            href={{ pathname: '/', query: { categorie: category, sousCategorie: sub } }}
-                            onClick={() => setOpenCategory(null)}
-                            className="px-5 py-2 text-sm font-semibold capitalize text-mist-600 hover:text-accent"
-                          >
-                            {sub}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+            <nav className="flex items-center gap-1 text-sm font-bold tracking-wide">
+              {CATEGORIES.map((category) => (
+                <Link
+                  key={category}
+                  href={`/?categorie=${category}#collection`}
+                  className="px-3 py-2 text-ink transition-colors hover:text-accent"
+                >
+                  {t(category)}
+                </Link>
+              ))}
             </nav>
             <HeaderIcons
               favoritesLabel={t('favorites')}
@@ -354,46 +298,16 @@ export function Header() {
               </div>
             </div>
             <nav className="flex-1 px-5 pt-2">
-              {CATEGORIES.map((category) => {
-                const isOpen = openMobileCategory === category;
-                const subcategories = getSubcategoriesForCategory(category);
-                return (
-                  <div key={category} className="border-b border-mist-100">
-                    <button
-                      type="button"
-                      onClick={() => setOpenMobileCategory(isOpen ? null : category)}
-                      aria-expanded={isOpen}
-                      className="flex w-full items-center justify-between py-4 text-left text-[17px] font-bold text-ink"
-                    >
-                      {t(category)}
-                      <ChevronIcon
-                        className={`h-[13px] w-[13px] flex-shrink-0 text-mist-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-                      />
-                    </button>
-                    {isOpen && (
-                      <div className="flex flex-col gap-1 pb-4 pl-1">
-                        <Link
-                          href={{ pathname: '/', query: { categorie: category } }}
-                          onClick={closeMobileMenu}
-                          className="py-1.5 text-sm font-semibold text-ink"
-                        >
-                          {t('viewAll')}
-                        </Link>
-                        {subcategories.map((sub) => (
-                          <Link
-                            key={sub}
-                            href={{ pathname: '/', query: { categorie: category, sousCategorie: sub } }}
-                            onClick={closeMobileMenu}
-                            className="py-1.5 text-sm font-semibold capitalize text-mist-600 hover:text-accent"
-                          >
-                            {sub}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              {CATEGORIES.map((category) => (
+                <Link
+                  key={category}
+                  href={`/?categorie=${category}#collection`}
+                  onClick={closeMobileMenu}
+                  className="block border-b border-mist-100 py-4 text-[17px] font-bold text-ink"
+                >
+                  {t(category)}
+                </Link>
+              ))}
             </nav>
           </div>
         </div>
