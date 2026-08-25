@@ -27,6 +27,48 @@ const EMPTY_VALUES: ShippingFormValues = {
   countryCode: 'FR'
 };
 
+const INPUT_CLASS = 'h-12 w-full rounded-xl border border-mist-200 bg-paper px-4 text-sm outline-none focus:border-ink';
+
+type ShippingTextFieldProps = {
+  field: keyof ShippingFormValues;
+  value: string;
+  label: string;
+  errorMessage?: string;
+  type?: string;
+  autoComplete?: string;
+  fullWidth?: boolean;
+  onChange: (value: string) => void;
+};
+
+function ShippingTextField({
+  field,
+  value,
+  label,
+  errorMessage,
+  type = 'text',
+  autoComplete,
+  fullWidth,
+  onChange
+}: ShippingTextFieldProps) {
+  return (
+    <label className={fullWidth ? 'sm:col-span-2' : undefined}>
+      <span className="mb-2 block text-sm font-medium">{label}</span>
+      <input
+        type={type}
+        autoComplete={autoComplete}
+        value={value}
+        aria-invalid={Boolean(errorMessage)}
+        aria-describedby={errorMessage ? `${field}-error` : undefined}
+        onChange={(event) => onChange(event.target.value)}
+        className={INPUT_CLASS}
+      />
+      {errorMessage && (
+        <span id={`${field}-error`} className="mt-1 block text-xs text-accent">{errorMessage}</span>
+      )}
+    </label>
+  );
+}
+
 export default function ShippingPage() {
   const t = useTranslations('checkout');
   const rawLocale = useLocale();
@@ -82,38 +124,7 @@ export default function ShippingPage() {
     );
   }
 
-  const inputClass = 'h-12 w-full rounded-xl border border-mist-200 bg-paper px-4 text-sm outline-none focus:border-ink';
   const countries = values.region === 'africa' ? AFRICA : EUROPE;
-
-  function TextField({
-    field,
-    type = 'text',
-    autoComplete,
-    fullWidth
-  }: {
-    field: keyof ShippingFormValues;
-    type?: string;
-    autoComplete?: string;
-    fullWidth?: boolean;
-  }) {
-    return (
-      <label className={fullWidth ? 'sm:col-span-2' : undefined}>
-        <span className="mb-2 block text-sm font-medium">{t(`fields.${field}`)}</span>
-        <input
-          type={type}
-          autoComplete={autoComplete}
-          value={(values[field] as string) ?? ''}
-          aria-invalid={Boolean(errors[field])}
-          aria-describedby={errors[field] ? `${field}-error` : undefined}
-          onChange={(event) => update(field, event.target.value as ShippingFormValues[typeof field])}
-          className={inputClass}
-        />
-        {errors[field] && (
-          <span id={`${field}-error`} className="mt-1 block text-xs text-accent">{t(`errors.${errors[field]}`)}</span>
-        )}
-      </label>
-    );
-  }
 
   const countrySelect = (
     <label>
@@ -123,7 +134,7 @@ export default function ShippingPage() {
         autoComplete="country"
         aria-invalid={Boolean(errors.country)}
         onChange={(event) => selectCountry(event.target.value)}
-        className={inputClass}
+        className={INPUT_CLASS}
       >
         {countries.map((c) => (
           <option key={c.code} value={c.code}>{countryName(c.code, locale)}</option>
@@ -155,8 +166,8 @@ export default function ShippingPage() {
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
-          <TextField field="fullName" autoComplete="name" fullWidth />
-          <TextField field="email" type="email" autoComplete="email" fullWidth />
+          <ShippingTextField field="fullName" value={values.fullName} label={t('fields.fullName')} errorMessage={errors.fullName ? t(`errors.${errors.fullName}`) : undefined} autoComplete="name" fullWidth onChange={(value) => update('fullName', value)} />
+          <ShippingTextField field="email" value={values.email} label={t('fields.email')} errorMessage={errors.email ? t(`errors.${errors.email}`) : undefined} type="email" autoComplete="email" fullWidth onChange={(value) => update('email', value)} />
 
           {values.region === 'europe' ? (
             <>
@@ -181,13 +192,13 @@ export default function ShippingPage() {
                   }
                 />
               </div>
-              <TextField field="city" autoComplete="address-level2" />
-              <TextField field="postalCode" autoComplete="postal-code" />
+              <ShippingTextField field="city" value={values.city ?? ''} label={t('fields.city')} errorMessage={errors.city ? t(`errors.${errors.city}`) : undefined} autoComplete="address-level2" onChange={(value) => update('city', value)} />
+              <ShippingTextField field="postalCode" value={values.postalCode ?? ''} label={t('fields.postalCode')} errorMessage={errors.postalCode ? t(`errors.${errors.postalCode}`) : undefined} autoComplete="postal-code" onChange={(value) => update('postalCode', value)} />
               {countrySelect}
             </>
           ) : (
             <>
-              <TextField field="phone" type="tel" autoComplete="tel" />
+              <ShippingTextField field="phone" value={values.phone ?? ''} label={t('fields.phone')} errorMessage={errors.phone ? t(`errors.${errors.phone}`) : undefined} type="tel" autoComplete="tel" onChange={(value) => update('phone', value)} />
               {countrySelect}
               <label className="sm:col-span-2">
                 <span className="mb-2 block text-sm font-medium">{t('fields.address')}</span>

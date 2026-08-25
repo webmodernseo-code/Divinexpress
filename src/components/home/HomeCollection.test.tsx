@@ -7,9 +7,11 @@ import { ALL_PRODUCTS } from '@/lib/products';
 import { HomeCollection } from './HomeCollection';
 
 vi.mock('next/image', () => ({
-  default: ({ alt = '', fill: _fill, priority: _priority, ...props }: React.ImgHTMLAttributes<HTMLImageElement> & { fill?: boolean; priority?: boolean }) => (
-    <img alt={alt} {...props} />
-  )
+  default: ({ alt = '', fill, priority, ...props }: React.ImgHTMLAttributes<HTMLImageElement> & { fill?: boolean; priority?: boolean }) => {
+    void fill;
+    void priority;
+    return <img alt={alt} {...props} />;
+  }
 }));
 
 vi.mock('next-intl', () => ({

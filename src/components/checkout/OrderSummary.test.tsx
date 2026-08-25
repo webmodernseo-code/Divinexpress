@@ -5,9 +5,10 @@ import { describe, expect, it, vi } from 'vitest';
 import { OrderSummary } from './OrderSummary';
 
 vi.mock('next/image', () => ({
-  default: ({ alt = '', fill: _fill, ...props }: React.ImgHTMLAttributes<HTMLImageElement> & { fill?: boolean }) => (
-    <img alt={alt} {...props} />
-  )
+  default: ({ alt = '', fill, ...props }: React.ImgHTMLAttributes<HTMLImageElement> & { fill?: boolean }) => {
+    void fill;
+    return <img alt={alt} {...props} />;
+  }
 }));
 
 vi.mock('next-intl', () => ({ useLocale: () => 'fr' }));

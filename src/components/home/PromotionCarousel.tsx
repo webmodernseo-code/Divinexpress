@@ -65,7 +65,10 @@ export function PromotionCarousel({ slides }: { slides: PromotionSlide[] }) {
         onTouchStart={(event) => { setPaused(true); touchX.current = event.touches[0]?.clientX ?? null; }}
         onTouchEnd={(event) => {
           const end = event.changedTouches[0]?.clientX;
-          if (touchX.current !== null && end !== undefined && Math.abs(touchX.current - end) > 45) touchX.current > end ? next() : previous();
+          if (touchX.current !== null && end !== undefined && Math.abs(touchX.current - end) > 45) {
+            if (touchX.current > end) next();
+            else previous();
+          }
           touchX.current = null; setPaused(false);
         }}
       >

@@ -28,7 +28,6 @@ export function CartDrawer({
   cartHref = '/commande/livraison',
   onQuantityChange,
   onRemove,
-  freeShippingThreshold: _freeShippingThreshold,
   currency: requestedCurrency,
   locale: requestedLocale
 }: CartDrawerProps) {

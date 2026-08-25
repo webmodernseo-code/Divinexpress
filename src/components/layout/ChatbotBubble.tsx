@@ -57,6 +57,7 @@ export function ChatbotBubble() {
 
   useEffect(() => {
     if (!open) return;
+    const trigger = triggerRef.current;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     inputRef.current?.focus();
@@ -92,7 +93,7 @@ export function ChatbotBubble() {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', onKeyDown);
       document.removeEventListener('focusin', onFocusIn);
-      triggerRef.current?.focus();
+      trigger?.focus();
     };
   }, [open]);
 

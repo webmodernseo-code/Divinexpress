@@ -4,7 +4,7 @@ import { getCurrentAdmin } from '@/server/auth/runtime';
 import { requireRole } from '@/server/auth/authorization';
 import { getCommerceDatabase } from '@/server/db/runtime';
 import { PromotionRepository } from '@/server/promotions/repository';
-import { errorResponse, hasActiveProduct } from '../route';
+import { errorResponse, hasActiveProduct } from '../helpers';
 
 const imageUrlSchema = z.string().trim().min(1).refine(
   (value) => value.startsWith('/') || /^https?:\/\//i.test(value),
