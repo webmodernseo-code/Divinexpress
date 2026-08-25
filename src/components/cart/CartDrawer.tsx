@@ -1,311 +1,130 @@
 'use client';
 
-import Image from 'next/image';
-import { Link } from '@/i18n/navigation';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useRef } from 'react';
+import { FiLock, FiShoppingBag, FiX } from 'react-icons/fi';
 import { useLocale, useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { useCart } from '@/context/CartContext';
 import { useCartDrawer } from '@/context/CartDrawerContext';
 import { useCurrency } from '@/context/CurrencyContext';
-import { FreeShippingProgress } from './FreeShippingProgress';
-import {
-  FiLock,
-  FiMinus,
-  FiPackage,
-  FiPlus,
-  FiTrash2,
-  FiX,
-} from 'react-icons/fi';
+import { formatPrice } from '@/lib/currency';
+import type { CurrencyCode } from '@/lib/currency';
+import { CartLineItem } from './CartLineItem';
 
 type CartDrawerProps = {
   open?: boolean;
   onClose?: () => void;
-  freeShippingThreshold?: number;
-  currency?: string;
-  locale?: string;
   cartHref?: string;
   onQuantityChange?: (quantity: number, productId: string, size: string, color: string) => void;
   onRemove?: (productId: string, size: string, color: string) => void;
+  freeShippingThreshold?: number;
+  currency?: string;
+  locale?: string;
 };
-
-const PAYMENT_LOGOS = [
-  { name: 'Visa & Mastercard', src: '/payment/visa-mastercard.png', width: 123, height: 50 },
-  { name: 'PayPal', src: '/payment/paypal.png', width: 60, height: 40 },
-  { name: 'Orange Money', src: '/payment/orange-money.png', width: 72, height: 28 },
-  { name: 'Wave', src: '/payment/wave.png', width: 48, height: 26 }
-];
 
 export function CartDrawer({
   open,
   onClose,
-  freeShippingThreshold = 150,
-  currency: propCurrency,
-  locale: propLocale,
   cartHref = '/commande/livraison',
   onQuantityChange,
-  onRemove
+  onRemove,
+  freeShippingThreshold: _freeShippingThreshold,
+  currency: requestedCurrency,
+  locale: requestedLocale
 }: CartDrawerProps) {
   const t = useTranslations('cart');
-  const systemLocale = useLocale() as 'fr' | 'en';
+  const systemLocale = useLocale();
   const { currency: systemCurrency } = useCurrency();
-  const { items, subtotalEur, removeItem, updateQuantity } = useCart();
-  const { isOpen: globalIsOpen, close: globalClose } = useCartDrawer();
-
-  // Use props if supplied, otherwise fallback to context
-  const activeOpen = open !== undefined ? open : globalIsOpen;
-  const activeOnClose = onClose !== undefined ? onClose : globalClose;
-  const activeCurrency = propCurrency || systemCurrency;
-  const activeLocale = propLocale || (systemLocale === 'fr' ? 'fr-FR' : 'en-GB');
+  const locale: 'fr' | 'en' = (requestedLocale ?? systemLocale).toLowerCase().startsWith('en') ? 'en' : 'fr';
+  const currency: CurrencyCode = requestedCurrency === 'GBP' || requestedCurrency === 'EUR'
+    ? requestedCurrency
+    : systemCurrency;
+  const { items, subtotalEur } = useCart();
+  const { isOpen, close } = useCartDrawer();
+  const activeOpen = open ?? isOpen;
+  const activeOnClose = onClose ?? close;
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!activeOpen) return;
-
     const previousOverflow = document.body.style.overflow;
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     document.body.style.overflow = 'hidden';
+    closeButtonRef.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        activeOnClose();
+        return;
+      }
+      if (event.key !== 'Tab') return;
 
-    const closeWithEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') activeOnClose();
+      const focusable = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      ) ?? []).filter((element) => element.getAttribute('aria-hidden') !== 'true');
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
-
-    window.addEventListener('keydown', closeWithEscape);
-
+    window.addEventListener('keydown', onKeyDown);
     return () => {
       document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', closeWithEscape);
+      window.removeEventListener('keydown', onKeyDown);
+      previousFocus?.focus();
     };
   }, [activeOpen, activeOnClose]);
 
-  const formatter = useMemo(
-    () =>
-      new Intl.NumberFormat(activeLocale, {
-        style: 'currency',
-        currency: activeCurrency,
-        minimumFractionDigits: 2
-      }),
-    [activeCurrency, activeLocale]
-  );
+  if (!activeOpen) return null;
 
-  const amountRemaining = Math.max(freeShippingThreshold - subtotalEur, 0);
-
+  const title = locale === 'fr' ? 'Votre panier' : 'Your cart';
   return (
-    <div
-      className={`fixed inset-0 z-50 transition-[visibility] duration-300 ${
-        activeOpen ? 'visible' : 'invisible'
-      }`}
-      aria-hidden={!activeOpen}
-    >
-      {/* Backdrop */}
-      <button
-        type="button"
-        aria-label="Close basket"
-        onClick={activeOnClose}
-        className={`absolute inset-0 bg-black/45 backdrop-blur-[1px] transition-opacity duration-300 ${
-          activeOpen ? 'opacity-100' : 'opacity-0'
-        }`}
-      />
-
-      {/* Drawer */}
-      <aside
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="cart-drawer-title"
-        className={`absolute inset-y-0 right-0 flex h-dvh w-full flex-col bg-white text-black shadow-[-20px_0_60px_rgba(0,0,0,0.14)] transition-transform duration-300 ease-out sm:w-[420px] ${
-          activeOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        <header className="flex shrink-0 items-center justify-between border-b border-neutral-200 px-5 py-5 sm:px-8 sm:py-6">
-          <div className="flex items-baseline gap-4">
-            <h2
-              id="cart-drawer-title"
-              className="font-serif text-[38px] leading-none tracking-[-0.035em] sm:text-[44px]"
-            >
-              {systemLocale === 'fr' ? 'Votre panier' : 'Your basket'}
-            </h2>
-            <span className="text-sm text-neutral-500">
-              {items.length} {items.length > 1 ? (systemLocale === 'fr' ? 'articles' : 'items') : (systemLocale === 'fr' ? 'article' : 'item')}
-            </span>
+    <div className="fixed inset-0 z-[70]">
+      <button type="button" aria-label={locale === 'fr' ? 'Fermer le panier en cliquant sur l’arrière-plan' : 'Close cart from backdrop'} onClick={activeOnClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <section ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="cart-dialog-title" className="absolute left-1/2 top-1/2 flex max-h-[min(90dvh,760px)] w-[calc(100%-1.5rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-3xl bg-white text-neutral-950 shadow-[0_32px_100px_rgba(0,0,0,.35)] sm:w-[calc(100%-3rem)]">
+        <header className="flex items-center justify-between border-b border-neutral-200 px-5 py-5 sm:px-8 sm:py-6">
+          <div>
+            <h2 id="cart-dialog-title" className="font-serif text-3xl tracking-tight sm:text-4xl">{title}</h2>
+            <p className="mt-1 text-sm text-neutral-500">{items.reduce((sum, item) => sum + item.quantity, 0)} {locale === 'fr' ? 'article(s)' : 'item(s)'}</p>
           </div>
-
-          <button
-            type="button"
-            onClick={activeOnClose}
-            aria-label="Close basket"
-            className="grid size-11 shrink-0 place-items-center rounded-full border border-neutral-300 transition hover:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/30"
-          >
+          <button ref={closeButtonRef} type="button" onClick={activeOnClose} aria-label={locale === 'fr' ? 'Fermer le panier' : 'Close cart'} className="grid size-11 place-items-center rounded-full border border-neutral-300 transition hover:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950">
             <FiX className="size-5" aria-hidden="true" />
           </button>
         </header>
 
-        <div className="min-h-0 flex-1 overflow-y-auto">
-          {/* Free Shipping Progress */}
-          <section className={`border-b border-neutral-200 px-5 py-6 sm:px-8 transition-colors duration-500 ${amountRemaining <= 0 ? 'bg-amber-50/25' : 'bg-transparent'}`}>
-            <div className="flex items-center gap-3">
-              <FiPackage className={`size-5 shrink-0 transition-all ${amountRemaining <= 0 ? 'text-amber-500 animate-bounce' : 'text-neutral-500'}`} aria-hidden="true" />
-              <p className={`text-sm sm:text-[15px] font-semibold transition-colors ${amountRemaining <= 0 ? 'text-amber-800' : 'text-ink'}`}>
-                {amountRemaining > 0 ? (
-                  systemLocale === 'fr' ? (
-                    <>Plus que <span className="font-bold text-black">{formatter.format(amountRemaining)}</span> pour la livraison offerte</>
-                  ) : (
-                    <>You&apos;re <span className="font-bold text-black">{formatter.format(amountRemaining)}</span> away from free delivery</>
-                  )
-                ) : (
-                  systemLocale === 'fr' ? 'Félicitations ! Livraison offerte débloquée ! 🎉' : 'Congratulations! You unlocked free delivery! 🎉'
-                )}
-              </p>
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 sm:px-8">
+          {items.length === 0 ? (
+            <div className="grid place-items-center py-16 text-center">
+              <FiShoppingBag className="size-10 text-neutral-300" aria-hidden="true" />
+              <p className="mt-4 text-neutral-500">{t('empty')}</p>
             </div>
-
-            <FreeShippingProgress
-              subtotalEur={subtotalEur}
-              threshold={freeShippingThreshold}
-              className="mt-5"
-            />
-
-            <p className="mt-3 flex items-center justify-between text-xs text-neutral-500 font-medium">
-              <span>{formatter.format(subtotalEur)}</span>
-              <span>{formatter.format(freeShippingThreshold)}</span>
-            </p>
-          </section>
-
-          {/* Cart items list */}
-          <section className="px-5 py-2 sm:px-8 divide-y divide-neutral-200">
-            {items.length === 0 ? (
-              <div className="py-12 text-center text-sm text-neutral-500">
-                {t('empty')}
-              </div>
-            ) : (
-              items.map((line) => {
-                if (!line.name || !line.imageUrl) return null;
-                const lineKey = `${line.productId}-${line.size}-${line.color}`;
-                const productImage = line.imageUrl;
-                const itemPrice = (line.unitPriceEur ?? 0) * line.quantity;
-
-                return (
-                  <article key={lineKey} className="grid grid-cols-[84px_1fr] gap-4 py-4 sm:grid-cols-[96px_1fr] sm:gap-5 first:pt-4">
-                    <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-neutral-100">
-                      <Image
-                        src={productImage}
-                        alt={line.name[systemLocale]}
-                        fill
-                        sizes="(max-width: 640px) 84px, 96px"
-                        className="object-cover"
-                      />
-                    </div>
-
-                    <div className="min-w-0 flex flex-col justify-between">
-                      <div>
-                        <h3 className="text-sm font-medium sm:text-base text-ink leading-tight">{line.name[systemLocale]}</h3>
-                        <p className="mt-1 text-xs text-neutral-500 sm:text-sm">
-                          {line.size} · {line.color}
-                        </p>
-                        <p className="mt-2 text-sm font-medium text-ink sm:text-base">
-                          {formatter.format(itemPrice)}
-                        </p>
-                      </div>
-
-                      <div className="mt-3 flex flex-wrap items-center gap-3">
-                        <div className="inline-flex h-9 items-center rounded-full border border-neutral-300">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const nextQty = Math.max(1, line.quantity - 1);
-                              updateQuantity(line.productId, line.size, line.color, nextQty);
-                              onQuantityChange?.(nextQty, line.productId, line.size, line.color);
-                            }}
-                            disabled={line.quantity <= 1}
-                            aria-label="Decrease quantity"
-                            className="grid h-full w-9 place-items-center rounded-l-full transition hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-35"
-                          >
-                            <FiMinus className="size-3.5" aria-hidden="true" />
-                          </button>
-                          <output
-                            aria-label="Quantity"
-                            className="min-w-7 text-center text-xs font-medium"
-                          >
-                            {line.quantity}
-                          </output>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const nextQty = line.quantity + 1;
-                              updateQuantity(line.productId, line.size, line.color, nextQty);
-                              onQuantityChange?.(nextQty, line.productId, line.size, line.color);
-                            }}
-                            aria-label="Increase quantity"
-                            className="grid h-full w-9 place-items-center rounded-r-full transition hover:bg-neutral-100"
-                          >
-                            <FiPlus className="size-3.5" aria-hidden="true" />
-                          </button>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            removeItem(line.productId, line.size, line.color);
-                            onRemove?.(line.productId, line.size, line.color);
-                          }}
-                          className="flex items-center gap-1.5 text-xs text-neutral-500 underline decoration-neutral-400 underline-offset-4 transition hover:text-black"
-                        >
-                          <FiTrash2 className="size-3.5" aria-hidden="true" />
-                          {systemLocale === 'fr' ? 'Retirer' : 'Remove'}
-                        </button>
-                      </div>
-                    </div>
-                  </article>
-                );
-              })
-            )}
-          </section>
-        </div>
-
-        <div className="flex shrink-0 items-center justify-center gap-2 border-t border-neutral-200 py-4 text-xs text-neutral-500">
-          <FiLock className="size-4" aria-hidden="true" />
-          {systemLocale === 'fr' ? 'Paiement sécurisé' : 'Secure checkout'}
+          ) : (
+            <ul className="divide-y divide-neutral-200">
+              {items.map((line) => <CartLineItem key={`${line.productId}-${line.size}-${line.color}`} line={line} onQuantityChange={onQuantityChange} onRemove={onRemove} />)}
+            </ul>
+          )}
         </div>
 
         {items.length > 0 && (
-          <footer className="shrink-0 border-t border-neutral-200 bg-neutral-50 px-5 pb-[max(20px,env(safe-area-inset-bottom))] pt-5 sm:px-8 sm:pb-6">
-            <div className="flex items-center justify-between text-lg font-medium">
-              <span>{t('subtotal')}</span>
-              <span>{formatter.format(subtotalEur)}</span>
+          <footer className="border-t border-neutral-200 bg-neutral-50 px-5 py-5 sm:px-8 sm:py-6">
+            <div className="flex items-center justify-between text-lg font-semibold sm:text-xl">
+              <span>{t('subtotal')}</span><span>{formatPrice(subtotalEur, currency, locale)}</span>
             </div>
-            <p className="mt-2 text-xs text-neutral-500">
-              {systemLocale === 'fr'
-                ? 'Taxes et frais de port calculés au moment de la commande.'
-                : 'Taxes and shipping calculated at checkout.'}
-            </p>
-
-            <Link
-              href={cartHref}
-              onClick={activeOnClose}
-              className="mt-5 flex h-14 w-full items-center justify-center rounded-lg bg-black text-sm font-semibold tracking-[0.14em] text-white transition hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/35 focus-visible:ring-offset-2"
-            >
-              {t('checkout').toUpperCase()}
+            <p className="mt-1 text-xs text-neutral-500">{locale === 'fr' ? 'Frais de livraison calculés à l’étape suivante.' : 'Shipping is calculated at the next step.'}</p>
+            <Link href={cartHref} onClick={activeOnClose} className="mt-5 flex h-14 w-full items-center justify-center rounded-full bg-neutral-950 px-6 text-sm font-semibold uppercase tracking-[.12em] text-white transition hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2">
+              {t('checkout')}
             </Link>
-
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
-              {PAYMENT_LOGOS.map((payment) => (
-                <div
-                  key={payment.name}
-                  className="grid h-10 min-w-14 place-items-center rounded-md border border-neutral-200 bg-white px-2 shadow-xs"
-                >
-                  <Image
-                    src={payment.src}
-                    alt={payment.name}
-                    width={payment.width}
-                    height={payment.height}
-                    className="max-h-6 w-auto object-contain"
-                  />
-                </div>
-              ))}
-            </div>
-
-            <p className="mt-4 flex items-center justify-center gap-2 text-xs text-neutral-500">
-              <FiLock className="size-3.5" aria-hidden="true" />
-              {systemLocale === 'fr' ? 'Paiements sécurisés' : 'Secure payments'}
-            </p>
+            <p className="mt-4 flex items-center justify-center gap-2 text-xs text-neutral-500"><FiLock aria-hidden="true" /> {locale === 'fr' ? 'Paiement sécurisé' : 'Secure checkout'}</p>
           </footer>
         )}
-      </aside>
+      </section>
     </div>
   );
 }
