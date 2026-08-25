@@ -12,6 +12,7 @@ import { Heading } from '@/components/ui/Heading';
 import { Button } from '@/components/ui/Button';
 import { CheckoutSteps } from '@/components/checkout/CheckoutSteps';
 import { readCheckoutResponse } from '@/lib/checkoutResponse';
+import { OrderSummary } from '@/components/checkout/OrderSummary';
 
 const PAYMENT_METHODS = ['stripe', 'genius'] as const;
 
@@ -36,7 +37,7 @@ export default function PaymentPage() {
   const locale = useLocale();
   const router = useRouter();
   const { shipping } = useCheckout();
-  const { items, clearCart } = useCart();
+  const { items, subtotalEur, clearCart } = useCart();
   const [values, setValues] = useState<PaymentFormValues>(DEFAULT_VALUES);
   const [errors, setErrors] = useState<PaymentFormErrors>({});
   const [submitting, setSubmitting] = useState(false);
@@ -108,17 +109,18 @@ export default function PaymentPage() {
   }
 
   return (
-    <Container className="max-w-xl py-12">
+    <Container className="max-w-6xl py-12">
       <CheckoutSteps current={2} />
+      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
+        <main>
+          <Heading level={1} className="text-center">
+            {t('paymentTitle')}
+          </Heading>
+          <p className="mt-2 text-center text-sm text-mist-600">
+            {locale === 'fr' ? 'Seuls les moyens de paiement configurés peuvent être sélectionnés.' : 'Only configured payment methods can be selected.'}
+          </p>
 
-      <Heading level={1} className="text-center">
-        {t('paymentTitle')}
-      </Heading>
-      <p className="mt-2 text-center text-sm text-mist-600">
-        {locale === 'fr' ? 'Seuls les moyens de paiement configurés peuvent être sélectionnés.' : 'Only configured payment methods can be selected.'}
-      </p>
-
-      <form onSubmit={handleSubmit} noValidate className="mt-9 space-y-5">
+          <form onSubmit={handleSubmit} noValidate className="mt-9 space-y-5">
         <div className="space-y-3">
           {PAYMENT_METHODS.map((method) => {
             const isActive = values.method === method;
@@ -172,10 +174,16 @@ export default function PaymentPage() {
         {errors.method && <p className="text-xs text-accent">{t(`errors.${errors.method}`)}</p>}
         {serverError && <p role="alert" className="text-sm text-accent">{serverError}</p>}
 
-        <Button type="submit" disabled={submitting || items.length === 0 || !values.method} className="w-full rounded-2xl">
-          {submitting ? (locale === 'fr' ? 'TRAITEMENT…' : 'PROCESSING…') : t('confirmPayment')}
-        </Button>
-      </form>
+            <Button type="submit" disabled={submitting || items.length === 0 || !values.method} className="w-full rounded-2xl">
+              {submitting ? (locale === 'fr' ? 'TRAITEMENT…' : 'PROCESSING…') : t('confirmPayment')}
+            </Button>
+          </form>
+        </main>
+
+        <aside className="lg:sticky lg:top-28">
+          <OrderSummary items={items} subtotalEur={subtotalEur} />
+        </aside>
+      </div>
     </Container>
   );
 }

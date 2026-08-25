@@ -12,6 +12,7 @@ import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Heading';
 import { Button } from '@/components/ui/Button';
 import { CheckoutSteps } from '@/components/checkout/CheckoutSteps';
+import { OrderSummary } from '@/components/checkout/OrderSummary';
 
 const EMPTY_VALUES: ShippingFormValues = {
   region: 'europe',
@@ -30,7 +31,7 @@ export default function ShippingPage() {
   const rawLocale = useLocale();
   const locale: 'fr' | 'en' = rawLocale === 'en' ? 'en' : 'fr';
   const router = useRouter();
-  const { items } = useCart();
+  const { items, subtotalEur } = useCart();
   const { shipping, setShipping } = useCheckout();
   const [values, setValues] = useState<ShippingFormValues>(EMPTY_VALUES);
   const [errors, setErrors] = useState<ShippingFormErrors>({});
@@ -134,11 +135,13 @@ export default function ShippingPage() {
   );
 
   return (
-    <Container className="max-w-2xl py-12">
+    <Container className="max-w-6xl py-12">
       <CheckoutSteps current={1} />
-      <Heading level={1} className="text-center">{t('shippingTitle')}</Heading>
+      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
+        <main>
+          <Heading level={1} className="text-center">{t('shippingTitle')}</Heading>
 
-      <form onSubmit={handleSubmit} noValidate className="mt-9 space-y-6">
+          <form onSubmit={handleSubmit} noValidate className="mt-9 space-y-6">
         <div>
           <span className="mb-2 block text-sm font-medium">{t('regionLabel')}</span>
           <div className="inline-flex rounded-full border border-mist-200 p-1">
@@ -212,8 +215,14 @@ export default function ShippingPage() {
           )}
         </div>
 
-        <Button type="submit" className="w-full rounded-2xl">{t('continueToPayment')}</Button>
-      </form>
+            <Button type="submit" className="w-full rounded-2xl">{t('continueToPayment')}</Button>
+          </form>
+        </main>
+
+        <aside className="lg:sticky lg:top-28">
+          <OrderSummary items={items} subtotalEur={subtotalEur} />
+        </aside>
+      </div>
     </Container>
   );
 }
