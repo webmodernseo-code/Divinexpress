@@ -1,21 +1,19 @@
 'use client';
 
-/* eslint-disable @next/next/no-html-link-for-pages */
-
 import { useEffect, useState, type ReactNode } from 'react';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
 import { Bell, ChevronDown, LayoutDashboard, LogOut, Menu, MessageSquare, Package, RotateCcw, Search, Settings, ShoppingBag, Users, X } from 'lucide-react';
 import { useAdminDemo } from '@/context/AdminDemoContext';
+import { Link, usePathname } from '@/i18n/navigation';
 
 const navigation = [
-  { label: "Vue d'ensemble", href: '/fr/dashboard', icon: LayoutDashboard },
-  { label: 'Produits', href: '/fr/produits', icon: Package },
-  { label: 'Commandes', href: '/fr/commandes', icon: ShoppingBag, badgeKey: 'orders' as const },
-  { label: 'Retours', href: '/fr/retours', icon: RotateCcw, badgeKey: 'returns' as const },
-  { label: 'Messages', href: '/fr/messages', icon: MessageSquare, badgeKey: 'messages' as const },
-  { label: 'Clients', href: '/fr/clients', icon: Users },
-  { label: 'Paramètres', href: '/fr/parametres', icon: Settings },
+  { label: "Vue d'ensemble", href: '/dashboard', icon: LayoutDashboard },
+  { label: 'Produits', href: '/produits', icon: Package },
+  { label: 'Commandes', href: '/commandes', icon: ShoppingBag, badgeKey: 'orders' as const },
+  { label: 'Retours', href: '/retours', icon: RotateCcw, badgeKey: 'returns' as const },
+  { label: 'Messages', href: '/messages', icon: MessageSquare, badgeKey: 'messages' as const },
+  { label: 'Clients', href: '/clients', icon: Users },
+  { label: 'Paramètres', href: '/parametres', icon: Settings },
 ];
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
@@ -64,7 +62,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           const isActive = cleanPath === cleanHref || cleanPath.startsWith(cleanHref + '/');
           const badgeCount = badgeKey ? badges[badgeKey] : 0;
           return (
-            <a
+            <Link
               key={label}
               href={href}
               onClick={onNavigate}
@@ -85,7 +83,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
                   {badgeCount}
                 </span>
               )}
-            </a>
+            </Link>
           );
         })}
       </nav>
@@ -102,13 +100,13 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           </span>
           <ChevronDown className="size-3.5 text-slate-400" />
         </button>
-        <a
-          href="/fr/connexion"
+        <Link
+          href="/connexion"
           className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-all duration-200"
         >
           <LogOut className="size-4 text-rose-500" />
           Se déconnecter
-        </a>
+        </Link>
       </div>
     </div>
   );
