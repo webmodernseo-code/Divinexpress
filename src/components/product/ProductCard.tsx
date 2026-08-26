@@ -44,6 +44,7 @@ export function ProductCard({ product }: { product: Product }) {
           <PlaceholderBlock
             aspect="portrait"
             fit="cover"
+            className="p-1.5"
             imageUrl={product.images?.[0] ?? getProductImageUrl(product, selectedColor)}
             label={product.name[locale]}
           />

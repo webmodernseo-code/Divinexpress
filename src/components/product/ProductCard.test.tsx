@@ -38,6 +38,6 @@ describe('ProductCard', () => {
     const image = screen.getByRole('img', { name: PRODUCTS[0].name.fr });
     expect(image).toHaveClass('object-cover');
     expect(image.parentElement).toHaveClass('rounded-2xl', 'bg-mist-100');
-    expect(image.parentElement).not.toHaveClass('p-4');
+    expect(image.parentElement).toHaveClass('p-1.5');
   });
 });

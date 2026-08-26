@@ -33,7 +33,7 @@ export function PlaceholderBlock({
         <img
           src={imageUrl}
           alt={label ?? ''}
-          className={`h-full w-full object-center transition-transform duration-500 group-hover:scale-105 ${
+          className={`h-full w-full rounded-xl object-center transition-transform duration-500 group-hover:scale-105 ${
             fit === 'contain' ? 'object-contain' : 'object-cover'
           }`}
         />
