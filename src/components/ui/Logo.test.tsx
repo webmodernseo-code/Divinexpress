@@ -33,5 +33,7 @@ describe('Logo', () => {
     render(<LoginPanel locale="fr" action={async () => ({ error: '' })} />);
 
     expectCompleteBrandLockup(screen.getByRole('link', { name: 'DivinExpress — accueil' }));
+    expect(screen.getByRole('button', { name: 'SE CONNECTER' })).toHaveClass('bg-emerald-700');
+    expect(screen.getByText(/connexion sécurisée et chiffrée/i)).toHaveClass('text-emerald-700');
   });
 });

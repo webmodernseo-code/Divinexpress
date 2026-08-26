@@ -31,4 +31,13 @@ describe('ProductCard', () => {
 
     expect(addToCart.closest('a')).toBeNull();
   });
+
+  it('makes the product image fill its rounded grey frame', () => {
+    render(<ProductCard product={PRODUCTS[0]} />);
+
+    const image = screen.getByRole('img', { name: PRODUCTS[0].name.fr });
+    expect(image).toHaveClass('object-cover');
+    expect(image.parentElement).toHaveClass('rounded-2xl', 'bg-mist-100');
+    expect(image.parentElement).not.toHaveClass('p-4');
+  });
 });

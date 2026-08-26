@@ -3,7 +3,6 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { buildMetadata, breadcrumbJsonLd, SITE_URL } from '@/lib/seo';
 import { HomeCollection } from '@/components/home/HomeCollection';
 import { HeroCarousel } from '@/components/home/HeroCarousel';
-import { PromoBanner } from '@/components/home/PromoBanner';
 import { HomeFaq } from '@/components/home/HomeFaq';
 import { CustomerTestimonials } from '@/components/home/CustomerTestimonials';
 import { PromotionCarousel } from '@/components/home/PromotionCarousel';
@@ -135,8 +134,6 @@ export default async function HomePage({
           { icon: 'shipping', title: t('feature3Title'), subtitle: t('feature3Subtitle') }
         ]}
       />
-
-      <PromoBanner />
 
       {/* Remounts when the Header navigates to a different category/subcategory. */}
       <div id="collection" className="scroll-mt-28">

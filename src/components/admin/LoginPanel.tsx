@@ -38,7 +38,7 @@ export function LoginPanel({ locale, action }: {
               height={67}
               className="h-9 w-auto invert"
             />
-            <span className="rounded-md bg-white/10 border border-white/20 px-2 py-0.5 text-[10px] font-extrabold tracking-wider text-white uppercase">
+            <span className="rounded-md border border-emerald-300/40 bg-emerald-500/20 px-2 py-0.5 text-[10px] font-extrabold tracking-wider text-emerald-100 uppercase">
               Admin
             </span>
           </div>
@@ -51,7 +51,7 @@ export function LoginPanel({ locale, action }: {
               Produits, commandes, retours et conversations clients réunis dans un seul espace sécurisé.
             </p>
             <p className="mt-10 flex items-center gap-4 text-sm font-semibold text-slate-200">
-              <ShieldCheck className="size-7 text-white/70" />
+              <ShieldCheck className="size-7 text-emerald-400" />
               Accès réservé aux membres autorisés.
             </p>
           </div>
@@ -92,7 +92,7 @@ export function LoginPanel({ locale, action }: {
               <span className="mb-2 block text-xs font-bold text-slate-700 uppercase tracking-wider">
                 {fr ? 'Identifiant' : 'Username'}
               </span>
-              <span className="flex h-14 items-center gap-3.5 rounded-xl border border-slate-200 bg-white px-4.5 focus-within:border-slate-900 focus-within:ring-4 focus-within:ring-slate-900/10 transition-all duration-200 shadow-sm">
+              <span className="flex h-14 items-center gap-3.5 rounded-xl border border-slate-200 bg-white px-4.5 focus-within:border-emerald-600 focus-within:ring-4 focus-within:ring-emerald-600/10 transition-all duration-200 shadow-sm">
                 <UserRound className="size-5 text-slate-400 stroke-[1.8]" />
                 <input
                   name="email"
@@ -109,7 +109,7 @@ export function LoginPanel({ locale, action }: {
               <span className="mb-2 block text-xs font-bold text-slate-700 uppercase tracking-wider">
                 {fr ? 'Mot de passe' : 'Password'}
               </span>
-              <span className="flex h-14 items-center gap-3.5 rounded-xl border border-slate-200 bg-white px-4.5 focus-within:border-slate-900 focus-within:ring-4 focus-within:ring-slate-900/10 transition-all duration-200 shadow-sm">
+              <span className="flex h-14 items-center gap-3.5 rounded-xl border border-slate-200 bg-white px-4.5 focus-within:border-emerald-600 focus-within:ring-4 focus-within:ring-emerald-600/10 transition-all duration-200 shadow-sm">
                 <LockKeyhole className="size-5 text-slate-400 stroke-[1.8]" />
                 <input
                   aria-label={fr ? 'Mot de passe' : 'Password'}
@@ -128,7 +128,7 @@ export function LoginPanel({ locale, action }: {
 
             <div className="flex items-center justify-between text-xs font-semibold text-slate-600">
               <label className="flex items-center gap-2 cursor-pointer select-none">
-                <input name="remember" type="checkbox" className="size-4 rounded border-slate-300 accent-black focus:ring-black/20" />
+                <input name="remember" type="checkbox" className="size-4 rounded border-slate-300 accent-emerald-700 focus:ring-emerald-600/20" />
                 {fr ? 'Se souvenir de moi' : 'Remember me'}
               </label>
               <a href="#forgot" className="hover:text-black transition-colors">
@@ -138,15 +138,15 @@ export function LoginPanel({ locale, action }: {
 
             <button
               disabled={pending}
-              className="flex h-14 w-full items-center justify-center gap-3 rounded-xl bg-black hover:bg-neutral-800 shadow-md shadow-black/10 active:scale-[0.98] font-bold text-white transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+              className="flex h-14 w-full items-center justify-center gap-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 shadow-md shadow-emerald-900/15 active:scale-[0.98] font-bold text-white transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
             >
               {pending ? (fr ? 'CONNEXION...' : 'SIGNING IN...') : (fr ? 'SE CONNECTER' : 'SIGN IN')}
               <ArrowRight className="size-4" />
             </button>
           </form>
 
-          <p className="mt-5 flex items-center justify-center gap-2 text-xs text-slate-400 font-semibold">
-            <LockKeyhole className="size-3.5 text-slate-400" />
+          <p className="mt-5 flex items-center justify-center gap-2 text-xs text-emerald-700 font-semibold">
+            <LockKeyhole className="size-3.5 text-emerald-600" />
             {fr ? 'Connexion sécurisée et chiffrée.' : 'Secure encrypted connection.'}
           </p>
 
@@ -157,8 +157,8 @@ export function LoginPanel({ locale, action }: {
                 {fr ? "Contacter l’administrateur" : 'Contact administrator'}
               </a>
             </p>
-            <div className="mt-4 flex gap-3.5 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-[12px] text-slate-700 leading-relaxed font-semibold">
-              <ShieldCheck className="size-5 shrink-0 text-slate-700 mt-0.5" />
+            <div className="mt-4 flex gap-3.5 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4 text-[12px] text-emerald-950 leading-relaxed font-semibold">
+              <ShieldCheck className="size-5 shrink-0 text-emerald-700 mt-0.5" />
               <p>{fr ? "L’authentification à deux facteurs (2FA) peut être requise après la saisie de vos identifiants." : 'Two-factor authentication (2FA) may be required after sign in.'}</p>
             </div>
           </div>

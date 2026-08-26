@@ -6,7 +6,6 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { CATEGORIES } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
 import { useCartDrawer } from '@/context/CartDrawerContext';
-import { useFavorites } from '@/context/FavoritesContext';
 import { Logo } from '@/components/ui/Logo';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { FaFacebookF, FaInstagram, FaTiktok } from 'react-icons/fa6';
@@ -55,15 +54,6 @@ const ICON_CIRCLE_CLASS =
 const ICON_SVG_CLASS = 'size-4 md:size-5';
 const ICON_BADGE_CLASS = 'absolute -right-1 -top-1 grid size-3.5 place-items-center rounded-full bg-black text-[8px] font-semibold text-white md:size-5 md:text-[10px]';
 
-function HeartIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
-      <path d="M12 21s-7.5-4.6-10-9.1C.5 8.7 2 5 5.6 5 8 5 9.7 6.4 12 9c2.3-2.6 4-4 6.4-4C22 5 23.5 8.7 22 11.9 19.5 16.4 12 21 12 21z" />
-    </svg>
-  );
-}
-
-
 function SearchIcon({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.7} aria-hidden="true">
@@ -90,19 +80,15 @@ function MenuIcon({ className = '' }: { className?: string }) {
 }
 
 function HeaderIcons({
-  favoritesLabel,
   cartLabel,
   searchLabel,
-  favoriteCount,
   cartCount,
   onSearchToggle,
   onOpenCart,
   onNavigate
 }: {
-  favoritesLabel: string;
   cartLabel: string;
   searchLabel: string;
-  favoriteCount: number;
   cartCount: number;
   onSearchToggle: () => void;
   onOpenCart: () => void;
@@ -113,12 +99,6 @@ function HeaderIcons({
       <button type="button" onClick={onSearchToggle} aria-label={searchLabel} className={ICON_CIRCLE_CLASS}>
         <SearchIcon className={ICON_SVG_CLASS} />
       </button>
-      <Link href="/favoris" aria-label={favoritesLabel} onClick={onNavigate} className={ICON_CIRCLE_CLASS}>
-        <HeartIcon className={ICON_SVG_CLASS} />
-        {favoriteCount > 0 && (
-          <span className={`${ICON_BADGE_CLASS} tabular-nums`}>{favoriteCount}</span>
-        )}
-      </Link>
       <button
         type="button"
         onClick={() => {
@@ -143,7 +123,6 @@ export function Header() {
   const router = useRouter();
   const { itemCount } = useCart();
   const { open: openCartDrawer } = useCartDrawer();
-  const { favoriteIds } = useFavorites();
 
   const [query, setQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -218,10 +197,8 @@ export function Header() {
               ))}
             </nav>
             <HeaderIcons
-              favoritesLabel={t('favorites')}
               cartLabel={t('cart')}
               searchLabel={t('search')}
-              favoriteCount={favoriteIds.length}
               cartCount={itemCount}
               onSearchToggle={() => setIsSearchOpen((open) => !open)}
               onOpenCart={openCartDrawer}
@@ -243,10 +220,8 @@ export function Header() {
               <Logo />
             </div>
             <HeaderIcons
-              favoritesLabel={t('favorites')}
               cartLabel={t('cart')}
               searchLabel={t('search')}
-              favoriteCount={favoriteIds.length}
               cartCount={itemCount}
               onSearchToggle={() => setIsSearchOpen((open) => !open)}
               onOpenCart={openCartDrawer}

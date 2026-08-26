@@ -16,6 +16,9 @@ const CATEGORY_IMAGES: Record<Category, string> = {
 };
 import { interleaveByCategory } from '@/lib/productFilters';
 
+type CategoryChoice = Category | 'all';
+const CATEGORY_CHOICES: CategoryChoice[] = ['all', ...CATEGORIES];
+
 /** Deterministic mixed order, so the unfiltered grid never looks sorted by category. */
 /** 2 rows of 4 on desktop, 3 rows of 2 on mobile, before "load more". */
 const DESKTOP_PAGE_SIZE = 8;
@@ -42,8 +45,8 @@ export function HomeCollection({
     [category, catalogProducts, mixedProducts]
   );
 
-  function selectCategory(next: Category) {
-    setCategory((current) => (current === next ? null : next));
+  function selectCategory(next: CategoryChoice) {
+    setCategory(next === 'all' ? null : next);
     setIsExpanded(false);
   }
 
@@ -54,27 +57,27 @@ export function HomeCollection({
   return (
     <>
       <Container className="pt-14 md:pt-18">
-        <Heading level={2}>{t('categoriesTitle')}</Heading>
-        <div className="mt-7 flex flex-wrap justify-center gap-4 md:mt-10 md:gap-9">
-          {CATEGORIES.map((item) => {
-            const isActive = category === item;
+        <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+          {CATEGORY_CHOICES.map((item) => {
+            const isActive = item === 'all' ? category === null : category === item;
+            const label = item === 'all' ? tNav('allCategories') : tNav(item);
             return (
               <button
                 key={item}
                 type="button"
                 onClick={() => selectCategory(item)}
                 aria-pressed={isActive}
-                className="group flex flex-col items-center"
+                className="group flex flex-col items-center rounded-2xl px-1 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               >
                 <div className={`relative aspect-square w-16 overflow-hidden rounded-full transition-transform duration-200 group-hover:scale-105 md:w-[116px] ${
-                  isActive ? 'ring-[3px] ring-accent' : ''
+                  isActive ? 'ring-[3px] ring-accent ring-offset-4' : ''
                 }`}>
                   <Image
-                    src={CATEGORY_IMAGES[item]}
+                    src={item === 'all' ? '/branding/logo-divinexpress-mark.png' : CATEGORY_IMAGES[item]}
                     alt=""
                     fill
                     sizes="(max-width: 768px) 64px, 116px"
-                    className="object-cover"
+                    className={item === 'all' ? 'bg-mist-100 object-contain p-3' : 'object-cover'}
                     priority
                   />
                 </div>
@@ -83,7 +86,7 @@ export function HomeCollection({
                     isActive ? 'text-accent' : 'text-ink'
                   }`}
                 >
-                  {tNav(item)}
+                  {label}
                 </p>
               </button>
             );

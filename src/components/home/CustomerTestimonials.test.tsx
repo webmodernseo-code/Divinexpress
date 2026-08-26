@@ -58,4 +58,14 @@ describe('CustomerTestimonials', () => {
     expect(screen.getByRole('heading', { name: 'Sélection écoresponsable' })).toBeInTheDocument();
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
+
+  it('uses a light premium review card with yellow star ratings from 3 to 4.5 out of 5', () => {
+    const { container } = render(<CustomerTestimonials />);
+
+    const section = container.querySelector('section');
+    expect(section).toHaveClass('bg-white');
+    expect(section).not.toHaveClass('bg-ink');
+    expect(screen.getByLabelText(/4,5 étoiles sur 5/i)).toBeInTheDocument();
+    expect(container.querySelectorAll('[data-review-star="true"]')).toHaveLength(5);
+  });
 });

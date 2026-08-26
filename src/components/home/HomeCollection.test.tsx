@@ -25,6 +25,7 @@ vi.mock('next-intl', () => ({
       'nav.femme': 'Femme',
       'nav.enfant': 'Enfant',
       'nav.accessoires': 'Accessoires',
+      'nav.allCategories': 'Toutes',
       'product.addToCart': 'Ajouter au panier',
       'product.toggleFavorite': 'Favori',
       'product.new': 'Nouveau'
@@ -50,6 +51,14 @@ const homme = ALL_PRODUCTS.find((product) => product.category === 'homme')!;
 const femme = ALL_PRODUCTS.find((product) => product.category === 'femme')!;
 
 describe('HomeCollection', () => {
+  it('starts with an active All category and does not render the category heading', () => {
+    render(<HomeCollection initialCategory={null} initialSubcategory={null} products={[homme, femme]} />);
+
+    expect(screen.queryByRole('heading', { name: /catégories/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Toutes' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Homme' })).toHaveAttribute('aria-pressed', 'false');
+  });
+
   it('shows only products from the selected category without exposing filter controls', async () => {
     const user = userEvent.setup();
     render(<HomeCollection initialCategory={null} initialSubcategory={null} products={[homme, femme]} />);

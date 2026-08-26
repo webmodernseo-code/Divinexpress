@@ -2,7 +2,6 @@ import { Children, isValidElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import HomePage from './page';
 import { HeroCarousel } from '@/components/home/HeroCarousel';
-import { PromoBanner } from '@/components/home/PromoBanner';
 import { CustomerTestimonials } from '@/components/home/CustomerTestimonials';
 import { PromotionCarousel } from '@/components/home/PromotionCarousel';
 
@@ -32,17 +31,14 @@ vi.mock('@/server/promotions/repository', () => ({
 }));
 
 describe('HomePage composition', () => {
-  it('renders the promotional banner immediately after the hero', async () => {
+  it('does not render the coupon promotion section', async () => {
     const page = await HomePage({
       params: Promise.resolve({ locale: 'fr' }),
       searchParams: Promise.resolve({})
     });
     const children = Children.toArray(page.props.children).filter(isValidElement);
-    const heroIndex = children.findIndex((child) => child.type === HeroCarousel);
-    const promoIndex = children.findIndex((child) => child.type === PromoBanner);
-
-    expect(heroIndex).toBeGreaterThanOrEqual(0);
-    expect(promoIndex).toBe(heroIndex + 1);
+    expect(children.some((child) => child.type === HeroCarousel)).toBe(true);
+    expect(children.some((child) => typeof child.type === 'function' && child.type.name === 'PromoBanner')).toBe(false);
   });
 
   it('finishes with testimonials followed by the published promotion carousel', async () => {
