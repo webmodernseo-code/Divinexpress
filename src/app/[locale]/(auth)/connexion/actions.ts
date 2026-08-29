@@ -21,22 +21,19 @@ export async function loginAction(
   const fr = locale !== 'en';
 
   const isDev = process.env.NODE_ENV !== 'production';
-  const defaultEmail = process.env.SEED_ADMIN_EMAIL || 'admin@divinexpress.local';
-  const defaultPassword = process.env.SEED_ADMIN_PASSWORD || 'adminpassword';
-
-  // In development, empty fields fall back to seed credentials for convenience.
-  // Never log the resolved credentials — they are secrets even in development.
-  const email = emailInput || (isDev ? defaultEmail : '');
-  const password = passwordInput || (isDev ? defaultPassword : '');
+  const email = emailInput;
+  const password = passwordInput;
 
   if (!email || !password) {
     return { error: fr ? 'Veuillez renseigner tous les champs.' : 'Please complete every field.' };
   }
 
   try {
-    loginRateLimiter.consume(email);
     const authService = await getAuthService();
-    const session = await authService.authenticate(email, password);
+    if (!isDev) loginRateLimiter.consume(email);
+    const session = isDev
+      ? await authService.createDevelopmentSession()
+      : await authService.authenticate(email, password);
     (await cookies()).set(ADMIN_SESSION_COOKIE, session.token, {
       httpOnly: true,
       sameSite: 'lax',
@@ -44,7 +41,7 @@ export async function loginAction(
       path: '/',
       expires: new Date(session.expiresAt),
     });
-    loginRateLimiter.reset(email);
+    if (!isDev) loginRateLimiter.reset(email);
   } catch (error) {
     const limited = error instanceof DomainError && error.code === 'RATE_LIMITED';
     return {

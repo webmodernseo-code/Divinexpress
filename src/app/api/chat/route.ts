@@ -7,6 +7,11 @@ const chatRequestSchema = z.object({
   locale: z.enum(['fr', 'en']),
 }).strict();
 
+const PREDEFINED_QUESTIONS = {
+  fr: ['suivre ma commande', 'faire un retour', 'choisir ma taille', 'quels moyens de paiement ?'],
+  en: ['track my order', 'make a return', 'choose my size', 'which payment methods?'],
+} as const;
+
 export async function POST(request: Request) {
   try {
     const parsed = chatRequestSchema.safeParse(await request.json());
@@ -15,6 +20,16 @@ export async function POST(request: Request) {
     }
 
     const { message, locale } = parsed.data;
+    const normalizedMessage = message.toLocaleLowerCase(locale).replace(/\s+/g, ' ').trim();
+    if ((PREDEFINED_QUESTIONS[locale] as readonly string[]).includes(normalizedMessage)) {
+      return Response.json({
+        reply: ruleBasedReply({
+          locale,
+          name: locale === 'fr' ? 'cher client' : 'there',
+          message,
+        }),
+      });
+    }
     const result = await generateAgentReply({
       channel: 'web',
       displayName: locale === 'fr' ? 'Visiteur du site' : 'Website visitor',

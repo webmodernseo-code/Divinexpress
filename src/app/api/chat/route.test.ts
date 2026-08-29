@@ -1,6 +1,9 @@
 // @vitest-environment node
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from './route';
+
+const { generateAgentReply } = vi.hoisted(() => ({ generateAgentReply: vi.fn() }));
+vi.mock('@/server/ai/agent', () => ({ generateAgentReply }));
 
 function request(body: unknown) {
   return new Request('http://localhost/api/chat', {
@@ -16,6 +19,7 @@ describe('POST /api/chat', () => {
   beforeEach(() => {
     apiKey = process.env.ANTHROPIC_API_KEY;
     delete process.env.ANTHROPIC_API_KEY;
+    generateAgentReply.mockResolvedValue({ usedAI: false, text: '' });
   });
 
   afterEach(() => {
@@ -39,6 +43,16 @@ describe('POST /api/chat', () => {
     const body = await response.json() as { reply: string };
     expect(body.reply.length).toBeGreaterThan(10);
     expect(body.reply).toMatch(/taille/i);
+  });
+
+  it('keeps quick FAQ replies deterministic even when AI is available', async () => {
+    generateAgentReply.mockResolvedValue({ usedAI: true, text: 'Variable AI answer' });
+    const response = await POST(request({ message: 'Quels moyens de paiement ?', locale: 'fr' }));
+    const body = await response.json() as { reply: string };
+
+    expect(body.reply).toMatch(/Orange Money|Wave/);
+    expect(body.reply).not.toBe('Variable AI answer');
+    expect(generateAgentReply).not.toHaveBeenCalled();
   });
 
   it('rejects malformed JSON without exposing internals', async () => {

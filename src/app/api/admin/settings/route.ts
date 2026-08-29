@@ -18,6 +18,8 @@ const settingsSchema = z.object({
   whatsapp_sync: z.boolean().optional(),
   whatsapp_number: z.string().trim().max(40).optional(),
   whatsapp_assignee: z.string().trim().min(1).max(120).optional(),
+  payment_europe_enabled: z.boolean().optional(),
+  payment_africa_enabled: z.boolean().optional(),
 }).strict();
 const allowedSettingKeys = new Set<string>(settingsSchema.keyof().options);
 
@@ -48,6 +50,8 @@ export async function GET() {
   settings.whatsapp_sync ??= true;
   settings.whatsapp_number ??= '+33 7 53 74 10 30';
   settings.whatsapp_assignee ??= 'Service client';
+  settings.payment_europe_enabled ??= true;
+  settings.payment_africa_enabled ??= true;
   
   return NextResponse.json(settings);
 }

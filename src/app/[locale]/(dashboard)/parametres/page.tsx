@@ -32,6 +32,8 @@ interface StoreSettings {
   whatsapp_sync?: boolean;
   whatsapp_assignee?: string;
   whatsapp_number?: string;
+  payment_europe_enabled?: boolean;
+  payment_africa_enabled?: boolean;
 }
 
 export default function ParametresPage() {
@@ -52,6 +54,8 @@ export default function ParametresPage() {
     return_period: '14 jours',
     whatsapp_sync: true,
     whatsapp_assignee: 'Service client',
+    payment_europe_enabled: true,
+    payment_africa_enabled: true,
   });
 
   useEffect(() => {
@@ -509,6 +513,54 @@ export default function ParametresPage() {
               </div>
 
             </div>
+          )}
+
+          {activeTab === 'paiements' && (
+            <section className="grid gap-6 md:grid-cols-2" aria-labelledby="payment-settings-title">
+              <div className="md:col-span-2">
+                <h2 id="payment-settings-title" className="font-serif text-2xl font-bold">
+                  {systemLocale === 'fr' ? 'Moyens de paiement par région' : 'Payment methods by region'}
+                </h2>
+                <p className="mt-2 text-xs text-admin-muted">
+                  {systemLocale === 'fr'
+                    ? 'Activez les régions proposées au paiement. Le prestataire doit également être configuré côté serveur.'
+                    : 'Enable the regions offered at checkout. The provider must also be configured on the server.'}
+                </p>
+              </div>
+
+              {[
+                {
+                  key: 'payment_europe_enabled' as const,
+                  title: 'Europe',
+                  methods: 'Visa, Mastercard, PayPal · Stripe',
+                  enabled: settings.payment_europe_enabled ?? true,
+                },
+                {
+                  key: 'payment_africa_enabled' as const,
+                  title: systemLocale === 'fr' ? 'Afrique' : 'Africa',
+                  methods: 'Orange Money, Wave, cartes · GeniusPay',
+                  enabled: settings.payment_africa_enabled ?? true,
+                },
+              ].map((region) => (
+                <article key={region.key} className="rounded-2xl border border-admin-border bg-white p-6 shadow-xs">
+                  <div className="flex items-start justify-between gap-5">
+                    <div>
+                      <h3 className="font-serif text-lg font-bold">{region.title}</h3>
+                      <p className="mt-2 text-xs text-admin-muted">{region.methods}</p>
+                    </div>
+                    <label className="inline-flex cursor-pointer items-center gap-3 text-xs font-bold">
+                      <span>{region.enabled ? (systemLocale === 'fr' ? 'Activé' : 'Enabled') : (systemLocale === 'fr' ? 'Désactivé' : 'Disabled')}</span>
+                      <input
+                        type="checkbox"
+                        checked={region.enabled}
+                        onChange={(event) => updateSetting(region.key, event.target.checked)}
+                        className="size-5 accent-indigo-600"
+                      />
+                    </label>
+                  </div>
+                </article>
+              ))}
+            </section>
           )}
 
         </div>

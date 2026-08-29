@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { PackageCheck, ShieldCheck, Sparkles } from 'lucide-react';
 
 type HeroTheme = 'navy' | 'black';
 
@@ -42,39 +43,8 @@ function overlayStyle(theme: HeroTheme): React.CSSProperties {
 }
 
 function FeatureIcon({ icon, className = '' }: { icon: HeroFeatureIcon; className?: string }) {
-  const common = {
-    className,
-    viewBox: '0 0 24 24',
-    fill: 'none',
-    stroke: 'currentColor',
-    strokeWidth: 1.5,
-    strokeLinecap: 'round' as const,
-    strokeLinejoin: 'round' as const,
-    'aria-hidden': true
-  };
-  if (icon === 'quality') {
-    return (
-      <svg {...common}>
-        <path d="M11 3C7 5 5 8 5 12c0 4 3 8 6 9 3-1 6-5 6-9 0-4-2-7-6-9z" />
-        <path d="M11 21V9" />
-      </svg>
-    );
-  }
-  if (icon === 'design') {
-    return (
-      <svg {...common}>
-        <circle cx="12" cy="9" r="5" />
-        <path d="M9 13l-2 8 5-3 5 3-2-8" />
-      </svg>
-    );
-  }
-  return (
-    <svg {...common}>
-      <path d="M3 7l9-4 9 4-9 4-9-4z" />
-      <path d="M3 7v10l9 4 9-4V7" />
-      <path d="M12 11v10" />
-    </svg>
-  );
+  const Icon = icon === 'quality' ? ShieldCheck : icon === 'design' ? Sparkles : PackageCheck;
+  return <Icon className={className} strokeWidth={1.7} aria-hidden="true" />;
 }
 
 export function HeroCarousel({
@@ -124,7 +94,7 @@ export function HeroCarousel({
                 fill
                 priority={index === 0}
                 sizes="100vw"
-                className="object-cover object-center md:object-right"
+                className="object-contain object-right md:object-cover md:object-right"
               />
 
               {/* Readability gradient (dark on the text side, transparent on the product side) */}
@@ -165,8 +135,8 @@ export function HeroCarousel({
 
                   <ul className="mt-5 flex flex-row flex-wrap gap-x-4 gap-y-2 sm:mt-10 sm:gap-x-8">
                     {features.map((feature) => (
-                      <li key={feature.title} className="flex items-center gap-2 sm:gap-3">
-                        <FeatureIcon icon={feature.icon} className="size-4 shrink-0 text-paper/80 sm:size-6" />
+                      <li key={feature.title} className="flex items-center gap-2 rounded-full border border-white/15 bg-black/15 px-3 py-2 backdrop-blur-sm sm:gap-3 sm:px-4">
+                        <FeatureIcon icon={feature.icon} className="size-4 shrink-0 text-paper sm:size-5" />
                         <span className="leading-tight">
                           <span className="block text-[11px] font-semibold text-paper sm:text-sm">{feature.title}</span>
                           <span className="hidden text-xs text-paper/65 sm:block">{feature.subtitle}</span>

@@ -17,9 +17,21 @@ describe('ChatbotBubble', () => {
     expect(screen.getByRole('dialog', { name: /assistant divinexpress/i })).toBeVisible();
     expect(screen.getByText(/bonjour.*comment puis-je vous aider/i)).toBeVisible();
     expect(screen.getByRole('textbox', { name: /votre message/i })).toHaveFocus();
+    expect(screen.getByRole('button', { name: /suivre ma commande/i })).toBeVisible();
+    expect(screen.getByRole('button', { name: /faire un retour/i })).toBeVisible();
     await user.keyboard('{Escape}');
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(trigger).toHaveFocus();
+  });
+
+  it('submits a predefined frequent question and exposes WhatsApp escalation', async () => {
+    const user = userEvent.setup();
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify({ reply: 'Votre commande est en préparation.' }), { status: 200 }));
+    render(<ChatbotBubble />);
+    await user.click(screen.getByRole('button', { name: /ouvrir l.assistant/i }));
+    await user.click(screen.getByRole('button', { name: /suivre ma commande/i }));
+    expect(await screen.findByText('Votre commande est en préparation.')).toBeVisible();
+    expect(screen.getByRole('link', { name: /whatsapp/i })).toHaveAttribute('href', expect.stringContaining('wa.me'));
   });
 
   it('blocks background clicks and closes only through its backdrop', async () => {

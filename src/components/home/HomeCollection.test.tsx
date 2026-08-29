@@ -51,6 +51,14 @@ const homme = ALL_PRODUCTS.find((product) => product.category === 'homme')!;
 const femme = ALL_PRODUCTS.find((product) => product.category === 'femme')!;
 
 describe('HomeCollection', () => {
+  it('keeps every category in one horizontally scrollable row', () => {
+    render(<HomeCollection initialCategory={null} initialSubcategory={null} products={[homme, femme]} />);
+
+    const row = screen.getByTestId('category-scroll-row');
+    expect(row).toHaveClass('flex-nowrap', 'overflow-x-auto');
+    expect(row).not.toHaveClass('flex-wrap');
+  });
+
   it('starts with an active All category and does not render the category heading', () => {
     render(<HomeCollection initialCategory={null} initialSubcategory={null} products={[homme, femme]} />);
 

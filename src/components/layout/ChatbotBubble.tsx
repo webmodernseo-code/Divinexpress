@@ -23,6 +23,8 @@ const copy = {
     sending: 'Réponse en cours…',
     error: 'Une erreur est survenue. Vérifiez votre connexion puis réessayez.',
     retry: 'Réessayer',
+    whatsapp: 'Contacter un conseiller sur WhatsApp',
+    quickQuestions: ['Suivre ma commande', 'Faire un retour', 'Choisir ma taille', 'Quels moyens de paiement ?'],
   },
   en: {
     open: 'Open the DivinExpress assistant',
@@ -36,6 +38,8 @@ const copy = {
     sending: 'Replying…',
     error: 'Something went wrong. Check your connection and try again.',
     retry: 'Try again',
+    whatsapp: 'Contact an advisor on WhatsApp',
+    quickQuestions: ['Track my order', 'Make a return', 'Choose my size', 'Which payment methods?'],
   },
 } as const;
 
@@ -130,16 +134,20 @@ export function ChatbotBubble() {
     }
   }
 
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const message = input.trim();
-    if (!message || pending) return;
+  function sendMessage(message: string) {
+    const normalized = message.trim();
+    if (!normalized || pending) return;
     setMessages((current) => [
       ...current,
-      { id: nextId.current++, role: 'customer', text: message },
+      { id: nextId.current++, role: 'customer', text: normalized },
     ]);
     setInput('');
-    void requestReply(message);
+    void requestReply(normalized);
+  }
+
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    sendMessage(input);
   }
 
   return (
@@ -203,6 +211,27 @@ export function ChatbotBubble() {
                   </button>
                 </div>
               )}
+              <div className="flex flex-wrap gap-2 pt-1" aria-label={locale === 'fr' ? 'Questions fréquentes' : 'Frequently asked questions'}>
+                {t.quickQuestions.map((question) => (
+                  <button
+                    key={question}
+                    type="button"
+                    disabled={pending}
+                    onClick={() => sendMessage(question)}
+                    className="rounded-full border border-neutral-300 bg-white px-3 py-2 text-xs font-semibold text-neutral-800 transition hover:border-neutral-950 disabled:opacity-50"
+                  >
+                    {question}
+                  </button>
+                ))}
+              </div>
+              <a
+                href="https://wa.me/33753741030"
+                target="_blank"
+                rel="noreferrer"
+                className="block text-center text-xs font-semibold text-emerald-700 underline decoration-emerald-300 underline-offset-4"
+              >
+                {t.whatsapp}
+              </a>
             </div>
 
             <form onSubmit={submit} className="flex items-center gap-2 border-t border-neutral-200 bg-white p-3">

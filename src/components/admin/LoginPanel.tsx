@@ -96,7 +96,7 @@ export function LoginPanel({ locale, action }: {
                 <UserRound className="size-5 text-slate-400 stroke-[1.8]" />
                 <input
                   name="email"
-                  type="email"
+                  type="text"
                   autoComplete="username"
                   required
                   className="w-full bg-transparent text-sm text-slate-800 placeholder:text-slate-400 outline-none"

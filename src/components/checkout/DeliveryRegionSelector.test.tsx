@@ -4,6 +4,20 @@ import { describe, expect, it, vi } from 'vitest';
 import { DeliveryRegionSelector } from './DeliveryRegionSelector';
 
 describe('DeliveryRegionSelector', () => {
+  it('uses maintained SVG icon components for both regions', () => {
+    render(
+      <DeliveryRegionSelector
+        value="europe"
+        onChange={vi.fn()}
+        groupLabel="Zone de livraison"
+        europeLabel="Europe"
+        africaLabel="Afrique"
+      />
+    );
+    expect(screen.getByTestId('region-icon-europe').tagName).toBe('svg');
+    expect(screen.getByTestId('region-icon-africa').tagName).toBe('svg');
+  });
+
   it('exposes two distinct region choices and marks the selected one', () => {
     render(
       <DeliveryRegionSelector

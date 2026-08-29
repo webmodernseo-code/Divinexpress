@@ -7,6 +7,7 @@ import { DevelopmentNotificationProvider } from '@/server/notifications/developm
 import { GeniusPaymentProvider } from '@/server/payments/genius-provider';
 import { StripePaymentProvider } from '@/server/payments/stripe-provider';
 import type { PaymentProvider } from '@/server/payments/provider';
+import type { Database } from '@/server/db/client';
 
 const requestSchema = z.object({
   idempotencyKey: z.string().min(8).max(120),
@@ -35,10 +36,25 @@ function countryCode(country: string): string | null {
   return known[normalized] ?? (normalized.length === 2 ? normalized.toUpperCase() : null);
 }
 
+async function paymentRegionEnabled(database: Database, region: 'europe' | 'africa'): Promise<boolean> {
+  const key = region === 'europe' ? 'payment_europe_enabled' : 'payment_africa_enabled';
+  const row = (await database.prepare('SELECT value_json FROM store_settings WHERE key = ?').get(key)) as
+    | { value_json: string }
+    | undefined;
+  return row ? JSON.parse(row.value_json) !== false : true;
+}
+
 export async function POST(request: Request) {
   try {
     const input = requestSchema.parse(await request.json());
     const database = await getCommerceDatabase();
+    const requestedRegion = input.shipping.region ?? 'europe';
+    if (!await paymentRegionEnabled(database, requestedRegion)) {
+      throw new DomainError('PAYMENT_METHOD_UNAVAILABLE', 'Payment region is disabled', 409);
+    }
+    if ((requestedRegion === 'europe' && input.method !== 'stripe') || (requestedRegion === 'africa' && input.method !== 'genius')) {
+      throw new DomainError('PAYMENT_METHOD_UNAVAILABLE', 'Payment method does not match shipping region', 409);
+    }
     const lines = await Promise.all(input.items.map(async (item) => {
       const variant = (await database.prepare(`SELECT id FROM product_variants
         WHERE product_id = ? AND size = ? AND color = ? AND active = 1`)
@@ -105,13 +121,16 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const region = new URL(request.url).searchParams.get('region') === 'africa' ? 'africa' : 'europe';
+  const database = await getCommerceDatabase();
+  const regionEnabled = await paymentRegionEnabled(database, region);
   const geniusConfigured = Boolean(process.env.GENIUS_API_KEY && process.env.GENIUS_API_SECRET);
   const stripeConfigured = Boolean(process.env.STRIPE_SECRET_KEY);
   return NextResponse.json({
     methods: {
-      stripe: { status: stripeConfigured ? 'configured' : 'unavailable' },
-      genius: { status: geniusConfigured ? 'configured' : 'unavailable' },
+      stripe: { status: region === 'europe' && regionEnabled && stripeConfigured ? 'configured' : 'unavailable' },
+      genius: { status: region === 'africa' && regionEnabled && geniusConfigured ? 'configured' : 'unavailable' },
     },
   });
 }

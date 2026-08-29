@@ -44,6 +44,23 @@ export class AuthService {
     return { id, token, expiresAt };
   }
 
+  async createDevelopmentSession(): Promise<SessionRecord> {
+    let user = (await this.database.prepare(`SELECT id, email, password_hash, role, active
+      FROM admin_users WHERE active = 1 ORDER BY created_at ASC LIMIT 1`).get()) as StoredUser | undefined;
+    if (!user) {
+      await this.createAdmin({ email: 'admin@divinexpress.local', password: 'adminpassword', role: 'owner' });
+      user = (await this.database.prepare(`SELECT id, email, password_hash, role, active
+        FROM admin_users WHERE email = ?`).get('admin@divinexpress.local')) as StoredUser;
+    }
+    const token = randomBytes(32).toString('hex');
+    const id = randomUUID();
+    const expiresAt = new Date(this.now().getTime() + this.sessionDurationMs).toISOString();
+    await this.database.prepare(`INSERT INTO admin_sessions
+      (id, user_id, token_hash, expires_at) VALUES (?, ?, ?, ?)`)
+      .run(id, user.id, hashToken(token), expiresAt);
+    return { id, token, expiresAt };
+  }
+
   async findSession(token: string): Promise<{ id: string; user: AdminUser; expiresAt: string } | null> {
     const row = (await this.database.prepare(`SELECT s.id, s.expires_at,
         u.id AS user_id, u.email, u.role

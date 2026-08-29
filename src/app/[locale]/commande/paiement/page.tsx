@@ -45,7 +45,7 @@ export default function PaymentPage() {
   const [capabilities, setCapabilities] = useState<PaymentCapabilities | null>(null);
 
   useEffect(() => {
-    fetch('/api/checkout')
+    fetch(`/api/checkout?region=${shipping?.region ?? 'europe'}`)
       .then((response) => response.ok ? response.json() : Promise.reject())
       .then((result: { methods: PaymentCapabilities }) => {
         setCapabilities(result.methods);
@@ -53,7 +53,7 @@ export default function PaymentPage() {
         setValues({ method: available ?? '' });
       })
       .catch(() => setCapabilities({ stripe: { status: 'unavailable' }, genius: { status: 'unavailable' } }));
-  }, []);
+  }, [shipping?.region]);
 
   function handleSelect(method: PaymentFormValues['method']) {
     setValues({ method });

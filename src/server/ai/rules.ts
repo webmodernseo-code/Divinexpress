@@ -45,6 +45,7 @@ export function ruleBasedReply(ctx: RuleContext): string {
     /suivi|tracking|où est|ou est|livraison|shipping|status|statut|colis|expédi/.test(msg);
   const wantsReturn = /retour|refund|rembours|annul|return|cancel/.test(msg);
   const wantsSize = /taille|size|fit|coupe/.test(msg);
+  const wantsPayment = /paiement|payment|payer|carte|paypal|orange money|wave/.test(msg);
 
   if (wantsTracking) {
     if (order) {
@@ -84,7 +85,13 @@ export function ruleBasedReply(ctx: RuleContext): string {
       : `Hello ${name}, our pieces fit true to size (premium straight cut). A size guide is available on each product page.`;
   }
 
+  if (wantsPayment) {
+    return fr
+      ? `Bonjour ${name}, nous proposons les cartes bancaires et PayPal en Europe, ainsi qu’Orange Money et Wave pour l’Afrique lorsque ces services sont activés.`
+      : `Hello ${name}, we support bank cards and PayPal in Europe, plus Orange Money and Wave for Africa when those services are enabled.`;
+  }
+
   return fr
-    ? `Bonjour ${name}, je suis l'assistant DivinExpress. J'ai bien reçu votre message. Comment puis-je vous aider aujourd'hui ? Un conseiller peut aussi prendre le relais si besoin.`
-    : `Hello ${name}, I'm the DivinExpress assistant. I've received your message. How can I help you today? A human advisor can also step in if needed.`;
+    ? `Bonjour ${name}, je suis limité sur cette question. Contactez-nous sur WhatsApp au +33 7 53 74 10 30 afin qu’un conseiller vous réponde.`
+    : `Hello ${name}, I am limited on this question. Contact us on WhatsApp at +33 7 53 74 10 30 so an advisor can help you.`;
 }

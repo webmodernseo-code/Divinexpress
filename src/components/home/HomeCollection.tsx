@@ -57,7 +57,10 @@ export function HomeCollection({
   return (
     <>
       <Container className="pt-14 md:pt-18">
-        <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+        <div
+          data-testid="category-scroll-row"
+          className="-mx-4 flex snap-x snap-mandatory flex-nowrap justify-start gap-4 overflow-x-auto px-4 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:justify-center md:gap-8 md:overflow-visible md:px-0"
+        >
           {CATEGORY_CHOICES.map((item) => {
             const isActive = item === 'all' ? category === null : category === item;
             const label = item === 'all' ? tNav('allCategories') : tNav(item);
@@ -67,7 +70,7 @@ export function HomeCollection({
                 type="button"
                 onClick={() => selectCategory(item)}
                 aria-pressed={isActive}
-                className="group flex flex-col items-center rounded-2xl px-1 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                className="group flex shrink-0 snap-start flex-col items-center rounded-2xl px-1 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               >
                 <div className={`relative aspect-square w-16 overflow-hidden rounded-full transition-transform duration-200 group-hover:scale-105 md:w-[116px] ${
                   isActive ? 'ring-[3px] ring-accent ring-offset-4' : ''

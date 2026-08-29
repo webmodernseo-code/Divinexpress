@@ -14,5 +14,14 @@ export function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAdmin = adminSegments.some((segment) => pathname.includes(segment));
   if (isAdmin) return <>{children}</>;
-  return <><Header /><main>{children}</main><Footer /><CookieBanner /><CartDrawer /><ChatbotBubble /></>;
+  return (
+    <div className="flex min-h-dvh flex-col">
+      <Header />
+      <main className="flex-1">{children}</main>
+      <Footer />
+      <CookieBanner />
+      <CartDrawer />
+      <ChatbotBubble />
+    </div>
+  );
 }
