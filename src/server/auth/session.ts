@@ -8,6 +8,12 @@ interface AdminInput { id?: string; email: string; password: string; role: Admin
 interface AdminUser { id: string; email: string; role: AdminRole }
 interface SessionRecord { id: string; token: string; expiresAt: string }
 interface StoredUser extends AdminUser { password_hash: string; active: number }
+interface CredentialUpdateInput {
+  userId: string;
+  currentPassword: string;
+  email: string;
+  newPassword?: string;
+}
 
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 const hashToken = (token: string) => createHash('sha256').update(token).digest('hex');
@@ -59,6 +65,31 @@ export class AuthService {
       (id, user_id, token_hash, expires_at) VALUES (?, ?, ?, ?)`)
       .run(id, user.id, hashToken(token), expiresAt);
     return { id, token, expiresAt };
+  }
+
+  async updateCredentials(input: CredentialUpdateInput): Promise<void> {
+    await this.database.exec('BEGIN IMMEDIATE');
+    try {
+      const user = (await this.database.prepare(`SELECT id, email, password_hash, role, active
+        FROM admin_users WHERE id = ? AND active = 1`).get(input.userId)) as StoredUser | undefined;
+      if (!user || !verifyPassword(input.currentPassword, user.password_hash)) {
+        throw new DomainError('UNAUTHORIZED', 'Current password is invalid', 401);
+      }
+      if (input.newPassword && input.newPassword.length < 8) {
+        throw new DomainError('CONFLICT', 'Password is too short');
+      }
+
+      const nextEmail = normalizeEmail(input.email);
+      const nextPasswordHash = input.newPassword ? hashPassword(input.newPassword) : user.password_hash;
+      await this.database.prepare(`UPDATE admin_users
+        SET email = ?, password_hash = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`)
+        .run(nextEmail, nextPasswordHash, user.id);
+      await this.database.prepare('DELETE FROM admin_sessions WHERE user_id = ?').run(user.id);
+      await this.database.exec('COMMIT');
+    } catch (error) {
+      await this.database.exec('ROLLBACK');
+      throw error;
+    }
   }
 
   async findSession(token: string): Promise<{ id: string; user: AdminUser; expiresAt: string } | null> {

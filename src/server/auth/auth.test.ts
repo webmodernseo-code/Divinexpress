@@ -81,6 +81,37 @@ describe('server sessions and authorization', () => {
     expect(await auth.findSession(replacement.token)).toBeNull();
   });
 
+  it('updates owner credentials only with the current password and revokes existing sessions', async () => {
+    const auth = new AuthService(database, () => new Date('2026-08-30T10:00:00.000Z'));
+    await auth.createAdmin({
+      id: 'admin-1',
+      email: 'owner@divinexpress.local',
+      password: 'old secure password',
+      role: 'owner',
+    });
+    const existingSession = await auth.authenticate('owner@divinexpress.local', 'old secure password');
+
+    await expect(auth.updateCredentials({
+      userId: 'admin-1',
+      currentPassword: 'wrong password',
+      email: 'webmodernseo@gmail.com',
+      newPassword: 'New secure password 2026!',
+    })).rejects.toThrowError(new DomainError('UNAUTHORIZED', 'Current password is invalid', 401));
+
+    await auth.updateCredentials({
+      userId: 'admin-1',
+      currentPassword: 'old secure password',
+      email: 'WebModernSEO@gmail.com',
+      newPassword: 'New secure password 2026!',
+    });
+
+    expect(await auth.findSession(existingSession.token)).toBeNull();
+    await expect(auth.authenticate('owner@divinexpress.local', 'old secure password'))
+      .rejects.toThrowError(new DomainError('UNAUTHORIZED', 'Invalid credentials', 401));
+    await expect(auth.authenticate('webmodernseo@gmail.com', 'New secure password 2026!'))
+      .resolves.toMatchObject({ token: expect.any(String) });
+  });
+
   it('enforces the role matrix', () => {
     expect(() => requireRole('support', ['owner', 'manager']))
       .toThrowError(new DomainError('FORBIDDEN', 'Insufficient permissions', 403));

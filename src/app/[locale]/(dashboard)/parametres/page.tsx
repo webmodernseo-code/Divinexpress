@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import { 
   Store, 
   CreditCard, 
@@ -38,9 +39,13 @@ interface StoreSettings {
 
 export default function ParametresPage() {
   const systemLocale = useLocale() as 'fr' | 'en';
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<Tab>('general');
   const [isSaved, setIsSaved] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  const [security, setSecurity] = useState({ email: '', currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [securityPending, setSecurityPending] = useState(false);
+  const [securityError, setSecurityError] = useState('');
   const [settings, setSettings] = useState<StoreSettings>({
     shop_name: 'DivinExpress',
     email: 'contact@divinexpress.fr',
@@ -65,6 +70,13 @@ export default function ParametresPage() {
         setSettings(data as StoreSettings);
         setHasChanges(false);
       })
+      .catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/admin/security')
+      .then((response) => response.ok ? response.json() : Promise.reject())
+      .then((data: { email: string }) => setSecurity((current) => ({ ...current, email: data.email })))
       .catch(() => undefined);
   }, []);
 
@@ -94,6 +106,35 @@ export default function ParametresPage() {
   const updateSetting = (key: keyof StoreSettings, value: string | boolean) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
     setHasChanges(true);
+  };
+
+  const handleSecuritySave = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSecurityError('');
+    if (security.newPassword !== security.confirmPassword) {
+      setSecurityError(systemLocale === 'fr' ? 'Les nouveaux mots de passe ne correspondent pas.' : 'New passwords do not match.');
+      return;
+    }
+    setSecurityPending(true);
+    try {
+      const response = await fetch('/api/admin/security', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(security),
+      });
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({})) as { error?: string };
+        throw new Error(payload.error ?? 'SECURITY_UPDATE_FAILED');
+      }
+      router.replace('/connexion?credentials=updated');
+    } catch (error) {
+      const code = error instanceof Error ? error.message : 'SECURITY_UPDATE_FAILED';
+      setSecurityError(code === 'UNAUTHORIZED'
+        ? (systemLocale === 'fr' ? 'Le mot de passe actuel est incorrect.' : 'Current password is incorrect.')
+        : (systemLocale === 'fr' ? 'Impossible de modifier les identifiants.' : 'Unable to update credentials.'));
+    } finally {
+      setSecurityPending(false);
+    }
   };
 
   return (
@@ -560,6 +601,96 @@ export default function ParametresPage() {
                   </div>
                 </article>
               ))}
+            </section>
+          )}
+
+          {activeTab === 'securite' && (
+            <section className="max-w-2xl rounded-2xl border border-admin-border bg-white p-6 shadow-xs" aria-labelledby="security-settings-title">
+              <h2 id="security-settings-title" className="font-serif text-2xl font-bold">
+                {systemLocale === 'fr' ? 'Identifiants administrateur' : 'Administrator credentials'}
+              </h2>
+              <p className="mt-2 text-xs leading-5 text-admin-muted">
+                {systemLocale === 'fr'
+                  ? 'Modifiez l’e-mail de connexion ou choisissez un nouveau mot de passe. Toutes les sessions seront déconnectées après l’enregistrement.'
+                  : 'Change the sign-in email or choose a new password. All sessions will be signed out after saving.'}
+              </p>
+
+              <form onSubmit={handleSecuritySave} className="mt-6 space-y-5">
+                <div>
+                  <label htmlFor="security-email" className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-admin-muted">
+                    {systemLocale === 'fr' ? 'E-mail de connexion' : 'Sign-in email'}
+                  </label>
+                  <input
+                    id="security-email"
+                    type="email"
+                    required
+                    autoComplete="username"
+                    value={security.email}
+                    onChange={(event) => setSecurity((current) => ({ ...current, email: event.target.value }))}
+                    className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50/40 px-4 text-sm outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="security-current-password" className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-admin-muted">
+                    {systemLocale === 'fr' ? 'Mot de passe actuel' : 'Current password'}
+                  </label>
+                  <input
+                    id="security-current-password"
+                    type="password"
+                    required
+                    minLength={8}
+                    autoComplete="current-password"
+                    value={security.currentPassword}
+                    onChange={(event) => setSecurity((current) => ({ ...current, currentPassword: event.target.value }))}
+                    className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50/40 px-4 text-sm outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                  />
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="security-new-password" className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-admin-muted">
+                      {systemLocale === 'fr' ? 'Nouveau mot de passe' : 'New password'}
+                    </label>
+                    <input
+                      id="security-new-password"
+                      type="password"
+                      minLength={12}
+                      autoComplete="new-password"
+                      placeholder={systemLocale === 'fr' ? 'Laisser vide pour conserver' : 'Leave blank to keep it'}
+                      value={security.newPassword}
+                      onChange={(event) => setSecurity((current) => ({ ...current, newPassword: event.target.value }))}
+                      className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50/40 px-4 text-sm outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="security-confirm-password" className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-admin-muted">
+                      {systemLocale === 'fr' ? 'Confirmer le mot de passe' : 'Confirm password'}
+                    </label>
+                    <input
+                      id="security-confirm-password"
+                      type="password"
+                      minLength={security.newPassword ? 12 : undefined}
+                      autoComplete="new-password"
+                      value={security.confirmPassword}
+                      onChange={(event) => setSecurity((current) => ({ ...current, confirmPassword: event.target.value }))}
+                      className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50/40 px-4 text-sm outline-none focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                    />
+                  </div>
+                </div>
+
+                {securityError && <p role="alert" className="text-xs font-semibold text-admin-error">{securityError}</p>}
+
+                <button
+                  type="submit"
+                  disabled={securityPending}
+                  className="h-11 rounded-xl bg-black px-5 text-xs font-bold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {securityPending
+                    ? (systemLocale === 'fr' ? 'Enregistrement…' : 'Saving…')
+                    : (systemLocale === 'fr' ? 'Mettre à jour les identifiants' : 'Update credentials')}
+                </button>
+              </form>
             </section>
           )}
 
