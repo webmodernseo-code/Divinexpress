@@ -8,6 +8,7 @@ export type DomainErrorCode =
   | 'UNAUTHORIZED'
   | 'FORBIDDEN'
   | 'RATE_LIMITED'
+  | 'PAYMENT_METHOD_UNAVAILABLE'
   | 'PAYMENT_PROVIDER_NOT_CONFIGURED';
 
 export class DomainError extends Error {
