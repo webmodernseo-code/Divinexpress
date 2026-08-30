@@ -18,7 +18,7 @@ vi.mock('@/server/payments/stripe-provider', () => ({ StripePaymentProvider: cla
 vi.mock('@/server/payments/genius-provider', () => ({ GeniusPaymentProvider: class {} }));
 vi.mock('@/server/notifications/development-provider', () => ({ DevelopmentNotificationProvider: class {} }));
 
-import { POST } from './route';
+import { GET, POST } from './route';
 
 describe('checkout settings integration', () => {
   beforeEach(() => {
@@ -45,6 +45,28 @@ describe('checkout settings integration', () => {
     expect(response.status).toBe(503);
     await expect(response.json()).resolves.toEqual({ error: 'SHOP_CLOSED' });
     expect(mocks.start).not.toHaveBeenCalled();
+  });
+
+  it('reports an enabled payment region whose provider still needs configuration', async () => {
+    delete process.env.STRIPE_SECRET_KEY;
+
+    const response = await GET(new Request('http://localhost/api/checkout?region=europe'));
+
+    await expect(response.json()).resolves.toMatchObject({
+      shopClosed: false,
+      region: { enabled: true, providerConfigured: false, status: 'provider_missing' },
+    });
+  });
+
+  it('reports a disabled payment region separately from provider configuration', async () => {
+    mocks.readStoreSettings.mockResolvedValue({ ...DEFAULT_STORE_SETTINGS, payment_africa_enabled: false });
+
+    const response = await GET(new Request('http://localhost/api/checkout?region=africa'));
+
+    await expect(response.json()).resolves.toMatchObject({
+      shopClosed: false,
+      region: { enabled: false, status: 'disabled' },
+    });
   });
 });
 

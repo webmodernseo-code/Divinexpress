@@ -1,10 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_STORE_SETTINGS } from '@/server/settings/store-settings';
 import { StoreSettingsForm } from './StoreSettingsForm';
 
+vi.mock('next/navigation', () => ({ useRouter: () => ({ replace: vi.fn() }) }));
+
 describe('StoreSettingsForm', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
   it('restores the last server values when Cancel is clicked', async () => {
     const user = userEvent.setup();
     render(<StoreSettingsForm initialSettings={DEFAULT_STORE_SETTINGS} locale="fr" save={vi.fn()} />);
@@ -29,5 +33,24 @@ describe('StoreSettingsForm', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent(/impossible/i);
     expect(name).toHaveValue('Maison Divine');
+  });
+
+  it('explains when an enabled payment provider still needs configuration', async () => {
+    const user = userEvent.setup();
+    vi.stubGlobal('fetch', vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.includes('/api/admin/security')) {
+        return new Response(JSON.stringify({ email: 'admin@example.com' }), { status: 200 });
+      }
+      return new Response(JSON.stringify({
+        shopClosed: false,
+        region: { enabled: true, providerConfigured: false, status: 'provider_missing' },
+      }), { status: 200 });
+    }));
+
+    render(<StoreSettingsForm initialSettings={DEFAULT_STORE_SETTINGS} locale="fr" save={vi.fn()} />);
+    await user.click(screen.getByRole('button', { name: /paiements/i }));
+
+    expect(await screen.findAllByText(/prestataire à configurer/i)).toHaveLength(2);
   });
 });

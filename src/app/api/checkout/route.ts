@@ -7,7 +7,6 @@ import { DevelopmentNotificationProvider } from '@/server/notifications/developm
 import { GeniusPaymentProvider } from '@/server/payments/genius-provider';
 import { StripePaymentProvider } from '@/server/payments/stripe-provider';
 import type { PaymentProvider } from '@/server/payments/provider';
-import type { Database } from '@/server/db/client';
 import { readStoreSettings } from '@/server/settings/store-settings';
 import { shippingMinorFor } from '@/server/settings/shipping';
 
@@ -38,14 +37,6 @@ function countryCode(country: string): string | null {
   return known[normalized] ?? (normalized.length === 2 ? normalized.toUpperCase() : null);
 }
 
-async function paymentRegionEnabled(database: Database, region: 'europe' | 'africa'): Promise<boolean> {
-  const key = region === 'europe' ? 'payment_europe_enabled' : 'payment_africa_enabled';
-  const row = (await database.prepare('SELECT value_json FROM store_settings WHERE key = ?').get(key)) as
-    | { value_json: string }
-    | undefined;
-  return row ? JSON.parse(row.value_json) !== false : true;
-}
-
 export async function POST(request: Request) {
   try {
     const input = requestSchema.parse(await request.json());
@@ -55,7 +46,10 @@ export async function POST(request: Request) {
       throw new DomainError('SHOP_CLOSED', 'Store is closed', 503);
     }
     const requestedRegion = input.shipping.region ?? 'europe';
-    if (!await paymentRegionEnabled(database, requestedRegion)) {
+    const requestedRegionEnabled = requestedRegion === 'europe'
+      ? storeSettings.payment_europe_enabled
+      : storeSettings.payment_africa_enabled;
+    if (!requestedRegionEnabled) {
       throw new DomainError('PAYMENT_METHOD_UNAVAILABLE', 'Payment region is disabled', 409);
     }
     if ((requestedRegion === 'europe' && input.method !== 'stripe') || (requestedRegion === 'africa' && input.method !== 'genius')) {
@@ -136,13 +130,18 @@ export async function GET(request: Request) {
   if (!settings.shop_enabled) {
     return NextResponse.json({
       shopClosed: true,
+      region: { enabled: false, providerConfigured: false, status: 'disabled' },
       methods: { stripe: { status: 'unavailable' }, genius: { status: 'unavailable' } },
     });
   }
-  const regionEnabled = await paymentRegionEnabled(database, region);
+  const regionEnabled = region === 'europe' ? settings.payment_europe_enabled : settings.payment_africa_enabled;
   const geniusConfigured = Boolean(process.env.GENIUS_API_KEY && process.env.GENIUS_API_SECRET);
   const stripeConfigured = Boolean(process.env.STRIPE_SECRET_KEY);
+  const providerConfigured = region === 'europe' ? stripeConfigured : geniusConfigured;
+  const status = !regionEnabled ? 'disabled' : providerConfigured ? 'configured' : 'provider_missing';
   return NextResponse.json({
+    shopClosed: false,
+    region: { enabled: regionEnabled, providerConfigured, status },
     methods: {
       stripe: { status: region === 'europe' && regionEnabled && stripeConfigured ? 'configured' : 'unavailable' },
       genius: { status: region === 'africa' && regionEnabled && geniusConfigured ? 'configured' : 'unavailable' },

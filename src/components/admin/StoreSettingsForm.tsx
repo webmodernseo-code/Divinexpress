@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import type { StoreSettings } from '@/server/settings/store-settings';
 
 type Tab = 'general' | 'livraison' | 'paiements' | 'securite';
@@ -21,6 +22,7 @@ export function StoreSettingsForm({
   save: (settings: StoreSettings) => Promise<StoreSettings>;
 }) {
   const fr = locale === 'fr';
+  const router = useRouter();
   const [tab, setTab] = useState<Tab>('general');
   const [serverSettings, setServerSettings] = useState(initialSettings);
   const [draft, setDraft] = useState(initialSettings);
@@ -40,8 +42,7 @@ export function StoreSettingsForm({
     })).then((entries) => {
       const next = { europe: 'unavailable', africa: 'unavailable' };
       for (const [region, payload] of entries) {
-        const provider = region === 'europe' ? payload.methods?.stripe : payload.methods?.genius;
-        next[region] = provider?.status ?? 'unavailable';
+        next[region] = payload.region?.status ?? 'unknown';
       }
       setPaymentStatus(next);
     }).catch(() => setPaymentStatus({ europe: 'unknown', africa: 'unknown' }));
@@ -89,7 +90,7 @@ export function StoreSettingsForm({
         body: JSON.stringify(security),
       });
       if (!response.ok) throw new Error('SECURITY_UPDATE_FAILED');
-      window.location.assign(`/${locale}/connexion?credentials=updated`);
+      router.replace(`/${locale}/connexion?credentials=updated`);
     } catch {
       setSecurityError(fr ? 'Impossible de modifier les identifiants.' : 'Unable to update credentials.');
     } finally {
@@ -164,7 +165,7 @@ export function StoreSettingsForm({
           <section className="grid gap-5 md:grid-cols-2">
             {(['europe', 'africa'] as const).map((region) => {
               const key = region === 'europe' ? 'payment_europe_enabled' : 'payment_africa_enabled';
-              return <article key={region} className={cardClass}><div className="flex items-center justify-between gap-4"><div><h2 className="font-serif text-xl font-bold">{region === 'europe' ? 'Europe' : 'Afrique'}</h2><p className="mt-2 text-xs text-admin-muted">{paymentStatus[region]}</p></div><input aria-label={region === 'europe' ? 'Europe' : 'Afrique'} type="checkbox" checked={draft[key]} onChange={(event) => update(key, event.target.checked)} className="size-5 accent-indigo-600" /></div></article>;
+              return <article key={region} className={cardClass}><div className="flex items-center justify-between gap-4"><div><h2 className="font-serif text-xl font-bold">{region === 'europe' ? 'Europe' : 'Afrique'}</h2><p className="mt-2 text-xs text-admin-muted">{paymentStatusLabel(paymentStatus[region], fr)}</p></div><input aria-label={region === 'europe' ? 'Europe' : 'Afrique'} type="checkbox" checked={draft[key]} onChange={(event) => update(key, event.target.checked)} className="size-5 accent-indigo-600" /></div></article>;
             })}
           </section>
         )}
@@ -187,4 +188,12 @@ export function StoreSettingsForm({
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return <label className="text-xs font-bold text-slate-700"><span>{label}</span>{children}</label>;
+}
+
+function paymentStatusLabel(status: string, fr: boolean): string {
+  if (status === 'configured') return fr ? 'Activé et configuré' : 'Enabled and configured';
+  if (status === 'provider_missing') return fr ? 'Activé — prestataire à configurer' : 'Enabled — provider setup required';
+  if (status === 'disabled') return fr ? 'Désactivé' : 'Disabled';
+  if (status === 'loading') return fr ? 'Vérification…' : 'Checking…';
+  return fr ? 'État indisponible' : 'Status unavailable';
 }
