@@ -9,6 +9,7 @@ import { ChatbotBubble } from './ChatbotBubble';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { StoreSettingsProvider } from '@/context/StoreSettingsContext';
 import { DEFAULT_STORE_SETTINGS, type PublicStoreSettings } from '@/server/settings/store-settings';
+import { StoreClosed, isPublicPathAllowedWhileClosed } from './StoreClosed';
 
 const adminSegments = ['/connexion', '/dashboard', '/produits', '/commandes', '/retours', '/messages', '/clients', '/parametres'];
 
@@ -16,6 +17,10 @@ export function SiteChrome({ children, settings = DEFAULT_STORE_SETTINGS }: { ch
   const pathname = usePathname();
   const isAdmin = adminSegments.some((segment) => pathname.includes(segment));
   if (isAdmin) return <StoreSettingsProvider settings={settings}>{children}</StoreSettingsProvider>;
+  if (!settings.shop_enabled && !isPublicPathAllowedWhileClosed(pathname)) {
+    const locale = pathname.startsWith('/en') ? 'en' : 'fr';
+    return <StoreSettingsProvider settings={settings}><StoreClosed locale={locale} shopName={settings.shop_name} /></StoreSettingsProvider>;
+  }
   return (
     <StoreSettingsProvider settings={settings}><div className="flex min-h-dvh flex-col">
       <Header />

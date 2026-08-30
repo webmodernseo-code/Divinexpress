@@ -38,6 +38,14 @@ describe('checkout settings integration', () => {
     expect(response.status).toBe(200);
     expect(mocks.start).toHaveBeenCalledWith(expect.objectContaining({ shippingMinor: 990 }));
   });
+
+  it('blocks checkout while the shop is closed', async () => {
+    mocks.readStoreSettings.mockResolvedValue({ ...DEFAULT_STORE_SETTINGS, shop_enabled: false });
+    const response = await POST(request());
+    expect(response.status).toBe(503);
+    await expect(response.json()).resolves.toEqual({ error: 'SHOP_CLOSED' });
+    expect(mocks.start).not.toHaveBeenCalled();
+  });
 });
 
 function request() {

@@ -51,6 +51,9 @@ export async function POST(request: Request) {
     const input = requestSchema.parse(await request.json());
     const database = await getCommerceDatabase();
     const storeSettings = await readStoreSettings(database);
+    if (!storeSettings.shop_enabled) {
+      throw new DomainError('SHOP_CLOSED', 'Store is closed', 503);
+    }
     const requestedRegion = input.shipping.region ?? 'europe';
     if (!await paymentRegionEnabled(database, requestedRegion)) {
       throw new DomainError('PAYMENT_METHOD_UNAVAILABLE', 'Payment region is disabled', 409);
@@ -129,6 +132,13 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   const region = new URL(request.url).searchParams.get('region') === 'africa' ? 'africa' : 'europe';
   const database = await getCommerceDatabase();
+  const settings = await readStoreSettings(database);
+  if (!settings.shop_enabled) {
+    return NextResponse.json({
+      shopClosed: true,
+      methods: { stripe: { status: 'unavailable' }, genius: { status: 'unavailable' } },
+    });
+  }
   const regionEnabled = await paymentRegionEnabled(database, region);
   const geniusConfigured = Boolean(process.env.GENIUS_API_KEY && process.env.GENIUS_API_SECRET);
   const stripeConfigured = Boolean(process.env.STRIPE_SECRET_KEY);

@@ -39,7 +39,7 @@ export async function readStoreSettings(database: Database): Promise<StoreSettin
     key: string;
     value_json: string;
   }>;
-  const knownKeys = new Set(storeSettingsSchema.keyof().options);
+  const knownKeys = new Set<string>(storeSettingsSchema.keyof().options);
   const persisted: Record<string, unknown> = {};
 
   for (const row of rows) {
