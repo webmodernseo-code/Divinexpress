@@ -18,6 +18,7 @@ import {
   X
 } from 'lucide-react';
 import Image from 'next/image';
+import { loadAdminOrders } from '@/lib/admin/orders-loader';
 
 type OrderItem = {
   id: string;
@@ -102,17 +103,21 @@ export default function CommandesPage() {
   const [detailedOrder, setDetailedOrder] = useState<OrderDetail | null>(null);
   const [search, setSearch] = useState('');
   const [statusTab, setStatusTab] = useState<'all' | 'todo' | 'preparing' | 'shipping' | 'returns'>('all');
+  const [ordersStatus, setOrdersStatus] = useState<'loading' | 'success' | 'error'>('loading');
 
-  const refreshOrders = () => {
-    fetch('/api/admin/orders')
-      .then((res) => (res.ok ? res.json() : Promise.reject()))
-      .then((data) => {
-        setOrdersList(data as OrderRaw[]);
-        if (data.length > 0 && !selectedOrderId) {
-          setSelectedOrderId((data as OrderRaw[])[0].number);
-        }
-      })
-      .catch(() => undefined);
+  const refreshOrders = async () => {
+    setOrdersStatus('loading');
+    const result = await loadAdminOrders<OrderRaw>((input) => fetch(input));
+    if (result.status === 'error') {
+      setOrdersStatus('error');
+      return;
+    }
+
+    setOrdersList(result.orders);
+    setOrdersStatus('success');
+    if (result.orders.length > 0 && !selectedOrderId) {
+      setSelectedOrderId(result.orders[0].number);
+    }
   };
 
   useEffect(() => {
@@ -318,6 +323,73 @@ export default function CommandesPage() {
       alert(systemLocale === 'fr' ? 'Erreur réseau' : 'Network error');
     }
   };
+
+  if (ordersStatus !== 'success') {
+    return (
+      <div className="space-y-6 animate-fade-in text-admin-text font-sans">
+        <div>
+          <h1 className="font-serif text-3xl font-bold tracking-tight">
+            {systemLocale === 'fr' ? 'Commandes' : 'Orders'}
+          </h1>
+          <p className="text-sm text-admin-muted mt-1.5 font-medium">
+            {systemLocale === 'fr' ? 'Gérez les commandes reçues sur la boutique.' : 'Manage orders received from the store.'}
+          </p>
+        </div>
+        <section
+          role={ordersStatus === 'error' ? 'alert' : 'status'}
+          className="rounded-2xl border border-admin-border bg-white p-10 text-center shadow-xs"
+        >
+          {ordersStatus === 'loading' ? (
+            <p className="text-sm font-semibold text-admin-muted">
+              {systemLocale === 'fr' ? 'Chargement des commandes…' : 'Loading orders…'}
+            </p>
+          ) : (
+            <div className="space-y-4">
+              <div>
+                <h2 className="text-base font-bold text-slate-900">
+                  {systemLocale === 'fr' ? 'Impossible de charger les commandes' : 'Unable to load orders'}
+                </h2>
+                <p className="mt-1 text-sm text-admin-muted">
+                  {systemLocale === 'fr' ? 'Vérifiez votre connexion puis réessayez.' : 'Check your connection and try again.'}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => void refreshOrders()}
+                className="h-10 rounded-xl bg-indigo-600 px-5 text-xs font-bold text-white hover:bg-indigo-700"
+              >
+                {systemLocale === 'fr' ? 'Réessayer' : 'Try again'}
+              </button>
+            </div>
+          )}
+        </section>
+      </div>
+    );
+  }
+
+  if (ordersList.length === 0) {
+    return (
+      <div className="space-y-6 animate-fade-in text-admin-text font-sans">
+        <div>
+          <h1 className="font-serif text-3xl font-bold tracking-tight">
+            {systemLocale === 'fr' ? 'Commandes' : 'Orders'}
+          </h1>
+          <p className="text-sm text-admin-muted mt-1.5 font-medium">
+            {systemLocale === 'fr' ? 'Gérez les commandes reçues sur la boutique.' : 'Manage orders received from the store.'}
+          </p>
+        </div>
+        <section className="rounded-2xl border border-admin-border bg-white p-10 text-center shadow-xs">
+          <Package className="mx-auto size-8 text-slate-300" aria-hidden />
+          <h2 className="mt-4 text-base font-bold text-slate-900">
+            {systemLocale === 'fr' ? 'Aucune commande pour le moment' : 'No orders yet'}
+          </h2>
+          <p className="mt-1 text-sm text-admin-muted">
+            {systemLocale === 'fr' ? 'Les nouvelles commandes apparaîtront automatiquement ici.' : 'New orders will automatically appear here.'}
+          </p>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fade-in text-admin-text font-sans">

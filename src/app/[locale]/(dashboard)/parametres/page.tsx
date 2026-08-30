@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
+import { MVP_SETTINGS_TABS, type MvpSettingsTab } from '@/lib/admin/mvp-config';
 import { 
   Store, 
   CreditCard, 
@@ -201,7 +202,7 @@ export default function ParametresPage() {
             { id: 'equipe' as const, label: systemLocale === 'fr' ? 'Équipe et permissions' : 'Team & Permissions', icon: Users },
             { id: 'securite' as const, label: systemLocale === 'fr' ? 'Sécurité' : 'Security', icon: Lock },
             { id: 'facturation' as const, label: systemLocale === 'fr' ? 'Facturation' : 'Billing', icon: FileText }
-          ].map((tab) => {
+          ].filter((tab) => MVP_SETTINGS_TABS.includes(tab.id as MvpSettingsTab)).map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
             return (

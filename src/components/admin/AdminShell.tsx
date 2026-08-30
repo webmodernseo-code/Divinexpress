@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Bell, ChevronDown, LayoutDashboard, LogOut, Menu, MessageSquare, Package, RotateCcw, Search, Settings, ShoppingBag, Users, X } from 'lucide-react';
 import { useAdminDemo } from '@/context/AdminDemoContext';
 import { Link, usePathname } from '@/i18n/navigation';
+import { MVP_NAVIGATION } from '@/lib/admin/mvp-config';
 
 const navigation = [
   { label: "Vue d'ensemble", href: '/dashboard', icon: LayoutDashboard },
@@ -56,7 +57,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
       {/* Navigation items styled like modern SaaS (Stripe/Linear) */}
       <nav aria-label="Navigation principale" className="flex-1 space-y-1.5 px-4 py-6">
-        {navigation.map(({ label, href, icon: Icon, badgeKey }) => {
+        {navigation.filter(({ href }) => MVP_NAVIGATION.some((item) => item.href === href)).map(({ label, href, icon: Icon, badgeKey }) => {
           const cleanPath = getPathWithoutLocale(pathname);
           const cleanHref = getPathWithoutLocale(href);
           const isActive = cleanPath === cleanHref || cleanPath.startsWith(cleanHref + '/');
