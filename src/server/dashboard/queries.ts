@@ -39,7 +39,9 @@ export async function getDashboardState(
         '/image/reign-admin-hoodie.png') AS image
     FROM product_variants v JOIN products p ON p.id = v.product_id
     LEFT JOIN inventory_movements m ON m.variant_id = v.id
-    WHERE p.status = 'active' GROUP BY v.id HAVING remaining <= 5 ORDER BY remaining LIMIT 5`)
+    WHERE p.status = 'active' GROUP BY v.id
+    HAVING COALESCE(SUM(m.quantity_delta), 0) <= 5
+    ORDER BY COALESCE(SUM(m.quantity_delta), 0) LIMIT 5`)
     .all()) as unknown as Array<{ id: string; name_fr: string; sku: string; remaining: number; image: string }>;
   const sales = (await database.prepare(`SELECT substr(created_at, 1, 10) AS day,
       SUM(total_minor) AS total FROM orders

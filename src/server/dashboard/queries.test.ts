@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { closeDatabase, createDatabase } from '../db/client';
 import { migrateDatabase } from '../db/migrate';
 import { getDashboardState } from './queries';
+import type { Database } from '../db/client';
 
 describe('getDashboardState', () => {
   afterEach(async () => {
@@ -24,5 +25,27 @@ describe('getDashboardState', () => {
     expect(state.metrics.find((metric) => metric.id === 'orders')?.value).toBe('1');
     expect(state.metrics.find((metric) => metric.id === 'revenue')?.value).toContain('100');
     expect(state.recentOrders[0]).toMatchObject({ id: 'RG-1', customer: 'Ada Lovelace' });
+  });
+
+  it('does not reference a select alias from the PostgreSQL HAVING clause', async () => {
+    const database = {
+      prepare(sql: string) {
+        if (/HAVING\s+remaining/i.test(sql)) {
+          throw new Error('column "remaining" does not exist');
+        }
+        return {
+          async get() { return { orders: 0, revenue: 0, basket: 0, returns: 0 }; },
+          async all() { return []; },
+          async run() { return { changes: 0, lastInsertRowid: 0 }; },
+        };
+      },
+      async exec() {},
+      async close() {},
+    } as Database;
+
+    await expect(getDashboardState(database, '30d')).resolves.toMatchObject({
+      recentOrders: [],
+      stockAlerts: [],
+    });
   });
 });
