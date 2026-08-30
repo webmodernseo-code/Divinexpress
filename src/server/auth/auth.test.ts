@@ -7,6 +7,7 @@ import { requireRole } from './authorization';
 import { hashPassword, verifyPassword } from './password';
 import { SlidingWindowRateLimiter } from './rate-limit';
 import { AuthService } from './session';
+import { ensureBootstrapAdmin } from './runtime';
 
 describe('password hashing', () => {
   it('uses a random salt and verifies only the original password', () => {
@@ -116,5 +117,31 @@ describe('server sessions and authorization', () => {
     expect(() => requireRole('support', ['owner', 'manager']))
       .toThrowError(new DomainError('FORBIDDEN', 'Insufficient permissions', 403));
     expect(() => requireRole('manager', ['owner', 'manager'])).not.toThrow();
+  });
+
+  it('creates the configured bootstrap owner when another administrator already exists', async () => {
+    const auth = new AuthService(database);
+    await auth.createAdmin({
+      id: 'legacy-admin',
+      email: 'legacy@divinexpress.local',
+      password: 'legacy secure password',
+      role: 'manager',
+    });
+
+    await ensureBootstrapAdmin(database, auth, 'webmodernseo@gmail.com', 'Production password 2026!');
+
+    await expect(auth.authenticate('webmodernseo@gmail.com', 'Production password 2026!'))
+      .resolves.toMatchObject({ token: expect.any(String) });
+  });
+
+  it('surfaces bootstrap failures when the configured owner was not created', async () => {
+    const auth = new AuthService(database);
+
+    await expect(ensureBootstrapAdmin(
+      database,
+      auth,
+      'webmodernseo@gmail.com',
+      'short',
+    )).rejects.toThrowError(new DomainError('CONFLICT', 'Password is too short'));
   });
 });
