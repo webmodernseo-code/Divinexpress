@@ -7,21 +7,23 @@ import { Footer } from './Footer';
 import { CookieBanner } from './CookieBanner';
 import { ChatbotBubble } from './ChatbotBubble';
 import { CartDrawer } from '@/components/cart/CartDrawer';
+import { StoreSettingsProvider } from '@/context/StoreSettingsContext';
+import { DEFAULT_STORE_SETTINGS, type PublicStoreSettings } from '@/server/settings/store-settings';
 
 const adminSegments = ['/connexion', '/dashboard', '/produits', '/commandes', '/retours', '/messages', '/clients', '/parametres'];
 
-export function SiteChrome({ children }: { children: ReactNode }) {
+export function SiteChrome({ children, settings = DEFAULT_STORE_SETTINGS }: { children: ReactNode; settings?: PublicStoreSettings }) {
   const pathname = usePathname();
   const isAdmin = adminSegments.some((segment) => pathname.includes(segment));
-  if (isAdmin) return <>{children}</>;
+  if (isAdmin) return <StoreSettingsProvider settings={settings}>{children}</StoreSettingsProvider>;
   return (
-    <div className="flex min-h-dvh flex-col">
+    <StoreSettingsProvider settings={settings}><div className="flex min-h-dvh flex-col">
       <Header />
       <main className="flex-1">{children}</main>
-      <Footer />
+      <Footer settings={settings} />
       <CookieBanner />
       <CartDrawer />
       <ChatbotBubble />
-    </div>
+    </div></StoreSettingsProvider>
   );
 }

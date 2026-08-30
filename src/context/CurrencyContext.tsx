@@ -14,12 +14,14 @@ const CurrencyContext = createContext<CurrencyContextValue | null>(null);
 
 export function CurrencyProvider({
   children,
-  initialLocale
+  initialLocale,
+  initialCurrency,
 }: {
   children: React.ReactNode;
   initialLocale: string;
+  initialCurrency?: CurrencyCode;
 }) {
-  const [currency, setCurrency] = useState<CurrencyCode>(() => defaultCurrencyForLocale(initialLocale));
+  const [currency, setCurrency] = useState<CurrencyCode>(() => initialCurrency ?? defaultCurrencyForLocale(initialLocale));
   const isFirstRender = useRef(true);
 
   useEffect(() => {

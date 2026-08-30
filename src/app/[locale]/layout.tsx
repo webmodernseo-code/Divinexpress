@@ -11,11 +11,15 @@ import { FavoritesProvider } from '@/context/FavoritesContext';
 import { CartDrawerProvider } from '@/context/CartDrawerContext';
 import { CheckoutProvider } from '@/context/CheckoutContext';
 import { SiteChrome } from '@/components/layout/SiteChrome';
+import { getCommerceDatabase } from '@/server/db/runtime';
+import { readPublicStoreSettings } from '@/server/settings/store-settings';
 import '../globals.css';
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -65,6 +69,7 @@ export default async function LocaleLayout({
   }
   setRequestLocale(locale);
   const messages = await getMessages();
+  const storeSettings = await readPublicStoreSettings(await getCommerceDatabase());
 
   return (
     <html lang={locale} className={`${fraunces.variable} ${inter.variable}`}>
@@ -74,12 +79,12 @@ export default async function LocaleLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
         />
         <NextIntlClientProvider messages={messages}>
-          <CurrencyProvider initialLocale={locale}>
+          <CurrencyProvider initialLocale={locale} initialCurrency={storeSettings.currency}>
             <CartProvider>
               <FavoritesProvider>
                 <CartDrawerProvider>
                   <CheckoutProvider>
-                    <SiteChrome>{children}</SiteChrome>
+                    <SiteChrome settings={storeSettings}>{children}</SiteChrome>
                   </CheckoutProvider>
                 </CartDrawerProvider>
               </FavoritesProvider>

@@ -16,6 +16,13 @@ describe('CurrencyContext', () => {
     expect(result.current.currency).toBe('EUR');
   });
 
+  it('uses the configured currency as the initial preference', () => {
+    const { result } = renderHook(() => useCurrency(), {
+      wrapper: ({ children }) => <CurrencyProvider initialLocale="fr" initialCurrency="GBP">{children}</CurrencyProvider>,
+    });
+    expect(result.current.currency).toBe('GBP');
+  });
+
   it('updates the currency and persists it to localStorage', async () => {
     const { result } = renderHook(() => useCurrency(), { wrapper });
     act(() => {

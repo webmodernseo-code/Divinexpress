@@ -8,6 +8,7 @@ import { Container } from '@/components/ui/Container';
 import { SOCIAL_LINKS } from '@/components/ui/SocialIcons';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { CurrencySwitcher } from './CurrencySwitcher';
+import { DEFAULT_STORE_SETTINGS, type PublicStoreSettings } from '@/server/settings/store-settings';
 
 type FooterLink = {
   key: 'newArrivals' | 'clothing' | 'accessories' | 'bestSellers' | 'contact' | 'faq' | 'shippingReturns' | 'sizeGuide' | 'legalNotice' | 'terms' | 'privacy' | 'login';
@@ -56,7 +57,7 @@ const PAYMENT_LOGOS = [
   { src: '/payment/wave.png', width: 701, height: 437 }
 ];
 
-export function Footer() {
+export function Footer({ settings = DEFAULT_STORE_SETTINGS }: { settings?: PublicStoreSettings }) {
   const t = useTranslations('footer');
   const [openGroup, setOpenGroup] = useState<FooterGroup['key'] | null>(null);
 
@@ -73,6 +74,11 @@ export function Footer() {
               height={67}
               className="h-auto w-[92px] object-contain lg:w-[110px]"
             />
+            <p className="text-sm font-bold text-ink">{settings.shop_name}</p>
+            <div className="hidden space-y-1 text-sm text-mist-600 lg:block">
+              <a className="block hover:text-ink" href={`mailto:${settings.email}`}>{settings.email}</a>
+              <a className="block hover:text-ink" href={`tel:${settings.phone.replace(/[^+\d]/g, '')}`}>{settings.phone}</a>
+            </div>
             <p className="hidden max-w-xs text-[14px] leading-6 text-mist-600 lg:block">{t('tagline')}</p>
             <div className="flex gap-4 items-center">
               {SOCIAL_LINKS.map(({ label, Icon }) => (

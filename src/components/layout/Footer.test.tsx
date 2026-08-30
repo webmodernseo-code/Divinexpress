@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Footer } from './Footer';
+import { DEFAULT_STORE_SETTINGS } from '@/server/settings/store-settings';
 
 const replace = vi.fn();
 const setCurrency = vi.fn();
@@ -71,6 +72,13 @@ describe('Footer', () => {
     expect(screen.getByRole('button', { name: /eur/i })).toBeInTheDocument();
   });
 
+  it('renders configured public contact details', () => {
+    render(<Footer settings={{ ...DEFAULT_STORE_SETTINGS, shop_name: 'Maison Divine', email: 'bonjour@example.com', phone: '+33 1 02 03 04 05' }} />);
+    expect(screen.getByText('Maison Divine')).toBeVisible();
+    expect(screen.getByRole('link', { name: 'bonjour@example.com' })).toHaveAttribute('href', 'mailto:bonjour@example.com');
+    expect(screen.getByRole('link', { name: '+33 1 02 03 04 05' })).toHaveAttribute('href', 'tel:+33102030405');
+  });
+
 
 
   it('renders the three desktop navigation groups and their localized links', () => {
@@ -97,7 +105,7 @@ describe('Footer', () => {
 
   it('uses the supplied white logo and labels the secure payment area', () => {
     render(<Footer />);
-    expect(screen.getByAltText('DivinExpress')).toHaveAttribute('src', '/branding/logo-reign.png');
+    expect(screen.getByAltText('DivinExpress')).toHaveAttribute('src', '/branding/logo-divinexpress.png');
     expect(screen.getByText('Paiements sécurisés')).toBeInTheDocument();
   });
 });
