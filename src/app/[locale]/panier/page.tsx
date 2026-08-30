@@ -7,6 +7,8 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useCart } from '@/context/CartContext';
 import { useCurrency } from '@/context/CurrencyContext';
 import { FreeShippingProgress } from '@/components/cart/FreeShippingProgress';
+import { useStoreSettings } from '@/context/StoreSettingsContext';
+import { freeShippingRemainingEur } from '@/server/settings/shipping';
 import {
   FiArrowLeft,
   FiLock,
@@ -26,13 +28,13 @@ const PAYMENT_LOGOS = [
   { name: 'Wave', src: '/payment/wave.png', width: 48, height: 26 }
 ];
 
-const FREE_SHIPPING_THRESHOLD = 150;
-
 export default function CartPage() {
   const t = useTranslations('cart');
   const systemLocale = useLocale() as 'fr' | 'en';
   const { items, subtotalEur, updateQuantity, removeItem } = useCart();
   const { currency } = useCurrency();
+  const settings = useStoreSettings();
+  const freeShippingThreshold = settings.free_shipping_threshold_minor / 100;
 
   const activeLocale = systemLocale === 'fr' ? 'fr-FR' : 'en-GB';
 
@@ -46,7 +48,7 @@ export default function CartPage() {
     [activeLocale, currency]
   );
 
-  const amountRemaining = Math.max(FREE_SHIPPING_THRESHOLD - subtotalEur, 0);
+  const amountRemaining = freeShippingRemainingEur(subtotalEur, settings.free_shipping_threshold_minor);
 
   const totalItemsCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -95,12 +97,12 @@ export default function CartPage() {
 
                 <FreeShippingProgress
                   subtotalEur={subtotalEur}
-                  threshold={FREE_SHIPPING_THRESHOLD}
+                  threshold={freeShippingThreshold}
                   className="mt-5"
                 />
                 <p className="mt-3 flex items-center justify-between text-xs text-neutral-500 font-medium">
                   <span>{formatter.format(subtotalEur)}</span>
-                  <span>{formatter.format(FREE_SHIPPING_THRESHOLD)}</span>
+                  <span>{formatter.format(freeShippingThreshold)}</span>
                 </p>
               </section>
 

@@ -8,6 +8,8 @@ import { GeniusPaymentProvider } from '@/server/payments/genius-provider';
 import { StripePaymentProvider } from '@/server/payments/stripe-provider';
 import type { PaymentProvider } from '@/server/payments/provider';
 import type { Database } from '@/server/db/client';
+import { readStoreSettings } from '@/server/settings/store-settings';
+import { shippingMinorFor } from '@/server/settings/shipping';
 
 const requestSchema = z.object({
   idempotencyKey: z.string().min(8).max(120),
@@ -48,6 +50,7 @@ export async function POST(request: Request) {
   try {
     const input = requestSchema.parse(await request.json());
     const database = await getCommerceDatabase();
+    const storeSettings = await readStoreSettings(database);
     const requestedRegion = input.shipping.region ?? 'europe';
     if (!await paymentRegionEnabled(database, requestedRegion)) {
       throw new DomainError('PAYMENT_METHOD_UNAVAILABLE', 'Payment region is disabled', 409);
@@ -55,11 +58,13 @@ export async function POST(request: Request) {
     if ((requestedRegion === 'europe' && input.method !== 'stripe') || (requestedRegion === 'africa' && input.method !== 'genius')) {
       throw new DomainError('PAYMENT_METHOD_UNAVAILABLE', 'Payment method does not match shipping region', 409);
     }
+    let subtotalMinor = 0;
     const lines = await Promise.all(input.items.map(async (item) => {
-      const variant = (await database.prepare(`SELECT id FROM product_variants
+      const variant = (await database.prepare(`SELECT id, price_minor FROM product_variants
         WHERE product_id = ? AND size = ? AND color = ? AND active = 1`)
-        .get(item.productId, item.size, item.color)) as { id: string } | undefined;
+        .get(item.productId, item.size, item.color)) as { id: string; price_minor: number } | undefined;
       if (!variant) throw new DomainError('NOT_FOUND', 'Variant not found', 404);
+      subtotalMinor += variant.price_minor * item.quantity;
       return { variantId: variant.id, quantity: item.quantity };
     }));
     const names = input.shipping.fullName.trim().split(/\s+/);
@@ -100,7 +105,7 @@ export async function POST(request: Request) {
         postalCode: input.shipping.postalCode?.trim() || null, city: input.shipping.city?.trim() || null,
         region: null, countryCode: destinationCountryCode,
       },
-      lines, shippingMinor: 0, taxMinor: 0, discountMinor: 0,
+      lines, shippingMinor: shippingMinorFor(subtotalMinor, storeSettings), taxMinor: 0, discountMinor: 0,
     });
     return NextResponse.json({
       orderId: result.order.id,
