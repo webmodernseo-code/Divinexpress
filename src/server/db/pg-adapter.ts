@@ -43,9 +43,14 @@ export function translateSql(sql: string): string {
 }
 
 export class PgStatement {
-  constructor(private client: Client, private sql: string) {}
+  constructor(
+    private client: Client,
+    private sql: string,
+    private ensureConnected: () => Promise<void>,
+  ) {}
 
   async run(...params: unknown[]): Promise<{ changes: number; lastInsertRowid: number | bigint }> {
+    await this.ensureConnected();
     const translated = translateSql(this.sql);
     const res = await this.client.query(translated, params);
     return {
@@ -55,12 +60,14 @@ export class PgStatement {
   }
 
   async get(...params: unknown[]): Promise<unknown> {
+    await this.ensureConnected();
     const translated = translateSql(this.sql);
     const res = await this.client.query(translated, params);
     return res.rows[0] ?? undefined;
   }
 
   async all(...params: unknown[]): Promise<unknown[]> {
+    await this.ensureConnected();
     const translated = translateSql(this.sql);
     const res = await this.client.query(translated, params);
     return res.rows;
@@ -70,16 +77,21 @@ export class PgStatement {
 export class PgDatabase {
   private client: Client;
   private connected = false;
+  private connectionPromise: Promise<void> | undefined;
 
   constructor(connectionString: string) {
     this.client = new Client({ connectionString });
   }
 
   private async ensureConnected() {
-    if (!this.connected) {
-      await this.client.connect();
-      this.connected = true;
-    }
+    if (this.connected) return;
+    this.connectionPromise ??= this.client.connect()
+      .then(() => { this.connected = true; })
+      .catch((error) => {
+        this.connectionPromise = undefined;
+        throw error;
+      });
+    await this.connectionPromise;
   }
 
   async exec(sql: string): Promise<void> {
@@ -96,11 +108,7 @@ export class PgDatabase {
   }
 
   prepare(sql: string): PgStatement {
-    // We cannot connect synchronously here, so we defer connection check inside the statement execution
-    this.ensureConnected().catch((err) => {
-      console.error('Failed to establish Neon/Postgres connection in prepare statement', err);
-    });
-    return new PgStatement(this.client, sql);
+    return new PgStatement(this.client, sql, () => this.ensureConnected());
   }
 
   async close(): Promise<void> {
